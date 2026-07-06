@@ -86,11 +86,11 @@ export function AppHeader({
               />
             </button>
             <Link
-              to="/search"
-              aria-label="검색"
+              to="/notifications"
+              aria-label="알림"
               className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
             >
-              <Search className="h-5 w-5" />
+              <Bell className="h-5 w-5" />
             </Link>
           </>
         )}
