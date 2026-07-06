@@ -51,9 +51,10 @@ export const Route = createFileRoute("/price/$variety")({
   }),
 });
 
-type Tab = "chart" | "compare" | "company" | "origin" | "variety";
+type Tab = "chart" | "auctions" | "compare" | "company" | "origin" | "variety";
 const TABS: { id: Tab; label: string }[] = [
   { id: "chart", label: "차트" },
+  { id: "auctions", label: "경매내역" },
   { id: "compare", label: "시장비교" },
   { id: "company", label: "법인" },
   { id: "origin", label: "산지" },
@@ -63,10 +64,9 @@ const TABS: { id: Tab; label: string }[] = [
 const PERIODS: { id: DetailPeriod; label: string }[] = [
   { id: "today", label: "오늘" },
   { id: "1w", label: "1주" },
-  { id: "1m", label: "1달" },
-  { id: "3m", label: "3달" },
+  { id: "1m", label: "1개월" },
+  { id: "3m", label: "3개월" },
   { id: "1y", label: "1년" },
-  { id: "all", label: "전체" },
 ];
 
 function VarietyDetailPage() {
