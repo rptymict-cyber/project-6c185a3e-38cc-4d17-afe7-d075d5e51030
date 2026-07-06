@@ -9,7 +9,7 @@ import {
   Star,
   BarChart2,
   Award,
-  X,
+  
   ChevronRight,
 } from "lucide-react";
 import {
