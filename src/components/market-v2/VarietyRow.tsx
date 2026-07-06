@@ -8,19 +8,20 @@ import { cn } from "@/lib/utils";
 export function VarietyRow({
   variety,
   itemName,
-  cropId,
+  cropId: _cropId,
 }: {
   variety: Variety;
   itemName: string;
-  cropId: string;
+  cropId?: string;
 }) {
+  void _cropId;
   const up = variety.changePct > 0;
   const flat = Math.abs(variety.changePct) < 0.05;
   const urgent = Math.abs(variety.changePct) >= 5;
   const color = flat ? "#6C757D" : up ? "#E03131" : "#1971C2";
 
   return (
-    <Link to="/market/$crop" params={{ crop: cropId }} className="block">
+    <Link to="/price/$variety" params={{ variety: variety.id }} className="block">
       <div
         className={cn("relative flex items-center gap-3 px-4 py-3.5 active:bg-[#F8F9FA]")}
         style={

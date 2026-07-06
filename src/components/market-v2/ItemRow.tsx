@@ -13,22 +13,15 @@ export function ItemRow({ item }: { item: Item }) {
   const urgent = Math.abs(top.changePct) >= 5;
   const color = flat ? "#6C757D" : up ? "#E03131" : "#1971C2";
 
-  // Route: if single variety, go straight to detail. Otherwise variety list.
-  const to =
-    item.varieties.length === 1
-      ? "/market/$crop"
-      : "/market/item/$item";
-  const params =
-    item.varieties.length === 1
-      ? { crop: item.cropId }
-      : { item: item.id };
+  // Route: if single variety, go straight to price detail. Otherwise variety list.
+  const single = item.varieties.length === 1;
+  const to = single ? "/price/$variety" : "/market/item/$item";
+  const params = single
+    ? { variety: item.varieties[0].id }
+    : { item: item.id };
 
   return (
-    <Link
-      to={to}
-      params={params}
-      className="block"
-    >
+    <Link to={to} params={params} className="block">
       <div
         className={cn(
           "relative flex items-center gap-3 px-4 py-3.5 transition-colors active:bg-[#F8F9FA]",
