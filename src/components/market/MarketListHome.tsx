@@ -8,7 +8,7 @@ import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { MarketCropRow } from "./MarketCropRow";
 import { MarketQuickMarketSection } from "./MarketQuickMarketSection";
 import { MarketRecentAuctionSection } from "./MarketRecentAuctionSection";
-import { MOVERS, TOP_CROPS } from "./types";
+import { TOP_CROPS } from "./types";
 
 const SORTS = ["인기조회", "상승률", "하락률", "거래량", "가격변동"];
 
@@ -42,34 +42,6 @@ export function MarketListHome({
         </Link>
       </div>
 
-
-      {/* 오늘 많이 움직인 품목 */}
-      <section className="mt-5 px-4">
-        <h3 className="mb-2 text-[14px] font-bold text-foreground">오늘 많이 움직인 품목</h3>
-        <div className="grid grid-cols-4 gap-2">
-          {MOVERS.map((m) => {
-            const up = m.changePct > 0;
-            return (
-              <button
-                key={m.id}
-                onClick={() => onSelectCrop(m.id)}
-                className="flex flex-col items-center gap-1 rounded-[12px] border border-[#E9ECEF] bg-background px-1 py-3 active:bg-secondary"
-              >
-                <span className="text-2xl">{m.emoji}</span>
-                <span className="text-[12px] font-semibold text-foreground">{m.name}</span>
-                <span
-                  className={cn(
-                    "text-[11px] font-bold tabular-nums",
-                    up ? "text-[#E03131]" : "text-[#1971C2]",
-                  )}
-                >
-                  {up ? "▲" : "▼"} {Math.abs(m.changePct).toFixed(1)}%
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
 
       <PredictableCropCards />
 
