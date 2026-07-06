@@ -42,31 +42,6 @@ export function MarketListHome({
         </Link>
       </div>
 
-      {/* 조회 축 탭 */}
-      <div className="mt-3 px-4">
-        <div className="no-scrollbar flex gap-2 overflow-x-auto">
-          {AXES.map((a) => {
-            const active = a.id === axis;
-            return (
-              <button
-                key={a.id}
-                onClick={() => {
-                  setAxis(a.id);
-                  if (a.id === "auction") onOpenAuction();
-                }}
-                className={cn(
-                  "shrink-0 rounded-full px-3.5 py-1.5 text-[12px] font-semibold transition-colors",
-                  active
-                    ? "bg-[#3A8A3A] text-white"
-                    : "bg-[#F1F3F5] text-muted-foreground",
-                )}
-              >
-                {a.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* 오늘 많이 움직인 품목 */}
       <section className="mt-5 px-4">
