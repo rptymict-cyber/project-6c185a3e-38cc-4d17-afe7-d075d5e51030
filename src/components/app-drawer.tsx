@@ -103,14 +103,6 @@ export function AppDrawerTrigger() {
             </span>
             AGDICT
           </SheetTitle>
-          <SheetClose asChild>
-            <button
-              aria-label="닫기"
-              className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </SheetClose>
         </SheetHeader>
         <nav className="flex-1 overflow-y-auto px-2 py-3">
           <ul className="grid gap-0.5">
