@@ -34,10 +34,9 @@ export const SORT_LABEL: Record<MarketSortKey, string> = {
 // ---------------------------------------------------------------------------
 
 export type MarketFilterState = {
-  // ISO date string (yyyy-mm-dd). Default = most recent trading day.
   date: string;
-  dateLabel: string; // human label e.g. "7월 5일 (토) · 최근 거래일"
-  categoryId: string; // 부류 id (fruit / fruit-veg / vegetable ...)
+  dateLabel: string;
+  categoryId: string;
   categoryLabel: string;
   itemId: string;
   itemLabel: string;
@@ -45,7 +44,9 @@ export type MarketFilterState = {
   varietyLabel: string;
   marketId: string;
   marketLabel: string;
-  unit: string; // e.g. "8kg 기준"
+  corpId: string;
+  corpLabel: string;
+  unit: string;
   simpleMode: boolean;
   setDate: (iso: string, label: string) => void;
   setItem: (p: {
@@ -57,30 +58,37 @@ export type MarketFilterState = {
     varietyLabel: string;
   }) => void;
   setMarket: (id: string, label: string) => void;
+  setCorp: (id: string, label: string) => void;
   setUnit: (u: string) => void;
   setSimpleMode: (v: boolean) => void;
+  toggleSimpleMode: () => void;
 };
 
 export const useMarketFilter = create<MarketFilterState>()(
   persist(
     (set) => ({
       date: "2025-07-05",
-      dateLabel: "7월 5일 (토) · 최근 거래일",
+      dateLabel: "7/5 (토) · 최근 거래일",
       categoryId: "fruit-veg",
       categoryLabel: "과채류",
-      itemId: "eggplant",
-      itemLabel: "가지",
-      varietyId: "eggplant-normal",
-      varietyLabel: "가지(일반)",
+      itemId: "tomato",
+      itemLabel: "토마토",
+      varietyId: "tomato-cherry",
+      varietyLabel: "방울토마토",
       marketId: "seoul-garak",
       marketLabel: "서울가락",
+      corpId: "all",
+      corpLabel: "전체",
       unit: "8kg 기준",
       simpleMode: true,
       setDate: (date, dateLabel) => set({ date, dateLabel }),
       setItem: (p) => set(p),
-      setMarket: (marketId, marketLabel) => set({ marketId, marketLabel }),
+      setMarket: (marketId, marketLabel) =>
+        set({ marketId, marketLabel, corpId: "all", corpLabel: "전체" }),
+      setCorp: (corpId, corpLabel) => set({ corpId, corpLabel }),
       setUnit: (unit) => set({ unit }),
       setSimpleMode: (simpleMode) => set({ simpleMode }),
+      toggleSimpleMode: () => set((s) => ({ simpleMode: !s.simpleMode })),
     }),
     {
       name: "agdict:viewMode",

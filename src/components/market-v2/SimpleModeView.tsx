@@ -55,7 +55,7 @@ export function SimpleModeView() {
           <span className="font-bold text-[#3A8A3A]">{all.length}건</span>
           {"  "}분류: {f.categoryLabel} → {f.itemLabel} → {f.varietyLabel}
         </div>
-        <div className="mt-0.5">도매시장/법인: {f.marketLabel} → 전체</div>
+        <div className="mt-0.5">도매시장/법인: {f.marketLabel} → {f.corpLabel}</div>
       </div>
 
       {/* Secondary filter chips */}
