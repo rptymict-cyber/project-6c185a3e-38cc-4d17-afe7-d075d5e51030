@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell } from "lucide-react";
-import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
+import { AppHeader } from "@/components/app-header";
 import { BottomNav } from "@/components/bottom-nav";
 import { MarketSearchBar } from "@/components/market-v2/MarketSearchBar";
 import { SegmentTabs } from "@/components/market-v2/SegmentTabs";
@@ -31,23 +30,11 @@ function MarketPage() {
   const setSegment = useMarketStore((s) => s.setSegment);
 
   return (
-    <AppShell
-      header={
-        <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-[#E9ECEF] bg-background px-4">
-          <span className="text-[20px] font-bold text-foreground">시세</span>
-          <button
-            aria-label="알림"
-            onClick={() => toast("알림은 준비 중이에요")}
-            className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-          >
-            <Bell className="h-5 w-5" />
-          </button>
-        </header>
-      }
-    >
+    <AppShell header={<AppHeader title="농산물 시세 조회" />}>
       <MarketSearchBar />
       <SegmentTabs value={segment} onChange={setSegment} />
       {segment === "items" ? <ItemsPanel /> : <MarketsPanel />}
     </AppShell>
   );
 }
+
