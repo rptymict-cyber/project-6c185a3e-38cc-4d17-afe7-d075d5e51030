@@ -58,7 +58,7 @@ function ProModeView() {
         itemLabel={f.itemLabel}
         varietyLabel={f.varietyLabel}
         marketLabel={f.marketLabel}
-        cropId={f.itemId}
+        varietyId={f.varietyId}
         quote={quote}
       />
       <ProAnalysisSection />
