@@ -105,6 +105,8 @@ export function MarketListHome({
         </div>
       </section>
 
+      <PredictableCropCards />
+
       {/* 실시간 품목 시세 TOP */}
       <section className="mt-6 px-4">
         <h3 className="mb-2 text-[14px] font-bold text-foreground">실시간 품목 시세 TOP</h3>
