@@ -19,7 +19,6 @@ export function MarketListHome({
   onSelectCrop: (id: string) => void;
   onOpenAuction: () => void;
 }) {
-  const [axis, setAxis] = useState<MarketAxis>("crop");
   const [sort, setSort] = useState("상승률");
 
   const sorted = [...TOP_CROPS].sort((a, b) => {
