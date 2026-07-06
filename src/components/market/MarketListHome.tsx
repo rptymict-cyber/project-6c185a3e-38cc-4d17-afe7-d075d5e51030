@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
+import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { MarketCropRow } from "./MarketCropRow";
 import { MarketQuickMarketSection } from "./MarketQuickMarketSection";
 import { MarketRecentAuctionSection } from "./MarketRecentAuctionSection";
@@ -103,6 +104,8 @@ export function MarketListHome({
           })}
         </div>
       </section>
+
+      <PredictableCropCards />
 
       {/* 실시간 품목 시세 TOP */}
       <section className="mt-6 px-4">
