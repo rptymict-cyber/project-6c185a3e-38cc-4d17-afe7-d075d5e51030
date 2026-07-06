@@ -6,6 +6,7 @@ import { AppShell } from "@/components/app-shell";
 import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
 import { DateSheetLite } from "@/components/date-sheet-lite";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
+import { TrendTab } from "@/components/statistics/TrendTab";
 import { VarietyPickerSheet } from "@/components/statistics/VarietyPickerSheet";
 import { getCrop } from "@/lib/mock/crops";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
