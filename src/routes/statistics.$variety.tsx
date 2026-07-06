@@ -6,6 +6,7 @@ import { AppShell } from "@/components/app-shell";
 import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
 import { DateSheetLite } from "@/components/date-sheet-lite";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
+import { TrendTab } from "@/components/statistics/TrendTab";
 import { VarietyPickerSheet } from "@/components/statistics/VarietyPickerSheet";
 import { getCrop } from "@/lib/mock/crops";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
@@ -198,13 +199,7 @@ function VarietyStatsPage() {
         </div>
       )}
 
-      {tab === "trend" && (
-        <div className="px-4 pt-6 pb-10">
-          <div className="rounded-[10px] border border-dashed border-[#CED4DA] bg-white p-8 text-center text-[13px] text-[#6C757D]">
-            가격 추이 뷰는 곧 제공됩니다.
-          </div>
-        </div>
-      )}
+      {tab === "trend" && <TrendTab varietyId={variety} />}
 
       <VarietyPickerSheet
         open={pickerOpen}
