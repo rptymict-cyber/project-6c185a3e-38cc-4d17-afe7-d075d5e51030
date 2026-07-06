@@ -19,6 +19,7 @@ import { Route as GradesRouteImport } from './routes/grades'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MarketIndexRouteImport } from './routes/market.index'
+import { Route as PriceVarietyRouteImport } from './routes/price.$variety'
 import { Route as MarketCropRouteImport } from './routes/market.$crop'
 import { Route as MarketWholesaleMarketRouteImport } from './routes/market.wholesale.$market'
 import { Route as MarketItemItemRouteImport } from './routes/market.item.$item'
@@ -73,6 +74,11 @@ const MarketIndexRoute = MarketIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MarketRoute,
 } as any)
+const PriceVarietyRoute = PriceVarietyRouteImport.update({
+  id: '/price/$variety',
+  path: '/price/$variety',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketCropRoute = MarketCropRouteImport.update({
   id: '/$crop',
   path: '/$crop',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/statistics': typeof StatisticsRoute
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
+  '/price/$variety': typeof PriceVarietyRoute
   '/market/': typeof MarketIndexRoute
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/statistics': typeof StatisticsRoute
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
+  '/price/$variety': typeof PriceVarietyRoute
   '/market': typeof MarketIndexRoute
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/statistics': typeof StatisticsRoute
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
+  '/price/$variety': typeof PriceVarietyRoute
   '/market/': typeof MarketIndexRoute
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/statistics'
     | '/watchlist'
     | '/market/$crop'
+    | '/price/$variety'
     | '/market/'
     | '/market/item/$item'
     | '/market/wholesale/$market'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/statistics'
     | '/watchlist'
     | '/market/$crop'
+    | '/price/$variety'
     | '/market'
     | '/market/item/$item'
     | '/market/wholesale/$market'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/statistics'
     | '/watchlist'
     | '/market/$crop'
+    | '/price/$variety'
     | '/market/'
     | '/market/item/$item'
     | '/market/wholesale/$market'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   StatisticsRoute: typeof StatisticsRoute
   WatchlistRoute: typeof WatchlistRoute
+  PriceVarietyRoute: typeof PriceVarietyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketIndexRouteImport
       parentRoute: typeof MarketRoute
     }
+    '/price/$variety': {
+      id: '/price/$variety'
+      path: '/price/$variety'
+      fullPath: '/price/$variety'
+      preLoaderRoute: typeof PriceVarietyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/market/$crop': {
       id: '/market/$crop'
       path: '/$crop'
@@ -316,6 +336,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   StatisticsRoute: StatisticsRoute,
   WatchlistRoute: WatchlistRoute,
+  PriceVarietyRoute: PriceVarietyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
