@@ -7,6 +7,7 @@ import { MarketFilterBar } from "@/components/market-v2/MarketFilterBar";
 import { ProPriceHeadlineCard } from "@/components/market-v2/ProPriceHeadlineCard";
 import { ProAnalysisSection } from "@/components/market-v2/ProAnalysisSection";
 import { ProMarketRankingTable } from "@/components/market-v2/ProMarketRankingTable";
+import { SimpleModeView } from "@/components/market-v2/SimpleModeView";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useMarketFilter } from "@/store/market";
 
@@ -35,20 +36,9 @@ function MarketPage() {
       <MarketFilterBar />
 
       <div className="mt-4 border-t-8 border-[#F1F3F5]">
-        {f.simpleMode ? <SimpleModePlaceholder /> : <ProModeView />}
+        {f.simpleMode ? <SimpleModeView /> : <ProModeView />}
       </div>
     </AppShell>
-  );
-}
-
-function SimpleModePlaceholder() {
-  return (
-    <div className="px-4 py-10 text-center">
-      <div className="text-[13px] font-semibold text-[#3A8A3A]">간편 모드</div>
-      <div className="mt-2 text-[13px] text-[#6C757D]">
-        선택한 조건의 시세가 이곳에 표시됩니다.
-      </div>
-    </div>
   );
 }
 
