@@ -23,16 +23,16 @@ const EMOJI: Record<string, string> = {
 export function ProPriceHeadlineCard({
   itemId,
   itemLabel,
+  varietyId,
   varietyLabel,
   marketLabel,
-  cropId,
   quote,
 }: {
   itemId: string;
   itemLabel: string;
+  varietyId: string;
   varietyLabel: string;
   marketLabel: string;
-  cropId: string;
   quote: MarketQuote;
 }) {
   const emoji = EMOJI[itemId] ?? "🌾";
@@ -42,8 +42,8 @@ export function ProPriceHeadlineCard({
 
   return (
     <Link
-      to="/market/$crop"
-      params={{ crop: cropId }}
+      to="/price/$variety"
+      params={{ variety: varietyId }}
       className="mx-4 mt-4 block rounded-[14px] border border-[#E9ECEF] bg-white p-4 active:bg-[#F8F9FA]"
     >
       <div className="flex items-center justify-between text-[12.5px] text-[#495057]">
