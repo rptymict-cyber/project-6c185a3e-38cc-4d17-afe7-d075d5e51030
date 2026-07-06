@@ -136,7 +136,6 @@ export function MarketListHome({
               rank={i + 1}
               crop={c}
               onClick={() => onSelectCrop(c.id)}
-              onStar={() => toast(`${c.name}을(를) 관심 품목에 추가했어요`)}
             />
           ))}
         </ul>

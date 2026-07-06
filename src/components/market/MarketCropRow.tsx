@@ -1,4 +1,3 @@
-import { Star } from "lucide-react";
 import { PriceBadge } from "@/components/price-badge";
 import type { TopCrop } from "./types";
 
@@ -6,12 +5,10 @@ export function MarketCropRow({
   rank,
   crop,
   onClick,
-  onStar,
 }: {
   rank: number;
   crop: TopCrop;
   onClick: () => void;
-  onStar: () => void;
 }) {
   return (
     <li className="border-t border-[#F1F3F5] first:border-t-0">
@@ -43,16 +40,6 @@ export function MarketCropRow({
             </span>
           </div>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onStar();
-          }}
-          className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:bg-secondary"
-          aria-label="관심 품목 추가"
-        >
-          <Star className="h-4 w-4" />
-        </button>
       </button>
     </li>
   );
