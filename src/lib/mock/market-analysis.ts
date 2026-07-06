@@ -21,7 +21,19 @@ export type MarketQuote = {
   fallbackNote?: string; // "7/6(일) 휴장으로 직전 거래일 표시"
 };
 
-export type SeriesPoint = { label: string; date: string; price: number; volume: number };
+export type SeriesPoint = {
+  label: string;
+  tooltipLabel: string;
+  date: string;
+  price: number;
+  volume: number;
+};
+export type PriceVolumeSeries = {
+  points: SeriesPoint[];
+  min: number;
+  max: number;
+  avg: number;
+};
 
 export type MarketRankingRow = {
   marketId: string;
