@@ -46,9 +46,6 @@ function MarketPage() {
       }
     >
       <MarketSearchBar />
-      <MarketQuickMarketSection
-        onMoreClick={() => setSegment("markets")}
-      />
       <SegmentTabs value={segment} onChange={setSegment} />
       {segment === "items" ? <ItemsPanel /> : <MarketsPanel />}
     </AppShell>
