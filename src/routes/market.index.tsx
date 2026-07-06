@@ -7,7 +7,6 @@ import { MarketSearchBar } from "@/components/market-v2/MarketSearchBar";
 import { SegmentTabs } from "@/components/market-v2/SegmentTabs";
 import { ItemsPanel } from "@/components/market-v2/ItemsPanel";
 import { MarketsPanel } from "@/components/market-v2/MarketsPanel";
-import { MarketQuickMarketSection } from "@/components/market/MarketQuickMarketSection";
 import { useMarketStore } from "@/store/market";
 
 void BottomNav;
