@@ -65,7 +65,7 @@ export function PredictableCropCards() {
       {/* Section header */}
       <div className="flex items-end justify-between px-4">
         <div>
-          <h3 className="text-[16px] font-bold text-foreground">예상 시세 가능 품목</h3>
+          <h3 className="text-[16px] font-bold text-foreground">농산물 시세 예측</h3>
           <p className="mt-0.5 text-[12px] text-[#6C757D]">
             5개 품목은 가격 흐름과 예상 시세를 함께 볼 수 있어요
           </p>
