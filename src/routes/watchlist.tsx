@@ -419,7 +419,7 @@ function QueryCard({
           <Link
             to="/price/$variety"
             params={{ variety: q.cropId }}
-            search={{ tab: "auctions" }}
+            hash="auctions"
             className="grid h-9 place-items-center rounded-lg border border-[#3A8A3A] text-[12.5px] font-bold text-[#3A8A3A]"
           >
             최근 경매
