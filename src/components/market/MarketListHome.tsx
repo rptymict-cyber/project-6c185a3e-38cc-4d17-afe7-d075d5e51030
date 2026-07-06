@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
