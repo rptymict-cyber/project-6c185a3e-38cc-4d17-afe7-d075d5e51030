@@ -32,7 +32,7 @@ function Home() {
     <AppShell
       header={
         <>
-          <AppHeader title="시세" />
+          <AppHeader title="농산물 시세 조회" />
           <div className="border-b border-[#F1F3F5] bg-background px-4 py-1.5 text-[11px] text-muted-foreground">
             기준일 2026.07.03 14:30 업데이트
           </div>
