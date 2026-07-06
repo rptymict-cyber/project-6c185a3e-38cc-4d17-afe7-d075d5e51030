@@ -8,15 +8,7 @@ import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { MarketCropRow } from "./MarketCropRow";
 import { MarketQuickMarketSection } from "./MarketQuickMarketSection";
 import { MarketRecentAuctionSection } from "./MarketRecentAuctionSection";
-import { MOVERS, TOP_CROPS, type MarketAxis } from "./types";
-
-const AXES: { id: MarketAxis; label: string }[] = [
-  { id: "crop", label: "품목별" },
-  { id: "market", label: "도매시장별" },
-  { id: "origin", label: "산지별" },
-  { id: "grade", label: "등급별" },
-  { id: "auction", label: "경매내역" },
-];
+import { MOVERS, TOP_CROPS } from "./types";
 
 const SORTS = ["인기조회", "상승률", "하락률", "거래량", "가격변동"];
 
