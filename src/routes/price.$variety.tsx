@@ -9,11 +9,11 @@ import { ArrowLeft, Bell, ChevronRight, MoreHorizontal, Search, Star, TrendingDo
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
-import { DetailPriceChart } from "@/components/detail/DetailPriceChart";
-import { getMarketQuote } from "@/lib/mock/market-analysis";
+import { PriceVolumeChart } from "@/components/market-v2/PriceVolumeChart";
+import { AuctionHistoryTable } from "@/components/market-v2/AuctionHistoryTable";
+import { getMarketQuote, getPriceVolumeSeries } from "@/lib/mock/market-analysis";
 import {
   getCompanyBreakdown,
-  getDetailSeries,
   getMarketCompare,
   getOriginBreakdown,
   getVarietyBreakdown,
@@ -51,9 +51,10 @@ export const Route = createFileRoute("/price/$variety")({
   }),
 });
 
-type Tab = "chart" | "compare" | "company" | "origin" | "variety";
+type Tab = "chart" | "auctions" | "compare" | "company" | "origin" | "variety";
 const TABS: { id: Tab; label: string }[] = [
   { id: "chart", label: "차트" },
+  { id: "auctions", label: "경매내역" },
   { id: "compare", label: "시장비교" },
   { id: "company", label: "법인" },
   { id: "origin", label: "산지" },
@@ -63,10 +64,9 @@ const TABS: { id: Tab; label: string }[] = [
 const PERIODS: { id: DetailPeriod; label: string }[] = [
   { id: "today", label: "오늘" },
   { id: "1w", label: "1주" },
-  { id: "1m", label: "1달" },
-  { id: "3m", label: "3달" },
+  { id: "1m", label: "1개월" },
+  { id: "3m", label: "3개월" },
   { id: "1y", label: "1년" },
-  { id: "all", label: "전체" },
 ];
 
 function VarietyDetailPage() {
@@ -221,6 +221,7 @@ function VarietyDetailPage() {
           }}
         />
       )}
+      {tab === "auctions" && <AuctionHistoryTable />}
       {tab === "compare" && <CompareTab variety={variety} unit={f.unit} />}
       {tab === "company" && (
         <CompanyTab variety={variety} marketId={f.marketId} unit={f.unit} />
@@ -248,7 +249,6 @@ function VarietyDetailPage() {
 // -- tabs -------------------------------------------------------------------
 
 function ChartTab({
-  variety,
   period,
   setPeriod,
   quote,
@@ -261,17 +261,19 @@ function ChartTab({
   onOpenSimple: () => void;
 }) {
   const f = useMarketFilter();
-  const series = getDetailSeries({
-    varietyId: variety,
+  const seriesPeriod = (period === "all" ? "1y" : period) as
+    | "today" | "1w" | "1m" | "3m" | "1y";
+  const series = getPriceVolumeSeries({
+    itemId: f.itemId,
+    varietyId: f.varietyId,
     marketId: f.marketId,
     unit: f.unit,
-    period,
+    date: f.date,
+    period: seriesPeriod,
   });
   return (
-    <div className="px-2 pt-3">
-      <DetailPriceChart series={series} />
-
-      <div className="no-scrollbar mt-2 flex gap-1.5 overflow-x-auto px-2">
+    <div className="px-3 pt-3">
+      <div className="no-scrollbar mb-3 flex gap-1.5 overflow-x-auto">
         {PERIODS.map((p) => {
           const active = p.id === period;
           return (
@@ -279,8 +281,8 @@ function ChartTab({
               key={p.id}
               onClick={() => setPeriod(p.id)}
               className={cn(
-                "shrink-0 rounded-full px-3 py-1 text-[12.5px] font-semibold",
-                active ? "bg-[#D6F0D6] text-[#1F5C1F]" : "bg-[#F1F3F5] text-[#6C757D]",
+                "shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors",
+                active ? "bg-[#1F5C1F] text-white" : "bg-[#F1F3F5] text-[#6C757D]",
               )}
             >
               {p.label}
@@ -289,7 +291,17 @@ function ChartTab({
         })}
       </div>
 
-      <div className="mx-2 mt-4 grid grid-cols-4 gap-1 rounded-[10px] bg-[#F8F9FA] px-1 py-3">
+      <div className="rounded-[12px] border border-[#F1F3F5] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+        <PriceVolumeChart series={series} period={seriesPeriod} />
+      </div>
+
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        <SummaryCard label="최고가" value={`${series.max.toLocaleString()}원`} tone="up" />
+        <SummaryCard label="최저가" value={`${series.min.toLocaleString()}원`} tone="down" />
+        <SummaryCard label="평균가" value={`${series.avg.toLocaleString()}원`} tone="neutral" />
+      </div>
+
+      <div className="mt-4 grid grid-cols-4 gap-1 rounded-[10px] bg-[#F8F9FA] px-1 py-3">
         <Stat label="전일 대비" value={fmtPct(quote.prevPct)} tone={toneOf(quote.prevPct)} />
         <Stat label="전주 대비" value={fmtPct(quote.weekPct)} tone={toneOf(quote.weekPct)} />
         <Stat label="전년 동기" value={fmtPct(quote.yearPct)} tone={toneOf(quote.yearPct)} />
@@ -308,6 +320,26 @@ function ChartTab({
     </div>
   );
 }
+
+function SummaryCard({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone: "up" | "down" | "neutral";
+}) {
+  const color =
+    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
+  return (
+    <div className="rounded-[10px] border border-[#F1F3F5] bg-white px-3 py-2.5 text-center">
+      <div className="text-[10.5px] text-[#868E96]">{label}</div>
+      <div className={cn("mt-0.5 text-[13.5px] font-bold", color)}>{value}</div>
+    </div>
+  );
+}
+
 
 function CompareTab({ variety, unit }: { variety: string; unit: string }) {
   const rows = getMarketCompare({ varietyId: variety, unit });
