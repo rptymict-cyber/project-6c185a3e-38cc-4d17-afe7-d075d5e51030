@@ -20,6 +20,8 @@ import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MarketIndexRouteImport } from './routes/market.index'
 import { Route as MarketCropRouteImport } from './routes/market.$crop'
+import { Route as MarketWholesaleMarketRouteImport } from './routes/market.wholesale.$market'
+import { Route as MarketItemItemRouteImport } from './routes/market.item.$item'
 
 const WatchlistRoute = WatchlistRouteImport.update({
   id: '/watchlist',
@@ -76,6 +78,16 @@ const MarketCropRoute = MarketCropRouteImport.update({
   path: '/$crop',
   getParentRoute: () => MarketRoute,
 } as any)
+const MarketWholesaleMarketRoute = MarketWholesaleMarketRouteImport.update({
+  id: '/wholesale/$market',
+  path: '/wholesale/$market',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketItemItemRoute = MarketItemItemRouteImport.update({
+  id: '/item/$item',
+  path: '/item/$item',
+  getParentRoute: () => MarketRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,6 +101,8 @@ export interface FileRoutesByFullPath {
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
   '/market/': typeof MarketIndexRoute
+  '/market/item/$item': typeof MarketItemItemRoute
+  '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -101,6 +115,8 @@ export interface FileRoutesByTo {
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
   '/market': typeof MarketIndexRoute
+  '/market/item/$item': typeof MarketItemItemRoute
+  '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -115,6 +131,8 @@ export interface FileRoutesById {
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
   '/market/': typeof MarketIndexRoute
+  '/market/item/$item': typeof MarketItemItemRoute
+  '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -130,6 +148,8 @@ export interface FileRouteTypes {
     | '/watchlist'
     | '/market/$crop'
     | '/market/'
+    | '/market/item/$item'
+    | '/market/wholesale/$market'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -142,6 +162,8 @@ export interface FileRouteTypes {
     | '/watchlist'
     | '/market/$crop'
     | '/market'
+    | '/market/item/$item'
+    | '/market/wholesale/$market'
   id:
     | '__root__'
     | '/'
@@ -155,6 +177,8 @@ export interface FileRouteTypes {
     | '/watchlist'
     | '/market/$crop'
     | '/market/'
+    | '/market/item/$item'
+    | '/market/wholesale/$market'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -248,17 +272,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketCropRouteImport
       parentRoute: typeof MarketRoute
     }
+    '/market/wholesale/$market': {
+      id: '/market/wholesale/$market'
+      path: '/wholesale/$market'
+      fullPath: '/market/wholesale/$market'
+      preLoaderRoute: typeof MarketWholesaleMarketRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/item/$item': {
+      id: '/market/item/$item'
+      path: '/item/$item'
+      fullPath: '/market/item/$item'
+      preLoaderRoute: typeof MarketItemItemRouteImport
+      parentRoute: typeof MarketRoute
+    }
   }
 }
 
 interface MarketRouteChildren {
   MarketCropRoute: typeof MarketCropRoute
   MarketIndexRoute: typeof MarketIndexRoute
+  MarketItemItemRoute: typeof MarketItemItemRoute
+  MarketWholesaleMarketRoute: typeof MarketWholesaleMarketRoute
 }
 
 const MarketRouteChildren: MarketRouteChildren = {
   MarketCropRoute: MarketCropRoute,
   MarketIndexRoute: MarketIndexRoute,
+  MarketItemItemRoute: MarketItemItemRoute,
+  MarketWholesaleMarketRoute: MarketWholesaleMarketRoute,
 }
 
 const MarketRouteWithChildren =
