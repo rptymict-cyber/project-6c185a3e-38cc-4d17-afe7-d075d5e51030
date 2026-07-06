@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { RefreshCw, Search } from "lucide-react";
+import { Bell, RefreshCw } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { AppDrawerTrigger } from "./app-drawer";
