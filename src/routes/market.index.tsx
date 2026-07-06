@@ -7,6 +7,7 @@ import { MarketFilterBar } from "@/components/market-v2/MarketFilterBar";
 import { ProPriceHeadlineCard } from "@/components/market-v2/ProPriceHeadlineCard";
 import { ProAnalysisSection } from "@/components/market-v2/ProAnalysisSection";
 import { ProMarketRankingTable } from "@/components/market-v2/ProMarketRankingTable";
+import { SimpleModeView } from "@/components/market-v2/SimpleModeView";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useMarketFilter } from "@/store/market";
 
