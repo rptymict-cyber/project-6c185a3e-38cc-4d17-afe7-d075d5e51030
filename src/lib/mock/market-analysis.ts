@@ -153,14 +153,80 @@ export function getMarketQuote(p: {
 
 // -- series -----------------------------------------------------------------
 
-const PERIOD_DAYS: Record<Period, number> = {
-  today: 1,
-  "1w": 7,
-  "1m": 30,
-  "3m": 90,
-  "1y": 12,
-};
+const DOW = ["일", "월", "화", "수", "목", "금", "토"];
+// morning-heavy auction volume pattern by hour (24 slots)
+const HOURLY_VOL_PATTERN = [
+  0.15, 0.1, 0.1, 0.4, 0.9, 1.4, 1.6, 1.5, 1.2, 1.0, 0.85, 0.7,
+  0.6, 0.55, 0.5, 0.45, 0.4, 0.4, 0.5, 0.7, 0.9, 1.0, 0.7, 0.35,
+];
 
+export function getPriceVolumeSeries(p: {
+  itemId: string;
+  varietyId: string;
+  marketId: string;
+  unit: string;
+  date: string;
+  period: Period;
+}): PriceVolumeSeries {
+  const rand = seeded(hash(`series|${p.itemId}|${p.varietyId}|${p.marketId}|${p.period}|${p.date}`));
+  const mult = unitMultiplier(p.unit);
+  const base = (700 + rand() * 1600) * mult;
+  const out: SeriesPoint[] = [];
+  const endDate = new Date(p.date + "T00:00:00");
+
+  if (p.period === "today") {
+    for (let h = 0; h < 24; h++) {
+      const drift = 1 + (rand() - 0.5) * 0.06;
+      const price = Math.round((base * drift) / 10) * 10;
+      const volume = +(HOURLY_VOL_PATTERN[h] * (30 + rand() * 30)).toFixed(1);
+      out.push({
+        label: `${String(h).padStart(2, "0")}시`,
+        tooltipLabel: `${h}시`,
+        date: p.date,
+        price,
+        volume,
+      });
+    }
+  } else if (p.period === "1y") {
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date(endDate);
+      d.setMonth(d.getMonth() - i);
+      const drift = 1 + (rand() - 0.5) * 0.14;
+      const price = Math.round((base * drift) / 10) * 10;
+      const volume = +(20 + rand() * 40).toFixed(1);
+      out.push({
+        label: `${d.getMonth() + 1}월`,
+        tooltipLabel: `${d.getFullYear()}년 ${d.getMonth() + 1}월`,
+        date: d.toISOString().slice(0, 10),
+        price,
+        volume,
+      });
+    }
+  } else {
+    const n = p.period === "1w" ? 7 : p.period === "1m" ? 30 : 90;
+    for (let i = n - 1; i >= 0; i--) {
+      const d = new Date(endDate);
+      d.setDate(d.getDate() - i);
+      const drift = 1 + (rand() - 0.5) * 0.08;
+      const price = Math.round((base * drift) / 10) * 10;
+      const volume = +(20 + rand() * 40).toFixed(1);
+      out.push({
+        label: `${d.getMonth() + 1}/${d.getDate()}`,
+        tooltipLabel: `${d.getMonth() + 1}/${d.getDate()} (${DOW[d.getDay()]})`,
+        date: d.toISOString().slice(0, 10),
+        price,
+        volume,
+      });
+    }
+  }
+  const prices = out.map((o) => o.price);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const avg = Math.round(prices.reduce((s, v) => s + v, 0) / prices.length);
+  return { points: out, min, max, avg };
+}
+
+/** @deprecated use getPriceVolumeSeries */
 export function getPriceSeries(p: {
   itemId: string;
   varietyId: string;
@@ -169,35 +235,9 @@ export function getPriceSeries(p: {
   date: string;
   period: Period;
 }): SeriesPoint[] {
-  const rand = seeded(hash(`series|${p.itemId}|${p.varietyId}|${p.marketId}|${p.period}`));
-  const mult = unitMultiplier(p.unit);
-  const base = (700 + rand() * 1600) * mult;
-
-  const points = PERIOD_DAYS[p.period];
-  const out: SeriesPoint[] = [];
-  const endDate = new Date(p.date + "T00:00:00");
-
-  for (let i = points - 1; i >= 0; i--) {
-    const d = new Date(endDate);
-    if (p.period === "1y") d.setMonth(d.getMonth() - i);
-    else d.setDate(d.getDate() - i);
-
-    const drift = 1 + (rand() - 0.5) * 0.08;
-    const price = Math.round((base * drift) / 10) * 10;
-    const volume = +(20 + rand() * 40).toFixed(1);
-    const label =
-      p.period === "1y"
-        ? `${d.getMonth() + 1}월`
-        : `${d.getMonth() + 1}/${d.getDate()}`;
-    out.push({
-      label,
-      date: d.toISOString().slice(0, 10),
-      price,
-      volume,
-    });
-  }
-  return out;
+  return getPriceVolumeSeries(p).points;
 }
+
 
 // -- market rankings --------------------------------------------------------
 
