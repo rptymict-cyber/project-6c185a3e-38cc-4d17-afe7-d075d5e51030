@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, Clock, TrendingDown, TrendingUp } from "lucide-react";
+import { ChevronDown, ChevronRight, Clock, TrendingDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/mock/market-analysis";
+import { UnitSheet } from "./UnitSheet";
 
 const EMOJI: Record<string, string> = {
   eggplant: "🍆",
