@@ -9,11 +9,11 @@ import { ArrowLeft, Bell, ChevronRight, MoreHorizontal, Search, Star, TrendingDo
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
-import { DetailPriceChart } from "@/components/detail/DetailPriceChart";
-import { getMarketQuote } from "@/lib/mock/market-analysis";
+import { PriceVolumeChart } from "@/components/market-v2/PriceVolumeChart";
+import { AuctionHistoryTable } from "@/components/market-v2/AuctionHistoryTable";
+import { getMarketQuote, getPriceVolumeSeries } from "@/lib/mock/market-analysis";
 import {
   getCompanyBreakdown,
-  getDetailSeries,
   getMarketCompare,
   getOriginBreakdown,
   getVarietyBreakdown,
