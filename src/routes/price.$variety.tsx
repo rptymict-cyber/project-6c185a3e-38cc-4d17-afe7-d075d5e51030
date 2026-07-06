@@ -221,6 +221,7 @@ function VarietyDetailPage() {
           }}
         />
       )}
+      {tab === "auctions" && <AuctionHistoryTable />}
       {tab === "compare" && <CompareTab variety={variety} unit={f.unit} />}
       {tab === "company" && (
         <CompanyTab variety={variety} marketId={f.marketId} unit={f.unit} />
