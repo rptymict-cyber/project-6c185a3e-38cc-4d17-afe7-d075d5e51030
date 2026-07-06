@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
+import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { MarketCropRow } from "./MarketCropRow";
 import { MarketQuickMarketSection } from "./MarketQuickMarketSection";
 import { MarketRecentAuctionSection } from "./MarketRecentAuctionSection";
