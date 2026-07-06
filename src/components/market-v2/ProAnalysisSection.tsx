@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { ProAnalysisChart } from "./ProAnalysisChart";
-import { getPriceSeries, type Period } from "@/lib/mock/market-analysis";
+import { PriceVolumeChart } from "./PriceVolumeChart";
+import { AuctionHistoryTable } from "./AuctionHistoryTable";
+import { getPriceVolumeSeries, type Period } from "@/lib/mock/market-analysis";
 import { useMarketFilter } from "@/store/market";
 
-type Tab = "overview" | "compare" | "company" | "origin" | "variety";
+type Tab = "chart" | "auctions" | "compare" | "company" | "origin" | "variety";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "overview", label: "종합" },
+  { id: "chart", label: "차트" },
+  { id: "auctions", label: "경매내역" },
   { id: "compare", label: "시장비교" },
   { id: "company", label: "법인" },
   { id: "origin", label: "산지" },
@@ -16,17 +18,17 @@ const TABS: { id: Tab; label: string }[] = [
 const PERIODS: { id: Period; label: string }[] = [
   { id: "today", label: "오늘" },
   { id: "1w", label: "1주" },
-  { id: "1m", label: "1달" },
-  { id: "3m", label: "3달" },
+  { id: "1m", label: "1개월" },
+  { id: "3m", label: "3개월" },
   { id: "1y", label: "1년" },
 ];
 
 export function ProAnalysisSection() {
-  const [tab, setTab] = useState<Tab>("overview");
+  const [tab, setTab] = useState<Tab>("chart");
   const [period, setPeriod] = useState<Period>("1w");
   const f = useMarketFilter();
 
-  const series = getPriceSeries({
+  const series = getPriceVolumeSeries({
     itemId: f.itemId,
     varietyId: f.varietyId,
     marketId: f.marketId,
@@ -59,38 +61,34 @@ export function ProAnalysisSection() {
         })}
       </div>
 
-      {/* Period chips */}
-      <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-2 pt-3">
-        {PERIODS.map((p) => {
-          const active = p.id === period;
-          return (
-            <button
-              key={p.id}
-              onClick={() => setPeriod(p.id)}
-              className={cn(
-                "shrink-0 rounded-full px-3 py-1 text-[12.5px] font-semibold",
-                active ? "bg-[#D6F0D6] text-[#1F5C1F]" : "bg-[#F1F3F5] text-[#6C757D]",
-              )}
-            >
-              {p.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {tab === "overview" ? (
-        <div className="px-2 pb-3">
-          <div className="flex items-center justify-end gap-3 px-3 pb-1 text-[11px] text-[#495057]">
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-[2px] w-3 rounded bg-[#3A8A3A]" /> 가격
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-2 w-2 rounded-sm bg-[#B7E4B7]" /> 거래량
-            </span>
+      {tab === "chart" && (
+        <div className="px-3 pb-3 pt-3">
+          <div className="no-scrollbar mb-3 flex gap-1.5 overflow-x-auto">
+            {PERIODS.map((p) => {
+              const active = p.id === period;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => setPeriod(p.id)}
+                  className={cn(
+                    "shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors",
+                    active
+                      ? "bg-[#1F5C1F] text-white"
+                      : "bg-[#F1F3F5] text-[#6C757D]",
+                  )}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
           </div>
-          <ProAnalysisChart data={series} />
+          <div className="rounded-[12px] border border-[#F1F3F5] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+            <PriceVolumeChart series={series} period={period} />
+          </div>
         </div>
-      ) : (
+      )}
+      {tab === "auctions" && <AuctionHistoryTable />}
+      {tab !== "chart" && tab !== "auctions" && (
         <div className="py-10 text-center text-[13px] text-[#868E96]">
           {TABS.find((t) => t.id === tab)?.label} 뷰는 준비 중입니다
         </div>
