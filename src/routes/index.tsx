@@ -1,19 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
-import { HomeSearchHeader } from "@/components/home/HomeSearchHeader";
-import {
-  HomeCategoryTabs,
-  type HomeCategory,
-} from "@/components/home/HomeCategoryTabs";
-import { TodayMarketBanner } from "@/components/home/TodayMarketBanner";
-import { TodayPriceBoard } from "@/components/home/TodayPriceBoard";
-import { RealtimeCropRanking } from "@/components/home/RealtimeCropRanking";
-import { AgricultureThemeSection } from "@/components/home/AgricultureThemeSection";
-import { MarketHotSection } from "@/components/home/MarketHotSection";
-import { PredictablePriceCTA } from "@/components/home/PredictablePriceCTA";
-import { DataSourceNotice } from "@/components/home/DataSourceNotice";
-import { CROPS, type Crop } from "@/lib/mock/crops";
+import { AppHeader } from "@/components/app-header";
+import { MarketListHome } from "@/components/market/MarketListHome";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,38 +25,34 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-function pickBoard(category: HomeCategory): Crop[] {
-  const byId = (id: string) => CROPS.find((c) => c.id === id)!;
-  if (category === "vegetable")
-    return ["cabbage", "lettuce", "radish", "potato"].map(byId);
-  if (category === "fruit") return ["apple", "pear", "grape", "cabbage"].map(byId);
-  if (category === "seasoning")
-    return ["onion", "garlic", "chili", "cabbage"].map(byId);
-  if (category === "grain") return ["rice", "barley", "soybean", "redbean"].map(byId);
-  if (category === "predict") return CROPS.filter((c) => c.aiReady).slice(0, 4);
-  return ["cabbage", "apple", "onion", "radish"].map(byId);
-}
-
 function Home() {
-  const [category, setCategory] = useState<HomeCategory>("all");
-  const board = pickBoard(category);
+  const router = useRouter();
 
   return (
     <AppShell
       header={
         <>
-          <HomeSearchHeader />
-          <HomeCategoryTabs value={category} onChange={setCategory} />
+          <AppHeader title="시세" />
+          <div className="border-b border-[#F1F3F5] bg-background px-4 py-1.5 text-[11px] text-muted-foreground">
+            기준일 2026.07.03 14:30 업데이트
+          </div>
         </>
       }
     >
-      <TodayMarketBanner />
-      <TodayPriceBoard crops={board} />
-      <RealtimeCropRanking />
-      <AgricultureThemeSection />
-      <MarketHotSection />
-      <PredictablePriceCTA />
-      <DataSourceNotice />
+      <MarketListHome
+        onSelectCrop={(id) => {
+          router.navigate({
+            to: "/market",
+            search: { crop: id, tab: "chart" },
+          });
+        }}
+        onOpenAuction={() => {
+          router.navigate({
+            to: "/market",
+            search: { crop: "cabbage", tab: "auction" },
+          });
+        }}
+      />
     </AppShell>
   );
 }
