@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
@@ -40,13 +41,13 @@ export function MarketListHome({
     <div className="pb-6">
       {/* 검색바 */}
       <div className="px-4 pt-3">
-        <button
-          onClick={() => toast("검색은 준비 중입니다")}
+        <Link
+          to="/search"
           className="flex w-full items-center gap-2 rounded-[12px] bg-[#F1F3F5] px-4 py-3 text-left text-[13px] text-muted-foreground"
         >
           <Search className="h-4 w-4" />
           품목, 시장, 산지, 등급을 검색하세요
-        </button>
+        </Link>
       </div>
 
       {/* 조회 축 탭 */}
