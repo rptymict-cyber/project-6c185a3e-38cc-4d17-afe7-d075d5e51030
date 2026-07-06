@@ -198,13 +198,7 @@ function VarietyStatsPage() {
         </div>
       )}
 
-      {tab === "trend" && (
-        <div className="px-4 pt-6 pb-10">
-          <div className="rounded-[10px] border border-dashed border-[#CED4DA] bg-white p-8 text-center text-[13px] text-[#6C757D]">
-            가격 추이 뷰는 곧 제공됩니다.
-          </div>
-        </div>
-      )}
+      {tab === "trend" && <TrendTab varietyId={variety} />}
 
       <VarietyPickerSheet
         open={pickerOpen}
