@@ -8,15 +8,7 @@ import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { MarketCropRow } from "./MarketCropRow";
 import { MarketQuickMarketSection } from "./MarketQuickMarketSection";
 import { MarketRecentAuctionSection } from "./MarketRecentAuctionSection";
-import { MOVERS, TOP_CROPS, type MarketAxis } from "./types";
-
-const AXES: { id: MarketAxis; label: string }[] = [
-  { id: "crop", label: "품목별" },
-  { id: "market", label: "도매시장별" },
-  { id: "origin", label: "산지별" },
-  { id: "grade", label: "등급별" },
-  { id: "auction", label: "경매내역" },
-];
+import { MOVERS, TOP_CROPS } from "./types";
 
 const SORTS = ["인기조회", "상승률", "하락률", "거래량", "가격변동"];
 
@@ -27,7 +19,6 @@ export function MarketListHome({
   onSelectCrop: (id: string) => void;
   onOpenAuction: () => void;
 }) {
-  const [axis, setAxis] = useState<MarketAxis>("crop");
   const [sort, setSort] = useState("상승률");
 
   const sorted = [...TOP_CROPS].sort((a, b) => {
@@ -51,31 +42,6 @@ export function MarketListHome({
         </Link>
       </div>
 
-      {/* 조회 축 탭 */}
-      <div className="mt-3 px-4">
-        <div className="no-scrollbar flex gap-2 overflow-x-auto">
-          {AXES.map((a) => {
-            const active = a.id === axis;
-            return (
-              <button
-                key={a.id}
-                onClick={() => {
-                  setAxis(a.id);
-                  if (a.id === "auction") onOpenAuction();
-                }}
-                className={cn(
-                  "shrink-0 rounded-full px-3.5 py-1.5 text-[12px] font-semibold transition-colors",
-                  active
-                    ? "bg-[#3A8A3A] text-white"
-                    : "bg-[#F1F3F5] text-muted-foreground",
-                )}
-              >
-                {a.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* 오늘 많이 움직인 품목 */}
       <section className="mt-5 px-4">
