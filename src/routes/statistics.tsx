@@ -1,9 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TrendingDown, TrendingUp, Layers } from "lucide-react";
+import { Calendar, ChevronDown } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
-import { CATEGORIES, CROPS } from "@/lib/mock/crops";
-import { PriceBadge, priceColor } from "@/components/price-badge";
+import { DateSheetLite } from "@/components/date-sheet-lite";
+import { Sparkline } from "@/components/sparkline";
+import {
+  getCategorySummaries,
+  getRanking,
+  type RankMode,
+} from "@/lib/mock/statistics";
+import type { Category } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/statistics")({
@@ -11,182 +18,214 @@ export const Route = createFileRoute("/statistics")({
   head: () => ({
     meta: [
       { title: "통계 — AGDICT" },
-      { name: "description", content: "오늘의 상승·하락 랭킹과 거래량 통계." },
+      { name: "description", content: "선택 거래일의 급상승·급하락·거래량 랭킹과 분류별 동향." },
     ],
   }),
 });
 
-function StatsPage() {
-  const withChange = CROPS.map((c) => ({
-    ...c,
-    changePct: ((c.currentPrice - c.prevPrice) / c.prevPrice) * 100,
-  }));
-  const gainers = [...withChange].sort((a, b) => b.changePct - a.changePct).slice(0, 5);
-  const losers = [...withChange].sort((a, b) => a.changePct - b.changePct).slice(0, 5);
-  const volumeTop = [...withChange].sort((a, b) => b.volumeTon - a.volumeTon).slice(0, 5);
-  const totalVol = withChange.reduce((s, c) => s + c.volumeTon, 0);
-  const avgChange =
-    withChange.reduce((s, c) => s + c.changePct, 0) / withChange.length;
+const RANK_TABS: { id: RankMode; label: string }[] = [
+  { id: "up", label: "급상승" },
+  { id: "down", label: "급하락" },
+  { id: "volume", label: "거래량" },
+];
 
-  const byCategory = CATEGORIES.filter((c) => c.id !== "all").map((cat) => {
-    const items = withChange.filter((c) => c.category === cat.id);
-    const vol = items.reduce((s, c) => s + c.volumeTon, 0);
-    const chg =
-      items.length ? items.reduce((s, c) => s + c.changePct, 0) / items.length : 0;
-    return { ...cat, count: items.length, vol, chg };
-  });
+function StatsPage() {
+  const [date, setDate] = useState("2025-07-05");
+  const [dateLabel, setDateLabel] = useState("7/5 (토) · 최근 거래일");
+  const [dateOpen, setDateOpen] = useState(false);
+  const [mode, setMode] = useState<RankMode>("up");
+  const [category, setCategory] = useState<Category | "all">("all");
+  const rankingRef = useRef<HTMLDivElement | null>(null);
+
+  const rows = useMemo(() => getRanking(date, mode, category), [date, mode, category]);
+  const summaries = useMemo(() => getCategorySummaries(date), [date]);
 
   return (
     <AppShell header={<AppHeader title="통계" />}>
-      <div className="px-4 pt-4 pb-6">
-        {/* KPI row */}
-        <div className="grid grid-cols-2 gap-2">
-          <div className="rounded-[10px] bg-surface p-4">
-            <div className="text-[11px] font-semibold text-muted-foreground">
-              전체 평균 등락률
-            </div>
-            <div
-              className={cn(
-                "mt-1 font-data text-[22px] font-black tabular-nums",
-                priceColor(avgChange),
-              )}
+      <div className="px-4 pb-6 pt-4">
+        {/* Date button */}
+        <button
+          onClick={() => setDateOpen(true)}
+          className="flex w-full items-center gap-2 rounded-[10px] border border-[#B7E1B7] bg-[#F0F9F0] px-3 py-2.5 text-left"
+        >
+          <Calendar className="h-4 w-4 text-[#3A8A3A]" />
+          <span className="text-[10px] font-semibold text-[#3A8A3A]">조회 날짜</span>
+          <span className="ml-1 flex-1 text-[13.5px] font-bold text-foreground">{dateLabel}</span>
+          <ChevronDown className="h-4 w-4 text-[#6C757D]" />
+        </button>
+
+        {/* Category filter indicator */}
+        {category !== "all" && (
+          <div className="mt-3 flex items-center gap-2">
+            <span className="text-[12px] text-[#6C757D]">
+              부류 필터:
+              <span className="ml-1 font-bold text-foreground">
+                {summaries.find((s) => s.id === category)?.label}
+              </span>
+            </span>
+            <button
+              onClick={() => setCategory("all")}
+              className="rounded-full bg-[#F1F3F5] px-2.5 py-1 text-[11px] font-semibold text-[#495057]"
             >
-              {avgChange > 0 ? "+" : ""}
-              {avgChange.toFixed(2)}%
-            </div>
+              해제
+            </button>
           </div>
-          <div className="rounded-[10px] bg-surface p-4">
-            <div className="text-[11px] font-semibold text-muted-foreground">
-              총 거래량
-            </div>
-            <div className="mt-1 font-data text-[22px] font-black tabular-nums">
-              {totalVol.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              <span className="ml-0.5 text-[12px] font-medium text-muted-foreground">t</span>
-            </div>
-          </div>
+        )}
+
+        {/* Ranking segment tabs */}
+        <div ref={rankingRef} className="mt-5 flex gap-1.5">
+          {RANK_TABS.map((t) => {
+            const active = t.id === mode;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setMode(t.id)}
+                className={cn(
+                  "flex-1 rounded-[10px] py-2 text-[13px] font-bold transition-colors",
+                  active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-[#495057]",
+                )}
+              >
+                {t.label}
+              </button>
+            );
+          })}
         </div>
 
-        <Section
-          icon={<TrendingUp className="h-4 w-4 text-price-up" />}
-          title="상승 랭킹"
-        >
-          <RankList items={gainers} />
-        </Section>
-
-        <Section
-          icon={<TrendingDown className="h-4 w-4 text-price-down" />}
-          title="하락 랭킹"
-        >
-          <RankList items={losers} />
-        </Section>
-
-        <Section
-          icon={<Layers className="h-4 w-4 text-primary" />}
-          title="거래량 상위"
-        >
-          <ul className="overflow-hidden rounded-[10px] bg-surface">
-            {volumeTop.map((c, i) => (
+        {/* Ranking list */}
+        <ul className="mt-3 overflow-hidden rounded-[10px] bg-white">
+          {rows.map((r, i) => {
+            const up = r.changePct > 0.05;
+            const down = r.changePct < -0.05;
+            const color = up ? "text-[#E03131]" : down ? "text-[#1971C2]" : "text-[#6C757D]";
+            const sign = up ? "▲" : down ? "▼" : "";
+            const rankColor = i < 3 ? "text-[#3A8A3A]" : "text-[#ADB5BD]";
+            return (
               <li
-                key={c.id}
+                key={r.id}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3",
-                  i > 0 && "border-t border-border",
+                  "border-[#F1F3F5]",
+                  i > 0 && "border-t",
                 )}
               >
-                <span className="w-5 shrink-0 text-center text-[12px] font-bold text-muted-foreground tabular-nums">
-                  {i + 1}
-                </span>
-                <span className="text-xl">{c.emoji}</span>
-                <span className="flex-1 truncate text-[14px] font-semibold">{c.name}</span>
-                <span className="font-data text-[14px] font-bold tabular-nums">
-                  {c.volumeTon.toLocaleString()}
-                  <span className="ml-0.5 text-[11px] font-medium text-muted-foreground">t</span>
-                </span>
+                <Link
+                  to="/statistics/$variety"
+                  params={{ variety: r.id }}
+                  className="flex items-center gap-3 px-4 py-3"
+                >
+                  <span
+                    className={cn(
+                      "w-4 text-center text-[14px] font-bold tabular-nums",
+                      rankColor,
+                    )}
+                  >
+                    {i + 1}
+                  </span>
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-[20px]">
+                    {r.emoji}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[14px] font-bold text-foreground">{r.name}</div>
+                    <div className="truncate text-[11px] text-[#868E96]">
+                      {r.categoryLabel} · {r.representativeMarket}
+                    </div>
+                  </div>
+                  <div className="h-8 w-14 shrink-0">
+                    <Sparkline data={r.spark} up={up} />
+                  </div>
+                  <div className="w-[74px] text-right">
+                    {mode === "volume" ? (
+                      <>
+                        <div className="text-[13.5px] font-bold tabular-nums text-foreground">
+                          {r.volumeTon.toLocaleString()}
+                          <span className="ml-0.5 text-[10px] font-medium text-[#6C757D]">t</span>
+                        </div>
+                        <div className={cn("text-[11.5px] font-semibold tabular-nums", color)}>
+                          {sign} {Math.abs(r.changePct).toFixed(1)}%
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-[13.5px] font-bold tabular-nums text-foreground">
+                          {r.currentPrice.toLocaleString()}
+                          <span className="ml-0.5 text-[10px] font-medium text-[#6C757D]">
+                            {r.unit.replace("원/", "/")}
+                          </span>
+                        </div>
+                        <div className={cn("text-[12px] font-bold tabular-nums", color)}>
+                          {sign} {Math.abs(r.changePct).toFixed(1)}%
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </Link>
               </li>
-            ))}
-          </ul>
-        </Section>
+            );
+          })}
+          {rows.length === 0 && (
+            <li className="px-4 py-8 text-center text-[13px] text-[#868E96]">
+              해당 조건의 데이터가 없어요
+            </li>
+          )}
+        </ul>
 
-        <Section title="분류별 요약">
-          <ul className="overflow-hidden rounded-[10px] bg-surface">
-            {byCategory.map((c, i) => (
-              <li
-                key={c.id}
+        {/* Category summary grid */}
+        <h2 className="mt-8 mb-2 px-1 text-[14px] font-bold text-foreground">분류별 동향</h2>
+        <div className="grid grid-cols-2 gap-2">
+          {summaries.map((s) => {
+            const up = s.avgChangePct > 0.05;
+            const down = s.avgChangePct < -0.05;
+            const color = up ? "text-[#E03131]" : down ? "text-[#1971C2]" : "text-[#6C757D]";
+            const sign = up ? "▲" : down ? "▼" : "";
+            const active = category === s.id;
+            return (
+              <button
+                key={s.id}
+                onClick={() => {
+                  setCategory(active ? "all" : s.id);
+                  requestAnimationFrame(() => {
+                    rankingRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  });
+                }}
                 className={cn(
-                  "grid grid-cols-[1fr_auto_auto] items-center gap-3 px-4 py-3",
-                  i > 0 && "border-t border-border",
+                  "rounded-[10px] border bg-white p-3 text-left transition-colors",
+                  active ? "border-[#3A8A3A] bg-[#F0F9F0]" : "border-[#E9ECEF]",
                 )}
               >
-                <span className="text-[14px] font-semibold">{c.label}</span>
-                <span className="tabular-nums text-[12px] text-muted-foreground">
-                  {c.count}개 · {c.vol.toLocaleString(undefined, { maximumFractionDigits: 0 })}t
-                </span>
-                <PriceBadge changePct={c.chg} />
-              </li>
-            ))}
-          </ul>
-        </Section>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-[13px] font-bold text-foreground">{s.label}</span>
+                  <span className={cn("text-[13px] font-bold tabular-nums", color)}>
+                    {sign} {Math.abs(s.avgChangePct).toFixed(1)}%
+                  </span>
+                </div>
+                <div className="mt-1.5 text-[11px] text-[#6C757D]">
+                  <span className="text-[#E03131]">상승 {s.upCount}</span>
+                  <span className="mx-1">·</span>
+                  <span className="text-[#1971C2]">하락 {s.downCount}</span>
+                  <span className="mx-1 text-[#CED4DA]">/</span>
+                  <span>{s.count}개 품종</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
 
-        <p className="mt-6 text-center text-[11px] text-muted-foreground">
+        <p className="mt-6 text-center text-[11px] text-[#868E96]">
           데이터 제공: KAMIS 농산물유통정보
         </p>
       </div>
+
+      <DateSheetLite
+        open={dateOpen}
+        onOpenChange={setDateOpen}
+        selected={date}
+        onSelect={(iso, label) => {
+          setDate(iso);
+          setDateLabel(label);
+        }}
+      />
     </AppShell>
-  );
-}
-
-function Section({
-  icon,
-  title,
-  children,
-}: {
-  icon?: React.ReactNode;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="mt-6">
-      <h2 className="mb-2 flex items-center gap-1.5 px-1 text-[13px] font-bold text-foreground">
-        {icon}
-        {title}
-      </h2>
-      {children}
-    </section>
-  );
-}
-
-function RankList({
-  items,
-}: {
-  items: (typeof CROPS[number] & { changePct: number })[];
-}) {
-  return (
-    <ul className="overflow-hidden rounded-[10px] bg-surface">
-      {items.map((c, i) => (
-        <li
-          key={c.id}
-          className={cn(
-            "grid grid-cols-[20px_28px_1fr_auto_auto] items-center gap-3 px-4 py-3",
-            i > 0 && "border-t border-border",
-          )}
-        >
-          <span className="text-center text-[12px] font-bold text-muted-foreground tabular-nums">
-            {i + 1}
-          </span>
-          <span className="text-xl">{c.emoji}</span>
-          <Link
-            to="/market/$crop"
-            params={{ crop: c.id }}
-            className="truncate text-[14px] font-semibold hover:text-primary"
-          >
-            {c.name}
-          </Link>
-          <span className="font-data text-[13px] font-bold tabular-nums">
-            {c.currentPrice.toLocaleString()}
-          </span>
-          <PriceBadge changePct={c.changePct} />
-        </li>
-      ))}
-    </ul>
   );
 }
