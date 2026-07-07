@@ -440,16 +440,10 @@ function NormalView({
 
 function PredictionBadge({ cropId }: { cropId: string }) {
   const active = isPredictionAvailable(cropId);
+  if (!active) return null;
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold",
-        active
-          ? "border-primary/30 bg-primary/10 text-primary"
-          : "border-border bg-muted text-muted-foreground",
-      )}
-    >
-      {active ? "AI 예측" : "예측 준비 중"}
+    <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+      AI 예측
     </span>
   );
 }
