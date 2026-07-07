@@ -8,9 +8,9 @@ import {
 import { ArrowLeft, Bell, ChevronRight, MoreHorizontal, Search, Star, TrendingDown, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
-import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
 import { PriceVolumeChart } from "@/components/market-v2/PriceVolumeChart";
 import { AuctionHistoryTable } from "@/components/market-v2/AuctionHistoryTable";
+import { getCrop } from "@/lib/mock/crops";
 import { getMarketQuote, getPriceVolumeSeries } from "@/lib/mock/market-analysis";
 import {
   getCompanyBreakdown,
@@ -23,6 +23,7 @@ import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
 import { useWatchlist } from "@/store/watchlist";
 import { cn } from "@/lib/utils";
+
 
 const EMOJI: Record<string, string> = {
   eggplant: "🍆",
@@ -74,7 +75,7 @@ function VarietyDetailPage() {
   const router = useRouter();
   const navigate = useNavigate();
   const f = useMarketFilter();
-  const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
+  
 
   const emoji = EMOJI[f.itemId] ?? "🌾";
 
@@ -92,11 +93,15 @@ function VarietyDetailPage() {
 
   const [tab, setTab] = useState<Tab>("chart");
   const [period, setPeriod] = useState<DetailPeriod>("1w");
-  const [alertOpen, setAlertOpen] = useState(false);
 
   const starred = useWatchlist((s) => s.crops.includes(variety));
   const toggleCrop = useWatchlist((s) => s.toggleCrop);
   const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
+  const crop = getCrop(f.itemId);
+  const isPredictable = Boolean(
+    crop?.isPredictable && crop.predictionStatus === "available",
+  );
+
 
   const up = quote.prevPct > 0;
   const flat = quote.prevPct === 0;
@@ -132,12 +137,13 @@ function VarietyDetailPage() {
               />
             </button>
             <button
-              aria-label="알림 설정"
-              onClick={() => setAlertOpen(true)}
+              aria-label="가격 알림 설정"
+              onClick={() => navigate({ to: "/price/$variety/alert", params: { variety } })}
               className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
             >
               <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
             </button>
+
             <button
               aria-label="더보기"
               onClick={() => toast("더보기 메뉴는 준비 중입니다")}
@@ -151,7 +157,7 @@ function VarietyDetailPage() {
     >
       {/* Title area */}
       <div className="px-4 pt-4">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-[19px] font-black tracking-tight text-foreground">
             {emoji} {f.varietyLabel}
           </h1>
@@ -159,19 +165,36 @@ function VarietyDetailPage() {
             {f.itemLabel} · {f.categoryLabel}
             <Search className="h-3 w-3" />
           </span>
+          {isPredictable && (
+            <span className="inline-flex items-center rounded-full border border-[#3A8A3A]/30 bg-[#F0F9F0] px-2 py-0.5 text-[11px] font-bold text-[#1F5C1F]">
+              시세 예측 가능
+            </span>
+          )}
         </div>
 
-        <div className="mt-3 flex items-end gap-1.5">
-          <span className="text-[32px] font-black leading-none tracking-tight text-foreground">
-            {quote.price.toLocaleString()}
-          </span>
-          <span className="text-[14px] font-semibold text-foreground">원</span>
-          <span className="pb-0.5 text-[12px] text-[#6C757D]">
-            / {quote.unit.replace(" 기준", "")}
-          </span>
-          <span className="mb-0.5 ml-1 inline-flex items-center rounded-full bg-[#F1F3F5] px-2 py-0.5 text-[11px] font-semibold text-[#495057]">
-            kg당 {pricePerKg.toLocaleString()}원
-          </span>
+        <div className="mt-3 flex items-end justify-between gap-2">
+          <div className="flex flex-wrap items-end gap-1.5">
+            <span className="text-[32px] font-black leading-none tracking-tight text-foreground">
+              {quote.price.toLocaleString()}
+            </span>
+            <span className="text-[14px] font-semibold text-foreground">원</span>
+            <span className="pb-0.5 text-[12px] text-[#6C757D]">
+              / {quote.unit.replace(" 기준", "")}
+            </span>
+            <span className="mb-0.5 ml-1 inline-flex items-center rounded-full bg-[#F1F3F5] px-2 py-0.5 text-[11px] font-semibold text-[#495057]">
+              kg당 {pricePerKg.toLocaleString()}원
+            </span>
+          </div>
+          {isPredictable && (
+            <Link
+              to="/prediction"
+              search={{ crop: f.itemId, entrySource: "detail" } as never}
+              className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-[#3A8A3A] px-2.5 py-1 text-[11.5px] font-bold text-[#1F5C1F] active:bg-[#F0F9F0]"
+            >
+              AI 시세 예측 보기
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          )}
         </div>
 
         <div className={cn("mt-1.5 flex items-center gap-2 text-[13px]", changeColor)}>
@@ -184,6 +207,7 @@ function VarietyDetailPage() {
           </span>
         </div>
       </div>
+
 
       {/* Tabs */}
       <div className="mt-5 border-b border-[#E9ECEF]">
@@ -215,10 +239,6 @@ function VarietyDetailPage() {
           period={period}
           setPeriod={setPeriod}
           quote={quote}
-          onOpenSimple={() => {
-            setSimpleMode(true);
-            navigate({ to: "/market" });
-          }}
         />
       )}
       {tab === "auctions" && <AuctionHistoryTable />}
@@ -232,17 +252,8 @@ function VarietyDetailPage() {
       {tab === "variety" && (
         <VarietyTab itemLabel={f.itemLabel} currentVarietyLabel={f.varietyLabel} />
       )}
-
-      <AlertSettingsSheet
-        open={alertOpen}
-        onOpenChange={setAlertOpen}
-        varietyId={variety}
-        marketId={f.marketId}
-        varietyLabel={f.varietyLabel}
-        marketLabel={f.marketLabel}
-        targetPrice={7000}
-      />
     </AppShell>
+
   );
 }
 
@@ -252,14 +263,14 @@ function ChartTab({
   period,
   setPeriod,
   quote,
-  onOpenSimple,
+
 }: {
   variety: string;
   period: DetailPeriod;
   setPeriod: (p: DetailPeriod) => void;
   quote: ReturnType<typeof getMarketQuote>;
-  onOpenSimple: () => void;
 }) {
+
   const f = useMarketFilter();
   const seriesPeriod = (period === "all" ? "1y" : period) as
     | "today" | "1w" | "1m" | "3m" | "1y";
@@ -308,15 +319,10 @@ function ChartTab({
         <Stat label="거래량" value={`${quote.volumeTon.toFixed(1)}t`} tone="neutral" />
       </div>
 
-      <div className="mt-4 border-t border-[#F1F3F5]">
-        <button
-          onClick={onOpenSimple}
-          className="flex w-full items-center justify-center gap-1 py-4 text-[13px] font-semibold text-[#3A8A3A]"
-        >
-          일별·경매 내역 보기
-          <ChevronRight className="h-4 w-4" />
-        </button>
+      <div className="mt-4 rounded-[10px] bg-[#F8F9FA] px-3 py-2 text-[11.5px] text-[#868E96]">
+        ※ 차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
       </div>
+
     </div>
   );
 }

@@ -20,6 +20,8 @@ export const CATEGORIES: { id: "all" | Category; label: string }[] = [
   { id: "legume", label: "두류" },
 ];
 
+export type PredictionStatus = "available" | "unavailable" | "comingSoon";
+
 export type Crop = {
   id: string;
   name: string;
@@ -31,10 +33,27 @@ export type Crop = {
   volumeTon: number;
   updatedAt: string; // "오늘 17:18"
   spark: number[]; // 7 pts
+  /**
+   * AI 시세 예측 가능 여부. 단일 소스로 관리한다.
+   * UI에서 별도 상수(AI_CROPS Set 등)로 중복 관리 금지.
+   */
+  isPredictable: boolean;
+  predictionStatus: PredictionStatus;
+  /** @deprecated use `isPredictable` */
   aiReady?: boolean;
-  season?: boolean; // seasonal representative
+  season?: boolean;
   grades?: { top: number; mid: number; low: number };
 };
+
+/**
+ * 예측 가능 작물 id 목록. Crop 정의 자체가 단일 소스이지만,
+ * 데이터 배열을 만드는 시점에 예측 필드를 일괄 stamping 하기 위해 사용한다.
+ * 화면 컴포넌트에서 이 Set을 import 해 사용하지 말 것.
+ */
+const PREDICTABLE_IDS = new Set(["chili", "apple", "cabbage", "onion", "radish"]);
+
+
+
 
 // deterministic seeded generator
 const seed = (n: number) => {
@@ -56,7 +75,10 @@ function makeSeries(base: number, len: number, seedNum: number, vol = 0.06) {
   return out;
 }
 
-export const CROPS: Crop[] = [
+type RawCrop = Omit<Crop, "isPredictable" | "predictionStatus">;
+
+const RAW_CROPS: RawCrop[] = [
+
   {
     id: "apple",
     name: "사과",
@@ -293,10 +315,24 @@ export const CROPS: Crop[] = [
   },
 ];
 
+export const CROPS: Crop[] = RAW_CROPS.map((c) => {
+  const predictable = PREDICTABLE_IDS.has(c.id);
+  return {
+    ...c,
+    isPredictable: predictable,
+    predictionStatus: predictable ? "available" : "unavailable",
+    aiReady: predictable,
+  };
+});
+
+export const predictableCrops: Crop[] = CROPS.filter(
+  (c) => c.isPredictable && c.predictionStatus === "available",
+);
 
 export function getCrop(id: string): Crop | undefined {
   return CROPS.find((c) => c.id === id);
 }
+
 
 export function seriesFor(cropId: string, period: "1w" | "1m" | "1y" | "3y") {
   const c = getCrop(cropId);
