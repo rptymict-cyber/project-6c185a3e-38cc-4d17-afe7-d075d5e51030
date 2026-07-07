@@ -33,6 +33,8 @@ export const SORT_LABEL: Record<MarketSortKey, string> = {
 // New filter store used by /market top area.
 // ---------------------------------------------------------------------------
 
+export type ProTab = "chart" | "auctions" | "compare" | "company" | "origin" | "variety";
+
 export type MarketFilterState = {
   date: string;
   dateLabel: string;
@@ -48,6 +50,7 @@ export type MarketFilterState = {
   corpLabel: string;
   unit: string;
   simpleMode: boolean;
+  proTab: ProTab;
   setDate: (iso: string, label: string) => void;
   setItem: (p: {
     categoryId: string;
@@ -62,6 +65,7 @@ export type MarketFilterState = {
   setUnit: (u: string) => void;
   setSimpleMode: (v: boolean) => void;
   toggleSimpleMode: () => void;
+  setProTab: (t: ProTab) => void;
 };
 
 export const useMarketFilter = create<MarketFilterState>()(
@@ -81,6 +85,7 @@ export const useMarketFilter = create<MarketFilterState>()(
       corpLabel: "전체",
       unit: "8kg 기준",
       simpleMode: true,
+      proTab: "chart",
       setDate: (date, dateLabel) => set({ date, dateLabel }),
       setItem: (p) => set(p),
       setMarket: (marketId, marketLabel) =>
@@ -89,6 +94,7 @@ export const useMarketFilter = create<MarketFilterState>()(
       setUnit: (unit) => set({ unit }),
       setSimpleMode: (simpleMode) => set({ simpleMode }),
       toggleSimpleMode: () => set((s) => ({ simpleMode: !s.simpleMode })),
+      setProTab: (proTab) => set({ proTab }),
     }),
     {
       name: "agdict:viewMode",

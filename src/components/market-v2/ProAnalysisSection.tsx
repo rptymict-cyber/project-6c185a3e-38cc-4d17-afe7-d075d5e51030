@@ -1,21 +1,13 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { PriceVolumeChart } from "./PriceVolumeChart";
 import { AuctionHistoryTable } from "./AuctionHistoryTable";
 import { ProMarketRankingTable } from "./ProMarketRankingTable";
 import { GroupRankingTable } from "./GroupRankingTable";
 import { getPriceVolumeSeries, type Period } from "@/lib/mock/market-analysis";
-import { useMarketFilter } from "@/store/market";
-
-type Tab = "chart" | "auctions" | "compare" | "company" | "origin" | "variety";
-const TABS: { id: Tab; label: string }[] = [
-  { id: "chart", label: "차트" },
-  { id: "auctions", label: "경매내역" },
-  { id: "compare", label: "시장비교" },
-  { id: "company", label: "법인" },
-  { id: "origin", label: "산지" },
-  { id: "variety", label: "품종" },
-];
+import { listAuctions } from "@/lib/mock/auctions";
+import { useMarketFilter, type ProTab } from "@/store/market";
+import { useState } from "react";
 
 const PERIODS: { id: Period; label: string }[] = [
   { id: "today", label: "오늘" },
@@ -26,9 +18,32 @@ const PERIODS: { id: Period; label: string }[] = [
 ];
 
 export function ProAnalysisSection() {
-  const [tab, setTab] = useState<Tab>("chart");
-  const [period, setPeriod] = useState<Period>("1w");
   const f = useMarketFilter();
+  const tab = f.proTab;
+  const setTab = f.setProTab;
+  const [period, setPeriod] = useState<Period>("1w");
+
+  const auctionCount = useMemo(
+    () =>
+      listAuctions({
+        categoryLabel: f.categoryLabel,
+        itemLabel: f.itemLabel,
+        varietyLabel: f.varietyLabel,
+        marketLabel: f.marketLabel,
+        marketId: f.marketId,
+        date: f.date,
+      }).length,
+    [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
+  );
+
+  const TABS: { id: ProTab; label: string }[] = [
+    { id: "chart", label: "차트" },
+    { id: "auctions", label: `경매내역 ${auctionCount}` },
+    { id: "compare", label: "시장비교" },
+    { id: "company", label: "법인" },
+    { id: "origin", label: "산지" },
+    { id: "variety", label: "품종" },
+  ];
 
   const series = getPriceVolumeSeries({
     itemId: f.itemId,
@@ -38,6 +53,8 @@ export function ProAnalysisSection() {
     date: f.date,
     period,
   });
+
+  const unitLabel = f.unit.replace(" 기준", "");
 
   return (
     <section className="mt-3 bg-white pt-1">
@@ -84,9 +101,33 @@ export function ProAnalysisSection() {
               );
             })}
           </div>
+
+          {/* Legend */}
+          <div className="mb-2 flex items-center gap-3 px-1 text-[11px] text-[#495057]">
+            <span className="flex items-center gap-1">
+              <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03131]" />
+              평균가(원/{unitLabel})
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="inline-block h-2 w-3 rounded-sm bg-[#E03131]/20" />
+              거래량
+            </span>
+          </div>
+
           <div className="rounded-[12px] border border-[#F1F3F5] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
             <PriceVolumeChart series={series} period={period} />
           </div>
+
+          {/* Period summary */}
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            <PeriodStat label="최고가" value={`${series.max.toLocaleString()}원`} tone="up" />
+            <PeriodStat label="최저가" value={`${series.min.toLocaleString()}원`} tone="down" />
+            <PeriodStat label="평균가" value={`${series.avg.toLocaleString()}원`} tone="neutral" />
+          </div>
+
+          <p className="mt-3 px-1 text-[11px] text-[#868E96]">
+            차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
+          </p>
         </div>
       )}
       {tab === "auctions" && <AuctionHistoryTable />}
@@ -95,5 +136,24 @@ export function ProAnalysisSection() {
       {tab === "origin" && <GroupRankingTable scope="origin" />}
       {tab === "variety" && <GroupRankingTable scope="variety" />}
     </section>
+  );
+}
+
+function PeriodStat({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone: "up" | "down" | "neutral";
+}) {
+  const color =
+    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
+  return (
+    <div className="flex flex-col items-center gap-0.5 rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2.5">
+      <span className="text-[10.5px] text-[#868E96]">{label}</span>
+      <span className={cn("text-[13px] font-bold", color)}>{value}</span>
+    </div>
   );
 }
