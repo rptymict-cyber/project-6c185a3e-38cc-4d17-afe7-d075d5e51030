@@ -25,6 +25,9 @@ interface CropSelectionState {
   setDraftCategory: (categoryId: string) => void;
   setDraftItem: (itemId: string) => void;
   setDraftVariety: (varietyId: VarietyIdOrAll) => void;
+  clearDraftCategory: () => void;
+  clearDraftItem: () => void;
+  clearDraftVariety: () => void;
   discardDraft: () => void;
   commitDraft: () => void;
 }
