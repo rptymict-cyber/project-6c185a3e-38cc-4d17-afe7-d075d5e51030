@@ -659,21 +659,77 @@ function SearchInput({
   );
 }
 
-function Breadcrumb({
-  children,
-  onBack,
+function SelectionCards({
+  draft,
+  onRemoveCategory,
+  onRemoveItem,
+  onRemoveVariety,
 }: {
-  children: React.ReactNode;
-  onBack: () => void;
+  draft: ReturnType<typeof useCropSelection.getState>["draft"];
+  onRemoveCategory: () => void;
+  onRemoveItem: () => void;
+  onRemoveVariety: () => void;
 }) {
+  const category = draft.categoryId ? getCategoryById(draft.categoryId) : undefined;
+  const item = draft.itemId ? getItemById(draft.itemId) : undefined;
+  const varietyName = (() => {
+    if (!draft.varietyId) return undefined;
+    if (draft.varietyId === ALL_VARIETY_ID) return "전체 품종";
+    return item?.varieties.find((v) => v.id === draft.varietyId)?.name;
+  })();
+
+  const rows: { key: string; icon: string; label: string; onRemove: () => void }[] = [];
+  if (category) {
+    rows.push({
+      key: "cat",
+      icon: category.emoji,
+      label: category.name,
+      onRemove: onRemoveCategory,
+    });
+  }
+  if (item) {
+    rows.push({
+      key: "item",
+      icon: item.emoji,
+      label: item.name,
+      onRemove: onRemoveItem,
+    });
+  }
+  if (varietyName) {
+    rows.push({
+      key: "var",
+      icon: item?.emoji ?? "🌱",
+      label: varietyName,
+      onRemove: onRemoveVariety,
+    });
+  }
+
+  if (rows.length === 0) return null;
+
   return (
-    <button
-      type="button"
-      onClick={onBack}
-      className="inline-flex items-center gap-1 text-sm text-gray-600 active:text-gray-900"
-    >
-      <ArrowLeft className="h-4 w-4" />
-      <span>{children}</span>
-    </button>
+    <div className="mt-3 space-y-2">
+      {rows.map((r) => (
+        <div
+          key={r.key}
+          className="flex h-12 items-center gap-3 rounded-xl border border-green-100 bg-green-50/70 px-3"
+        >
+          <span className="text-lg" aria-hidden>
+            {r.icon}
+          </span>
+          <span className="flex-1 truncate text-sm font-semibold text-green-900">
+            {r.label}
+          </span>
+          <button
+            type="button"
+            onClick={r.onRemove}
+            aria-label={`${r.label} 선택 해제`}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-green-700 active:bg-green-100"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }
+
