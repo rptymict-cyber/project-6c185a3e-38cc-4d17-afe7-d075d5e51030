@@ -48,6 +48,10 @@ export function ProPriceHeadlineCard({
   const [unitOpen, setUnitOpen] = useState(false);
   const isFav = useWatchlist((s) => s.crops.includes(itemId));
   const toggleCrop = useWatchlist((s) => s.toggleCrop);
+  const navigate = useNavigate();
+  const marketId = useMarketFilter((s) => s.marketId);
+  const hasAlert = useAlerts((s) => s.hasAnyFor(varietyId, marketId));
+  const existingRule = useAlerts((s) => s.getByKey(varietyId, marketId));
 
   return (
     <>
