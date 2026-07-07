@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { ArrowLeft, Bell, ChevronDown, ChevronRight, Star } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
@@ -7,10 +12,12 @@ import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
 import { DateSheetLite } from "@/components/date-sheet-lite";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
 import { TrendTab } from "@/components/statistics/TrendTab";
-import { VarietyPickerSheet } from "@/components/statistics/VarietyPickerSheet";
+// NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
+// VarietyPickerSheet는 롤백 대비로 남겨두고 여기서 import 하지 않는다.
 import { getCrop } from "@/lib/mock/crops";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
 import { useAlerts } from "@/store/alerts";
+import { useCropSelection } from "@/store/cropSelection";
 import { useMarketFilter } from "@/store/market";
 import { useRecentStats } from "@/store/recent-stats";
 import { useWatchlist } from "@/store/watchlist";
@@ -51,12 +58,22 @@ function VarietyStatsPage() {
   const [dateOpen, setDateOpen] = useState(false);
 
   const [tab, setTab] = useState<Tab>("market");
-  const [pickerOpen, setPickerOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
 
   useEffect(() => {
     if (crop) pushRecent(variety);
   }, [crop, variety, pushRecent]);
+
+  // /crop-select 에서 다른 품목을 선택하고 돌아온 경우 자동으로 해당 상세로 이동
+  const committedItemId = useCropSelection((s) => s.committed.itemId);
+  useEffect(() => {
+    if (committedItemId && committedItemId !== variety) {
+      navigate({
+        to: "/statistics/$variety",
+        params: { variety: committedItemId },
+      });
+    }
+  }, [committedItemId, variety, navigate]);
 
   const data = useMemo(
     () => (crop ? getVarietyMarketAverages({ varietyId: variety, date }) : null),
@@ -143,8 +160,12 @@ function VarietyStatsPage() {
     >
       {/* Breadcrumb chip */}
       <div className="px-4 pt-4">
-        <button
-          onClick={() => setPickerOpen(true)}
+        <Link
+          to="/crop-select"
+          search={{
+            from: "statistics-detail",
+            return: `/statistics/${variety}`,
+          }}
           className="inline-flex items-center gap-1.5 rounded-full bg-[#F1F3F5] px-3 py-1.5 text-[12px] font-semibold text-[#495057]"
         >
           <span>{data.breadcrumb.categoryLabel}</span>
@@ -153,7 +174,7 @@ function VarietyStatsPage() {
           <ChevronRight className="h-3 w-3 text-[#ADB5BD]" />
           <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
           <ChevronDown className="ml-0.5 h-3.5 w-3.5 text-[#6C757D]" />
-        </button>
+        </Link>
       </div>
 
       {/* Tabs */}
@@ -237,16 +258,6 @@ function VarietyStatsPage() {
 
       {tab === "trend" && <TrendTab varietyId={variety} />}
 
-      <VarietyPickerSheet
-        open={pickerOpen}
-        onOpenChange={setPickerOpen}
-        currentCropId={variety}
-        onSelect={(cropId) => {
-          if (cropId !== variety) {
-            navigate({ to: "/statistics/$variety", params: { variety: cropId } });
-          }
-        }}
-      />
 
       <DateSheetLite
         open={dateOpen}

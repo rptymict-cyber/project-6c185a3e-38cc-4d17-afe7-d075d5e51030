@@ -9,18 +9,17 @@ import {
   Search,
   Sprout,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { DateSheetLite } from "@/components/date-sheet-lite";
+import { getCrop } from "@/lib/mock/crops";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { CATEGORIES, CROPS, getCrop, type Crop } from "@/lib/mock/crops";
+  getCategoryById,
+  getItemById,
+} from "@/lib/catalog-service";
+import { useCropSelection } from "@/store/cropSelection";
 import { useRecentStats } from "@/store/recent-stats";
 import { cn } from "@/lib/utils";
 
@@ -37,24 +36,8 @@ export const Route = createFileRoute("/statistics")({
   }),
 });
 
-const VARIETIES: Record<string, string[]> = {
-  apple: ["전체", "부사", "홍로", "감홍", "아오리"],
-  pear: ["전체", "신고", "원황", "추황"],
-  mandarin: ["전체", "하우스감귤", "감귤(일반)", "극조생", "만생귤"],
-  cabbage: ["전체", "월동", "봄", "여름", "가을"],
-  radish: ["전체", "가을", "봄", "월동"],
-  onion: ["전체", "조생", "중생", "만생"],
-  garlic: ["전체", "난지형", "한지형"],
-  chili: ["전체", "노지", "하우스"],
-  tomato: ["전체", "토마토(일반)", "방울토마토", "대추방울토마토"],
-  eggplant: ["전체", "가지(일반)", "가지(상품)"],
-};
-
 function fmtDateDot(iso: string): string {
   return iso.replaceAll("-", ".");
-}
-function categoryLabelOf(id: string): string {
-  return CATEGORIES.find((c) => c.id === id)?.label ?? id;
 }
 
 function StatisticsHome() {
@@ -62,41 +45,36 @@ function StatisticsHome() {
   const recent = useRecentStats((s) => s.items);
 
   const [date, setDate] = useState("2025-07-05");
-  const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [cropId, setCropId] = useState<string | null>(null);
-  const [varietyLabel, setVarietyLabel] = useState<string>("전체");
-
   const [dateOpen, setDateOpen] = useState(false);
-  const [catOpen, setCatOpen] = useState(false);
-  const [cropOpen, setCropOpen] = useState(false);
-  const [varOpen, setVarOpen] = useState(false);
 
-  const crop = cropId ? getCrop(cropId) : null;
-  const cropLabel = crop?.name ?? "선택";
-  const catLabel = categoryId ? categoryLabelOf(categoryId) : "선택";
-  const canSubmit = !!(categoryId && cropId);
+  // 작물 선택은 /crop-select 페이지가 유일한 진입점.
+  // 화면은 committed 값만 구독한다.
+  const committed = useCropSelection((s) => s.committed);
+  const category = committed.categoryId
+    ? getCategoryById(committed.categoryId)
+    : undefined;
+  const item = committed.itemId ? getItemById(committed.itemId) : undefined;
+  const varietyName = (() => {
+    if (!committed.varietyId || !item) return undefined;
+    if (committed.varietyId === "ALL") return "전체 품종";
+    return item.varieties.find((v) => v.id === committed.varietyId)?.name;
+  })();
 
-  const openCrop = () => {
-    if (!categoryId) {
-      toast("부류를 먼저 선택해 주세요.");
-      return;
-    }
-    setCropOpen(true);
-  };
-  const openVar = () => {
-    if (!cropId) {
-      toast("품목을 먼저 선택해 주세요.");
-      return;
-    }
-    setVarOpen(true);
-  };
+  const canSubmit = Boolean(item && committed.varietyId);
+
   const submit = () => {
-    if (!canSubmit) {
-      toast("조회 날짜, 부류, 품목, 품종을 모두 선택해 주세요.");
+    if (!canSubmit || !item) {
+      toast("조회 날짜와 부류/품목/품종을 모두 선택해 주세요.");
       return;
     }
-    useRecentStats.getState().push(cropId!);
-    navigate({ to: "/statistics/$variety", params: { variety: cropId! } });
+    useRecentStats.getState().push(item.id);
+    navigate({ to: "/statistics/$variety", params: { variety: item.id } });
+  };
+
+  // /crop-select 로 이동시키는 공통 링크 프롭
+  const cropSelectSearch = {
+    from: "statistics" as const,
+    return: "/statistics" as const,
   };
 
   return (
@@ -149,26 +127,26 @@ function StatisticsHome() {
               filled
               onClick={() => setDateOpen(true)}
             />
-            <SelectCard
+            <CropSelectCard
               icon={<Layers className="h-4 w-4" />}
               label="부류"
-              value={categoryId ? catLabel : "선택"}
-              filled={!!categoryId}
-              onClick={() => setCatOpen(true)}
+              value={category?.name ?? "선택"}
+              filled={!!category}
+              search={cropSelectSearch}
             />
-            <SelectCard
+            <CropSelectCard
               icon={<Package className="h-4 w-4" />}
               label="품목"
-              value={cropId ? cropLabel : "선택"}
-              filled={!!cropId}
-              onClick={openCrop}
+              value={item?.name ?? "선택"}
+              filled={!!item}
+              search={cropSelectSearch}
             />
-            <SelectCard
+            <CropSelectCard
               icon={<Sprout className="h-4 w-4" />}
               label="품종"
-              value={cropId ? varietyLabel : "선택"}
-              filled={!!cropId && !!varietyLabel}
-              onClick={openVar}
+              value={varietyName ?? "선택"}
+              filled={!!varietyName}
+              search={cropSelectSearch}
             />
           </div>
 
@@ -227,7 +205,7 @@ function StatisticsHome() {
                           {c.name}
                         </div>
                         <div className="truncate text-[11px] text-[#868E96]">
-                          {viewedISO} · {categoryLabelOf(c.category)}
+                          {viewedISO}
                         </div>
                       </div>
                       <ChevronRight className="h-4 w-4 text-[#ADB5BD]" />
@@ -258,67 +236,6 @@ function StatisticsHome() {
         onOpenChange={setDateOpen}
         selected={date}
         onSelect={(iso) => setDate(iso)}
-      />
-
-      {/* Category sheet */}
-      <PickerSheet
-        open={catOpen}
-        onOpenChange={setCatOpen}
-        title="부류 선택"
-        placeholder="부류 검색"
-        options={CATEGORIES.filter((c) => c.id !== "all").map((c) => ({
-          key: c.id,
-          label: c.label,
-        }))}
-        selectedKey={categoryId}
-        onSelect={(key) => {
-          if (categoryId !== key) {
-            setCropId(null);
-            setVarietyLabel("전체");
-          }
-          setCategoryId(key);
-          setCatOpen(false);
-        }}
-      />
-
-      {/* Crop sheet */}
-      <PickerSheet
-        open={cropOpen}
-        onOpenChange={setCropOpen}
-        title="품목 선택"
-        placeholder="품목 검색"
-        options={
-          categoryId
-            ? CROPS.filter((c) => c.category === categoryId).map((c: Crop) => ({
-                key: c.id,
-                label: c.name,
-                emoji: c.emoji,
-              }))
-            : []
-        }
-        selectedKey={cropId}
-        onSelect={(key) => {
-          if (cropId !== key) setVarietyLabel("전체");
-          setCropId(key);
-          setCropOpen(false);
-        }}
-      />
-
-      {/* Variety sheet */}
-      <PickerSheet
-        open={varOpen}
-        onOpenChange={setVarOpen}
-        title="품종 선택"
-        placeholder="품종 검색"
-        options={(cropId ? VARIETIES[cropId] ?? ["전체", "기타"] : []).map((v) => ({
-          key: v,
-          label: v,
-        }))}
-        selectedKey={varietyLabel}
-        onSelect={(key) => {
-          setVarietyLabel(key);
-          setVarOpen(false);
-        }}
       />
     </AppShell>
   );
@@ -362,93 +279,40 @@ function SelectCard({
   );
 }
 
-function PickerSheet({
-  open,
-  onOpenChange,
-  title,
-  placeholder,
-  options,
-  selectedKey,
-  onSelect,
+function CropSelectCard({
+  icon,
+  label,
+  value,
+  filled,
+  search,
 }: {
-  open: boolean;
-  onOpenChange: (v: boolean) => void;
-  title: string;
-  placeholder: string;
-  options: { key: string; label: string; emoji?: string }[];
-  selectedKey: string | null;
-  onSelect: (key: string) => void;
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  filled: boolean;
+  search: { from: string; return: string };
 }) {
-  const [q, setQ] = useState("");
-  const filtered = useMemo(
-    () => options.filter((o) => (q ? o.label.includes(q) : true)),
-    [options, q],
-  );
   return (
-    <Sheet
-      open={open}
-      onOpenChange={(v) => {
-        if (!v) setQ("");
-        onOpenChange(v);
-      }}
+    <Link
+      to="/crop-select"
+      search={search}
+      className="flex items-center gap-2.5 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-3 text-left active:bg-[#F8F9FA]"
     >
-      <SheetContent side="bottom" className="max-h-[80vh] rounded-t-2xl p-0">
-        <SheetHeader className="px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">{title}</SheetTitle>
-        </SheetHeader>
-        <div className="px-5 pt-3">
-          <div className="flex items-center gap-2 rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-2">
-            <Search className="h-4 w-4 text-[#ADB5BD]" />
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder={placeholder}
-              className="min-w-0 flex-1 bg-transparent text-[13.5px] outline-none placeholder:text-[#ADB5BD]"
-            />
-          </div>
-        </div>
-        <ul className="mt-3 max-h-[52vh] overflow-y-auto px-5 pb-6">
-          {filtered.length === 0 ? (
-            <li className="py-10 text-center text-[13px] text-[#868E96]">
-              결과가 없어요
-            </li>
-          ) : (
-            filtered.map((o) => {
-              const active = o.key === selectedKey;
-              return (
-                <li key={o.key}>
-                  <button
-                    type="button"
-                    onClick={() => onSelect(o.key)}
-                    className={cn(
-                      "flex w-full items-center gap-3 rounded-[10px] px-3 py-3 text-left",
-                      active ? "bg-[#F0F9F0]" : "hover:bg-[#F8F9FA]",
-                    )}
-                  >
-                    {o.emoji && <span className="text-[18px]">{o.emoji}</span>}
-                    <span
-                      className={cn(
-                        "flex-1 text-[14px] font-semibold",
-                        active ? "text-[#1F5C1F]" : "text-foreground",
-                      )}
-                    >
-                      {o.label}
-                    </span>
-                    <span
-                      className={cn(
-                        "grid h-5 w-5 place-items-center rounded-full border-2",
-                        active ? "border-[#3A8A3A]" : "border-[#CED4DA]",
-                      )}
-                    >
-                      {active && <span className="h-2.5 w-2.5 rounded-full bg-[#3A8A3A]" />}
-                    </span>
-                  </button>
-                </li>
-              );
-            })
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-[#495057]">
+        {icon}
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="text-[11px] font-semibold text-[#868E96]">{label}</div>
+        <div
+          className={cn(
+            "mt-0.5 truncate text-[13.5px] font-bold",
+            filled ? "text-[#E03131]" : "text-[#ADB5BD]",
           )}
-        </ul>
-      </SheetContent>
-    </Sheet>
+        >
+          {value}
+        </div>
+      </div>
+      <ChevronDown className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
+    </Link>
   );
 }
