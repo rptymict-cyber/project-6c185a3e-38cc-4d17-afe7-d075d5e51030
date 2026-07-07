@@ -6,7 +6,6 @@ import { MarketSearchBar } from "@/components/market-v2/MarketSearchBar";
 import { MarketFilterBar } from "@/components/market-v2/MarketFilterBar";
 import { ProPriceHeadlineCard } from "@/components/market-v2/ProPriceHeadlineCard";
 import { ProAnalysisSection } from "@/components/market-v2/ProAnalysisSection";
-import { ProMarketRankingTable } from "@/components/market-v2/ProMarketRankingTable";
 import { SimpleModeView } from "@/components/market-v2/SimpleModeView";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useMarketFilter } from "@/store/market";
@@ -35,7 +34,7 @@ function MarketPage() {
       <MarketSearchBar />
       <MarketFilterBar />
 
-      <div className="mt-4 border-t-8 border-[#F1F3F5]">
+      <div className="mt-3">
         {f.simpleMode ? <SimpleModeView /> : <ProModeView />}
       </div>
     </AppShell>
@@ -52,17 +51,18 @@ function ProModeView() {
     date: f.date,
   });
   return (
-    <div className="bg-[#F1F3F5] pb-6">
-      <ProPriceHeadlineCard
-        itemId={f.itemId}
-        itemLabel={f.itemLabel}
-        varietyLabel={f.varietyLabel}
-        marketLabel={f.marketLabel}
-        varietyId={f.varietyId}
-        quote={quote}
-      />
+    <div className="pb-6">
+      <div className="px-4">
+        <ProPriceHeadlineCard
+          itemId={f.itemId}
+          itemLabel={f.itemLabel}
+          varietyLabel={f.varietyLabel}
+          marketLabel={f.marketLabel}
+          varietyId={f.varietyId}
+          quote={quote}
+        />
+      </div>
       <ProAnalysisSection />
-      <ProMarketRankingTable />
     </div>
   );
 }
