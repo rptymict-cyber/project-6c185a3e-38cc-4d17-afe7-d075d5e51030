@@ -2,12 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, LayoutList, Table as TableIcon } from "lucide-react";
 import { useMarketFilter } from "@/store/market";
-import {
-  listAuctions,
-  applySecondaryFilters,
-  countBy,
-  type AuctionRecord,
-} from "@/lib/mock/auctions";
+import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 20;
