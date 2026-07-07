@@ -10,7 +10,7 @@ import {
 import { useMarketFilter } from "@/store/market";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/notifications")({
+export const Route = createFileRoute("/notifications/")({
   component: NotificationsPage,
   head: () => ({
     meta: [

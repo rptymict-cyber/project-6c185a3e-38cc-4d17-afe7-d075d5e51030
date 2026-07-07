@@ -8,7 +8,7 @@ import { SwipeReorderList } from "@/components/swipe-reorder-list";
 import { useAlerts, type PriceAlertRule } from "@/store/alerts";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/notifications/settings")({
+export const Route = createFileRoute("/notifications/settings/")({
   component: NotificationSettingsPage,
   head: () => ({
     meta: [
