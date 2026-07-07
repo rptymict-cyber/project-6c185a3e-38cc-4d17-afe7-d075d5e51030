@@ -300,3 +300,79 @@ export function getMarketRankings(p: {
   rows.sort(sorters[p.sort]);
   return rows;
 }
+
+// -- generic rankings (company / origin / variety) --------------------------
+
+export type GroupRankingRow = {
+  id: string;
+  name: string;
+  subLabel?: string;
+  price: number;
+  prevPct: number;
+  weekPct: number;
+  volumeTon: number;
+  sharePct: number;
+};
+
+const COMPANY_POOL = [
+  { id: "seoul", name: "서울청과", sub: "가락시장" },
+  { id: "jungang", name: "중앙청과", sub: "가락시장" },
+  { id: "hanguk", name: "한국청과", sub: "가락시장" },
+  { id: "donghwa", name: "동화청과", sub: "가락시장" },
+  { id: "gangseo", name: "강서청과", sub: "강서시장" },
+  { id: "nh-gangseo", name: "농협강서청과", sub: "강서시장" },
+  { id: "bugbu", name: "북부청과", sub: "대구북부" },
+];
+
+const ORIGIN_POOL = [
+  { id: "jeju", name: "제주", sub: "제주도" },
+  { id: "haenam", name: "해남", sub: "전라남도" },
+  { id: "muan", name: "무안", sub: "전라남도" },
+  { id: "andong", name: "안동", sub: "경상북도" },
+  { id: "chungju", name: "충주", sub: "충청북도" },
+  { id: "goesan", name: "괴산", sub: "충청북도" },
+  { id: "pyeongchang", name: "평창", sub: "강원도" },
+];
+
+const VARIETY_POOL = [
+  { id: "v1", name: "상품", sub: "특등급" },
+  { id: "v2", name: "중품", sub: "1등급" },
+  { id: "v3", name: "하품", sub: "2등급" },
+  { id: "v4", name: "혼합", sub: "등외" },
+];
+
+function buildGroupRankings(
+  pool: { id: string; name: string; sub?: string }[],
+  p: { itemId: string; varietyId: string; unit: string; date: string; sort: RankingSort; scope: string },
+): GroupRankingRow[] {
+  const mult = unitMultiplier(p.unit);
+  const rows: GroupRankingRow[] = pool.map((m) => {
+    const rand = seeded(hash(`${p.scope}|${p.itemId}|${p.varietyId}|${m.id}|${p.date}`));
+    const basePerKg = 700 + Math.round(rand() * 1600);
+    const price = Math.round((basePerKg * mult) / 10) * 10;
+    const prevPct = +(rand() * -14 + 3).toFixed(1);
+    const weekPct = +(rand() * 12 - 2).toFixed(1);
+    const volumeTon = +(8 + rand() * 40).toFixed(1);
+    return { id: m.id, name: m.name, subLabel: m.sub, price, prevPct, weekPct, volumeTon, sharePct: 0 };
+  });
+  const total = rows.reduce((s, r) => s + r.volumeTon, 0);
+  rows.forEach((r) => (r.sharePct = +((r.volumeTon / total) * 100).toFixed(1)));
+  const sorters: Record<RankingSort, (a: GroupRankingRow, b: GroupRankingRow) => number> = {
+    "price-desc": (a, b) => b.price - a.price,
+    "price-asc": (a, b) => a.price - b.price,
+    "volume-desc": (a, b) => b.volumeTon - a.volumeTon,
+    "change-desc": (a, b) => b.prevPct - a.prevPct,
+  };
+  rows.sort(sorters[p.sort]);
+  return rows;
+}
+
+export function getCompanyRankings(p: { itemId: string; varietyId: string; unit: string; date: string; sort: RankingSort }) {
+  return buildGroupRankings(COMPANY_POOL, { ...p, scope: "company" });
+}
+export function getOriginRankings(p: { itemId: string; varietyId: string; unit: string; date: string; sort: RankingSort }) {
+  return buildGroupRankings(ORIGIN_POOL, { ...p, scope: "origin" });
+}
+export function getVarietyRankings(p: { itemId: string; varietyId: string; unit: string; date: string; sort: RankingSort }) {
+  return buildGroupRankings(VARIETY_POOL, { ...p, scope: "variety" });
+}
