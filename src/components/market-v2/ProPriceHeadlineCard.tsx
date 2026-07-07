@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Bell, ChevronDown, ChevronRight, Clock, Star, TrendingDown, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/mock/market-analysis";
+import { useAlerts } from "@/store/alerts";
+import { useMarketFilter } from "@/store/market";
 import { useWatchlist } from "@/store/watchlist";
 import { UnitSheet } from "./UnitSheet";
 
