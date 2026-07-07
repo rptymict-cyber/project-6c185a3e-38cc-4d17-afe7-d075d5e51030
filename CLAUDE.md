@@ -19,9 +19,10 @@
 
 ### 유일한 예외
 
-- **상세 화면의 "변경 ›" 인라인 칩**: 이미 확정된 부류·품목에서
-  **품종 단일 레벨만 바꾸는 경우** (예: `statistics.$variety.tsx`의
-  `VarietyPickerSheet`)는 기존 인라인 방식 유지.
+- **상세 화면의 "변경 ›" 인라인 칩** 중 **품종 단일 레벨만** 바꾸는 경우.
+  현재 프로젝트에서는 이 예외에 해당하는 UI가 없다
+  (`statistics.$variety.tsx`의 breadcrumb는 부류+품목까지 바꾸므로
+  예외가 아니며 `/crop-select`로 이동함).
 - **간편 모드의 출하지/규격 칩**: 작물 선택이 아니라 조회 결과 내
   2차 필터이므로 이 규칙과 무관.
 
@@ -35,8 +36,8 @@
 - `src/components/add-crop-sheet.tsx`
 - `src/components/market-v2/CropSheet.tsx`
 - `src/components/market-v2/ItemSheet.tsx`
+- `src/components/statistics/VarietyPickerSheet.tsx`
 - `src/routes/statistics.select.tsx`
-- `src/routes/statistics.tsx` 안의 (구) `PickerSheet` — 이미 제거됨
 
 ### 관련 파일
 

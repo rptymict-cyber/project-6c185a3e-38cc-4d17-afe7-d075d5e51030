@@ -33,6 +33,7 @@ import { Link } from "@tanstack/react-router";
 | --- | --- | --- |
 | 시세 필터바 (`MarketFilterBar`) | `market` | `/market` |
 | 통계 홈 (`/statistics`) 부류/품목/품종 카드 | `statistics` | `/statistics` |
+| 통계 상세 (`/statistics/$variety`) breadcrumb 칩 | `statistics-detail` | `/statistics/{variety}` |
 | 즐겨찾기 빈 상태 (`/watchlist`) | `watchlist` | `/watchlist` |
 | 홈 관심 작물 "추가" 칩 (`InterestChips`) | `home` | `/` |
 
@@ -63,4 +64,5 @@ const item = committed.itemId ? getItemById(committed.itemId) : undefined;
 - `src/components/add-crop-sheet.tsx`
 - `src/components/market-v2/CropSheet.tsx`
 - `src/components/market-v2/ItemSheet.tsx`
+- `src/components/statistics/VarietyPickerSheet.tsx`
 - `src/routes/statistics.select.tsx`
