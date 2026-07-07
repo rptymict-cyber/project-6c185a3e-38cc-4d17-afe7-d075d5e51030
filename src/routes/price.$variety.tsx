@@ -269,8 +269,8 @@ function ChartTab({
   period: DetailPeriod;
   setPeriod: (p: DetailPeriod) => void;
   quote: ReturnType<typeof getMarketQuote>;
-  onOpenSimple: () => void;
 }) {
+
   const f = useMarketFilter();
   const seriesPeriod = (period === "all" ? "1y" : period) as
     | "today" | "1w" | "1m" | "3m" | "1y";
