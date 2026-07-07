@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, ChevronRight, Clock, TrendingDown, TrendingUp } from "lucide-react";
+import { Bell, ChevronDown, ChevronRight, Clock, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/mock/market-analysis";
+import { useWatchlist } from "@/store/watchlist";
 import { UnitSheet } from "./UnitSheet";
 
 const EMOJI: Record<string, string> = {
@@ -42,21 +44,50 @@ export function ProPriceHeadlineCard({
   const flat = quote.prevPct === 0;
   const changeColor = flat ? "text-[#6C757D]" : up ? "text-[#E03131]" : "text-[#1971C2]";
   const [unitOpen, setUnitOpen] = useState(false);
+  const isFav = useWatchlist((s) => s.crops.includes(itemId));
+  const toggleCrop = useWatchlist((s) => s.toggleCrop);
 
   return (
     <>
       <div className="mt-4 rounded-[14px] border border-[#E9ECEF] bg-white p-4">
-        <Link
-          to="/price/$variety"
-          params={{ variety: varietyId }}
-          className="flex items-center justify-between text-[12.5px] text-[#495057] active:opacity-70"
-        >
-          <span className="truncate">
+        {/* Title row with actions */}
+        <div className="flex items-center justify-between gap-2">
+          <span className="min-w-0 truncate text-[12.5px] text-[#495057]">
             <span className="mr-1">{emoji}</span>
             {itemLabel} · {varietyLabel} · {marketLabel}
           </span>
-          <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
-        </Link>
+          <div className="flex shrink-0 items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => {
+                const added = toggleCrop(itemId);
+                toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 제거했어요");
+              }}
+              aria-label="즐겨찾기"
+              className="grid h-8 w-8 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
+            >
+              <Star
+                className={cn("h-4 w-4", isFav && "fill-[#F59F00] text-[#F59F00]")}
+              />
+            </button>
+            <Link
+              to="/price/$variety/alert"
+              params={{ variety: varietyId }}
+              aria-label="알림 설정"
+              className="grid h-8 w-8 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
+            >
+              <Bell className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/price/$variety"
+              params={{ variety: varietyId }}
+              aria-label="상세 보기"
+              className="grid h-8 w-8 place-items-center rounded-full text-[#ADB5BD] active:bg-[#F1F3F5]"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
 
         <div className="mt-2 flex items-end justify-between">
           <div className="flex items-baseline gap-1">
@@ -101,7 +132,7 @@ export function ProPriceHeadlineCard({
           <Stat label="전일 대비" value={fmtPct(quote.prevPct)} tone={toneOf(quote.prevPct)} />
           <Stat label="전주 대비" value={fmtPct(quote.weekPct)} tone={toneOf(quote.weekPct)} />
           <Stat label="전년 동기" value={fmtPct(quote.yearPct)} tone={toneOf(quote.yearPct)} />
-          <Stat label="거래량" value={`${quote.volumeTon.toFixed(1)}t`} tone="neutral" />
+          <Stat label="경매" value={`${quote.boxes > 0 ? Math.round(quote.volumeTon * 1.6) : 0}건`} tone="neutral" />
         </div>
 
         {/* Footer */}
