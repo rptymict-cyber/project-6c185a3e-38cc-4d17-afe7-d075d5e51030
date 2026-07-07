@@ -177,7 +177,6 @@ function WatchlistPage() {
         <div className="flex flex-1 items-center gap-2">
           {([
             ["all", "전체"],
-            ["alert", "알림 있음"],
             ["ai", "예측 가능"],
           ] as const).map(([id, label]) => {
             const active = filter === id;
