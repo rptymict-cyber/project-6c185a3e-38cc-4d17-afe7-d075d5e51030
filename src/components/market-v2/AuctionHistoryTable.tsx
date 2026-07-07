@@ -23,50 +23,27 @@ export function AuctionHistoryTable() {
     [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
   );
 
-  const [origin, setOrigin] = useState<string>("all");
-  const [pkg, setPkg] = useState<string>("all");
   const [view, setView] = useState<ViewMode>("list");
   const [page, setPage] = useState(1);
 
-  const filtered = useMemo(
-    () => applySecondaryFilters(all, origin, pkg),
-    [all, origin, pkg],
-  );
-
   const summary = useMemo(() => {
-    if (filtered.length === 0) {
+    if (all.length === 0) {
       return { avg: 0, avgPerKg: 0, volumeTon: 0 };
     }
     const avg = Math.round(
-      filtered.reduce((s, r) => s + r.price, 0) / filtered.length,
+      all.reduce((s: number, r: AuctionRecord) => s + r.price, 0) / all.length,
     );
     const avgPerKg = Math.round(
-      filtered.reduce((s, r) => s + r.pricePerKg, 0) / filtered.length,
+      all.reduce((s: number, r: AuctionRecord) => s + r.pricePerKg, 0) / all.length,
     );
     const volumeTon = +(
-      filtered.reduce((s, r) => s + r.packageKg * r.count, 0) / 1000
+      all.reduce((s: number, r: AuctionRecord) => s + r.packageKg * r.count, 0) / 1000
     ).toFixed(1);
     return { avg, avgPerKg, volumeTon };
-  }, [filtered]);
+  }, [all]);
 
-  const originCounts = useMemo(() => countBy(all, (r) => r.origin), [all]);
-  const packageCounts = useMemo(() => countBy(all, (r) => r.packageLabel), [all]);
-
-  const topOrigins = useMemo(
-    () =>
-      Object.entries(originCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 4),
-    [originCounts],
-  );
-  const packageEntries = useMemo(
-    () =>
-      Object.entries(packageCounts).sort((a, b) => b[1] - a[1]),
-    [packageCounts],
-  );
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const visible = filtered.slice(0, page * PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+  const visible = all.slice(0, page * PAGE_SIZE);
 
   const dateLabel = f.date.replaceAll("-", ".");
 
@@ -77,7 +54,7 @@ export function AuctionHistoryTable() {
         <div className="flex items-baseline gap-2">
           <h3 className="text-[15px] font-bold text-foreground">경매내역</h3>
           <span className="text-[15px] font-black text-[#3A8A3A]">
-            총 {filtered.length}건
+            총 {all.length}건
           </span>
         </div>
         <div className="mt-1 text-[11.5px] text-[#868E96]">
@@ -90,34 +67,6 @@ export function AuctionHistoryTable() {
         <SummaryCell label="평균가" value={`${summary.avg.toLocaleString()}원`} />
         <SummaryCell label="거래량" value={`${summary.volumeTon}t`} />
         <SummaryCell label="kg당" value={`${summary.avgPerKg.toLocaleString()}원`} />
-      </div>
-
-      {/* Filter chips */}
-      <div className="mt-3 space-y-2">
-        <ChipRow
-          label="출하지"
-          value={origin}
-          onChange={(v) => {
-            setOrigin(v);
-            setPage(1);
-          }}
-          options={[
-            { value: "all", label: "전체", count: all.length },
-            ...topOrigins.map(([v, c]) => ({ value: v, label: v, count: c })),
-          ]}
-        />
-        <ChipRow
-          label="규격"
-          value={pkg}
-          onChange={(v) => {
-            setPkg(v);
-            setPage(1);
-          }}
-          options={[
-            { value: "all", label: "전체", count: all.length },
-            ...packageEntries.map(([v, c]) => ({ value: v, label: v, count: c })),
-          ]}
-        />
       </div>
 
       {/* View toggle */}
@@ -137,7 +86,7 @@ export function AuctionHistoryTable() {
         <EmptyRow />
       ) : view === "list" ? (
         <ul className="mt-3 divide-y divide-[#F1F3F5] overflow-hidden rounded-[12px] border border-[#E9ECEF] bg-white">
-          {visible.map((r) => (
+          {visible.map((r: AuctionRecord) => (
             <AuctionListItem key={r.id} r={r} />
           ))}
         </ul>
@@ -177,51 +126,6 @@ function ToggleBtn({
     >
       {children}
     </button>
-  );
-}
-
-function ChipRow({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  options: { value: string; label: string; count: number }[];
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="w-10 shrink-0 text-[11.5px] font-semibold text-[#495057]">
-        {label}
-      </span>
-      <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
-        {options.map((o) => {
-          const active = o.value === value;
-          return (
-            <button
-              key={o.value}
-              type="button"
-              onClick={() => onChange(o.value)}
-              className={cn(
-                "shrink-0 rounded-full border px-2.5 py-1 text-[11.5px] font-medium",
-                active
-                  ? "border-[#1F5C1F] bg-[#1F5C1F] text-white"
-                  : "border-[#E9ECEF] bg-white text-[#495057]",
-              )}
-            >
-              {o.label}
-              {o.value !== "all" && (
-                <span className={cn("ml-1", active ? "text-white/80" : "text-[#868E96]")}>
-                  {o.count}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </div>
   );
 }
 
