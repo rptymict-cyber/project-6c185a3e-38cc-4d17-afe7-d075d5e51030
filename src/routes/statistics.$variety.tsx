@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Bell, Calendar, ChevronDown, ChevronRight, Star } from "lucide-react";
+import { ArrowLeft, Bell, ChevronDown, ChevronRight, Star } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
@@ -12,6 +12,7 @@ import { getCrop } from "@/lib/mock/crops";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
 import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
+import { useRecentStats } from "@/store/recent-stats";
 import { useWatchlist } from "@/store/watchlist";
 import { cn } from "@/lib/utils";
 
@@ -27,24 +28,35 @@ export const Route = createFileRoute("/statistics/$variety")({
 
 type Tab = "market" | "trend";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "market", label: "시장별 평균" },
-  { id: "trend", label: "가격 추이" },
+  { id: "market", label: "시장별 평균가격" },
+  { id: "trend", label: "시장가격 그래프" },
 ];
+
+function formatKoreanDate(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  const dt = new Date(y, (m ?? 1) - 1, d ?? 1);
+  const wd = ["일", "월", "화", "수", "목", "금", "토"][dt.getDay()];
+  return `${y}년 ${m}월 ${d}일 (${wd})`;
+}
 
 function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
   const navigate = useNavigate();
   const crop = getCrop(variety);
+  const pushRecent = useRecentStats((s) => s.push);
 
   // Statistics tab manages its own date state — do NOT share with market tab.
   const [date, setDate] = useState("2025-07-05");
-  const [dateLabel, setDateLabel] = useState("7/5 (토) · 최근 거래일");
   const [dateOpen, setDateOpen] = useState(false);
 
   const [tab, setTab] = useState<Tab>("market");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+
+  useEffect(() => {
+    if (crop) pushRecent(variety);
+  }, [crop, variety, pushRecent]);
 
   const data = useMemo(
     () => (crop ? getVarietyMarketAverages({ varietyId: variety, date }) : null),
