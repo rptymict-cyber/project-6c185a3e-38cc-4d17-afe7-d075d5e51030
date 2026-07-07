@@ -357,7 +357,7 @@ function NormalView({
         <div className="flex flex-1 items-center gap-2">
           {([
             ["all", "전체"],
-            ["ai", "시세 예측"],
+            ["ai", "AI 예측"],
           ] as const).map(([id, label]) => {
             const active = filter === id;
             return (
