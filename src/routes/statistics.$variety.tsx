@@ -58,7 +58,7 @@ function VarietyStatsPage() {
   const [dateOpen, setDateOpen] = useState(false);
 
   const [tab, setTab] = useState<Tab>("market");
-  const [alertOpen, setAlertOpen] = useState(false);
+  // alertOpen 제거됨 — 벨 아이콘은 규칙 통합 화면으로 이동
 
   useEffect(() => {
     if (crop) pushRecent(variety);
