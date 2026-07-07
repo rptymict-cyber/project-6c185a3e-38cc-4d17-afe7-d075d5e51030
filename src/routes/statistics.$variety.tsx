@@ -82,9 +82,10 @@ function VarietyStatsPage() {
 
   const starred = useWatchlist((s) => s.crops.includes(variety));
   const toggleCrop = useWatchlist((s) => s.toggleCrop);
-  const hasAlert = useAlerts((s) =>
-    s.hasAnyFor(variety, data?.regions[0]?.markets[0]?.id ?? "all"),
-  );
+  const alertMarketId = data?.regions[0]?.markets[0]?.id ?? "all";
+  const alertMarketLabel = data?.regions[0]?.markets[0]?.name ?? "전체";
+  const hasAlert = useAlerts((s) => s.hasAnyFor(variety, alertMarketId));
+  const existingAlertRule = useAlerts((s) => s.getByKey(variety, alertMarketId));
 
   const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
   const setMarket = useMarketFilter((s) => s.setMarket);
