@@ -157,7 +157,7 @@ function VarietyDetailPage() {
     >
       {/* Title area */}
       <div className="px-4 pt-4">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-[19px] font-black tracking-tight text-foreground">
             {emoji} {f.varietyLabel}
           </h1>
@@ -165,19 +165,36 @@ function VarietyDetailPage() {
             {f.itemLabel} · {f.categoryLabel}
             <Search className="h-3 w-3" />
           </span>
+          {isPredictable && (
+            <span className="inline-flex items-center rounded-full border border-[#3A8A3A]/30 bg-[#F0F9F0] px-2 py-0.5 text-[11px] font-bold text-[#1F5C1F]">
+              시세 예측 가능
+            </span>
+          )}
         </div>
 
-        <div className="mt-3 flex items-end gap-1.5">
-          <span className="text-[32px] font-black leading-none tracking-tight text-foreground">
-            {quote.price.toLocaleString()}
-          </span>
-          <span className="text-[14px] font-semibold text-foreground">원</span>
-          <span className="pb-0.5 text-[12px] text-[#6C757D]">
-            / {quote.unit.replace(" 기준", "")}
-          </span>
-          <span className="mb-0.5 ml-1 inline-flex items-center rounded-full bg-[#F1F3F5] px-2 py-0.5 text-[11px] font-semibold text-[#495057]">
-            kg당 {pricePerKg.toLocaleString()}원
-          </span>
+        <div className="mt-3 flex items-end justify-between gap-2">
+          <div className="flex flex-wrap items-end gap-1.5">
+            <span className="text-[32px] font-black leading-none tracking-tight text-foreground">
+              {quote.price.toLocaleString()}
+            </span>
+            <span className="text-[14px] font-semibold text-foreground">원</span>
+            <span className="pb-0.5 text-[12px] text-[#6C757D]">
+              / {quote.unit.replace(" 기준", "")}
+            </span>
+            <span className="mb-0.5 ml-1 inline-flex items-center rounded-full bg-[#F1F3F5] px-2 py-0.5 text-[11px] font-semibold text-[#495057]">
+              kg당 {pricePerKg.toLocaleString()}원
+            </span>
+          </div>
+          {isPredictable && (
+            <Link
+              to="/prediction"
+              search={{ crop: f.itemId, entrySource: "detail" } as never}
+              className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-[#3A8A3A] px-2.5 py-1 text-[11.5px] font-bold text-[#1F5C1F] active:bg-[#F0F9F0]"
+            >
+              AI 시세 예측 보기
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          )}
         </div>
 
         <div className={cn("mt-1.5 flex items-center gap-2 text-[13px]", changeColor)}>
@@ -190,6 +207,7 @@ function VarietyDetailPage() {
           </span>
         </div>
       </div>
+
 
       {/* Tabs */}
       <div className="mt-5 border-b border-[#E9ECEF]">
