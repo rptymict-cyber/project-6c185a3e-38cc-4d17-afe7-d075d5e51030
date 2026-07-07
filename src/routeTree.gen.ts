@@ -25,6 +25,7 @@ import { Route as MarketIndexRouteImport } from './routes/market.index'
 import { Route as StatisticsSelectRouteImport } from './routes/statistics.select'
 import { Route as StatisticsVarietyRouteImport } from './routes/statistics.$variety'
 import { Route as PriceVarietyRouteImport } from './routes/price.$variety'
+import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
 import { Route as MarketCropRouteImport } from './routes/market.$crop'
 import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
 import { Route as PriceVarietyAlertRouteImport } from './routes/price.$variety.alert'
@@ -112,6 +113,11 @@ const PriceVarietyRoute = PriceVarietyRouteImport.update({
   path: '/price/$variety',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsSettingsRoute = NotificationsSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => NotificationsRoute,
+} as any)
 const MarketCropRoute = MarketCropRouteImport.update({
   id: '/$crop',
   path: '/$crop',
@@ -119,9 +125,9 @@ const MarketCropRoute = MarketCropRouteImport.update({
 } as any)
 const NotificationsSettingsIndexRoute =
   NotificationsSettingsIndexRouteImport.update({
-    id: '/settings/',
-    path: '/settings/',
-    getParentRoute: () => NotificationsRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => NotificationsSettingsRoute,
   } as any)
 const PriceVarietyAlertRoute = PriceVarietyAlertRouteImport.update({
   id: '/alert',
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/statistics': typeof StatisticsRouteWithChildren
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
+  '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/statistics/select': typeof StatisticsSelectRoute
@@ -204,6 +211,7 @@ export interface FileRoutesById {
   '/statistics': typeof StatisticsRouteWithChildren
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
+  '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/statistics/select': typeof StatisticsSelectRoute
@@ -230,6 +238,7 @@ export interface FileRouteTypes {
     | '/statistics'
     | '/watchlist'
     | '/market/$crop'
+    | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
     | '/statistics/select'
@@ -276,6 +285,7 @@ export interface FileRouteTypes {
     | '/statistics'
     | '/watchlist'
     | '/market/$crop'
+    | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
     | '/statistics/select'
@@ -417,6 +427,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PriceVarietyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications/settings': {
+      id: '/notifications/settings'
+      path: '/settings'
+      fullPath: '/notifications/settings'
+      preLoaderRoute: typeof NotificationsSettingsRouteImport
+      parentRoute: typeof NotificationsRoute
+    }
     '/market/$crop': {
       id: '/market/$crop'
       path: '/$crop'
@@ -426,10 +443,10 @@ declare module '@tanstack/react-router' {
     }
     '/notifications/settings/': {
       id: '/notifications/settings/'
-      path: '/settings'
+      path: '/'
       fullPath: '/notifications/settings/'
       preLoaderRoute: typeof NotificationsSettingsIndexRouteImport
-      parentRoute: typeof NotificationsRoute
+      parentRoute: typeof NotificationsSettingsRoute
     }
     '/price/$variety/alert': {
       id: '/price/$variety/alert'
@@ -481,14 +498,27 @@ const MarketRouteChildren: MarketRouteChildren = {
 const MarketRouteWithChildren =
   MarketRoute._addFileChildren(MarketRouteChildren)
 
-interface NotificationsRouteChildren {
-  NotificationsIndexRoute: typeof NotificationsIndexRoute
+interface NotificationsSettingsRouteChildren {
   NotificationsSettingsIndexRoute: typeof NotificationsSettingsIndexRoute
 }
 
-const NotificationsRouteChildren: NotificationsRouteChildren = {
-  NotificationsIndexRoute: NotificationsIndexRoute,
+const NotificationsSettingsRouteChildren: NotificationsSettingsRouteChildren = {
   NotificationsSettingsIndexRoute: NotificationsSettingsIndexRoute,
+}
+
+const NotificationsSettingsRouteWithChildren =
+  NotificationsSettingsRoute._addFileChildren(
+    NotificationsSettingsRouteChildren,
+  )
+
+interface NotificationsRouteChildren {
+  NotificationsSettingsRoute: typeof NotificationsSettingsRouteWithChildren
+  NotificationsIndexRoute: typeof NotificationsIndexRoute
+}
+
+const NotificationsRouteChildren: NotificationsRouteChildren = {
+  NotificationsSettingsRoute: NotificationsSettingsRouteWithChildren,
+  NotificationsIndexRoute: NotificationsIndexRoute,
 }
 
 const NotificationsRouteWithChildren = NotificationsRoute._addFileChildren(
