@@ -14,7 +14,6 @@ export function InterestChips() {
   const select = useInterests((s) => s.select);
   const remove = useInterests((s) => s.remove);
   const [editing, setEditing] = useState(false);
-  const [open, setOpen] = useState(false);
 
   const items = ids.map(getCrop).filter(Boolean) as ReturnType<typeof getCrop> extends undefined
     ? never
