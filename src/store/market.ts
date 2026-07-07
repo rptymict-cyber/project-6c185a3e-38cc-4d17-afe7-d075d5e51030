@@ -85,6 +85,7 @@ export const useMarketFilter = create<MarketFilterState>()(
       corpLabel: "전체",
       unit: "8kg 기준",
       simpleMode: true,
+      proTab: "chart",
       setDate: (date, dateLabel) => set({ date, dateLabel }),
       setItem: (p) => set(p),
       setMarket: (marketId, marketLabel) =>
@@ -93,6 +94,7 @@ export const useMarketFilter = create<MarketFilterState>()(
       setUnit: (unit) => set({ unit }),
       setSimpleMode: (simpleMode) => set({ simpleMode }),
       toggleSimpleMode: () => set((s) => ({ simpleMode: !s.simpleMode })),
+      setProTab: (proTab) => set({ proTab }),
     }),
     {
       name: "agdict:viewMode",
