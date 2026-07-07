@@ -275,3 +275,38 @@ function MinimalHeader({ label, onBack }: { label: string; onBack: () => void })
     </header>
   );
 }
+
+function SummaryCard({
+  label,
+  value,
+  sub,
+  tone,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  tone?: "up" | "down" | "flat";
+}) {
+  const color =
+    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
+  return (
+    <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2">
+      <div className="text-[10.5px] font-semibold text-[#6C757D]">{label}</div>
+      <div className={cn("mt-1 text-[13px] font-black tabular-nums leading-tight", color)}>
+        {value}
+      </div>
+      {sub && <div className="mt-0.5 text-[10px] text-[#868E96]">{sub}</div>}
+    </div>
+  );
+}
+
+function fmtSigned(v: number): string {
+  if (v === 0) return "0";
+  return `${v > 0 ? "+" : ""}${v.toLocaleString()}`;
+}
+
+function toneOf(v: number): "up" | "down" | "flat" {
+  if (v > 0) return "up";
+  if (v < 0) return "down";
+  return "flat";
+}
