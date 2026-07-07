@@ -28,21 +28,6 @@ export const Route = createFileRoute("/market/")({
 
 function MarketPage() {
   const f = useMarketFilter();
-
-  return (
-    <AppShell header={<AppHeader title="농산물 시세 조회" />}>
-      <MarketSearchBar />
-      <MarketFilterBar />
-
-      <div className="mt-3">
-        {f.simpleMode ? <SimpleModeView /> : <ProModeView />}
-      </div>
-    </AppShell>
-  );
-}
-
-function ProModeView() {
-  const f = useMarketFilter();
   const quote = getMarketQuote({
     itemId: f.itemId,
     varietyId: f.varietyId,
@@ -50,8 +35,13 @@ function ProModeView() {
     unit: f.unit,
     date: f.date,
   });
+
   return (
-    <div className="pb-6">
+    <AppShell header={<AppHeader title="농산물 시세 조회" />}>
+      <MarketSearchBar />
+      <MarketFilterBar />
+
+      {/* Common headline card — identical in both modes */}
       <div className="px-4">
         <ProPriceHeadlineCard
           itemId={f.itemId}
@@ -62,7 +52,8 @@ function ProModeView() {
           quote={quote}
         />
       </div>
-      <ProAnalysisSection />
-    </div>
+
+      {f.simpleMode ? <SimpleModeView /> : <ProAnalysisSection />}
+    </AppShell>
   );
 }
