@@ -497,20 +497,19 @@ function Step2Item({
 /* ---------- Step 3 ---------- */
 
 function Step3Variety({
-  categoryId,
+  categoryId: _categoryId,
   itemId,
   selectedVarietyId,
-  onBack,
   onPickVariety,
+  selectionCards,
 }: {
   categoryId: string;
   itemId: string;
   selectedVarietyId?: string;
-  onBack: () => void;
   onPickVariety: (id: string) => void;
+  selectionCards: React.ReactNode;
 }) {
   const [q, setQ] = useState("");
-  const category = getCategoryById(categoryId);
   const item = getItemById(itemId);
   const varieties = item?.varieties ?? [];
   const filtered = useMemo(() => {
@@ -526,13 +525,9 @@ function Step3Variety({
 
   return (
     <div className="px-4 py-4">
-      <Breadcrumb onBack={onBack}>
-        {category?.name ?? "부류"} <span className="text-gray-400">{">"}</span>{" "}
-        {item?.name ?? "품목"}
-      </Breadcrumb>
-      <div className="mt-3">
-        <SearchInput value={q} onChange={setQ} placeholder="품종 검색" />
-      </div>
+      <SearchInput value={q} onChange={setQ} placeholder="품종 검색" />
+      {selectionCards}
+
 
       <div className="mt-3 overflow-hidden rounded-2xl bg-white">
         <ul>
