@@ -239,10 +239,6 @@ function VarietyDetailPage() {
           period={period}
           setPeriod={setPeriod}
           quote={quote}
-          onOpenSimple={() => {
-            setSimpleMode(true);
-            navigate({ to: "/market" });
-          }}
         />
       )}
       {tab === "auctions" && <AuctionHistoryTable />}
@@ -256,17 +252,8 @@ function VarietyDetailPage() {
       {tab === "variety" && (
         <VarietyTab itemLabel={f.itemLabel} currentVarietyLabel={f.varietyLabel} />
       )}
-
-      <AlertSettingsSheet
-        open={alertOpen}
-        onOpenChange={setAlertOpen}
-        varietyId={variety}
-        marketId={f.marketId}
-        varietyLabel={f.varietyLabel}
-        marketLabel={f.marketLabel}
-        targetPrice={7000}
-      />
     </AppShell>
+
   );
 }
 
