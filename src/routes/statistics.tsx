@@ -138,21 +138,21 @@ function StatisticsHome() {
               icon={<Sparkles className="h-4 w-4" />}
               title="시세 예측 가능"
               subtitle="품목"
-              onClick={() => navigate({ to: "/statistics/select", search: { quick: "predict" } })}
+              onClick={() => navigate({ to: "/statistics/select" })}
             />
             <QuickCard
               tone="blue"
               icon={<BarChart3 className="h-4 w-4" />}
               title="거래량 많은"
               subtitle="품목"
-              onClick={() => navigate({ to: "/statistics/select", search: { quick: "volume" } })}
+              onClick={() => navigate({ to: "/statistics/select" })}
             />
             <QuickCard
               tone="rose"
               icon={<ArrowUpDown className="h-4 w-4" />}
               title="가격 변동 큰"
               subtitle="품목"
-              onClick={() => navigate({ to: "/statistics/select", search: { quick: "change" } })}
+              onClick={() => navigate({ to: "/statistics/select" })}
             />
           </div>
         </section>
