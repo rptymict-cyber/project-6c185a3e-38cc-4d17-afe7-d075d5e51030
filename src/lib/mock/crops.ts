@@ -315,10 +315,24 @@ const RAW_CROPS: RawCrop[] = [
   },
 ];
 
+export const CROPS: Crop[] = RAW_CROPS.map((c) => {
+  const predictable = PREDICTABLE_IDS.has(c.id);
+  return {
+    ...c,
+    isPredictable: predictable,
+    predictionStatus: predictable ? "available" : "unavailable",
+    aiReady: predictable,
+  };
+});
+
+export const predictableCrops: Crop[] = CROPS.filter(
+  (c) => c.isPredictable && c.predictionStatus === "available",
+);
 
 export function getCrop(id: string): Crop | undefined {
   return CROPS.find((c) => c.id === id);
 }
+
 
 export function seriesFor(cropId: string, period: "1w" | "1m" | "1y" | "3y") {
   const c = getCrop(cropId);
