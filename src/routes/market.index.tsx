@@ -53,7 +53,7 @@ function MarketPage() {
         />
       </div>
 
-      {f.simpleMode ? <SimpleModeView /> : <ProAnalysisSection />}
+      {f.simpleMode ? <AuctionHistoryTable /> : <ProAnalysisSection />}
     </AppShell>
   );
 }
