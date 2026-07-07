@@ -437,15 +437,14 @@ function Step1Category({
 
 function Step2Item({
   categoryId,
-  onBack,
   onPickItem,
+  selectionCards,
 }: {
   categoryId: string;
-  onBack: () => void;
   onPickItem: (id: string) => void;
+  selectionCards: React.ReactNode;
 }) {
   const [q, setQ] = useState("");
-  const category = getCategoryById(categoryId);
   const items = getItemsByCategory(categoryId);
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -455,12 +454,11 @@ function Step2Item({
 
   return (
     <div className="px-4 py-4">
-      <Breadcrumb onBack={onBack}>{category?.name ?? "부류"}</Breadcrumb>
-      <div className="mt-3">
-        <SearchInput value={q} onChange={setQ} placeholder="품목 검색" />
-      </div>
+      <SearchInput value={q} onChange={setQ} placeholder="품목 검색" />
+      {selectionCards}
 
       <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+
         {filtered.length === 0 ? (
           <div className="px-4 py-8 text-center text-sm text-gray-500">
             해당하는 품목이 없어요.
