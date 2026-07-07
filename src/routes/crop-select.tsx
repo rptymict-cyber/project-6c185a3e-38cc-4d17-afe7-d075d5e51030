@@ -72,6 +72,9 @@ function CropSelectPage() {
   const setDraftCategory = useCropSelection((s) => s.setDraftCategory);
   const setDraftItem = useCropSelection((s) => s.setDraftItem);
   const setDraftVariety = useCropSelection((s) => s.setDraftVariety);
+  const clearDraftCategory = useCropSelection((s) => s.clearDraftCategory);
+  const clearDraftItem = useCropSelection((s) => s.clearDraftItem);
+  const clearDraftVariety = useCropSelection((s) => s.clearDraftVariety);
   const commitDraft = useCropSelection((s) => s.commitDraft);
   const discardDraft = useCropSelection((s) => s.discardDraft);
 
@@ -167,6 +170,28 @@ function CropSelectPage() {
     setStep(3);
   };
 
+  const handleRemoveCategory = () => {
+    clearDraftCategory();
+    setStep(1);
+  };
+  const handleRemoveItem = () => {
+    clearDraftItem();
+    setStep(2);
+  };
+  const handleRemoveVariety = () => {
+    clearDraftVariety();
+    setStep(3);
+  };
+
+  const selectionCards = (
+    <SelectionCards
+      draft={draft}
+      onRemoveCategory={handleRemoveCategory}
+      onRemoveItem={handleRemoveItem}
+      onRemoveVariety={handleRemoveVariety}
+    />
+  );
+
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-gray-100">
       <Header title={STEP_TITLE[step]} onClose={handleClose} />
@@ -177,13 +202,14 @@ function CropSelectPage() {
           <Step1Category
             onPickCategory={handlePickCategory}
             onSearchJump={handleSearchJump}
+            selectionCards={selectionCards}
           />
         )}
         {step === 2 && (
           <Step2Item
             categoryId={draft.categoryId!}
-            onBack={() => setStep(1)}
             onPickItem={handlePickItem}
+            selectionCards={selectionCards}
           />
         )}
         {step === 3 && (
@@ -191,8 +217,8 @@ function CropSelectPage() {
             categoryId={draft.categoryId!}
             itemId={draft.itemId!}
             selectedVarietyId={draft.varietyId}
-            onBack={() => setStep(2)}
             onPickVariety={handlePickVariety}
+            selectionCards={selectionCards}
           />
         )}
       </main>
