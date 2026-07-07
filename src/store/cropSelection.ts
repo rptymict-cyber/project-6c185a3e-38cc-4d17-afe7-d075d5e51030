@@ -79,6 +79,20 @@ export const useCropSelection = create<CropSelectionState>()(
       setDraftVariety: (varietyId) =>
         set((s) => ({ draft: { ...s.draft, varietyId } })),
 
+      clearDraftCategory: () => set({ draft: EMPTY }),
+
+      clearDraftItem: () =>
+        set((s) => ({
+          draft: {
+            categoryId: s.draft.categoryId,
+            itemId: undefined,
+            varietyId: undefined,
+          },
+        })),
+
+      clearDraftVariety: () =>
+        set((s) => ({ draft: { ...s.draft, varietyId: undefined } })),
+
       discardDraft: () => set({ draft: EMPTY }),
 
       commitDraft: () => set((s) => ({ committed: { ...s.draft } })),
