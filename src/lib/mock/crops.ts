@@ -75,7 +75,10 @@ function makeSeries(base: number, len: number, seedNum: number, vol = 0.06) {
   return out;
 }
 
-export const CROPS: Crop[] = [
+type RawCrop = Omit<Crop, "isPredictable" | "predictionStatus">;
+
+const RAW_CROPS: RawCrop[] = [
+
   {
     id: "apple",
     name: "사과",
