@@ -1,13 +1,20 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { ChevronRight } from "lucide-react";
 import { useMarketFilter } from "@/store/market";
-import { listAuctions } from "@/lib/mock/auctions";
+import {
+  applySecondaryFilters,
+  countBy,
+  listAuctions,
+  type AuctionRecord,
+} from "@/lib/mock/auctions";
+import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 20;
 
 export function AuctionHistoryTable() {
   const f = useMarketFilter();
-  const rows = useMemo(
+  const all = useMemo(
     () =>
       listAuctions({
         categoryLabel: f.categoryLabel,
@@ -19,51 +26,120 @@ export function AuctionHistoryTable() {
       }),
     [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
   );
+
+  const [origin, setOrigin] = useState("all");
+  const [pkg, setPkg] = useState("all");
   const [page, setPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
-  const visible = rows.slice(0, page * PAGE_SIZE);
+
+  const filtered = useMemo(
+    () => applySecondaryFilters(all, origin, pkg),
+    [all, origin, pkg],
+  );
+
+  const originCounts = useMemo(() => countBy(all, (r) => r.origin), [all]);
+  const packageCounts = useMemo(() => countBy(all, (r) => r.packageLabel), [all]);
+
+  const summary = useMemo(() => {
+    if (filtered.length === 0) {
+      return { avg: 0, max: 0, min: 0, volumeTon: 0 };
+    }
+    const prices = filtered.map((r) => r.price);
+    const avg = Math.round(prices.reduce((s, v) => s + v, 0) / prices.length);
+    const max = Math.max(...prices);
+    const min = Math.min(...prices);
+    const volumeTon = +(
+      filtered.reduce((s, r) => s + r.packageKg * r.count, 0) / 1000
+    ).toFixed(1);
+    return { avg, max, min, volumeTon };
+  }, [filtered]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const visible = filtered.slice(0, page * PAGE_SIZE);
+
+  const dateLabel = f.date.replaceAll("-", ".");
 
   return (
-    <div className="px-2 pb-6 pt-3">
-      <div className="overflow-x-auto rounded-[10px] border border-[#E9ECEF]">
-        <table className="w-full min-w-[560px] text-[12px]">
-          <thead>
-            <tr className="bg-[#F8F9FA] text-[#6C757D]">
-              <Th>시간</Th>
-              <Th>도매시장</Th>
-              <Th>도매법인</Th>
-              <Th>출하지</Th>
-              <Th className="text-right">수량</Th>
-              <Th className="text-right">경락가</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {visible.map((r) => {
-              const mmdd = r.auctionDate.slice(5).replace("-", "/");
-              return (
-                <tr key={r.id} className="border-t border-[#F1F3F5] hover:bg-[#F8F9FA]">
-                  <Td>
-                    <Link
-                      to="/market/auction/$id"
-                      params={{ id: r.id }}
-                      className="block whitespace-nowrap text-[#495057]"
-                    >
-                      {mmdd} {r.auctionClock}
-                    </Link>
-                  </Td>
-                  <Td>{r.marketName}</Td>
-                  <Td>{r.corporationName}</Td>
-                  <Td>{r.origin}</Td>
-                  <Td className="text-right">{r.count}</Td>
-                  <Td className="text-right font-bold text-[#E03131]">
-                    {r.price.toLocaleString()}
-                  </Td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+    <div className="px-4 pb-8 pt-4">
+      {/* Summary header */}
+      <div>
+        <div className="flex items-baseline gap-2">
+          <h3 className="text-[15px] font-bold text-foreground">경매내역</h3>
+          <span className="text-[15px] font-black text-[#3A8A3A]">
+            총 {all.length}건
+          </span>
+        </div>
+        <div className="mt-1 text-[11.5px] text-[#868E96]">
+          {dateLabel} 기준 · {f.marketLabel} · {f.corpLabel} 법인 · {f.unit.replace(" 기준", "")} 기준
+        </div>
       </div>
+
+      {/* 4 stat grid */}
+      <div className="mt-3 grid grid-cols-4 gap-2">
+        <SummaryCell label="평균가" value={`${summary.avg.toLocaleString()}원`} />
+        <SummaryCell label="최고가" value={`${summary.max.toLocaleString()}원`} tone="up" />
+        <SummaryCell label="최저가" value={`${summary.min.toLocaleString()}원`} tone="down" />
+        <SummaryCell label="총 거래량" value={`${summary.volumeTon}t`} />
+      </div>
+
+      {/* Filter chips */}
+      <div className="no-scrollbar mt-4 flex gap-1.5 overflow-x-auto">
+        <FilterChip
+          label="출하지 전체"
+          active={origin === "all"}
+          onClick={() => {
+            setOrigin("all");
+            setPage(1);
+          }}
+        />
+        {Object.entries(originCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([k, n]) => (
+            <FilterChip
+              key={k}
+              label={`${k} (${n})`}
+              active={origin === k}
+              onClick={() => {
+                setOrigin(k);
+                setPage(1);
+              }}
+            />
+          ))}
+      </div>
+      <div className="no-scrollbar mt-2 flex gap-1.5 overflow-x-auto">
+        <FilterChip
+          label="규격 전체"
+          active={pkg === "all"}
+          onClick={() => {
+            setPkg("all");
+            setPage(1);
+          }}
+        />
+        {Object.entries(packageCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([k, n]) => (
+            <FilterChip
+              key={k}
+              label={`${k} (${n})`}
+              active={pkg === k}
+              onClick={() => {
+                setPkg(k);
+                setPage(1);
+              }}
+            />
+          ))}
+      </div>
+
+      {/* Card list */}
+      {visible.length === 0 ? (
+        <EmptyRow />
+      ) : (
+        <ul className="mt-3 divide-y divide-[#F1F3F5] overflow-hidden rounded-[12px] border border-[#E9ECEF] bg-white">
+          {visible.map((r) => (
+            <AuctionListItem key={r.id} r={r} />
+          ))}
+        </ul>
+      )}
+
       {page < totalPages && (
         <button
           onClick={() => setPage((p) => p + 1)}
@@ -76,17 +152,84 @@ export function AuctionHistoryTable() {
   );
 }
 
-function Th({ children, className }: { children: React.ReactNode; className?: string }) {
+function AuctionListItem({ r }: { r: AuctionRecord }) {
+  const mmdd = r.auctionDate.slice(5).replace("-", "/");
   return (
-    <th className={`whitespace-nowrap px-3 py-2 text-left font-semibold ${className ?? ""}`}>
-      {children}
-    </th>
+    <li>
+      <Link
+        to="/market/auction/$id"
+        params={{ id: r.id }}
+        className="flex items-center gap-3 px-3.5 py-3 active:bg-[#F8F9FA]"
+      >
+        <div className="w-[54px] shrink-0 text-[11px] leading-tight text-[#868E96]">
+          <div>{mmdd}</div>
+          <div>{r.auctionClock}</div>
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline gap-2">
+            <span className="text-[15px] font-bold text-[#E03131]">
+              {r.price.toLocaleString()}원
+            </span>
+            <span className="text-[11.5px] text-[#868E96]">
+              수량 {r.count}건 · {r.packageLabel}
+            </span>
+          </div>
+          <div className="mt-0.5 truncate text-[11.5px] text-[#495057]">
+            {r.origin} · {r.corporationName}
+          </div>
+        </div>
+        <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
+      </Link>
+    </li>
   );
 }
-function Td({ children, className }: { children: React.ReactNode; className?: string }) {
+
+function SummaryCell({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: "up" | "down";
+}) {
+  const color =
+    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
   return (
-    <td className={`whitespace-nowrap px-3 py-2.5 text-[#495057] ${className ?? ""}`}>
-      {children}
-    </td>
+    <div className="flex flex-col items-center gap-0.5 rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2.5">
+      <span className="text-[10.5px] text-[#868E96]">{label}</span>
+      <span className={cn("text-[12.5px] font-bold", color)}>{value}</span>
+    </div>
+  );
+}
+
+function FilterChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "shrink-0 rounded-full px-3 py-1.5 text-[12px] font-semibold",
+        active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-[#495057]",
+      )}
+    >
+      {label}
+    </button>
+  );
+}
+
+function EmptyRow() {
+  return (
+    <div className="mt-4 flex flex-col items-center gap-2 py-14 text-center">
+      <span className="text-3xl">📭</span>
+      <span className="text-[13px] text-[#6C757D]">해당 조건의 경매 결과가 없어요</span>
+    </div>
   );
 }
