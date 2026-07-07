@@ -85,11 +85,11 @@ export function AuctionHistoryTable() {
       {visible.length === 0 ? (
         <EmptyRow />
       ) : view === "list" ? (
-        <ul className="mt-3 divide-y divide-[#F1F3F5] overflow-hidden rounded-[12px] border border-[#E9ECEF] bg-white">
+        <div className="mt-3 space-y-2">
           {visible.map((r: AuctionRecord) => (
             <AuctionListItem key={r.id} r={r} />
           ))}
-        </ul>
+        </div>
       ) : (
         <AuctionTable rows={visible} />
       )}
