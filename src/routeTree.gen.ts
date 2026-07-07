@@ -24,6 +24,7 @@ import { Route as MarketIndexRouteImport } from './routes/market.index'
 import { Route as StatisticsSelectRouteImport } from './routes/statistics.select'
 import { Route as StatisticsVarietyRouteImport } from './routes/statistics.$variety'
 import { Route as PriceVarietyRouteImport } from './routes/price.$variety'
+import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
 import { Route as MarketCropRouteImport } from './routes/market.$crop'
 import { Route as PriceVarietyAlertRouteImport } from './routes/price.$variety.alert'
 import { Route as MarketWholesaleMarketRouteImport } from './routes/market.wholesale.$market'
@@ -105,6 +106,11 @@ const PriceVarietyRoute = PriceVarietyRouteImport.update({
   path: '/price/$variety',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsSettingsRoute = NotificationsSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => NotificationsRoute,
+} as any)
 const MarketCropRoute = MarketCropRouteImport.update({
   id: '/$crop',
   path: '/$crop',
@@ -137,13 +143,14 @@ export interface FileRoutesByFullPath {
   '/crop-select': typeof CropSelectRoute
   '/grades': typeof GradesRoute
   '/market': typeof MarketRouteWithChildren
-  '/notifications': typeof NotificationsRoute
+  '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRouteWithChildren
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
+  '/notifications/settings': typeof NotificationsSettingsRoute
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/statistics/select': typeof StatisticsSelectRoute
@@ -158,13 +165,14 @@ export interface FileRoutesByTo {
   '/compare': typeof CompareRoute
   '/crop-select': typeof CropSelectRoute
   '/grades': typeof GradesRoute
-  '/notifications': typeof NotificationsRoute
+  '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRouteWithChildren
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
+  '/notifications/settings': typeof NotificationsSettingsRoute
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/statistics/select': typeof StatisticsSelectRoute
@@ -181,13 +189,14 @@ export interface FileRoutesById {
   '/crop-select': typeof CropSelectRoute
   '/grades': typeof GradesRoute
   '/market': typeof MarketRouteWithChildren
-  '/notifications': typeof NotificationsRoute
+  '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRouteWithChildren
   '/watchlist': typeof WatchlistRoute
   '/market/$crop': typeof MarketCropRoute
+  '/notifications/settings': typeof NotificationsSettingsRoute
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/statistics/select': typeof StatisticsSelectRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/statistics'
     | '/watchlist'
     | '/market/$crop'
+    | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
     | '/statistics/select'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/statistics'
     | '/watchlist'
     | '/market/$crop'
+    | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
     | '/statistics/select'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/statistics'
     | '/watchlist'
     | '/market/$crop'
+    | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
     | '/statistics/select'
@@ -271,7 +283,7 @@ export interface RootRouteChildren {
   CropSelectRoute: typeof CropSelectRoute
   GradesRoute: typeof GradesRoute
   MarketRoute: typeof MarketRouteWithChildren
-  NotificationsRoute: typeof NotificationsRoute
+  NotificationsRoute: typeof NotificationsRouteWithChildren
   PredictionRoute: typeof PredictionRoute
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
@@ -387,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PriceVarietyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications/settings': {
+      id: '/notifications/settings'
+      path: '/settings'
+      fullPath: '/notifications/settings'
+      preLoaderRoute: typeof NotificationsSettingsRouteImport
+      parentRoute: typeof NotificationsRoute
+    }
     '/market/$crop': {
       id: '/market/$crop'
       path: '/$crop'
@@ -444,6 +463,18 @@ const MarketRouteChildren: MarketRouteChildren = {
 const MarketRouteWithChildren =
   MarketRoute._addFileChildren(MarketRouteChildren)
 
+interface NotificationsRouteChildren {
+  NotificationsSettingsRoute: typeof NotificationsSettingsRoute
+}
+
+const NotificationsRouteChildren: NotificationsRouteChildren = {
+  NotificationsSettingsRoute: NotificationsSettingsRoute,
+}
+
+const NotificationsRouteWithChildren = NotificationsRoute._addFileChildren(
+  NotificationsRouteChildren,
+)
+
 interface StatisticsRouteChildren {
   StatisticsVarietyRoute: typeof StatisticsVarietyRoute
   StatisticsSelectRoute: typeof StatisticsSelectRoute
@@ -476,7 +507,7 @@ const rootRouteChildren: RootRouteChildren = {
   CropSelectRoute: CropSelectRoute,
   GradesRoute: GradesRoute,
   MarketRoute: MarketRouteWithChildren,
-  NotificationsRoute: NotificationsRoute,
+  NotificationsRoute: NotificationsRouteWithChildren,
   PredictionRoute: PredictionRoute,
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
