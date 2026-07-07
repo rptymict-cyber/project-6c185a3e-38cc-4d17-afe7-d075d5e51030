@@ -17,6 +17,7 @@ import { Route as PredictionRouteImport } from './routes/prediction'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as GradesRouteImport } from './routes/grades'
+import { Route as CropSelectRouteImport } from './routes/crop-select'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MarketIndexRouteImport } from './routes/market.index'
@@ -67,6 +68,11 @@ const MarketRoute = MarketRouteImport.update({
 const GradesRoute = GradesRouteImport.update({
   id: '/grades',
   path: '/grades',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CropSelectRoute = CropSelectRouteImport.update({
+  id: '/crop-select',
+  path: '/crop-select',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareRoute = CompareRouteImport.update({
@@ -128,6 +134,7 @@ const MarketAuctionIdRoute = MarketAuctionIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/crop-select': typeof CropSelectRoute
   '/grades': typeof GradesRoute
   '/market': typeof MarketRouteWithChildren
   '/notifications': typeof NotificationsRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/crop-select': typeof CropSelectRoute
   '/grades': typeof GradesRoute
   '/notifications': typeof NotificationsRoute
   '/prediction': typeof PredictionRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/crop-select': typeof CropSelectRoute
   '/grades': typeof GradesRoute
   '/market': typeof MarketRouteWithChildren
   '/notifications': typeof NotificationsRoute
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/compare'
+    | '/crop-select'
     | '/grades'
     | '/market'
     | '/notifications'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/compare'
+    | '/crop-select'
     | '/grades'
     | '/notifications'
     | '/prediction'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/compare'
+    | '/crop-select'
     | '/grades'
     | '/market'
     | '/notifications'
@@ -256,6 +268,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompareRoute: typeof CompareRoute
+  CropSelectRoute: typeof CropSelectRoute
   GradesRoute: typeof GradesRoute
   MarketRoute: typeof MarketRouteWithChildren
   NotificationsRoute: typeof NotificationsRoute
@@ -323,6 +336,13 @@ declare module '@tanstack/react-router' {
       path: '/grades'
       fullPath: '/grades'
       preLoaderRoute: typeof GradesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crop-select': {
+      id: '/crop-select'
+      path: '/crop-select'
+      fullPath: '/crop-select'
+      preLoaderRoute: typeof CropSelectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare': {
@@ -453,6 +473,7 @@ const PriceVarietyRouteWithChildren = PriceVarietyRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompareRoute: CompareRoute,
+  CropSelectRoute: CropSelectRoute,
   GradesRoute: GradesRoute,
   MarketRoute: MarketRouteWithChildren,
   NotificationsRoute: NotificationsRoute,
