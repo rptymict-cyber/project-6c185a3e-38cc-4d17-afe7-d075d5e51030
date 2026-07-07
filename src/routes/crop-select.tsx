@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Check, ChevronRight, Search, X } from "lucide-react";
+import { Check, ChevronRight, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
@@ -72,6 +72,9 @@ function CropSelectPage() {
   const setDraftCategory = useCropSelection((s) => s.setDraftCategory);
   const setDraftItem = useCropSelection((s) => s.setDraftItem);
   const setDraftVariety = useCropSelection((s) => s.setDraftVariety);
+  const clearDraftCategory = useCropSelection((s) => s.clearDraftCategory);
+  const clearDraftItem = useCropSelection((s) => s.clearDraftItem);
+  const clearDraftVariety = useCropSelection((s) => s.clearDraftVariety);
   const commitDraft = useCropSelection((s) => s.commitDraft);
   const discardDraft = useCropSelection((s) => s.discardDraft);
 
@@ -167,6 +170,28 @@ function CropSelectPage() {
     setStep(3);
   };
 
+  const handleRemoveCategory = () => {
+    clearDraftCategory();
+    setStep(1);
+  };
+  const handleRemoveItem = () => {
+    clearDraftItem();
+    setStep(2);
+  };
+  const handleRemoveVariety = () => {
+    clearDraftVariety();
+    setStep(3);
+  };
+
+  const selectionCards = (
+    <SelectionCards
+      draft={draft}
+      onRemoveCategory={handleRemoveCategory}
+      onRemoveItem={handleRemoveItem}
+      onRemoveVariety={handleRemoveVariety}
+    />
+  );
+
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-gray-100">
       <Header title={STEP_TITLE[step]} onClose={handleClose} />
@@ -177,13 +202,14 @@ function CropSelectPage() {
           <Step1Category
             onPickCategory={handlePickCategory}
             onSearchJump={handleSearchJump}
+            selectionCards={selectionCards}
           />
         )}
         {step === 2 && (
           <Step2Item
             categoryId={draft.categoryId!}
-            onBack={() => setStep(1)}
             onPickItem={handlePickItem}
+            selectionCards={selectionCards}
           />
         )}
         {step === 3 && (
@@ -191,8 +217,8 @@ function CropSelectPage() {
             categoryId={draft.categoryId!}
             itemId={draft.itemId!}
             selectedVarietyId={draft.varietyId}
-            onBack={() => setStep(2)}
             onPickVariety={handlePickVariety}
+            selectionCards={selectionCards}
           />
         )}
       </main>
@@ -318,9 +344,11 @@ function Stepper({
 function Step1Category({
   onPickCategory,
   onSearchJump,
+  selectionCards,
 }: {
   onPickCategory: (id: string) => void;
   onSearchJump: (r: SearchResult) => void;
+  selectionCards: React.ReactNode;
 }) {
   const [q, setQ] = useState("");
   const categories = getCategories();
@@ -334,6 +362,8 @@ function Step1Category({
         onChange={setQ}
         placeholder="부류 검색 (예: 하우스감귤 — 품종명으로도 검색 가능)"
       />
+      {selectionCards}
+
 
       {q.trim() ? (
         <div className="mt-3 overflow-hidden rounded-2xl bg-white">
@@ -407,15 +437,14 @@ function Step1Category({
 
 function Step2Item({
   categoryId,
-  onBack,
   onPickItem,
+  selectionCards,
 }: {
   categoryId: string;
-  onBack: () => void;
   onPickItem: (id: string) => void;
+  selectionCards: React.ReactNode;
 }) {
   const [q, setQ] = useState("");
-  const category = getCategoryById(categoryId);
   const items = getItemsByCategory(categoryId);
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -425,12 +454,11 @@ function Step2Item({
 
   return (
     <div className="px-4 py-4">
-      <Breadcrumb onBack={onBack}>{category?.name ?? "부류"}</Breadcrumb>
-      <div className="mt-3">
-        <SearchInput value={q} onChange={setQ} placeholder="품목 검색" />
-      </div>
+      <SearchInput value={q} onChange={setQ} placeholder="품목 검색" />
+      {selectionCards}
 
       <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+
         {filtered.length === 0 ? (
           <div className="px-4 py-8 text-center text-sm text-gray-500">
             해당하는 품목이 없어요.
@@ -469,20 +497,19 @@ function Step2Item({
 /* ---------- Step 3 ---------- */
 
 function Step3Variety({
-  categoryId,
+  categoryId: _categoryId,
   itemId,
   selectedVarietyId,
-  onBack,
   onPickVariety,
+  selectionCards,
 }: {
   categoryId: string;
   itemId: string;
   selectedVarietyId?: string;
-  onBack: () => void;
   onPickVariety: (id: string) => void;
+  selectionCards: React.ReactNode;
 }) {
   const [q, setQ] = useState("");
-  const category = getCategoryById(categoryId);
   const item = getItemById(itemId);
   const varieties = item?.varieties ?? [];
   const filtered = useMemo(() => {
@@ -498,13 +525,9 @@ function Step3Variety({
 
   return (
     <div className="px-4 py-4">
-      <Breadcrumb onBack={onBack}>
-        {category?.name ?? "부류"} <span className="text-gray-400">{">"}</span>{" "}
-        {item?.name ?? "품목"}
-      </Breadcrumb>
-      <div className="mt-3">
-        <SearchInput value={q} onChange={setQ} placeholder="품종 검색" />
-      </div>
+      <SearchInput value={q} onChange={setQ} placeholder="품종 검색" />
+      {selectionCards}
+
 
       <div className="mt-3 overflow-hidden rounded-2xl bg-white">
         <ul>
@@ -636,21 +659,77 @@ function SearchInput({
   );
 }
 
-function Breadcrumb({
-  children,
-  onBack,
+function SelectionCards({
+  draft,
+  onRemoveCategory,
+  onRemoveItem,
+  onRemoveVariety,
 }: {
-  children: React.ReactNode;
-  onBack: () => void;
+  draft: ReturnType<typeof useCropSelection.getState>["draft"];
+  onRemoveCategory: () => void;
+  onRemoveItem: () => void;
+  onRemoveVariety: () => void;
 }) {
+  const category = draft.categoryId ? getCategoryById(draft.categoryId) : undefined;
+  const item = draft.itemId ? getItemById(draft.itemId) : undefined;
+  const varietyName = (() => {
+    if (!draft.varietyId) return undefined;
+    if (draft.varietyId === ALL_VARIETY_ID) return "전체 품종";
+    return item?.varieties.find((v) => v.id === draft.varietyId)?.name;
+  })();
+
+  const rows: { key: string; icon: string; label: string; onRemove: () => void }[] = [];
+  if (category) {
+    rows.push({
+      key: "cat",
+      icon: category.emoji,
+      label: category.name,
+      onRemove: onRemoveCategory,
+    });
+  }
+  if (item) {
+    rows.push({
+      key: "item",
+      icon: item.emoji,
+      label: item.name,
+      onRemove: onRemoveItem,
+    });
+  }
+  if (varietyName) {
+    rows.push({
+      key: "var",
+      icon: item?.emoji ?? "🌱",
+      label: varietyName,
+      onRemove: onRemoveVariety,
+    });
+  }
+
+  if (rows.length === 0) return null;
+
   return (
-    <button
-      type="button"
-      onClick={onBack}
-      className="inline-flex items-center gap-1 text-sm text-gray-600 active:text-gray-900"
-    >
-      <ArrowLeft className="h-4 w-4" />
-      <span>{children}</span>
-    </button>
+    <div className="mt-3 space-y-2">
+      {rows.map((r) => (
+        <div
+          key={r.key}
+          className="flex h-12 items-center gap-3 rounded-xl border border-green-100 bg-green-50/70 px-3"
+        >
+          <span className="text-lg" aria-hidden>
+            {r.icon}
+          </span>
+          <span className="flex-1 truncate text-sm font-semibold text-green-900">
+            {r.label}
+          </span>
+          <button
+            type="button"
+            onClick={r.onRemove}
+            aria-label={`${r.label} 선택 해제`}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-green-700 active:bg-green-100"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }
+

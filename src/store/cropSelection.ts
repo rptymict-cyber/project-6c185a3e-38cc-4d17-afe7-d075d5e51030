@@ -25,6 +25,9 @@ interface CropSelectionState {
   setDraftCategory: (categoryId: string) => void;
   setDraftItem: (itemId: string) => void;
   setDraftVariety: (varietyId: VarietyIdOrAll) => void;
+  clearDraftCategory: () => void;
+  clearDraftItem: () => void;
+  clearDraftVariety: () => void;
   discardDraft: () => void;
   commitDraft: () => void;
 }
@@ -75,6 +78,20 @@ export const useCropSelection = create<CropSelectionState>()(
 
       setDraftVariety: (varietyId) =>
         set((s) => ({ draft: { ...s.draft, varietyId } })),
+
+      clearDraftCategory: () => set({ draft: EMPTY }),
+
+      clearDraftItem: () =>
+        set((s) => ({
+          draft: {
+            categoryId: s.draft.categoryId,
+            itemId: undefined,
+            varietyId: undefined,
+          },
+        })),
+
+      clearDraftVariety: () =>
+        set((s) => ({ draft: { ...s.draft, varietyId: undefined } })),
 
       discardDraft: () => set({ draft: EMPTY }),
 

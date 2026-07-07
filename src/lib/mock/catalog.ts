@@ -47,13 +47,13 @@ export const CATEGORIES: Category[] = [
   { id: "legume", name: "두류", emoji: "🫘" },
 ];
 
-const ACTIVE_IDS = new Set(["apple", "pear", "cabbage", "radish", "onion"]);
+const ACTIVE_IDS = new Set(["apple", "cabbage", "radish", "onion", "chili"]);
 const PREPARING_IDS = new Set([
+  "pear",
   "strawberry",
   "grape",
   "mandarin",
   "tomato",
-  "chili",
   "garlic",
   "pumpkin",
   "cucumber",
