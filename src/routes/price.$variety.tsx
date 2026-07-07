@@ -137,12 +137,13 @@ function VarietyDetailPage() {
               />
             </button>
             <button
-              aria-label="알림 설정"
-              onClick={() => setAlertOpen(true)}
+              aria-label="가격 알림 설정"
+              onClick={() => navigate({ to: "/price/$variety/alert", params: { variety } })}
               className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
             >
               <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
             </button>
+
             <button
               aria-label="더보기"
               onClick={() => toast("더보기 메뉴는 준비 중입니다")}
