@@ -101,35 +101,3 @@ function SelectorCard({
     </button>
   );
 }
-
-function SelectorCard({
-  icon,
-  label,
-  value,
-  onClick,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "flex min-h-16 flex-col items-start gap-1 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-2.5 text-left",
-        "active:bg-[#F8F9FA]",
-      )}
-    >
-      <span className="flex items-center gap-1 text-[11px] font-medium text-[#868E96]">
-        {icon}
-        {label}
-      </span>
-      <span className="flex w-full items-center justify-between">
-        <span className="truncate text-[14px] font-bold text-foreground">{value}</span>
-        <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#ADB5BD]" />
-      </span>
-    </button>
-  );
-}
