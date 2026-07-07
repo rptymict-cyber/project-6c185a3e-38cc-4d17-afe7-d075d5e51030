@@ -139,7 +139,19 @@ function VarietyDetailPage() {
             </button>
             <button
               aria-label="가격 알림 설정"
-              onClick={() => navigate({ to: "/price/$variety/alert", params: { variety } })}
+              onClick={() => {
+                if (existingRule) {
+                  navigate({
+                    to: "/notifications/settings/$ruleId",
+                    params: { ruleId: existingRule.id },
+                  });
+                } else {
+                  navigate({
+                    to: "/notifications/settings/new",
+                    search: { varietyId: variety, marketId: f.marketId },
+                  });
+                }
+              }}
               className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
             >
               <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
