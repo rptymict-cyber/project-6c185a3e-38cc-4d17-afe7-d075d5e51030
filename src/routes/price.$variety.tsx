@@ -263,7 +263,7 @@ function ChartTab({
   period,
   setPeriod,
   quote,
-  onOpenSimple,
+
 }: {
   variety: string;
   period: DetailPeriod;
