@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Bell, Calendar, ChevronDown, ChevronRight, Star } from "lucide-react";
+import { ArrowLeft, Bell, ChevronDown, ChevronRight, Star } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
@@ -12,6 +12,7 @@ import { getCrop } from "@/lib/mock/crops";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
 import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
+import { useRecentStats } from "@/store/recent-stats";
 import { useWatchlist } from "@/store/watchlist";
 import { cn } from "@/lib/utils";
 
@@ -27,24 +28,35 @@ export const Route = createFileRoute("/statistics/$variety")({
 
 type Tab = "market" | "trend";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "market", label: "시장별 평균" },
-  { id: "trend", label: "가격 추이" },
+  { id: "market", label: "시장별 평균가격" },
+  { id: "trend", label: "시장가격 그래프" },
 ];
+
+function formatKoreanDate(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  const dt = new Date(y, (m ?? 1) - 1, d ?? 1);
+  const wd = ["일", "월", "화", "수", "목", "금", "토"][dt.getDay()];
+  return `${y}년 ${m}월 ${d}일 (${wd})`;
+}
 
 function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
   const navigate = useNavigate();
   const crop = getCrop(variety);
+  const pushRecent = useRecentStats((s) => s.push);
 
   // Statistics tab manages its own date state — do NOT share with market tab.
   const [date, setDate] = useState("2025-07-05");
-  const [dateLabel, setDateLabel] = useState("7/5 (토) · 최근 거래일");
   const [dateOpen, setDateOpen] = useState(false);
 
   const [tab, setTab] = useState<Tab>("market");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+
+  useEffect(() => {
+    if (crop) pushRecent(variety);
+  }, [crop, variety, pushRecent]);
 
   const data = useMemo(
     () => (crop ? getVarietyMarketAverages({ varietyId: variety, date }) : null),
@@ -174,14 +186,10 @@ function VarietyStatsPage() {
           <div className="px-4 pt-4">
             <button
               onClick={() => setDateOpen(true)}
-              className="flex w-full items-center gap-2 rounded-[10px] border border-[#B7E1B7] bg-[#F0F9F0] px-3 py-2.5 text-left"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E9ECEF] bg-white px-3 py-1.5 text-[13px] font-semibold text-foreground"
             >
-              <Calendar className="h-4 w-4 text-[#3A8A3A]" />
-              <span className="text-[10px] font-semibold text-[#3A8A3A]">조회 날짜</span>
-              <span className="ml-1 flex-1 text-[13.5px] font-bold text-foreground">
-                {dateLabel}
-              </span>
-              <ChevronDown className="h-4 w-4 text-[#6C757D]" />
+              {formatKoreanDate(date)}
+              <ChevronDown className="h-3.5 w-3.5 text-[#6C757D]" />
             </button>
 
             {data.differentFromRequest && (
@@ -190,6 +198,23 @@ function VarietyStatsPage() {
               </div>
             )}
           </div>
+
+          {/* Summary cards */}
+          <div className="mt-3 grid grid-cols-4 gap-2 px-4">
+            <SummaryCard label="전체 평균" value={`${data.overall.avgKg.toLocaleString()}원`} sub="kg당" />
+            <SummaryCard
+              label="전일 대비"
+              value={fmtSigned(data.overall.deltaAmount) + "원"}
+              tone={toneOf(data.overall.deltaAmount)}
+            />
+            <SummaryCard
+              label="등락률"
+              value={`${data.overall.deltaAmount > 0 ? "▲" : data.overall.deltaAmount < 0 ? "▼" : ""} ${Math.abs(data.overall.deltaPct).toFixed(1)}%`}
+              tone={toneOf(data.overall.deltaAmount)}
+            />
+            <SummaryCard label="거래량" value={`${data.overall.volumeTon.toFixed(1)}t`} />
+          </div>
+          <p className="mt-2 px-4 text-[11px] text-[#868E96]">* kg당 평균가 기준</p>
 
           <MarketAveragesTable data={data} onOpenMarket={openInSimpleMode} />
 
@@ -216,9 +241,8 @@ function VarietyStatsPage() {
         open={dateOpen}
         onOpenChange={setDateOpen}
         selected={date}
-        onSelect={(iso, label) => {
+        onSelect={(iso) => {
           setDate(iso);
-          setDateLabel(label);
         }}
       />
 
@@ -250,4 +274,39 @@ function MinimalHeader({ label, onBack }: { label: string; onBack: () => void })
       </span>
     </header>
   );
+}
+
+function SummaryCard({
+  label,
+  value,
+  sub,
+  tone,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  tone?: "up" | "down" | "flat";
+}) {
+  const color =
+    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
+  return (
+    <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2">
+      <div className="text-[10.5px] font-semibold text-[#6C757D]">{label}</div>
+      <div className={cn("mt-1 text-[13px] font-black tabular-nums leading-tight", color)}>
+        {value}
+      </div>
+      {sub && <div className="mt-0.5 text-[10px] text-[#868E96]">{sub}</div>}
+    </div>
+  );
+}
+
+function fmtSigned(v: number): string {
+  if (v === 0) return "0";
+  return `${v > 0 ? "+" : ""}${v.toLocaleString()}`;
+}
+
+function toneOf(v: number): "up" | "down" | "flat" {
+  if (v > 0) return "up";
+  if (v < 0) return "down";
+  return "flat";
 }
