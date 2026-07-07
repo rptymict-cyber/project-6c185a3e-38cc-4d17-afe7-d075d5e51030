@@ -20,6 +20,8 @@ export const CATEGORIES: { id: "all" | Category; label: string }[] = [
   { id: "legume", label: "두류" },
 ];
 
+export type PredictionStatus = "available" | "unavailable" | "comingSoon";
+
 export type Crop = {
   id: string;
   name: string;
@@ -31,10 +33,18 @@ export type Crop = {
   volumeTon: number;
   updatedAt: string; // "오늘 17:18"
   spark: number[]; // 7 pts
+  /**
+   * AI 시세 예측 가능 여부. 단일 소스로 관리한다.
+   * UI에서 별도 상수(AI_CROPS Set 등)로 중복 관리 금지.
+   */
+  isPredictable: boolean;
+  predictionStatus: PredictionStatus;
+  /** @deprecated use `isPredictable` */
   aiReady?: boolean;
   season?: boolean; // seasonal representative
   grades?: { top: number; mid: number; low: number };
 };
+
 
 // deterministic seeded generator
 const seed = (n: number) => {
