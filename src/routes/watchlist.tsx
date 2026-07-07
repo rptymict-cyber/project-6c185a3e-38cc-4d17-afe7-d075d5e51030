@@ -1,6 +1,5 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Bell,
   Check,
   ChevronDown,
   ChevronLeft,
@@ -43,23 +42,57 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
-import {
-  isPredictionAvailable,
-  timeAgo,
-  useSavedQueries,
-  type SavedQuery,
-} from "@/store/saved-queries";
+import { CROPS, getCrop, type Crop } from "@/lib/mock/crops";
+import { useWatchlist } from "@/store/watchlist";
 
 type Filter = "all" | "ai";
-type Sort = "updated" | "trade" | "priceDesc" | "priceAsc" | "manual";
+type Sort = "updated" | "priceDesc" | "priceAsc" | "changeDesc" | "manual";
 
 const SORT_LABEL: Record<Sort, string> = {
   updated: "최근 업데이트순",
-  trade: "최근 거래순",
   priceDesc: "높은 가격순",
   priceAsc: "낮은 가격순",
+  changeDesc: "변동률순",
   manual: "직접 정렬순",
 };
+
+/** Display item derived from a Crop + user context defaults. */
+type WatchItem = {
+  id: string;
+  cropId: string;
+  emoji: string;
+  category: string;
+  varietyName: string;
+  marketName: string;
+  corporation: string;
+  origin: string;
+  unitLabel: string;
+  price: number;
+  changePct: number;
+  lastAuctionAt: string;
+  aiReady: boolean;
+};
+
+function toWatchItem(crop: Crop): WatchItem {
+  const unitLabel = crop.unit.replace(/^원\s*\//, "");
+  const changePct =
+    crop.prevPrice > 0 ? ((crop.currentPrice - crop.prevPrice) / crop.prevPrice) * 100 : 0;
+  return {
+    id: crop.id,
+    cropId: crop.id,
+    emoji: crop.emoji,
+    category: crop.name,
+    varietyName: `${crop.name}(일반)`,
+    marketName: "서울가락",
+    corporation: "서울청과(주)",
+    origin: "전국 평균",
+    unitLabel,
+    price: crop.currentPrice,
+    changePct,
+    lastAuctionAt: crop.updatedAt,
+    aiReady: Boolean(crop.aiReady),
+  };
+}
 
 export const Route = createFileRoute("/watchlist")({
   component: WatchlistPage,
@@ -75,15 +108,21 @@ export const Route = createFileRoute("/watchlist")({
 });
 
 function WatchlistPage() {
-  const items = useSavedQueries((s) => s.items);
-  const remove = useSavedQueries((s) => s.remove);
-  const removeMany = useSavedQueries((s) => s.removeMany);
-  const replaceAll = useSavedQueries((s) => s.replaceAll);
-  const restore = useSavedQueries((s) => s.restore);
+  const cropIds = useWatchlist((s) => s.crops);
+  const removeCrop = useWatchlist((s) => s.removeCrop);
+  const setCropOrder = useWatchlist((s) => s.setCropOrder);
+  const toggleCrop = useWatchlist((s) => s.toggleCrop);
+
+  const items = useMemo<WatchItem[]>(() => {
+    return cropIds
+      .map((id) => getCrop(id))
+      .filter((c): c is Crop => Boolean(c))
+      .map(toWatchItem);
+  }, [cropIds]);
 
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState<SavedQuery[]>([]);
-  const originalRef = useRef<SavedQuery[]>([]);
+  const [draftIds, setDraftIds] = useState<string[]>([]);
+  const originalRef = useRef<string[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -92,48 +131,48 @@ function WatchlistPage() {
   const [sort, setSort] = useState<Sort>("updated");
   const [sortOpen, setSortOpen] = useState(false);
 
-  // Fix hydration mismatch: relative-time strings depend on Date.now().
+  // hydration-safe mount flag (kept for consistency; timestamps are static strings)
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   const enterEdit = () => {
-    setDraft(items);
-    originalRef.current = items;
+    setDraftIds(cropIds);
+    originalRef.current = cropIds;
     setSelected(new Set());
     setEditing(true);
   };
   const exitEdit = (persist: boolean) => {
-    if (persist) replaceAll(draft);
-    else replaceAll(originalRef.current);
+    if (persist) setCropOrder(draftIds);
     setEditing(false);
     setSelected(new Set());
   };
 
   const filtered = useMemo(() => {
     let arr = items.slice();
-    if (filter === "ai") arr = arr.filter((q) => isPredictionAvailable(q.cropId));
+    if (filter === "ai") arr = arr.filter((q) => q.aiReady);
     if (query.trim()) {
       const q = query.trim().toLowerCase();
       arr = arr.filter((it) =>
-        [
-          it.category,
-          it.varietyName,
-          it.marketName,
-          it.corporation,
-          it.origin,
-          it.unitLabel,
-        ]
+        [it.category, it.varietyName, it.marketName, it.corporation, it.origin, it.unitLabel]
           .join(" ")
           .toLowerCase()
           .includes(q),
       );
     }
-    if (sort === "updated") arr.sort((a, b) => b.updatedAt - a.updatedAt);
-    else if (sort === "trade") arr.sort((a, b) => b.lastAuctionAt.localeCompare(a.lastAuctionAt));
-    else if (sort === "priceDesc") arr.sort((a, b) => b.price - a.price);
+    if (sort === "priceDesc") arr.sort((a, b) => b.price - a.price);
     else if (sort === "priceAsc") arr.sort((a, b) => a.price - b.price);
+    else if (sort === "changeDesc")
+      arr.sort((a, b) => Math.abs(b.changePct) - Math.abs(a.changePct));
+    // "updated" and "manual" keep insertion order
     return arr;
   }, [items, filter, sort, query]);
+
+  const draftItems = useMemo<WatchItem[]>(() => {
+    return draftIds
+      .map((id) => getCrop(id))
+      .filter((c): c is Crop => Boolean(c))
+      .map(toWatchItem);
+  }, [draftIds]);
 
   const toggleSelect = (id: string) =>
     setSelected((prev) => {
@@ -143,13 +182,12 @@ function WatchlistPage() {
       return n;
     });
 
-  const handleRemoveOne = (q: SavedQuery) => {
-    const idx = items.findIndex((it) => it.id === q.id);
-    remove(q.id);
+  const handleRemoveOne = (item: WatchItem) => {
+    removeCrop(item.cropId);
     toast("즐겨찾기에서 제거되었습니다.", {
       action: {
         label: "실행 취소",
-        onClick: () => restore(q, idx),
+        onClick: () => toggleCrop(item.cropId),
       },
     });
   };
@@ -221,8 +259,8 @@ function WatchlistPage() {
     >
       {editing ? (
         <EditView
-          draft={draft}
-          setDraft={setDraft}
+          draft={draftItems}
+          onReorder={(ids) => setDraftIds(ids)}
           selected={selected}
           toggleSelect={toggleSelect}
         />
@@ -259,8 +297,10 @@ function WatchlistPage() {
             <AlertDialogAction
               onClick={() => {
                 const ids = Array.from(selected);
-                removeMany(ids);
-                setDraft((d) => d.filter((q) => !selected.has(q.id)));
+                // remove from draft + persist immediately via store
+                ids.forEach((id) => removeCrop(id));
+                setDraftIds((d) => d.filter((x) => !selected.has(x)));
+                originalRef.current = originalRef.current.filter((x) => !selected.has(x));
                 setSelected(new Set());
                 setConfirmOpen(false);
                 toast("선택한 즐겨찾기가 삭제되었습니다.");
@@ -293,8 +333,8 @@ function NormalView({
   onRemove,
   mounted,
 }: {
-  items: SavedQuery[];
-  filtered: SavedQuery[];
+  items: WatchItem[];
+  filtered: WatchItem[];
   query: string;
   setQuery: (v: string) => void;
   filter: Filter;
@@ -304,32 +344,31 @@ function NormalView({
   sortOpen: boolean;
   setSortOpen: (v: boolean) => void;
   onEdit: () => void;
-  onRemove: (q: SavedQuery) => void;
+  onRemove: (q: WatchItem) => void;
   mounted: boolean;
 }) {
+  void mounted;
   return (
     <>
-      {/* Body header */}
       <div className="flex items-end justify-between px-4 pt-4">
         <div>
-          <h1 className="text-[22px] font-black tracking-tight text-foreground">
-            즐겨찾기
-          </h1>
+          <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
           <p className="mt-1 text-[13px] text-muted-foreground">
             총 <span className="font-semibold text-foreground">{items.length}</span>개의 즐겨찾기
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onEdit}
-          className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-primary px-3 text-[13px] font-bold text-primary hover:bg-primary/5"
-        >
-          <Pencil className="h-3.5 w-3.5" />
-          편집
-        </button>
+        {items.length > 0 && (
+          <button
+            type="button"
+            onClick={onEdit}
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-primary px-3 text-[13px] font-bold text-primary hover:bg-primary/5"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            편집
+          </button>
+        )}
       </div>
 
-      {/* Search */}
       <div className="px-4 pt-3">
         <label className="flex h-11 items-center gap-2 rounded-xl border border-input bg-secondary/50 px-3">
           <Search className="h-4 w-4 text-muted-foreground" />
@@ -352,7 +391,6 @@ function NormalView({
         </label>
       </div>
 
-      {/* Chips + sort */}
       <div className="mt-3 flex items-center gap-2 px-4">
         <div className="flex flex-1 items-center gap-2">
           {([
@@ -419,7 +457,6 @@ function NormalView({
         </div>
       </div>
 
-      {/* Info banner */}
       <div className="mx-4 mt-3 flex gap-2 rounded-[10px] bg-muted px-3 py-2.5 text-[11.5px] leading-relaxed text-muted-foreground">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>별표를 누르면 즐겨찾기에서 해제됩니다.</span>
@@ -430,7 +467,7 @@ function NormalView({
       ) : (
         <ul className="space-y-2 px-4 py-4">
           {filtered.map((q) => (
-            <NormalCard key={q.id} q={q} onRemove={() => onRemove(q)} mounted={mounted} />
+            <NormalCard key={q.id} q={q} onRemove={() => onRemove(q)} />
           ))}
         </ul>
       )}
@@ -438,9 +475,8 @@ function NormalView({
   );
 }
 
-function PredictionBadge({ cropId }: { cropId: string }) {
-  const active = isPredictionAvailable(cropId);
-  if (!active) return null;
+function PredictionBadge({ aiReady }: { aiReady: boolean }) {
+  if (!aiReady) return null;
   return (
     <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
       AI 예측
@@ -448,101 +484,92 @@ function PredictionBadge({ cropId }: { cropId: string }) {
   );
 }
 
-function NormalCard({
-  q,
-  onRemove,
-  mounted,
-}: {
-  q: SavedQuery;
-  onRemove: () => void;
-  mounted: boolean;
-}) {
+function NormalCard({ q, onRemove }: { q: WatchItem; onRemove: () => void }) {
   const rising = q.changePct >= 0;
+  const flat = Math.abs(q.changePct) < 0.05;
   return (
-    <li className="rounded-2xl border border-border bg-background p-3 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+    <li className="rounded-2xl border border-border bg-background p-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+      {/* Top row: emoji + identity + star/more */}
       <div className="flex items-start gap-3">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-muted text-2xl" aria-hidden>
+        <div
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-muted text-2xl"
+          aria-hidden
+        >
           {q.emoji}
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <PredictionBadge cropId={q.cropId} />
-              <div className="mt-1 truncate text-[14px] font-bold text-foreground">
-                {q.category} · {q.varietyName}
-              </div>
-              <div className="mt-0.5 truncate text-[11.5px] text-muted-foreground">
-                {q.marketName} · {q.corporation}
-              </div>
-              <div className="truncate text-[11.5px] text-muted-foreground">
-                {q.origin} · {q.unitLabel} 기준
-              </div>
-              <div className="mt-1 truncate text-[10.5px] text-muted-foreground">
-                최근 거래 {q.lastAuctionAt}
-              </div>
+          {q.aiReady && (
+            <div className="mb-1">
+              <PredictionBadge aiReady={q.aiReady} />
             </div>
-
-            <div className="text-right">
-              <div className="font-data text-[15px] font-bold tabular-nums text-foreground">
-                {q.price.toLocaleString()}
-                <span className="ml-0.5 text-[10.5px] font-medium text-muted-foreground">
-                  원 / {q.unitLabel}
-                </span>
-              </div>
-              <div className="mt-1 inline-flex items-center gap-1">
-                <span
-                  className={cn(
-                    "rounded-md px-1.5 py-0.5 text-[10.5px] font-bold",
-                    rising ? "bg-[#FFE3E3] text-[#E03131]" : "bg-[#DBE4FF] text-[#1971C2]",
-                  )}
-                >
-                  {rising ? "▲ +" : "▼ "}
-                  {q.changePct.toFixed(1)}%
-                </span>
-                <span className="text-[10px] text-muted-foreground">전일 대비</span>
-              </div>
-              <div className="mt-1 text-[10px] text-muted-foreground" suppressHydrationWarning>
-                {mounted ? `업데이트 ${timeAgo(q.updatedAt)}` : ""}
-              </div>
-            </div>
+          )}
+          <div className="truncate text-[15px] font-bold text-foreground">
+            {q.category} · {q.varietyName}
+          </div>
+          <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
+            {q.marketName} · {q.corporation}
+          </div>
+          <div className="truncate text-[12px] text-muted-foreground">
+            {q.origin} · {q.unitLabel} 기준
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-col items-center gap-1">
+        <div className="flex shrink-0 items-center gap-0.5">
           <button
             type="button"
             onClick={onRemove}
             aria-label="즐겨찾기에서 제거"
-            className="grid h-7 w-7 place-items-center rounded-full text-amber-500"
+            className="grid h-8 w-8 place-items-center rounded-full text-amber-500"
           >
             <Star className="h-5 w-5 fill-amber-400" />
           </button>
           <button
             type="button"
-            aria-label={q.hasAlert ? "알림 있음" : "알림 설정"}
-            className={cn(
-              "grid h-7 w-7 place-items-center rounded-full",
-              q.hasAlert ? "text-primary" : "text-muted-foreground",
-            )}
-          >
-            <Bell className={cn("h-5 w-5", q.hasAlert && "fill-primary")} />
-          </button>
-          <button
-            type="button"
             aria-label="더 보기"
-            className="grid h-7 w-7 place-items-center rounded-full text-muted-foreground"
+            className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground"
           >
             <MoreVertical className="h-4 w-4" />
           </button>
         </div>
       </div>
 
+      {/* Price row */}
+      <div className="mt-3 flex items-end justify-between gap-3 border-t border-border/60 pt-3">
+        <div className="min-w-0">
+          <div className="font-data text-[20px] font-bold leading-none tabular-nums text-foreground">
+            {q.price.toLocaleString()}
+            <span className="ml-1 text-[12px] font-medium text-muted-foreground">
+              원 / {q.unitLabel}
+            </span>
+          </div>
+          <div className="mt-1.5 text-[11px] text-muted-foreground">
+            최근 거래 {q.lastAuctionAt}
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <span
+            className={cn(
+              "inline-flex items-center whitespace-nowrap rounded-md px-2 py-1 text-[12px] font-bold tabular-nums",
+              flat
+                ? "bg-muted text-muted-foreground"
+                : rising
+                  ? "bg-[#FFE3E3] text-[#E03131]"
+                  : "bg-[#DBE4FF] text-[#1971C2]",
+            )}
+          >
+            {flat ? "— 0.0%" : `${rising ? "▲ +" : "▼ "}${q.changePct.toFixed(1)}%`}
+          </span>
+          <span className="text-[10.5px] text-muted-foreground">전일 대비</span>
+        </div>
+      </div>
+
+      {/* Actions */}
       <div className="mt-3 grid grid-cols-2 gap-2">
         <Link
           to="/price/$variety"
           params={{ variety: q.cropId }}
-          className="grid h-9 place-items-center rounded-lg border border-primary text-[12.5px] font-bold text-primary"
+          className="grid h-9 place-items-center rounded-lg border border-primary text-[13px] font-bold text-primary"
         >
           시세 보기
         </Link>
@@ -550,7 +577,7 @@ function NormalCard({
           to="/price/$variety"
           params={{ variety: q.cropId }}
           hash="auctions"
-          className="grid h-9 place-items-center rounded-lg border border-primary text-[12.5px] font-bold text-primary"
+          className="grid h-9 place-items-center rounded-lg border border-primary text-[13px] font-bold text-primary"
         >
           최근 경매
         </Link>
@@ -563,12 +590,12 @@ function NormalCard({
 
 function EditView({
   draft,
-  setDraft,
+  onReorder,
   selected,
   toggleSelect,
 }: {
-  draft: SavedQuery[];
-  setDraft: (updater: SavedQuery[] | ((prev: SavedQuery[]) => SavedQuery[])) => void;
+  draft: WatchItem[];
+  onReorder: (ids: string[]) => void;
   selected: Set<string>;
   toggleSelect: (id: string) => void;
 }) {
@@ -580,12 +607,10 @@ function EditView({
   const onDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
-    setDraft((prev) => {
-      const oldIndex = prev.findIndex((q) => q.id === active.id);
-      const newIndex = prev.findIndex((q) => q.id === over.id);
-      if (oldIndex < 0 || newIndex < 0) return prev;
-      return arrayMove(prev, oldIndex, newIndex);
-    });
+    const oldIndex = draft.findIndex((q) => q.id === active.id);
+    const newIndex = draft.findIndex((q) => q.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    onReorder(arrayMove(draft, oldIndex, newIndex).map((q) => q.id));
   };
 
   return (
@@ -616,7 +641,7 @@ function SortableEditCard({
   checked,
   onCheck,
 }: {
-  q: SavedQuery;
+  q: WatchItem;
   checked: boolean;
   onCheck: () => void;
 }) {
@@ -628,6 +653,7 @@ function SortableEditCard({
     transition,
   };
   const rising = q.changePct >= 0;
+  const flat = Math.abs(q.changePct) < 0.05;
 
   return (
     <li
@@ -638,14 +664,14 @@ function SortableEditCard({
         isDragging ? "z-10 shadow-lg" : "shadow-[0_1px_2px_rgba(0,0,0,0.03)]",
       )}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={onCheck}
           aria-pressed={checked}
           aria-label={checked ? "선택 해제" : "선택"}
           className={cn(
-            "mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-md border",
+            "grid h-6 w-6 shrink-0 place-items-center rounded-md border",
             checked
               ? "border-primary bg-primary text-primary-foreground"
               : "border-input bg-background",
@@ -654,36 +680,36 @@ function SortableEditCard({
           {checked && <Check className="h-4 w-4" strokeWidth={3} />}
         </button>
 
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-muted text-2xl" aria-hidden>
+        <div
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-muted text-2xl"
+          aria-hidden
+        >
           {q.emoji}
         </div>
 
         <div className="min-w-0 flex-1">
-          <PredictionBadge cropId={q.cropId} />
-          <div className="mt-1 truncate text-[14px] font-bold text-foreground">
+          <div className="truncate text-[14px] font-bold text-foreground">
             {q.category} · {q.varietyName}
           </div>
           <div className="mt-0.5 truncate text-[11.5px] text-muted-foreground">
-            {q.marketName} · {q.corporation}
+            {q.marketName} · {q.unitLabel} 기준
           </div>
-          <div className="truncate text-[11.5px] text-muted-foreground">
-            {q.origin} · {q.unitLabel} 기준
-          </div>
-          <div className="mt-1.5 flex items-center justify-between gap-2">
-            <div className="font-data text-[14px] font-bold tabular-nums text-foreground">
+          <div className="mt-1 flex items-center gap-2">
+            <span className="font-data text-[13px] font-bold tabular-nums text-foreground">
               {q.price.toLocaleString()}
-              <span className="ml-0.5 text-[10.5px] font-medium text-muted-foreground">
-                원 / {q.unitLabel}
-              </span>
-            </div>
+              <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">원</span>
+            </span>
             <span
               className={cn(
-                "rounded-md px-1.5 py-0.5 text-[10.5px] font-bold",
-                rising ? "bg-[#FFE3E3] text-[#E03131]" : "bg-[#DBE4FF] text-[#1971C2]",
+                "rounded-md px-1.5 py-0.5 text-[10.5px] font-bold tabular-nums",
+                flat
+                  ? "bg-muted text-muted-foreground"
+                  : rising
+                    ? "bg-[#FFE3E3] text-[#E03131]"
+                    : "bg-[#DBE4FF] text-[#1971C2]",
               )}
             >
-              {rising ? "▲ +" : "▼ "}
-              {q.changePct.toFixed(1)}%
+              {flat ? "0.0%" : `${rising ? "+" : ""}${q.changePct.toFixed(1)}%`}
             </span>
           </div>
         </div>
@@ -691,7 +717,7 @@ function SortableEditCard({
         <button
           type="button"
           aria-label="순서 변경"
-          className="mt-1 grid h-9 w-8 shrink-0 cursor-grab touch-none place-items-center rounded-md text-muted-foreground active:cursor-grabbing"
+          className="grid h-10 w-9 shrink-0 cursor-grab touch-none place-items-center rounded-md text-muted-foreground active:cursor-grabbing"
           {...attributes}
           {...listeners}
         >
@@ -707,7 +733,13 @@ function SortableEditCard({
 function EmptyState({ hasAny }: { hasAny: boolean }) {
   return (
     <div className="flex flex-col items-center px-6 pb-16 pt-20 text-center">
-      <Star className="mb-5" size={48} color="hsl(var(--muted))" fill="hsl(var(--muted))" strokeWidth={1.5} />
+      <Star
+        className="mb-5"
+        size={48}
+        color="hsl(var(--muted))"
+        fill="hsl(var(--muted))"
+        strokeWidth={1.5}
+      />
       <h3 className="text-[16px] font-bold text-foreground">
         {hasAny ? "조건에 맞는 즐겨찾기가 없어요" : "즐겨찾기가 없어요"}
       </h3>
@@ -728,5 +760,5 @@ function EmptyState({ hasAny }: { hasAny: boolean }) {
   );
 }
 
-// silence unused import warning if useRouter tree-shakes later
-void useRouter;
+// Preload crops for tree-shaking safety
+void CROPS;
