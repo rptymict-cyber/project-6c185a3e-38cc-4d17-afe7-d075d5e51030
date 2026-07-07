@@ -87,6 +87,13 @@ export function ProAnalysisSection() {
             })}
           </div>
 
+          {/* Period summary */}
+          <div className="mb-3 grid grid-cols-3 gap-2">
+            <PeriodStat label="최고가" value={`${series.max.toLocaleString()}원`} tone="up" />
+            <PeriodStat label="최저가" value={`${series.min.toLocaleString()}원`} tone="down" />
+            <PeriodStat label="평균가" value={`${series.avg.toLocaleString()}원`} tone="neutral" />
+          </div>
+
           {/* Legend */}
           <div className="mb-2 flex items-center gap-3 px-1 text-[11px] text-[#495057]">
             <span className="flex items-center gap-1">
@@ -103,18 +110,12 @@ export function ProAnalysisSection() {
             <PriceVolumeChart series={series} period={period} />
           </div>
 
-          {/* Period summary */}
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            <PeriodStat label="최고가" value={`${series.max.toLocaleString()}원`} tone="up" />
-            <PeriodStat label="최저가" value={`${series.min.toLocaleString()}원`} tone="down" />
-            <PeriodStat label="평균가" value={`${series.avg.toLocaleString()}원`} tone="neutral" />
-          </div>
-
           <p className="mt-3 px-1 text-[11px] text-[#868E96]">
             차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
           </p>
         </div>
       )}
+
       {tab === "auctions" && <AuctionHistoryTable />}
       {tab === "compare" && <ProMarketRankingTable />}
       {tab === "company" && <GroupRankingTable scope="company" />}
