@@ -75,7 +75,7 @@ function VarietyDetailPage() {
   const router = useRouter();
   const navigate = useNavigate();
   const f = useMarketFilter();
-  void useMarketFilter((s) => s.setSimpleMode);
+  
 
   const emoji = EMOJI[f.itemId] ?? "🌾";
 
