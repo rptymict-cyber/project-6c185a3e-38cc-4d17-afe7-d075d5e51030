@@ -8,7 +8,7 @@ import {
 import { ArrowLeft, Bell, ChevronDown, ChevronRight, Star } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
-import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
+// AlertSettingsSheet 제거됨 — 알림 규칙은 /notifications/settings/$ruleId 통합 화면 사용
 import { DateSheetLite } from "@/components/date-sheet-lite";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
 import { TrendTab } from "@/components/statistics/TrendTab";
