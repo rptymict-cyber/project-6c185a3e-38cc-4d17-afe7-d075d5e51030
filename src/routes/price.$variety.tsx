@@ -97,6 +97,7 @@ function VarietyDetailPage() {
   const starred = useWatchlist((s) => s.crops.includes(variety));
   const toggleCrop = useWatchlist((s) => s.toggleCrop);
   const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
+  const existingRule = useAlerts((s) => s.getByKey(variety, f.marketId));
   const crop = getCrop(f.itemId);
   const isPredictable = Boolean(
     crop?.isPredictable && crop.predictionStatus === "available",

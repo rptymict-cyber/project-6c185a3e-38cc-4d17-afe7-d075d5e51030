@@ -29,6 +29,7 @@ import { Route as NotificationsSettingsRouteImport } from './routes/notification
 import { Route as MarketCropRouteImport } from './routes/market.$crop'
 import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
 import { Route as PriceVarietyAlertRouteImport } from './routes/price.$variety.alert'
+import { Route as NotificationsSettingsNewRouteImport } from './routes/notifications.settings.new'
 import { Route as NotificationsSettingsRuleIdRouteImport } from './routes/notifications.settings.$ruleId'
 import { Route as MarketWholesaleMarketRouteImport } from './routes/market.wholesale.$market'
 import { Route as MarketItemItemRouteImport } from './routes/market.item.$item'
@@ -135,6 +136,12 @@ const PriceVarietyAlertRoute = PriceVarietyAlertRouteImport.update({
   path: '/alert',
   getParentRoute: () => PriceVarietyRoute,
 } as any)
+const NotificationsSettingsNewRoute =
+  NotificationsSettingsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => NotificationsSettingsRoute,
+  } as any)
 const NotificationsSettingsRuleIdRoute =
   NotificationsSettingsRuleIdRouteImport.update({
     id: '/$ruleId',
@@ -180,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
+  '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
   '/notifications/settings/': typeof NotificationsSettingsIndexRoute
 }
@@ -203,6 +211,7 @@ export interface FileRoutesByTo {
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
+  '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
   '/notifications/settings': typeof NotificationsSettingsIndexRoute
 }
@@ -230,6 +239,7 @@ export interface FileRoutesById {
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
+  '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
   '/notifications/settings/': typeof NotificationsSettingsIndexRoute
 }
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/market/item/$item'
     | '/market/wholesale/$market'
     | '/notifications/settings/$ruleId'
+    | '/notifications/settings/new'
     | '/price/$variety/alert'
     | '/notifications/settings/'
   fileRoutesByTo: FileRoutesByTo
@@ -281,6 +292,7 @@ export interface FileRouteTypes {
     | '/market/item/$item'
     | '/market/wholesale/$market'
     | '/notifications/settings/$ruleId'
+    | '/notifications/settings/new'
     | '/price/$variety/alert'
     | '/notifications/settings'
   id:
@@ -307,6 +319,7 @@ export interface FileRouteTypes {
     | '/market/item/$item'
     | '/market/wholesale/$market'
     | '/notifications/settings/$ruleId'
+    | '/notifications/settings/new'
     | '/price/$variety/alert'
     | '/notifications/settings/'
   fileRoutesById: FileRoutesById
@@ -468,6 +481,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PriceVarietyAlertRouteImport
       parentRoute: typeof PriceVarietyRoute
     }
+    '/notifications/settings/new': {
+      id: '/notifications/settings/new'
+      path: '/new'
+      fullPath: '/notifications/settings/new'
+      preLoaderRoute: typeof NotificationsSettingsNewRouteImport
+      parentRoute: typeof NotificationsSettingsRoute
+    }
     '/notifications/settings/$ruleId': {
       id: '/notifications/settings/$ruleId'
       path: '/$ruleId'
@@ -520,11 +540,13 @@ const MarketRouteWithChildren =
 
 interface NotificationsSettingsRouteChildren {
   NotificationsSettingsRuleIdRoute: typeof NotificationsSettingsRuleIdRoute
+  NotificationsSettingsNewRoute: typeof NotificationsSettingsNewRoute
   NotificationsSettingsIndexRoute: typeof NotificationsSettingsIndexRoute
 }
 
 const NotificationsSettingsRouteChildren: NotificationsSettingsRouteChildren = {
   NotificationsSettingsRuleIdRoute: NotificationsSettingsRuleIdRoute,
+  NotificationsSettingsNewRoute: NotificationsSettingsNewRoute,
   NotificationsSettingsIndexRoute: NotificationsSettingsIndexRoute,
 }
 
