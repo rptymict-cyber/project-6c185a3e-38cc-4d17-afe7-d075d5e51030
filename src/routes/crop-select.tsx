@@ -344,9 +344,11 @@ function Stepper({
 function Step1Category({
   onPickCategory,
   onSearchJump,
+  selectionCards,
 }: {
   onPickCategory: (id: string) => void;
   onSearchJump: (r: SearchResult) => void;
+  selectionCards: React.ReactNode;
 }) {
   const [q, setQ] = useState("");
   const categories = getCategories();
@@ -360,6 +362,8 @@ function Step1Category({
         onChange={setQ}
         placeholder="부류 검색 (예: 하우스감귤 — 품종명으로도 검색 가능)"
       />
+      {selectionCards}
+
 
       {q.trim() ? (
         <div className="mt-3 overflow-hidden rounded-2xl bg-white">
