@@ -750,10 +750,11 @@ function EmptyState({ hasAny }: { hasAny: boolean }) {
       </p>
       {!hasAny && (
         <Link
-          to="/market"
+          to="/crop-select"
+          search={{ from: "watchlist", return: "/watchlist" }}
           className="mt-6 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-[14px] font-bold text-primary-foreground"
         >
-          시세 보러 가기
+          작물 찾아보기
         </Link>
       )}
     </div>

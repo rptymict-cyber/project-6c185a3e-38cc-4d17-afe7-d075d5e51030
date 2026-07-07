@@ -1,10 +1,12 @@
 import { toast } from "sonner";
 import { Plus, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useInterests } from "@/store/interests";
-import { CROPS, getCrop } from "@/lib/mock/crops";
+import { getCrop } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { AddCropSheet } from "./add-crop-sheet";
+// NOTE: 작물 추가는 /crop-select 페이지가 유일한 진입점.
+// AddCropSheet 컴포넌트 파일은 롤백 대비로 남겨두었으며 여기서 import 하지 않는다.
 
 export function InterestChips() {
   const ids = useInterests((s) => s.ids);
@@ -67,15 +69,15 @@ export function InterestChips() {
             </button>
           );
         })}
-        <button
-          onClick={() => setOpen(true)}
+        <Link
+          to="/crop-select"
+          search={{ from: "home", return: "/" }}
           className="inline-flex shrink-0 items-center gap-1 rounded-full border border-dashed border-[#ADB5BD] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#6C757D]"
         >
           <Plus className="h-3.5 w-3.5" />
           추가
-        </button>
+        </Link>
       </div>
-      <AddCropSheet open={open} onOpenChange={setOpen} allCrops={CROPS} />
     </>
   );
 }
