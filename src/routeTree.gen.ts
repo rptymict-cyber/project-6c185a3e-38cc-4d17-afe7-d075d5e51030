@@ -14,6 +14,7 @@ import { Route as StatisticsRouteImport } from './routes/statistics'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as PredictionRouteImport } from './routes/prediction'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as GradesRouteImport } from './routes/grades'
 import { Route as CropSelectRouteImport } from './routes/crop-select'
@@ -56,6 +57,11 @@ const PredictionRoute = PredictionRouteImport.update({
   path: '/prediction',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
@@ -82,9 +88,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsIndexRoute = NotificationsIndexRouteImport.update({
-  id: '/notifications/',
-  path: '/notifications/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => NotificationsRoute,
 } as any)
 const MarketIndexRoute = MarketIndexRouteImport.update({
   id: '/',
@@ -113,9 +119,9 @@ const MarketCropRoute = MarketCropRouteImport.update({
 } as any)
 const NotificationsSettingsIndexRoute =
   NotificationsSettingsIndexRouteImport.update({
-    id: '/notifications/settings/',
-    path: '/notifications/settings/',
-    getParentRoute: () => rootRouteImport,
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => NotificationsRoute,
   } as any)
 const PriceVarietyAlertRoute = PriceVarietyAlertRouteImport.update({
   id: '/alert',
@@ -144,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/crop-select': typeof CropSelectRoute
   '/grades': typeof GradesRoute
   '/market': typeof MarketRouteWithChildren
+  '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
@@ -190,6 +197,7 @@ export interface FileRoutesById {
   '/crop-select': typeof CropSelectRoute
   '/grades': typeof GradesRoute
   '/market': typeof MarketRouteWithChildren
+  '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
@@ -215,6 +223,7 @@ export interface FileRouteTypes {
     | '/crop-select'
     | '/grades'
     | '/market'
+    | '/notifications'
     | '/prediction'
     | '/search'
     | '/settings'
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/crop-select'
     | '/grades'
     | '/market'
+    | '/notifications'
     | '/prediction'
     | '/search'
     | '/settings'
@@ -284,14 +294,13 @@ export interface RootRouteChildren {
   CropSelectRoute: typeof CropSelectRoute
   GradesRoute: typeof GradesRoute
   MarketRoute: typeof MarketRouteWithChildren
+  NotificationsRoute: typeof NotificationsRouteWithChildren
   PredictionRoute: typeof PredictionRoute
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
   StatisticsRoute: typeof StatisticsRouteWithChildren
   WatchlistRoute: typeof WatchlistRoute
   PriceVarietyRoute: typeof PriceVarietyRouteWithChildren
-  NotificationsIndexRoute: typeof NotificationsIndexRoute
-  NotificationsSettingsIndexRoute: typeof NotificationsSettingsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -331,6 +340,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PredictionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/market': {
       id: '/market'
       path: '/market'
@@ -368,10 +384,10 @@ declare module '@tanstack/react-router' {
     }
     '/notifications/': {
       id: '/notifications/'
-      path: '/notifications'
+      path: '/'
       fullPath: '/notifications/'
       preLoaderRoute: typeof NotificationsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof NotificationsRoute
     }
     '/market/': {
       id: '/market/'
@@ -410,10 +426,10 @@ declare module '@tanstack/react-router' {
     }
     '/notifications/settings/': {
       id: '/notifications/settings/'
-      path: '/notifications/settings'
+      path: '/settings'
       fullPath: '/notifications/settings/'
       preLoaderRoute: typeof NotificationsSettingsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof NotificationsRoute
     }
     '/price/$variety/alert': {
       id: '/price/$variety/alert'
@@ -465,6 +481,20 @@ const MarketRouteChildren: MarketRouteChildren = {
 const MarketRouteWithChildren =
   MarketRoute._addFileChildren(MarketRouteChildren)
 
+interface NotificationsRouteChildren {
+  NotificationsIndexRoute: typeof NotificationsIndexRoute
+  NotificationsSettingsIndexRoute: typeof NotificationsSettingsIndexRoute
+}
+
+const NotificationsRouteChildren: NotificationsRouteChildren = {
+  NotificationsIndexRoute: NotificationsIndexRoute,
+  NotificationsSettingsIndexRoute: NotificationsSettingsIndexRoute,
+}
+
+const NotificationsRouteWithChildren = NotificationsRoute._addFileChildren(
+  NotificationsRouteChildren,
+)
+
 interface StatisticsRouteChildren {
   StatisticsVarietyRoute: typeof StatisticsVarietyRoute
   StatisticsSelectRoute: typeof StatisticsSelectRoute
@@ -497,14 +527,13 @@ const rootRouteChildren: RootRouteChildren = {
   CropSelectRoute: CropSelectRoute,
   GradesRoute: GradesRoute,
   MarketRoute: MarketRouteWithChildren,
+  NotificationsRoute: NotificationsRouteWithChildren,
   PredictionRoute: PredictionRoute,
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
   StatisticsRoute: StatisticsRouteWithChildren,
   WatchlistRoute: WatchlistRoute,
   PriceVarietyRoute: PriceVarietyRouteWithChildren,
-  NotificationsIndexRoute: NotificationsIndexRoute,
-  NotificationsSettingsIndexRoute: NotificationsSettingsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
