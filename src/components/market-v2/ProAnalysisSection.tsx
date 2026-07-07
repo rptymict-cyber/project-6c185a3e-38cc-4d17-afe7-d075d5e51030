@@ -23,19 +23,6 @@ export function ProAnalysisSection() {
   const setTab = f.setProTab;
   const [period, setPeriod] = useState<Period>("1w");
 
-  const auctionCount = useMemo(
-    () =>
-      listAuctions({
-        categoryLabel: f.categoryLabel,
-        itemLabel: f.itemLabel,
-        varietyLabel: f.varietyLabel,
-        marketLabel: f.marketLabel,
-        marketId: f.marketId,
-        date: f.date,
-      }).length,
-    [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
-  );
-
   const TABS: { id: ProTab; label: string }[] = [
     { id: "chart", label: "차트" },
     { id: "auctions", label: "경매내역" },
