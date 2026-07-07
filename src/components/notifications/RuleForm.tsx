@@ -44,7 +44,7 @@ export function RuleForm({
   const [auctionStart, setAuctionStart] = useState<boolean>(seed.auctionStart);
 
   const quote = getMarketQuote({
-    itemId: seed.itemId ?? seed.varietyId,
+    itemId: seed.varietyId,
     varietyId: seed.varietyId,
     marketId: seed.marketId,
     unit: seed.unit,
