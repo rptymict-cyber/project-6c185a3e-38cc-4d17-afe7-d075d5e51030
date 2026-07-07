@@ -186,14 +186,10 @@ function VarietyStatsPage() {
           <div className="px-4 pt-4">
             <button
               onClick={() => setDateOpen(true)}
-              className="flex w-full items-center gap-2 rounded-[10px] border border-[#B7E1B7] bg-[#F0F9F0] px-3 py-2.5 text-left"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E9ECEF] bg-white px-3 py-1.5 text-[13px] font-semibold text-foreground"
             >
-              <Calendar className="h-4 w-4 text-[#3A8A3A]" />
-              <span className="text-[10px] font-semibold text-[#3A8A3A]">조회 날짜</span>
-              <span className="ml-1 flex-1 text-[13.5px] font-bold text-foreground">
-                {dateLabel}
-              </span>
-              <ChevronDown className="h-4 w-4 text-[#6C757D]" />
+              {formatKoreanDate(date)}
+              <ChevronDown className="h-3.5 w-3.5 text-[#6C757D]" />
             </button>
 
             {data.differentFromRequest && (
@@ -202,6 +198,23 @@ function VarietyStatsPage() {
               </div>
             )}
           </div>
+
+          {/* Summary cards */}
+          <div className="mt-3 grid grid-cols-4 gap-2 px-4">
+            <SummaryCard label="전체 평균" value={`${data.overall.avgKg.toLocaleString()}원`} sub="kg당" />
+            <SummaryCard
+              label="전일 대비"
+              value={fmtSigned(data.overall.deltaAmount) + "원"}
+              tone={toneOf(data.overall.deltaAmount)}
+            />
+            <SummaryCard
+              label="등락률"
+              value={`${data.overall.deltaAmount > 0 ? "▲" : data.overall.deltaAmount < 0 ? "▼" : ""} ${Math.abs(data.overall.deltaPct).toFixed(1)}%`}
+              tone={toneOf(data.overall.deltaAmount)}
+            />
+            <SummaryCard label="거래량" value={`${data.overall.volumeTon.toFixed(1)}t`} />
+          </div>
+          <p className="mt-2 px-4 text-[11px] text-[#868E96]">* kg당 평균가 기준</p>
 
           <MarketAveragesTable data={data} onOpenMarket={openInSimpleMode} />
 
