@@ -1,11 +1,9 @@
-import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { PriceVolumeChart } from "./PriceVolumeChart";
 import { AuctionHistoryTable } from "./AuctionHistoryTable";
 import { ProMarketRankingTable } from "./ProMarketRankingTable";
 import { GroupRankingTable } from "./GroupRankingTable";
 import { getPriceVolumeSeries, type Period } from "@/lib/mock/market-analysis";
-import { listAuctions } from "@/lib/mock/auctions";
 import { useMarketFilter, type ProTab } from "@/store/market";
 import { useState } from "react";
 
@@ -23,22 +21,9 @@ export function ProAnalysisSection() {
   const setTab = f.setProTab;
   const [period, setPeriod] = useState<Period>("1w");
 
-  const auctionCount = useMemo(
-    () =>
-      listAuctions({
-        categoryLabel: f.categoryLabel,
-        itemLabel: f.itemLabel,
-        varietyLabel: f.varietyLabel,
-        marketLabel: f.marketLabel,
-        marketId: f.marketId,
-        date: f.date,
-      }).length,
-    [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
-  );
-
   const TABS: { id: ProTab; label: string }[] = [
     { id: "chart", label: "차트" },
-    { id: "auctions", label: `경매내역 ${auctionCount}` },
+    { id: "auctions", label: "경매내역" },
     { id: "compare", label: "시장비교" },
     { id: "company", label: "법인" },
     { id: "origin", label: "산지" },
