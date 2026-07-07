@@ -93,11 +93,15 @@ function VarietyDetailPage() {
 
   const [tab, setTab] = useState<Tab>("chart");
   const [period, setPeriod] = useState<DetailPeriod>("1w");
-  const [alertOpen, setAlertOpen] = useState(false);
 
   const starred = useWatchlist((s) => s.crops.includes(variety));
   const toggleCrop = useWatchlist((s) => s.toggleCrop);
   const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
+  const crop = getCrop(f.itemId);
+  const isPredictable = Boolean(
+    crop?.isPredictable && crop.predictionStatus === "available",
+  );
+
 
   const up = quote.prevPct > 0;
   const flat = quote.prevPct === 0;
