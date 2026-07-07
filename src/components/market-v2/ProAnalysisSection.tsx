@@ -90,11 +90,10 @@ export function ProAnalysisSection() {
         </div>
       )}
       {tab === "auctions" && <AuctionHistoryTable />}
-      {tab !== "chart" && tab !== "auctions" && (
-        <div className="py-10 text-center text-[13px] text-[#868E96]">
-          {TABS.find((t) => t.id === tab)?.label} 뷰는 준비 중입니다
-        </div>
-      )}
+      {tab === "compare" && <ProMarketRankingTable />}
+      {tab === "company" && <GroupRankingTable scope="company" />}
+      {tab === "origin" && <GroupRankingTable scope="origin" />}
+      {tab === "variety" && <GroupRankingTable scope="variety" />}
     </section>
   );
 }
