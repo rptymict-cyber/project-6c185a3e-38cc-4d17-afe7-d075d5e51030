@@ -131,33 +131,41 @@ function ToggleBtn({
 
 function AuctionListItem({ r }: { r: AuctionRecord }) {
   const mmdd = r.auctionDate.slice(5).replace("-", "/");
+  const path = `${r.category} / ${r.cropName} / ${r.varietyName}`;
   return (
-    <li>
-      <Link
-        to="/market/auction/$id"
-        params={{ id: r.id }}
-        className="flex items-center gap-3 px-3.5 py-3 active:bg-[#F8F9FA]"
-      >
-        <div className="w-[54px] shrink-0 text-[11px] leading-tight text-[#868E96]">
-          <div>{mmdd}</div>
-          <div>{r.auctionClock}</div>
-        </div>
+    <Link
+      to="/market/auction/$id"
+      params={{ id: r.id }}
+      className="block rounded-[12px] border border-[#E9ECEF] bg-white p-4 active:bg-[#F8F9FA]"
+    >
+      <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1">
-          <div className="flex items-baseline gap-2">
+          {/* Row 1: path + time */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="truncate text-[13px] font-bold text-[#212529]">
+              {path}
+            </span>
+            <span className="shrink-0 text-[12px] text-[#868E96]">
+              {mmdd} {r.auctionClock}
+            </span>
+          </div>
+          {/* Row 2: price + meta */}
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-1 gap-y-0.5">
             <span className="text-[15px] font-bold text-[#E03131]">
               {r.price.toLocaleString()}원
             </span>
             <span className="text-[11.5px] text-[#868E96]">
-              수량 {r.count}건 · {r.packageLabel}
+              · 수량 {r.count}건 · 규격 {r.packageLabel} · 출하지 {r.origin}
             </span>
           </div>
-          <div className="mt-0.5 truncate text-[11.5px] text-[#495057]">
-            {r.origin} · {r.corporationName}
+          {/* Row 3: corporation */}
+          <div className="mt-0.5 text-[11.5px] text-[#868E96]">
+            법인 {r.corporationName}
           </div>
         </div>
         <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
-      </Link>
-    </li>
+      </div>
+    </Link>
   );
 }
 
