@@ -140,28 +140,6 @@ function SummaryCell({
   );
 }
 
-function FilterChip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "shrink-0 rounded-full px-3 py-1.5 text-[12px] font-semibold",
-        active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-[#495057]",
-      )}
-    >
-      {label}
-    </button>
-  );
-}
-
 function EmptyRow() {
   return (
     <div className="mt-4 flex flex-col items-center gap-2 py-14 text-center">
