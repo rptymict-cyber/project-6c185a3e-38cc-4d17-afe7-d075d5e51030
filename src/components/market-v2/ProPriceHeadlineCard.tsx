@@ -45,7 +45,7 @@ export function ProPriceHeadlineCard({
 
   return (
     <>
-      <div className="mx-4 mt-4 rounded-[14px] border border-[#E9ECEF] bg-white p-4">
+      <div className="mt-4 rounded-[14px] border border-[#E9ECEF] bg-white p-4">
         <Link
           to="/price/$variety"
           params={{ variety: varietyId }}
