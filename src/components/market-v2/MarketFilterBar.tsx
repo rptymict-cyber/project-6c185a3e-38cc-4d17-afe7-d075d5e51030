@@ -52,7 +52,7 @@ export function MarketFilterBar() {
       </div>
 
       {/* Simple-mode toggle row (below filters, above headline card) */}
-      <div className="mt-3 flex items-center justify-between px-1">
+      <div className="mt-3 flex items-center gap-2 px-1">
         <span className="text-[13.5px] font-semibold text-foreground">간편 모드</span>
         <Switch
           checked={f.simpleMode}
