@@ -160,8 +160,12 @@ function VarietyStatsPage() {
     >
       {/* Breadcrumb chip */}
       <div className="px-4 pt-4">
-        <button
-          onClick={() => setPickerOpen(true)}
+        <Link
+          to="/crop-select"
+          search={{
+            from: "statistics-detail",
+            return: `/statistics/${variety}`,
+          }}
           className="inline-flex items-center gap-1.5 rounded-full bg-[#F1F3F5] px-3 py-1.5 text-[12px] font-semibold text-[#495057]"
         >
           <span>{data.breadcrumb.categoryLabel}</span>
@@ -170,7 +174,7 @@ function VarietyStatsPage() {
           <ChevronRight className="h-3 w-3 text-[#ADB5BD]" />
           <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
           <ChevronDown className="ml-0.5 h-3.5 w-3.5 text-[#6C757D]" />
-        </button>
+        </Link>
       </div>
 
       {/* Tabs */}
@@ -254,16 +258,6 @@ function VarietyStatsPage() {
 
       {tab === "trend" && <TrendTab varietyId={variety} />}
 
-      <VarietyPickerSheet
-        open={pickerOpen}
-        onOpenChange={setPickerOpen}
-        currentCropId={variety}
-        onSelect={(cropId) => {
-          if (cropId !== variety) {
-            navigate({ to: "/statistics/$variety", params: { variety: cropId } });
-          }
-        }}
-      />
 
       <DateSheetLite
         open={dateOpen}
