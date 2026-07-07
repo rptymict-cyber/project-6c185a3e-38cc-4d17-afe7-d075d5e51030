@@ -2,12 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import { useMarketFilter } from "@/store/market";
-import {
-  applySecondaryFilters,
-  countBy,
-  listAuctions,
-  type AuctionRecord,
-} from "@/lib/mock/auctions";
+import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 20;
@@ -27,34 +22,24 @@ export function AuctionHistoryTable() {
     [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
   );
 
-  const [origin, setOrigin] = useState("all");
-  const [pkg, setPkg] = useState("all");
   const [page, setPage] = useState(1);
 
-  const filtered = useMemo(
-    () => applySecondaryFilters(all, origin, pkg),
-    [all, origin, pkg],
-  );
-
-  const originCounts = useMemo(() => countBy(all, (r) => r.origin), [all]);
-  const packageCounts = useMemo(() => countBy(all, (r) => r.packageLabel), [all]);
-
   const summary = useMemo(() => {
-    if (filtered.length === 0) {
+    if (all.length === 0) {
       return { avg: 0, max: 0, min: 0, volumeTon: 0 };
     }
-    const prices = filtered.map((r) => r.price);
+    const prices = all.map((r) => r.price);
     const avg = Math.round(prices.reduce((s, v) => s + v, 0) / prices.length);
     const max = Math.max(...prices);
     const min = Math.min(...prices);
     const volumeTon = +(
-      filtered.reduce((s, r) => s + r.packageKg * r.count, 0) / 1000
+      all.reduce((s, r) => s + r.packageKg * r.count, 0) / 1000
     ).toFixed(1);
     return { avg, max, min, volumeTon };
-  }, [filtered]);
+  }, [all]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const visible = filtered.slice(0, page * PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+  const visible = all.slice(0, page * PAGE_SIZE);
 
   const dateLabel = f.date.replaceAll("-", ".");
 
@@ -79,54 +64,6 @@ export function AuctionHistoryTable() {
         <SummaryCell label="최고가" value={`${summary.max.toLocaleString()}원`} tone="up" />
         <SummaryCell label="최저가" value={`${summary.min.toLocaleString()}원`} tone="down" />
         <SummaryCell label="총 거래량" value={`${summary.volumeTon}t`} />
-      </div>
-
-      {/* Filter chips */}
-      <div className="no-scrollbar mt-4 flex gap-1.5 overflow-x-auto">
-        <FilterChip
-          label="출하지 전체"
-          active={origin === "all"}
-          onClick={() => {
-            setOrigin("all");
-            setPage(1);
-          }}
-        />
-        {Object.entries(originCounts)
-          .sort((a, b) => b[1] - a[1])
-          .map(([k, n]) => (
-            <FilterChip
-              key={k}
-              label={`${k} (${n})`}
-              active={origin === k}
-              onClick={() => {
-                setOrigin(k);
-                setPage(1);
-              }}
-            />
-          ))}
-      </div>
-      <div className="no-scrollbar mt-2 flex gap-1.5 overflow-x-auto">
-        <FilterChip
-          label="규격 전체"
-          active={pkg === "all"}
-          onClick={() => {
-            setPkg("all");
-            setPage(1);
-          }}
-        />
-        {Object.entries(packageCounts)
-          .sort((a, b) => b[1] - a[1])
-          .map(([k, n]) => (
-            <FilterChip
-              key={k}
-              label={`${k} (${n})`}
-              active={pkg === k}
-              onClick={() => {
-                setPkg(k);
-                setPage(1);
-              }}
-            />
-          ))}
       </div>
 
       {/* Card list */}
