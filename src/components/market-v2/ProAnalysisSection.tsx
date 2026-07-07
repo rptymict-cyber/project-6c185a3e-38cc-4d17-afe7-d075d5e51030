@@ -2,6 +2,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { PriceVolumeChart } from "./PriceVolumeChart";
 import { AuctionHistoryTable } from "./AuctionHistoryTable";
+import { ProMarketRankingTable } from "./ProMarketRankingTable";
+import { GroupRankingTable } from "./GroupRankingTable";
 import { getPriceVolumeSeries, type Period } from "@/lib/mock/market-analysis";
 import { useMarketFilter } from "@/store/market";
 
