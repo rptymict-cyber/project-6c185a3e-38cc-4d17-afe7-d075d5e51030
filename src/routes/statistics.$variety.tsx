@@ -281,15 +281,8 @@ function VarietyStatsPage() {
         }}
       />
 
-      <AlertSettingsSheet
-        open={alertOpen}
-        onOpenChange={setAlertOpen}
-        varietyId={variety}
-        marketId={data.regions[0]?.markets[0]?.id ?? "all"}
-        varietyLabel={crop.name}
-        marketLabel={data.regions[0]?.markets[0]?.name ?? "전체"}
-        targetPrice={Math.round(data.overall.avgKg * 1.1)}
-      />
+      {/* 알림 설정은 /notifications/settings/$ruleId (또는 /new)로 라우팅됨 */}
+      {alertMarketLabel && null}
     </AppShell>
   );
 }
