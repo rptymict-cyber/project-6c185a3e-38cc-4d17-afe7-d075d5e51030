@@ -38,7 +38,7 @@ export function ProAnalysisSection() {
 
   const TABS: { id: ProTab; label: string }[] = [
     { id: "chart", label: "차트" },
-    { id: "auctions", label: `경매내역 ${auctionCount}` },
+    { id: "auctions", label: "경매내역" },
     { id: "compare", label: "시장비교" },
     { id: "company", label: "법인" },
     { id: "origin", label: "산지" },
