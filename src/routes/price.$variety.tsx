@@ -319,15 +319,10 @@ function ChartTab({
         <Stat label="거래량" value={`${quote.volumeTon.toFixed(1)}t`} tone="neutral" />
       </div>
 
-      <div className="mt-4 border-t border-[#F1F3F5]">
-        <button
-          onClick={onOpenSimple}
-          className="flex w-full items-center justify-center gap-1 py-4 text-[13px] font-semibold text-[#3A8A3A]"
-        >
-          일별·경매 내역 보기
-          <ChevronRight className="h-4 w-4" />
-        </button>
+      <div className="mt-4 rounded-[10px] bg-[#F8F9FA] px-3 py-2 text-[11.5px] text-[#868E96]">
+        ※ 차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
       </div>
+
     </div>
   );
 }
