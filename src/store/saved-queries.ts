@@ -108,6 +108,8 @@ type State = {
   remove: (id: string) => void;
   removeMany: (ids: string[]) => void;
   reorder: (ids: string[]) => void;
+  replaceAll: (items: SavedQuery[]) => void;
+  restore: (item: SavedQuery, index: number) => void;
   refresh: (id: string) => void;
   seedIfEmpty: () => void;
 };
@@ -129,10 +131,16 @@ export const useSavedQueries = create<State>()(
           const it = map.get(id);
           if (it) next.push(it);
         });
-        // append any not in list
         get().items.forEach((q) => {
           if (!ids.includes(q.id)) next.push(q);
         });
+        set({ items: next });
+      },
+      replaceAll: (items) => set({ items }),
+      restore: (item, index) => {
+        const next = get().items.slice();
+        const i = Math.min(Math.max(index, 0), next.length);
+        next.splice(i, 0, item);
         set({ items: next });
       },
       refresh: (id) =>
@@ -148,6 +156,13 @@ export const useSavedQueries = create<State>()(
     { name: "agdict:saved-queries:v1" },
   ),
 );
+
+import { CROPS } from "@/lib/mock/crops";
+const CROPS_INDEX = new Map(CROPS.map((c) => [c.id, c]));
+
+export function isPredictionAvailable(cropId: string): boolean {
+  return Boolean(CROPS_INDEX.get(cropId)?.aiReady);
+}
 
 export function timeAgo(ts: number): string {
   const diff = Math.max(0, Date.now() - ts);
