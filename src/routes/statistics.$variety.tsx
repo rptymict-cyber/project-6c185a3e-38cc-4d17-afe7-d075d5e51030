@@ -241,9 +241,8 @@ function VarietyStatsPage() {
         open={dateOpen}
         onOpenChange={setDateOpen}
         selected={date}
-        onSelect={(iso, label) => {
+        onSelect={(iso) => {
           setDate(iso);
-          setDateLabel(label);
         }}
       />
 
