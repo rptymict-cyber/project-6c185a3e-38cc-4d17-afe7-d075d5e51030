@@ -6,7 +6,7 @@ import { AppShell, TopHeader } from "@/components/app-shell";
 import { cn } from "@/lib/utils";
 import { useSavedQueries, timeAgo, type SavedQuery } from "@/store/saved-queries";
 
-type Filter = "all" | "alert" | "ai";
+type Filter = "all" | "ai";
 type Sort = "updated" | "added" | "priceDesc" | "changeDesc";
 
 const SORT_LABEL: Record<Sort, string> = {
@@ -41,7 +41,6 @@ function WatchlistPage() {
 
   const filtered = useMemo(() => {
     let arr = items.slice();
-    if (filter === "alert") arr = arr.filter((q) => q.hasAlert);
     if (filter === "ai") arr = arr.filter((q) => q.aiReady);
     if (sort === "updated") arr.sort((a, b) => b.updatedAt - a.updatedAt);
     else if (sort === "priceDesc") arr.sort((a, b) => b.price - a.price);
