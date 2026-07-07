@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/notifications")({
+export const Route = createFileRoute("/notifications/settings")({
   component: () => <Outlet />,
 });

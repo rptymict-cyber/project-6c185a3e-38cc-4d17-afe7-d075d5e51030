@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Bell, ChevronDown, ChevronRight, Clock, Star, TrendingDown, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/mock/market-analysis";
+import { useAlerts } from "@/store/alerts";
+import { useMarketFilter } from "@/store/market";
 import { useWatchlist } from "@/store/watchlist";
 import { UnitSheet } from "./UnitSheet";
 
@@ -46,6 +48,10 @@ export function ProPriceHeadlineCard({
   const [unitOpen, setUnitOpen] = useState(false);
   const isFav = useWatchlist((s) => s.crops.includes(itemId));
   const toggleCrop = useWatchlist((s) => s.toggleCrop);
+  const navigate = useNavigate();
+  const marketId = useMarketFilter((s) => s.marketId);
+  const hasAlert = useAlerts((s) => s.hasAnyFor(varietyId, marketId));
+  const existingRule = useAlerts((s) => s.getByKey(varietyId, marketId));
 
   return (
     <>
@@ -70,14 +76,26 @@ export function ProPriceHeadlineCard({
                 className={cn("h-4 w-4", isFav && "fill-[#F59F00] text-[#F59F00]")}
               />
             </button>
-            <Link
-              to="/price/$variety/alert"
-              params={{ variety: varietyId }}
+            <button
+              type="button"
+              onClick={() => {
+                if (existingRule) {
+                  navigate({
+                    to: "/notifications/settings/$ruleId",
+                    params: { ruleId: existingRule.id },
+                  });
+                } else {
+                  navigate({
+                    to: "/notifications/settings/new",
+                    search: { varietyId, marketId },
+                  });
+                }
+              }}
               aria-label="알림 설정"
               className="grid h-8 w-8 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
             >
-              <Bell className="h-4 w-4" />
-            </Link>
+              <Bell className={cn("h-4 w-4", hasAlert && "text-[#3A8A3A]")} />
+            </button>
             <Link
               to="/price/$variety"
               params={{ variety: varietyId }}

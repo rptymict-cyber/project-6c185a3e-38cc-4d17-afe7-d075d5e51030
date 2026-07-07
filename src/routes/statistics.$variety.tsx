@@ -8,7 +8,7 @@ import {
 import { ArrowLeft, Bell, ChevronDown, ChevronRight, Star } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
-import { AlertSettingsSheet } from "@/components/detail/AlertSettingsSheet";
+// AlertSettingsSheet 제거됨 — 알림 규칙은 /notifications/settings/$ruleId 통합 화면 사용
 import { DateSheetLite } from "@/components/date-sheet-lite";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
 import { TrendTab } from "@/components/statistics/TrendTab";
@@ -58,7 +58,7 @@ function VarietyStatsPage() {
   const [dateOpen, setDateOpen] = useState(false);
 
   const [tab, setTab] = useState<Tab>("market");
-  const [alertOpen, setAlertOpen] = useState(false);
+  // alertOpen 제거됨 — 벨 아이콘은 규칙 통합 화면으로 이동
 
   useEffect(() => {
     if (crop) pushRecent(variety);
@@ -82,9 +82,10 @@ function VarietyStatsPage() {
 
   const starred = useWatchlist((s) => s.crops.includes(variety));
   const toggleCrop = useWatchlist((s) => s.toggleCrop);
-  const hasAlert = useAlerts((s) =>
-    s.hasAnyFor(variety, data?.regions[0]?.markets[0]?.id ?? "all"),
-  );
+  const alertMarketId = data?.regions[0]?.markets[0]?.id ?? "all";
+  const alertMarketLabel = data?.regions[0]?.markets[0]?.name ?? "전체";
+  const hasAlert = useAlerts((s) => s.hasAnyFor(variety, alertMarketId));
+  const existingAlertRule = useAlerts((s) => s.getByKey(variety, alertMarketId));
 
   const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
   const setMarket = useMarketFilter((s) => s.setMarket);
@@ -149,7 +150,19 @@ function VarietyStatsPage() {
             </button>
             <button
               aria-label="알림 설정"
-              onClick={() => setAlertOpen(true)}
+              onClick={() => {
+                if (existingAlertRule) {
+                  navigate({
+                    to: "/notifications/settings/$ruleId",
+                    params: { ruleId: existingAlertRule.id },
+                  });
+                } else {
+                  navigate({
+                    to: "/notifications/settings/new",
+                    search: { varietyId: variety, marketId: alertMarketId },
+                  });
+                }
+              }}
               className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
             >
               <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
@@ -268,15 +281,8 @@ function VarietyStatsPage() {
         }}
       />
 
-      <AlertSettingsSheet
-        open={alertOpen}
-        onOpenChange={setAlertOpen}
-        varietyId={variety}
-        marketId={data.regions[0]?.markets[0]?.id ?? "all"}
-        varietyLabel={crop.name}
-        marketLabel={data.regions[0]?.markets[0]?.name ?? "전체"}
-        targetPrice={Math.round(data.overall.avgKg * 1.1)}
-      />
+      {/* 알림 설정은 /notifications/settings/$ruleId (또는 /new)로 라우팅됨 */}
+      {alertMarketLabel && null}
     </AppShell>
   );
 }
