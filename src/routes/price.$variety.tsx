@@ -180,7 +180,7 @@ function VarietyDetailPage() {
           </span>
           {isPredictable && (
             <span className="inline-flex items-center rounded-full border border-[#3A8A3A]/30 bg-[#F0F9F0] px-2 py-0.5 text-[11px] font-bold text-[#1F5C1F]">
-              시세 예측 가능
+              AI 가격 예측 가능
             </span>
           )}
         </div>
