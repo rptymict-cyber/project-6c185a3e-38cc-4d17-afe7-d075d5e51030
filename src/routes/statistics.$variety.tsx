@@ -272,13 +272,12 @@ function VarietyStatsPage() {
       {tab === "trend" && <TrendTab varietyId={variety} />}
 
 
-      <DateSheetLite
+      <DatePickerSheet
         open={dateOpen}
         onOpenChange={setDateOpen}
         selected={date}
-        onSelect={(iso) => {
-          setDate(iso);
-        }}
+        onConfirm={(iso) => setDate(iso)}
+        hasDataFor={defaultTradingDayFilter}
       />
 
       {/* 알림 설정은 /notifications/settings/$ruleId (또는 /new)로 라우팅됨 */}
