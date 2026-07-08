@@ -97,6 +97,25 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
 
   const chartSeries = yearMode ? yearSeries : baseSeries;
 
+  // Period summary — 최고가/최저가/평균가/총 거래량 across the anchor series.
+  const anchorKey = yearMode ? "2026" : (compareIds[0] ?? "all");
+  const periodSummary = useMemo(() => {
+    const prices: number[] = [];
+    let vol = 0;
+    for (const pt of points) {
+      const v = pt[anchorKey];
+      if (typeof v === "number") prices.push(v);
+      vol += pt.volume;
+    }
+    if (prices.length === 0) {
+      return { high: 0, low: 0, avg: 0, vol: 0 };
+    }
+    const high = Math.max(...prices);
+    const low = Math.min(...prices);
+    const avg = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+    return { high, low, avg, vol: Math.round(vol * 10) / 10 };
+  }, [points, anchorKey]);
+
   return (
     <div className="pb-8">
       {/* Comparison chips */}
