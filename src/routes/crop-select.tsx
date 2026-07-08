@@ -175,6 +175,16 @@ function CropSelectPage() {
     }
 
     toast.success("조건을 적용했어요");
+
+    // 통계 흐름에서는 홈으로 돌아가지 않고 선택한 품목 통계 상세로 바로 이동한다.
+    if (from === "statistics" && item) {
+      navigate({
+        to: "/statistics/$variety",
+        params: { variety: item.id },
+      });
+      return;
+    }
+
     navigate({ to: returnTo });
   };
 
