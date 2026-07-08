@@ -155,6 +155,13 @@ function CropSelectPage() {
 
   const handlePickItem = (itemId: string) => {
     setDraftItem(itemId);
+    const item = getItemById(itemId);
+    // 소분류가 없는 품목이면 품종 선택 단계를 생략하고 자동 완료 가능한 상태로 만든다.
+    if (item && (item.hasNoVariety || item.varieties.length === 0)) {
+      setDraftVariety(ALL_VARIETY_ID);
+      // step 2에 머무르며 하단 CTA로 바로 적용
+      return;
+    }
     setStep(3);
   };
 
@@ -167,7 +174,9 @@ function CropSelectPage() {
     setDraftCategory(r.category.id);
     setDraftItem(r.item.id);
     setDraftVariety(r.variety ? r.variety.id : ALL_VARIETY_ID);
-    setStep(3);
+    const targetItem = getItemById(r.item.id);
+    const noVar = targetItem && (targetItem.hasNoVariety || targetItem.varieties.length === 0);
+    setStep(noVar ? 2 : 3);
   };
 
   const handleRemoveCategory = () => {
