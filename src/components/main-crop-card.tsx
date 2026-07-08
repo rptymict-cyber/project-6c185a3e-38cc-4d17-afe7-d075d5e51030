@@ -13,6 +13,7 @@ import type { Crop } from "@/lib/mock/crops";
 import { MARKETS } from "@/lib/mock/markets";
 import { PriceBadge } from "./price-badge";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 import {
   Popover,
   PopoverContent,
@@ -77,9 +78,7 @@ export function MainCropCard({ crop }: { crop: Crop }) {
       {/* Header row */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="text-2xl" aria-hidden>
-            {crop.emoji}
-          </span>
+          <CropIcon name={crop.name} size={28} />
           <div className="min-w-0">
             <div className="truncate text-[16px] font-bold text-foreground">
               {crop.name}

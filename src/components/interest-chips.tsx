@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { useInterests } from "@/store/interests";
 import { getCrop } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 import { useState } from "react";
 // NOTE: 작물 추가는 /crop-select 페이지가 유일한 진입점.
 // AddCropSheet 컴포넌트 파일은 롤백 대비로 남겨두었으며 여기서 import 하지 않는다.
@@ -46,7 +47,7 @@ export function InterestChips() {
                   : "border-[#3A8A3A] bg-[#F0F9F0] text-[#1F5C1F]",
               )}
             >
-              <span aria-hidden>{c.emoji}</span>
+              <CropIcon name={c.name} size={16} />
               <span>{c.name}</span>
               {editing && (
                 <span

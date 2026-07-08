@@ -9,6 +9,7 @@ import { Sparkline } from "./sparkline";
 import { PriceBadge } from "./price-badge";
 import { StarToggle } from "./star-toggle";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 function insightFor(crop: Crop, changePct: number) {
   const spark = crop.spark;
@@ -54,9 +55,8 @@ export function CropCard({ crop }: { crop: Crop }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="text-2xl" aria-hidden>
-            {crop.emoji}
-          </span>
+          <CropIcon name={crop.name} size={28} />
+
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="truncate text-[15px] font-bold text-foreground">

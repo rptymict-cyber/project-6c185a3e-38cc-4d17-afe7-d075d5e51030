@@ -4,6 +4,7 @@ import type { Item } from "@/lib/mock/items";
 import { topVariety, itemTotalVolume, varietyInsight } from "@/lib/mock/items";
 import { MarketSpark } from "./MarketSpark";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 export function ItemRow({ item }: { item: Item }) {
   const top = topVariety(item);
@@ -35,9 +36,7 @@ export function ItemRow({ item }: { item: Item }) {
             : undefined
         }
       >
-        <span className="text-[26px] leading-none" aria-hidden>
-          {item.emoji}
-        </span>
+        <CropIcon name={item.name} size={30} />
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">

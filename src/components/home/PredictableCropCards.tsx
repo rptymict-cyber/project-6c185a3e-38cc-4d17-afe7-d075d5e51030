@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import { PREDICTABLE_CROPS } from "@/features/prediction/mockPredictionData";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 // 홈에 뿌릴 최소 시세 값 (예측 가능 5개 작물 전용)
 const HOME_PRICE: Record<
@@ -66,7 +67,7 @@ export function PredictableCropCards() {
               search={{ cropId: crop.id, entrySource: "home" }}
               className="flex min-w-[140px] max-w-[140px] flex-col rounded-[12px] border border-[#E9ECEF] bg-white p-3.5 transition-colors active:bg-[#F8F9FA]"
             >
-              <span className="text-[28px] leading-none">{crop.emoji}</span>
+              <CropIcon name={crop.name} size={32} />
 
               <div className="mt-2 flex items-center gap-1.5">
                 <span className="text-[14px] font-bold text-foreground">
