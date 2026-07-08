@@ -67,7 +67,7 @@ function CropDetail() {
     <AppShell
       header={
         <TopHeader
-          title={`${crop.emoji} ${crop.name}`}
+          title={crop.name}
           left={
             <button
               aria-label="뒤로"

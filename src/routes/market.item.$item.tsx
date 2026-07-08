@@ -55,8 +55,9 @@ function ItemVarietiesPage() {
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="flex min-w-0 flex-1 items-center gap-1.5">
+            <CropIcon name={item.name} size={22} />
             <span className="truncate text-[17px] font-bold">
-              {item.emoji} {item.name}
+              {item.name}
             </span>
             <span
               className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
