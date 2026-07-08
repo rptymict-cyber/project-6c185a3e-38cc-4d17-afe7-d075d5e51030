@@ -489,7 +489,7 @@ function Step2Item({
                     )}
                   >
                     <span className="flex items-center gap-3">
-                      <CropIcon name={it.name} size={24} />
+                      <CropIcon iconKey={it.iconKey} size={24} />
                       <span
                         className={cn(
                           "text-sm font-medium",
