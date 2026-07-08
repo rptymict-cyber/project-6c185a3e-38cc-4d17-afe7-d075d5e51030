@@ -9,7 +9,9 @@ import { PriceVolumeChart } from "@/components/price-volume-chart";
 import { StarToggle } from "@/components/star-toggle";
 import { getCrop, seriesFor } from "@/lib/mock/crops";
 import { useUi } from "@/store/ui";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromCrop } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/market/$crop")({
