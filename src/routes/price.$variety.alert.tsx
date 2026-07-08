@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { AppShell, TopHeader } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import { Switch } from "@/components/ui/switch";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useAlerts } from "@/store/alerts";

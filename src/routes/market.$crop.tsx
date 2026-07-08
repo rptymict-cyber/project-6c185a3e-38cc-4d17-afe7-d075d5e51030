@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { AppShell, TopHeader } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import { PeriodChips } from "@/components/period-chips";
 import { PriceBadge, priceColor } from "@/components/price-badge";
 import { PriceVolumeChart } from "@/components/price-volume-chart";
