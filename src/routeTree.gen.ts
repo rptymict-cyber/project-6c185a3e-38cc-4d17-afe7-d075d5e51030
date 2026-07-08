@@ -107,14 +107,14 @@ const MarketIndexRoute = MarketIndexRouteImport.update({
   getParentRoute: () => MarketRoute,
 } as any)
 const StatisticsSelectRoute = StatisticsSelectRouteImport.update({
-  id: '/select',
-  path: '/select',
-  getParentRoute: () => StatisticsRoute,
+  id: '/statistics/select',
+  path: '/statistics/select',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const StatisticsVarietyRoute = StatisticsVarietyRouteImport.update({
-  id: '/$variety',
-  path: '/$variety',
-  getParentRoute: () => StatisticsRoute,
+  id: '/statistics/$variety',
+  path: '/statistics/$variety',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PriceVarietyRoute = PriceVarietyRouteImport.update({
   id: '/price/$variety',
@@ -349,6 +349,8 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   WatchlistRoute: typeof WatchlistRoute
   PriceVarietyRoute: typeof PriceVarietyRouteWithChildren
+  StatisticsVarietyRoute: typeof StatisticsVarietyRoute
+  StatisticsSelectRoute: typeof StatisticsSelectRoute
   StatisticsIndexRoute: typeof StatisticsIndexRoute
 }
 
@@ -454,17 +456,17 @@ declare module '@tanstack/react-router' {
     }
     '/statistics/select': {
       id: '/statistics/select'
-      path: '/select'
+      path: '/statistics/select'
       fullPath: '/statistics/select'
       preLoaderRoute: typeof StatisticsSelectRouteImport
-      parentRoute: typeof StatisticsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/statistics/$variety': {
       id: '/statistics/$variety'
-      path: '/$variety'
+      path: '/statistics/$variety'
       fullPath: '/statistics/$variety'
       preLoaderRoute: typeof StatisticsVarietyRouteImport
-      parentRoute: typeof StatisticsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/price/$variety': {
       id: '/price/$variety'
@@ -614,6 +616,8 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   WatchlistRoute: WatchlistRoute,
   PriceVarietyRoute: PriceVarietyRouteWithChildren,
+  StatisticsVarietyRoute: StatisticsVarietyRoute,
+  StatisticsSelectRoute: StatisticsSelectRoute,
   StatisticsIndexRoute: StatisticsIndexRoute,
 }
 export const routeTree = rootRouteImport
