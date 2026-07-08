@@ -90,6 +90,9 @@ function VarietyStatsPage() {
   const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
   const setMarket = useMarketFilter((s) => s.setMarket);
   const setMarketDate = useMarketFilter((s) => s.setDate);
+  const marketLabel = useMarketFilter((s) => s.marketLabel);
+  const corpLabel = useMarketFilter((s) => s.corpLabel);
+  const unitLabel = useMarketFilter((s) => s.unit);
 
   const openInSimpleMode = (marketId: string) => {
     if (!data) return;
