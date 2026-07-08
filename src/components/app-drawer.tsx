@@ -2,14 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Menu,
-  Package,
-  Store,
-  MapPin,
   Sparkles,
-  Star,
   BarChart2,
   Award,
-  
+  Bell,
+  Info,
   ChevronRight,
 } from "lucide-react";
 import {
@@ -24,7 +21,6 @@ import type { ComponentType } from "react";
 
 type Item = {
   to: string;
-  search?: Record<string, string>;
   label: string;
   description?: string;
   Icon: ComponentType<{ className?: string }>;
@@ -33,50 +29,35 @@ type Item = {
 
 const items: Item[] = [
   {
-    to: "/market",
-    search: { tab: "crop" },
-    label: "품목별",
-    description: "작물별 시세 목록",
-    Icon: Package,
-  },
-  {
-    to: "/market",
-    search: { tab: "market" },
-    label: "도매시장별",
-    description: "지역·시장별 평균가",
-    Icon: Store,
-  },
-  {
-    to: "/market",
-    search: { tab: "origin" },
-    label: "주산지 정보",
-    description: "월별 주요 산지 비중",
-    Icon: MapPin,
-  },
-  {
     to: "/prediction",
-    label: "AI 가격 예측",
-    description: "유리한 출하·매입 시점",
+    label: "AI 시세 예측",
+    description: "유리한 출하·매입 시점 확인",
     Icon: Sparkles,
     badge: "Beta",
   },
   {
-    to: "/watchlist",
-    label: "즐겨찾기",
-    description: "저장한 품목과 시장",
-    Icon: Star,
-  },
-  {
     to: "/compare",
-    label: "시장별 비교",
-    description: "여러 시장을 한눈에 비교",
+    label: "시장별 가격 비교",
+    description: "여러 도매시장을 한눈에 비교",
     Icon: BarChart2,
   },
   {
     to: "/grades",
-    label: "등급 정보",
+    label: "등급별 가격 정보",
     description: "상·중·하 등급별 시세",
     Icon: Award,
+  },
+  {
+    to: "/notifications/settings",
+    label: "알림 설정",
+    description: "가격 변동 알림 규칙 관리",
+    Icon: Bell,
+  },
+  {
+    to: "/data-guide",
+    label: "데이터 기준 안내",
+    description: "출처·기준일·단위 안내",
+    Icon: Info,
   },
 ];
 
@@ -111,7 +92,6 @@ export function AppDrawerTrigger() {
                 <SheetClose asChild>
                   <Link
                     to={it.to}
-                    search={it.search as never}
                     className="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-secondary"
                   >
                     <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface text-primary">

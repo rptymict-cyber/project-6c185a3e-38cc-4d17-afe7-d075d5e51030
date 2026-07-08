@@ -17,6 +17,7 @@ import { Route as PredictionRouteImport } from './routes/prediction'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as GradesRouteImport } from './routes/grades'
+import { Route as DataGuideRouteImport } from './routes/data-guide'
 import { Route as CropSelectRouteImport } from './routes/crop-select'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
@@ -73,6 +74,11 @@ const MarketRoute = MarketRouteImport.update({
 const GradesRoute = GradesRouteImport.update({
   id: '/grades',
   path: '/grades',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataGuideRoute = DataGuideRouteImport.update({
+  id: '/data-guide',
+  path: '/data-guide',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CropSelectRoute = CropSelectRouteImport.update({
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
   '/crop-select': typeof CropSelectRoute
+  '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
   '/market': typeof MarketRouteWithChildren
   '/notifications': typeof NotificationsRouteWithChildren
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
   '/crop-select': typeof CropSelectRoute
+  '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
   '/crop-select': typeof CropSelectRoute
+  '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
   '/market': typeof MarketRouteWithChildren
   '/notifications': typeof NotificationsRouteWithChildren
@@ -249,6 +258,7 @@ export interface FileRouteTypes {
     | '/'
     | '/compare'
     | '/crop-select'
+    | '/data-guide'
     | '/grades'
     | '/market'
     | '/notifications'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/'
     | '/compare'
     | '/crop-select'
+    | '/data-guide'
     | '/grades'
     | '/prediction'
     | '/search'
@@ -300,6 +311,7 @@ export interface FileRouteTypes {
     | '/'
     | '/compare'
     | '/crop-select'
+    | '/data-guide'
     | '/grades'
     | '/market'
     | '/notifications'
@@ -328,6 +340,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompareRoute: typeof CompareRoute
   CropSelectRoute: typeof CropSelectRoute
+  DataGuideRoute: typeof DataGuideRoute
   GradesRoute: typeof GradesRoute
   MarketRoute: typeof MarketRouteWithChildren
   NotificationsRoute: typeof NotificationsRouteWithChildren
@@ -395,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/grades'
       fullPath: '/grades'
       preLoaderRoute: typeof GradesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data-guide': {
+      id: '/data-guide'
+      path: '/data-guide'
+      fullPath: '/data-guide'
+      preLoaderRoute: typeof DataGuideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/crop-select': {
@@ -599,6 +619,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompareRoute: CompareRoute,
   CropSelectRoute: CropSelectRoute,
+  DataGuideRoute: DataGuideRoute,
   GradesRoute: GradesRoute,
   MarketRoute: MarketRouteWithChildren,
   NotificationsRoute: NotificationsRouteWithChildren,
