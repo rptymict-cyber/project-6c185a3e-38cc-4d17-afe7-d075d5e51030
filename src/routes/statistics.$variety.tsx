@@ -166,19 +166,20 @@ function VarietyStatsPage() {
                       to: "/notifications/settings/$ruleId",
                       params: { ruleId: existingAlertRule.id },
                     });
-                } else {
-                  navigate({
-                    to: "/notifications/settings/new",
-                    search: { varietyId: variety, marketId: alertMarketId },
-                  });
-                }
-              }}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
-            </button>
-          </div>
-        </header>
+                  } else {
+                    navigate({
+                      to: "/notifications/settings/new",
+                      search: { varietyId: variety, marketId: alertMarketId },
+                    });
+                  }
+                }}
+                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
+              >
+                <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
+              </button>
+            </>
+          }
+        />
       }
     >
       {/* Breadcrumb chip */}
