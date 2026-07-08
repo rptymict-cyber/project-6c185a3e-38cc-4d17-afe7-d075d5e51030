@@ -148,7 +148,7 @@ function VarietyDetailPage() {
             <button
               aria-label="즐겨찾기"
               onClick={() => {
-                const added = toggleCrop(variety);
+                const added = toggleFavorite(fromMarketQuote(favInput));
                 toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
               }}
               className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
