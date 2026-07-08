@@ -21,7 +21,9 @@ import {
 } from "@/lib/mock/variety-detail";
 import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
 
 
