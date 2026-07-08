@@ -20,7 +20,9 @@ import { useAlerts } from "@/store/alerts";
 import { useCropSelection } from "@/store/cropSelection";
 import { useMarketFilter } from "@/store/market";
 import { useRecentStats } from "@/store/recent-stats";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromCrop } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/statistics/$variety")({
