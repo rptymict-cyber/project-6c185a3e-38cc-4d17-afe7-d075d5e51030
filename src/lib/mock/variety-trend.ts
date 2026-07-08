@@ -1,4 +1,5 @@
-import { getCrop, type Crop } from "./crops";
+import { type Crop } from "./crops";
+import { resolveCropSubject } from "./crop-resolver";
 import { MARKETS } from "./markets";
 
 export type TrendPeriod = "1w" | "2w" | "1m" | "3m" | "1y" | "5y";
