@@ -237,17 +237,17 @@ function CropSelectPage() {
 
 function Header({ title, onClose }: { title: string; onClose: () => void }) {
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-gray-200 bg-white px-3">
+    <header className="sticky top-0 z-20 grid h-14 grid-cols-[1fr_auto_1fr] items-center bg-white px-3">
+      <div />
+      <h1 className="text-base font-semibold text-gray-900">{title}</h1>
       <button
         type="button"
         onClick={onClose}
         aria-label="닫기"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-100"
+        className="ml-auto flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-100"
       >
         <X className="h-5 w-5" />
       </button>
-      <h1 className="text-base font-semibold text-gray-900">{title}</h1>
-      <div className="h-10 w-10" />
     </header>
   );
 }
@@ -266,74 +266,78 @@ function Stepper({
   const doneMap: Record<Step, boolean> = {
     1: Boolean(draft.categoryId) && step > 1,
     2: Boolean(draft.itemId) && step > 2,
-    3: Boolean(draft.varietyId) && false, // 3은 완료 표시 대신 active로만 유지
+    3: false,
   };
   const lockedMap: Record<Step, boolean> = {
     1: false,
     2: !draft.categoryId,
     3: !draft.itemId,
   };
-  const labels: Record<Step, string> = {
-    1: "부류",
-    2: "품목",
-    3: "품종",
-  };
-
+  const labels: Record<Step, string> = { 1: "부류 선택", 2: "품목 선택", 3: "품종 선택" };
   const stepList: Step[] = [1, 2, 3];
 
   return (
-    <div className="bg-white px-4 pb-4 pt-3">
-      <div className="flex items-center">
+    <div className="bg-white px-6 pb-5 pt-2">
+      {/* row 1: circles + connecting lines */}
+      <div className="grid grid-cols-[auto_1fr_auto_1fr_auto] items-center">
         {stepList.map((s, idx) => {
           const isActive = step === s;
           const isDone = doneMap[s];
           const isLocked = lockedMap[s] && !isActive && !isDone;
-          return (
-            <div key={s} className="flex flex-1 items-center">
-              <button
-                type="button"
-                onClick={() => onStepClick(s)}
-                disabled={isLocked}
-                className="flex flex-col items-center gap-1"
-                aria-current={isActive ? "step" : undefined}
-              >
-                <span
-                  className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors",
-                    isDone && "bg-green-600 text-white",
-                    isActive && "bg-green-700 text-white",
-                    isLocked && "bg-gray-200 text-gray-400",
-                    !isDone &&
-                      !isActive &&
-                      !isLocked &&
-                      "bg-gray-100 text-gray-500",
-                  )}
-                >
-                  {isDone ? <Check className="h-4 w-4" /> : s}
-                </span>
-                <span
-                  className={cn(
-                    "text-[11px]",
-                    isActive
-                      ? "font-semibold text-green-700"
-                      : isLocked
-                        ? "text-gray-400"
-                        : "text-gray-600",
-                  )}
-                >
-                  {labels[s]}
-                </span>
-              </button>
-              {idx < stepList.length - 1 && (
-                <div
-                  className={cn(
-                    "mx-2 h-0.5 flex-1 rounded",
-                    doneMap[s] ? "bg-green-600" : "bg-gray-200",
-                  )}
-                />
+          const circle = (
+            <button
+              key={`c-${s}`}
+              type="button"
+              onClick={() => onStepClick(s)}
+              disabled={isLocked}
+              aria-current={isActive ? "step" : undefined}
+              className={cn(
+                "flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors",
+                isDone && "bg-green-600 text-white",
+                isActive && "bg-green-600 text-white",
+                isLocked && "bg-gray-200 text-gray-400",
+                !isDone && !isActive && !isLocked && "bg-gray-200 text-gray-500",
               )}
-            </div>
+            >
+              {isDone ? <Check className="h-4 w-4" /> : s}
+            </button>
           );
+          if (idx === stepList.length - 1) return circle;
+          const nextDone = doneMap[s];
+          return [
+            circle,
+            <div
+              key={`l-${s}`}
+              className={cn(
+                "mx-2 h-0.5 rounded",
+                nextDone ? "bg-green-600" : "bg-gray-200",
+              )}
+            />,
+          ];
+        })}
+      </div>
+      {/* row 2: labels aligned under circles */}
+      <div className="mt-2 grid grid-cols-[auto_1fr_auto_1fr_auto] items-center">
+        {stepList.map((s, idx) => {
+          const isActive = step === s;
+          const isLocked = lockedMap[s] && !isActive && !doneMap[s];
+          const label = (
+            <span
+              key={`t-${s}`}
+              className={cn(
+                "w-9 text-center text-[11px]",
+                isActive
+                  ? "font-semibold text-green-700"
+                  : isLocked
+                    ? "text-gray-400"
+                    : "text-gray-600",
+              )}
+            >
+              {labels[s]}
+            </span>
+          );
+          if (idx === stepList.length - 1) return label;
+          return [label, <div key={`s-${s}`} />];
         })}
       </div>
     </div>
