@@ -30,7 +30,7 @@ export function TopHeader({
   right?: ReactNode;
 }) {
   return (
-    <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur">
+    <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-border bg-background px-4">
       <div className="flex min-w-0 items-center gap-2">{left}</div>
       {title ? (
         <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center">
