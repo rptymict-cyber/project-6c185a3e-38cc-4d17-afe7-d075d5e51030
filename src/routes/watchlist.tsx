@@ -105,7 +105,7 @@ function WatchlistPage() {
               {(
                 [
                   ["all", "전체"],
-                  ["ai", "AI 예측"],
+                  ["ai", "AI 가격 예측"],
                 ] as const
               ).map(([id, label]) => {
                 const active = filter === id;
