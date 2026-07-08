@@ -107,14 +107,14 @@ const MarketIndexRoute = MarketIndexRouteImport.update({
   getParentRoute: () => MarketRoute,
 } as any)
 const StatisticsSelectRoute = StatisticsSelectRouteImport.update({
-  id: '/statistics/select',
-  path: '/statistics/select',
-  getParentRoute: () => rootRouteImport,
+  id: '/select',
+  path: '/select',
+  getParentRoute: () => StatisticsRoute,
 } as any)
 const StatisticsVarietyRoute = StatisticsVarietyRouteImport.update({
-  id: '/statistics/$variety',
-  path: '/statistics/$variety',
-  getParentRoute: () => rootRouteImport,
+  id: '/$variety',
+  path: '/$variety',
+  getParentRoute: () => StatisticsRoute,
 } as any)
 const PriceVarietyRoute = PriceVarietyRouteImport.update({
   id: '/price/$variety',
@@ -349,8 +349,6 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   WatchlistRoute: typeof WatchlistRoute
   PriceVarietyRoute: typeof PriceVarietyRouteWithChildren
-  StatisticsVarietyRoute: typeof StatisticsVarietyRoute
-  StatisticsSelectRoute: typeof StatisticsSelectRoute
   StatisticsIndexRoute: typeof StatisticsIndexRoute
 }
 
@@ -456,17 +454,17 @@ declare module '@tanstack/react-router' {
     }
     '/statistics/select': {
       id: '/statistics/select'
-      path: '/statistics/select'
+      path: '/select'
       fullPath: '/statistics/select'
       preLoaderRoute: typeof StatisticsSelectRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof StatisticsRoute
     }
     '/statistics/$variety': {
       id: '/statistics/$variety'
-      path: '/statistics/$variety'
+      path: '/$variety'
       fullPath: '/statistics/$variety'
       preLoaderRoute: typeof StatisticsVarietyRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof StatisticsRoute
     }
     '/price/$variety': {
       id: '/price/$variety'
@@ -616,10 +614,18 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   WatchlistRoute: WatchlistRoute,
   PriceVarietyRoute: PriceVarietyRouteWithChildren,
-  StatisticsVarietyRoute: StatisticsVarietyRoute,
-  StatisticsSelectRoute: StatisticsSelectRoute,
   StatisticsIndexRoute: StatisticsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
