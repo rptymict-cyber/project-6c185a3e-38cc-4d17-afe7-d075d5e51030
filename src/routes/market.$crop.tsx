@@ -53,7 +53,7 @@ function CropDetail() {
 
   if (!crop) {
     return (
-      <AppShell header={<TopHeader title="시세 상세" />}>
+      <AppShell header={<DetailHeader title="시세 상세" onBack={() => router.history.back()} />}>
         <div className="p-8 text-center text-muted-foreground">품목을 찾을 수 없어요.</div>
       </AppShell>
     );
