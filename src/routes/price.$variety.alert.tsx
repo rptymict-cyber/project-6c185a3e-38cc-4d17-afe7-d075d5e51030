@@ -114,7 +114,7 @@ function PriceAlertPage() {
       <div className="h-24" aria-hidden />
 
       {/* Bottom actions */}
-      <div className="fixed inset-x-0 bottom-[60px] z-30 mx-auto w-full max-w-[430px] border-t border-[#E9ECEF] bg-background/95 px-4 py-3 backdrop-blur">
+      <div className="fixed inset-x-0 bottom-[60px] z-30 mx-auto w-full max-w-[430px] border-t border-[#E9ECEF] bg-background px-4 py-3">
         <div className="flex gap-2">
           <button
             onClick={() => router.history.back()}
