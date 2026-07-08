@@ -98,6 +98,7 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
   );
 
   const chartSeries = yearMode ? yearSeries : baseSeries;
+  const hasTrendData = points.length > 0;
 
   // Period summary — 최고가/최저가/평균가/총 거래량 across the anchor series.
   const anchorKey = yearMode ? "2026" : (compareIds[0] ?? "all");
@@ -234,32 +235,45 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
       </div>
 
       {/* Chart */}
-      <div className="mt-3 px-2">
-        <ChartRangeHeader
-          firstLabel={points[0]?.label}
-          lastLabel={points[points.length - 1]?.label}
-          unitLabel={priceUnitLabel(varietyId)}
-        />
-        <TrendDualChart points={points} series={chartSeries} unitLabel={priceUnitLabel(varietyId)} view={chartView} />
-      </div>
-
-      {/* Hint */}
-      <p className="mt-2 px-4 text-[11px] text-[#868E96]">
-        그래프를 누르면 날짜별 상세 정보가 나옵니다
-      </p>
-
-      {/* Period summary */}
-      <div className="mt-4 px-4">
-        <div className="rounded-[12px] border border-[#E9ECEF] bg-white p-3">
-          <div className="mb-2 text-[12px] font-bold text-foreground">선택 기간 요약</div>
-          <div className="grid grid-cols-4 gap-2">
-            <SummaryStat label="최고가" value={`${periodSummary.high.toLocaleString()}원`} tone="up" />
-            <SummaryStat label="최저가" value={`${periodSummary.low.toLocaleString()}원`} tone="down" />
-            <SummaryStat label="평균가" value={`${periodSummary.avg.toLocaleString()}원`} />
-            <SummaryStat label="총 거래량" value={`${periodSummary.vol.toFixed(1)}t`} />
+      {hasTrendData ? (
+        <>
+          <div className="mt-3 px-2">
+            <ChartRangeHeader
+              firstLabel={points[0]?.label}
+              lastLabel={points[points.length - 1]?.label}
+              unitLabel={priceUnitLabel(varietyId)}
+            />
+            <TrendDualChart points={points} series={chartSeries} unitLabel={priceUnitLabel(varietyId)} view={chartView} />
           </div>
+
+          {/* Hint */}
+          <p className="mt-2 px-4 text-[11px] text-[#868E96]">
+            그래프를 누르면 날짜별 상세 정보가 나옵니다
+          </p>
+
+          {/* Period summary */}
+          <div className="mt-4 px-4">
+            <div className="rounded-[12px] border border-[#E9ECEF] bg-white p-3">
+              <div className="mb-2 text-[12px] font-bold text-foreground">선택 기간 요약</div>
+              <div className="grid grid-cols-4 gap-2">
+                <SummaryStat label="최고가" value={`${periodSummary.high.toLocaleString()}원`} tone="up" />
+                <SummaryStat label="최저가" value={`${periodSummary.low.toLocaleString()}원`} tone="down" />
+                <SummaryStat label="평균가" value={`${periodSummary.avg.toLocaleString()}원`} />
+                <SummaryStat label="총 거래량" value={`${periodSummary.vol.toFixed(1)}t`} />
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="mx-4 mt-4 rounded-[12px] border border-dashed border-[#E9ECEF] bg-[#F8F9FA] px-4 py-10 text-center">
+          <div className="text-[13.5px] font-bold text-foreground">
+            선택한 조건의 가격 추이 데이터가 없습니다
+          </div>
+          <p className="mt-2 text-[12px] leading-relaxed text-[#6C757D]">
+            데이터가 제공되는 품목부터 순차적으로 확인할 수 있습니다.
+          </p>
         </div>
-      </div>
+      )}
 
       {/* Footer link */}
       <div className="mt-6 border-t border-[#F1F3F5]">

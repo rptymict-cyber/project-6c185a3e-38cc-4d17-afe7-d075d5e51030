@@ -3,6 +3,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   Calendar as CalendarIcon,
   ChevronRight,
+  Layers,
+  Leaf,
   Sprout,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -90,14 +92,24 @@ function StatisticsHome() {
               onClick={() => setDateOpen(true)}
             />
             <CropFieldLink
+              icon={<Layers className="h-3.5 w-3.5" />}
+              label="부류"
+              value={category?.name}
+              placeholder="부류 선택"
+            />
+            <CropFieldLink
+              icon={<Leaf className="h-3.5 w-3.5" />}
+              label="품목"
+              value={item?.name}
+              placeholder={category ? "품목 선택" : "부류 먼저 선택"}
+              disabled={!category}
+            />
+            <CropFieldLink
               icon={<Sprout className="h-3.5 w-3.5" />}
-              label="작물"
-              value={
-                item
-                  ? [category?.name, item.name, varietyName].filter(Boolean).join(" > ")
-                  : undefined
-              }
-              placeholder="작물 선택"
+              label="품종"
+              value={varietyName}
+              placeholder={item ? "품종 선택" : "품목 먼저 선택"}
+              disabled={!item}
             />
           </div>
 
