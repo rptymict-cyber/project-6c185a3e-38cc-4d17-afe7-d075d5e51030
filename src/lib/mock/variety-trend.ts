@@ -159,7 +159,7 @@ export function getVarietyTrend(params: {
   seriesIds: CompareSeriesId[];
   period: TrendPeriod;
 }): TrendPoint[] {
-  const crop = resolveCropSubject(params.varietyId).crop;
+  const crop = resolveRealCrop(params.varietyId);
   if (!crop) return [];
   const dates = backDates(params.period, REFERENCE_END);
   const perSeries: Record<string, number[]> = {};
