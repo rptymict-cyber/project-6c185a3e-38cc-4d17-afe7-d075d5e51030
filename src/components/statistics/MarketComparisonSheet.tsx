@@ -35,14 +35,16 @@ export function MarketComparisonSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-2xl p-0">
-        <SheetHeader className="px-5 pt-5">
+      <SheetContent side="bottom" className="flex max-h-[85dvh] flex-col rounded-t-2xl p-0">
+        <SheetHeader className="shrink-0 px-5 pt-5">
           <SheetTitle className="text-[16px] font-bold">시장 추가</SheetTitle>
         </SheetHeader>
 
-        <div className="mt-2 px-5 text-[11.5px] text-[#6C757D]">
+        <div className="shrink-0 mt-2 px-5 text-[11.5px] text-[#6C757D]">
           현재 {compareIds.length}/{MAX_COMPARE}개 선택됨
         </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto">
 
         <ul className="px-2 pb-4 pt-2">
           {/* 전국 always-on row */}
@@ -143,9 +145,20 @@ export function MarketComparisonSheet({
           ))}
         </ul>
 
-        <p className="px-5 pb-6 text-[11px] text-[#868E96]">
-          전국은 모든 시장의 평균입니다.
-        </p>
+          <p className="px-5 pb-6 text-[11px] text-[#868E96]">
+            전국은 모든 시장의 평균입니다.
+          </p>
+        </div>
+
+        <div className="shrink-0 border-t border-[#E9ECEF] bg-white px-5 py-3">
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="flex w-full items-center justify-center rounded-[12px] bg-[#3A8A3A] py-3 text-[14px] font-black text-white active:bg-[#2F6F2F]"
+          >
+            완료
+          </button>
+        </div>
       </SheetContent>
     </Sheet>
   );
