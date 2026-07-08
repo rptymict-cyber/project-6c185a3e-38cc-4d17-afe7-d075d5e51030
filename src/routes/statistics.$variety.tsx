@@ -240,20 +240,16 @@ function VarietyStatsPage() {
             )}
           </div>
 
-          {/* Summary cards */}
-          <div className="mt-3 grid grid-cols-4 gap-2 px-4">
+          {/* Summary cards — 전체 평균 / 전일 대비 / 거래량 */}
+          <div className="mt-3 grid grid-cols-3 gap-2 px-4">
             <SummaryCard label="전체 평균" value={`${data.overall.avgKg.toLocaleString()}원`} sub="kg당" />
             <SummaryCard
               label="전일 대비"
               value={fmtSigned(data.overall.deltaAmount) + "원"}
+              sub={`${data.overall.deltaAmount > 0 ? "▲" : data.overall.deltaAmount < 0 ? "▼" : ""} ${Math.abs(data.overall.deltaPct).toFixed(1)}%`}
               tone={toneOf(data.overall.deltaAmount)}
             />
-            <SummaryCard
-              label="등락률"
-              value={`${data.overall.deltaAmount > 0 ? "▲" : data.overall.deltaAmount < 0 ? "▼" : ""} ${Math.abs(data.overall.deltaPct).toFixed(1)}%`}
-              tone={toneOf(data.overall.deltaAmount)}
-            />
-            <SummaryCard label="거래량" value={`${data.overall.volumeTon.toFixed(1)}t`} />
+            <SummaryCard label="거래량" value={`${data.overall.volumeTon.toFixed(1)}t`} sub="총 반입량" />
           </div>
           <p className="mt-2 px-4 text-[11px] text-[#868E96]">* kg당 평균가 기준</p>
 
