@@ -83,7 +83,7 @@ export function DatePickerSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="rounded-t-2xl p-0">
+      <SheetContent side="bottom" className="rounded-t-2xl p-0 [&>button:first-of-type]:hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5">
           <h2 className="text-[16px] font-bold text-foreground">날짜 선택</h2>
