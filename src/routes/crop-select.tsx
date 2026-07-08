@@ -413,11 +413,11 @@ function Step1Category({
                       <span className="text-sm font-medium text-gray-900">
                         {c.name}
                       </span>
-                      <span className="text-xs text-gray-400">
-                        {count}
-                      </span>
                     </span>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs text-gray-400">{count}</span>
+                      <ChevronRight className="h-4 w-4 text-gray-400" />
+                    </span>
                   </button>
                 </li>
               );
