@@ -18,10 +18,12 @@ type State = {
   reset: () => void;
 };
 
+const DEFAULT_COMPARE = ["all", "seoul-garak", "seoul-gangseo"];
+
 export const useTrendCompare = create<State>()(
   persist(
     (set, get) => ({
-      compareIds: ["all", "seoul-garak"],
+      compareIds: DEFAULT_COMPARE,
       yearMode: false,
       addCompare: (id) => {
         const ids = get().compareIds;
@@ -46,8 +48,8 @@ export const useTrendCompare = create<State>()(
         return "added";
       },
       setYearMode: (yearMode) => set({ yearMode }),
-      reset: () => set({ compareIds: ["all", "seoul-garak"], yearMode: false }),
+      reset: () => set({ compareIds: DEFAULT_COMPARE, yearMode: false }),
     }),
-    { name: "agdict:trend-compare" },
+    { name: "agdict:trend-compare", version: 2 },
   ),
 );
