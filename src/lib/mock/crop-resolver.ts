@@ -11,8 +11,49 @@
  * 이렇게 하면 시장별 평균가 / 가격 추이 그래프가 모두 정상 렌더링된다.
  */
 import type { Category, Crop, PredictionStatus } from "./crops";
-import { getCrop as getCropMock } from "./crops";
+import { CROPS, getCrop as getCropMock } from "./crops";
 import { CATEGORIES as CATALOG_CATEGORIES, ITEMS } from "./catalog";
+
+function getCropByName(name: string): Crop | undefined {
+  return CROPS.find((c) => c.name === name);
+}
+
+/**
+ * 통계 mock에 "실제" 데이터가 존재하는지 여부.
+ * - 직접 CROPS id 매칭
+ * - 카탈로그 variety → 상위 품목명이 CROPS 이름과 일치
+ * - 카탈로그 item → item.name 이 CROPS 이름과 일치
+ * 매칭되지 않으면 개발용 fallback 수치를 만들지 말고
+ * UI에서 "데이터 없음" 안내를 보여줘야 한다.
+ */
+export function hasRealStatisticsData(id: string): boolean {
+  if (getCropMock(id)) return true;
+  for (const item of ITEMS) {
+    if (item.varieties.some((v) => v.id === id)) {
+      return Boolean(getCropByName(item.name));
+    }
+  }
+  const item = ITEMS.find((it) => it.id === id);
+  if (item) return Boolean(getCropByName(item.name));
+  return false;
+}
+
+/**
+ * 카탈로그 id를 실제 CROPS 데이터로 매핑하려 시도한다.
+ * 실패 시 null.
+ */
+export function resolveRealCrop(id: string): Crop | null {
+  const direct = getCropMock(id);
+  if (direct) return direct;
+  for (const item of ITEMS) {
+    if (item.varieties.some((v) => v.id === id)) {
+      return getCropByName(item.name) ?? null;
+    }
+  }
+  const item = ITEMS.find((it) => it.id === id);
+  if (item) return getCropByName(item.name) ?? null;
+  return null;
+}
 
 export interface CropSubject {
   crop: Crop;
