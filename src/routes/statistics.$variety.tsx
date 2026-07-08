@@ -15,7 +15,7 @@ import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable
 import { TrendTab } from "@/components/statistics/TrendTab";
 // NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
 // VarietyPickerSheet는 롤백 대비로 남겨두고 여기서 import 하지 않는다.
-import { getCrop } from "@/lib/mock/crops";
+import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
 import { useAlerts } from "@/store/alerts";
 import { useCropSelection } from "@/store/cropSelection";
@@ -54,7 +54,7 @@ function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
   const navigate = useNavigate();
-  const crop = getCrop(variety);
+  const crop = resolveCropSubject(variety).crop;
   const pushRecent = useRecentStats((s) => s.push);
 
   // Statistics tab manages its own date state — do NOT share with market tab.
@@ -68,16 +68,20 @@ function VarietyStatsPage() {
     if (crop) pushRecent(variety);
   }, [crop, variety, pushRecent]);
 
-  // /crop-select 에서 다른 품목을 선택하고 돌아온 경우 자동으로 해당 상세로 이동
+  // /crop-select 에서 다른 작물을 선택하고 돌아온 경우 자동으로 해당 상세로 이동.
+  // route param이 varietyId(구체) 또는 itemId(전체 품종) 어느 쪽이든 정합성을 맞춘다.
   const committedItemId = useCropSelection((s) => s.committed.itemId);
+  const committedVarietyId = useCropSelection((s) => s.committed.varietyId);
   useEffect(() => {
-    if (committedItemId && committedItemId !== variety) {
-      navigate({
-        to: "/statistics/$variety",
-        params: { variety: committedItemId },
-      });
+    if (!committedItemId) return;
+    const target =
+      committedVarietyId && committedVarietyId !== "ALL"
+        ? committedVarietyId
+        : committedItemId;
+    if (target !== variety) {
+      navigate({ to: "/statistics/$variety", params: { variety: target } });
     }
-  }, [committedItemId, variety, navigate]);
+  }, [committedItemId, committedVarietyId, variety, navigate]);
 
   const data = useMemo(
     () => (crop ? getVarietyMarketAverages({ varietyId: variety, date }) : null),

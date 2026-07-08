@@ -48,6 +48,7 @@ export const Route = createFileRoute("/crop-select")({
 const CTA_LABEL_BY_FROM: Record<string, string> = {
   market: "확인",
   statistics: "선택한 작물 통계 보기",
+  "statistics-detail": "선택한 작물 통계 보기",
   prediction: "예측 보기",
   home: "적용하기",
 };
@@ -55,6 +56,7 @@ const DEFAULT_CTA_LABEL = "적용하기";
 
 const PAGE_TITLE_BY_FROM: Record<string, string> = {
   statistics: "통계 작물 선택",
+  "statistics-detail": "통계 작물 선택",
   prediction: "예측 작물 선택",
 };
 const DEFAULT_PAGE_TITLE = "작물 선택";
@@ -176,11 +178,14 @@ function CropSelectPage() {
 
     toast.success("조건을 적용했어요");
 
-    // 통계 흐름에서는 홈으로 돌아가지 않고 선택한 품목 통계 상세로 바로 이동한다.
-    if (from === "statistics" && item) {
+    // 통계 흐름에서는 홈으로 돌아가지 않고 선택한 작물의 통계 상세로 바로 이동한다.
+    // 선택한 품종이 있으면 varietyId를 우선 사용하고, "전체 품종"이면 itemId 기준으로 이동한다.
+    if ((from === "statistics" || from === "statistics-detail") && item) {
+      const isAll = draft.varietyId === ALL_VARIETY_ID;
+      const target = isAll ? item.id : (draft.varietyId as string);
       navigate({
         to: "/statistics/$variety",
-        params: { variety: item.id },
+        params: { variety: target },
       });
       return;
     }

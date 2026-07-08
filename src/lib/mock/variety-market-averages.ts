@@ -1,4 +1,5 @@
-import { CATEGORIES, CROPS, getCrop, type Crop } from "./crops";
+import { CATEGORIES, type Crop } from "./crops";
+import { resolveCropSubject } from "./crop-resolver";
 import { MARKETS, type Market } from "./markets";
 
 export type CompanyAverage = {
@@ -151,8 +152,8 @@ export function getVarietyMarketAverages(params: {
   varietyId: string;
   date: string;
 }): VarietyMarketAverages | null {
-  const crop = getCrop(params.varietyId) ?? CROPS[0];
-  if (!crop) return null;
+  const subject = resolveCropSubject(params.varietyId);
+  const crop = subject.crop;
 
   const { effective, label, requestedLabel, different } = resolveEffective(params.date);
   const seed = hash(`${crop.id}:${effective}`);
@@ -182,12 +183,15 @@ export function getVarietyMarketAverages(params: {
   const deltaAmount = avgKg - prevAvgKg;
   const deltaPct = prevAvgKg > 0 ? (deltaAmount / prevAvgKg) * 100 : 0;
 
+  // 카탈로그 기반 라벨을 우선 사용. CROPS mock에만 있으면 예전 로직으로 fallback.
+  const categoryLabel = subject.categoryLabel || categoryLabelOf(crop.category);
+
   return {
     variety: crop,
     breadcrumb: {
-      categoryLabel: categoryLabelOf(crop.category),
-      itemLabel: crop.name,
-      varietyLabel: crop.name,
+      categoryLabel,
+      itemLabel: subject.itemLabel,
+      varietyLabel: subject.varietyLabel,
     },
     effectiveDate: effective,
     effectiveDateLabel: label,

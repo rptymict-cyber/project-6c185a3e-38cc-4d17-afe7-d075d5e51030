@@ -1,9 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, ChevronRight, Search } from "lucide-react";
+import { Bell, ChevronDown, ChevronRight, Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
-import { getCrop } from "@/lib/mock/crops";
 import { useRecentStats } from "@/store/recent-stats";
+import { useCropSelection } from "@/store/cropSelection";
+import {
+  getCategoryById,
+  getItemById,
+} from "@/lib/catalog-service";
+import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
 
@@ -25,8 +30,25 @@ const CROP_SELECT_SEARCH = {
   return: "/statistics" as const,
 };
 
+function useCommittedCropLabel(): string | null {
+  const committed = useCropSelection((s) => s.committed);
+  if (!committed.itemId) return null;
+  const item = getItemById(committed.itemId);
+  if (!item) return null;
+  const category = committed.categoryId
+    ? getCategoryById(committed.categoryId)
+    : undefined;
+  const varietyName =
+    !committed.varietyId || committed.varietyId === "ALL"
+      ? "전체 품종"
+      : (item.varieties.find((v) => v.id === committed.varietyId)?.name ??
+        "전체 품종");
+  return `${category?.name ? category.name + " · " : ""}${item.name} · ${varietyName}`;
+}
+
 function StatisticsHome() {
   const recent = useRecentStats((s) => s.items);
+  const cropLabel = useCommittedCropLabel();
 
   return (
     <AppShell
@@ -34,36 +56,34 @@ function StatisticsHome() {
         <AppHeader
           title="농산물 통계"
           right={
-            <>
-              <Link
-                to="/crop-select"
-                search={CROP_SELECT_SEARCH}
-                aria-label="검색"
-                className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-              >
-                <Search className="h-5 w-5" />
-              </Link>
-              <Link
-                to="/notifications"
-                aria-label="알림"
-                className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-              >
-                <Bell className="h-5 w-5" />
-              </Link>
-            </>
+            <Link
+              to="/notifications"
+              aria-label="알림"
+              className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+            >
+              <Bell className="h-5 w-5" />
+            </Link>
           }
         />
       }
     >
       <div className="px-4 pb-10 pt-4">
-        {/* Search field → crop-select */}
+        {/* 작물 선택 버튼 — 시세 탭의 필터 카드와 동일한 스타일, 한 행 전체 너비 */}
         <Link
           to="/crop-select"
           search={CROP_SELECT_SEARCH}
-          className="flex h-11 w-full items-center gap-2 rounded-full border border-[#E9ECEF] bg-[#F8F9FA] px-4 text-[13.5px] text-[#868E96] active:bg-[#F1F3F5]"
+          className="flex min-h-16 w-full flex-col items-start gap-1 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
         >
-          <Search className="h-4 w-4 text-[#ADB5BD]" />
-          작물명 · 품종으로 검색
+          <span className="flex items-center gap-1 text-[11px] font-medium text-[#868E96]">
+            <Sprout className="h-3.5 w-3.5" />
+            작물
+          </span>
+          <span className="flex w-full items-center justify-between">
+            <span className="truncate text-[14px] font-bold text-foreground">
+              {cropLabel ?? "작물 선택"}
+            </span>
+            <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#ADB5BD]" />
+          </span>
         </Link>
 
         {/* Recent stats */}
@@ -81,8 +101,8 @@ function StatisticsHome() {
 
             <ul className="overflow-hidden rounded-[12px] border border-[#E9ECEF] bg-white">
               {recent.map((r, i) => {
-                const c = getCrop(r.varietyId);
-                if (!c) return null;
+                const subject = resolveCropSubject(r.varietyId);
+                const c = subject.crop;
                 const delta = c.currentPrice - c.prevPrice;
                 const pct = c.prevPrice > 0 ? (delta / c.prevPrice) * 100 : 0;
                 const tone =
@@ -103,7 +123,9 @@ function StatisticsHome() {
                           {c.name}
                         </div>
                         <div className="mt-0.5 truncate text-[11px] text-[#868E96]">
-                          {c.unit}
+                          {subject.itemLabel !== subject.varietyLabel
+                            ? `${subject.itemLabel} · ${subject.varietyLabel}`
+                            : c.unit}
                         </div>
                       </div>
                       <div className="text-right">
@@ -122,30 +144,6 @@ function StatisticsHome() {
             </ul>
           </section>
         )}
-
-        {/* Main CTA — pick a crop */}
-        <Link
-          to="/crop-select"
-          search={CROP_SELECT_SEARCH}
-          className="mt-6 flex items-center gap-3 rounded-[16px] border border-[#D3EBD3] bg-[#F0F9F0] p-4 active:bg-[#E7F5E7]"
-        >
-          <div
-            aria-hidden
-            className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white text-[28px] leading-none"
-          >
-            📊
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="text-[15px] font-black leading-snug text-[#1F5C1F]">
-              작물 선택해서 통계 보기
-            </div>
-            <div className="mt-1 text-[12px] leading-relaxed text-[#3A8A3A]">
-              가격 흐름 · 시장별 평균가 · 거래량
-            </div>
-          </div>
-          <ChevronRight className="h-5 w-5 shrink-0 text-[#3A8A3A]" />
-        </Link>
-
       </div>
     </AppShell>
   );
