@@ -1,5 +1,6 @@
 import { createFileRoute, useRouter, notFound } from "@tanstack/react-router";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { DetailHeader } from "@/components/detail-header";
 import { useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { MARKETS } from "@/lib/mock/markets";
@@ -77,17 +78,13 @@ function WholesaleDetailPage() {
   return (
     <AppShell
       header={
-        <header className="sticky top-0 z-30 flex h-[52px] items-center gap-2 border-b border-[#E9ECEF] bg-background px-2">
-          <button
-            aria-label="뒤로"
-            onClick={() => router.history.back()}
-            className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <span className="flex-1 truncate text-[17px] font-bold">{market.name}</span>
-          <span className="shrink-0 pr-2 text-[11px] text-[#6C757D]">07/03 07:00 기준</span>
-        </header>
+        <DetailHeader
+          title={market.name}
+          onBack={() => router.history.back()}
+          right={
+            <span className="pr-2 text-[11px] text-[#6C757D]">07/03 07:00 기준</span>
+          }
+        />
       }
       bottom={
         <div className="fixed inset-x-0 bottom-[60px] z-30 mx-auto w-full max-w-[430px] border-t border-[#E9ECEF] bg-[#F8F9FA] px-4 py-2.5">

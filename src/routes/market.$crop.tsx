@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { AppShell, TopHeader } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import { PeriodChips } from "@/components/period-chips";
 import { PriceBadge, priceColor } from "@/components/price-badge";
 import { PriceVolumeChart } from "@/components/price-volume-chart";
@@ -52,7 +53,7 @@ function CropDetail() {
 
   if (!crop) {
     return (
-      <AppShell header={<TopHeader title="시세 상세" />}>
+      <AppShell header={<DetailHeader title="시세 상세" onBack={() => router.history.back()} />}>
         <div className="p-8 text-center text-muted-foreground">품목을 찾을 수 없어요.</div>
       </AppShell>
     );
@@ -66,17 +67,9 @@ function CropDetail() {
   return (
     <AppShell
       header={
-        <TopHeader
+        <DetailHeader
           title={crop.name}
-          left={
-            <button
-              aria-label="뒤로"
-              onClick={() => router.history.back()}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-          }
+          onBack={() => router.history.back()}
           right={
             <>
               <StarToggle

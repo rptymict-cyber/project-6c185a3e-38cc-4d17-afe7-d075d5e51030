@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { AppShell, TopHeader } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import { Switch } from "@/components/ui/switch";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useAlerts } from "@/store/alerts";
@@ -45,17 +45,9 @@ function PriceAlertPage() {
   return (
     <AppShell
       header={
-        <TopHeader
+        <DetailHeader
           title="가격 알림 설정"
-          left={
-            <button
-              onClick={() => router.history.back()}
-              aria-label="뒤로가기"
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-          }
+          onBack={() => router.history.back()}
         />
       }
     >

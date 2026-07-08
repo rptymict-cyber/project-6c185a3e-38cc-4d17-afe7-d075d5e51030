@@ -5,7 +5,8 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { ArrowLeft, Bell, ChevronRight, MoreHorizontal, Search, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { Bell, ChevronRight, MoreHorizontal, Search, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { DetailHeader } from "@/components/detail-header";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { PriceVolumeChart } from "@/components/market-v2/PriceVolumeChart";
@@ -136,59 +137,55 @@ function VarietyDetailPage() {
   return (
     <AppShell
       header={
-        <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-[#E9ECEF] bg-background px-2">
-          <button
-            aria-label="뒤로"
-            onClick={() => router.history.back()}
-            className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <div className="flex items-center gap-0.5">
-            <button
-              aria-label="즐겨찾기"
-              onClick={() => {
-                const added = toggleFavorite(fromMarketQuote(favInput));
-                toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
-              }}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <Star
-                className={cn(
-                  "h-5 w-5",
-                  starred ? "fill-[#F59F00] text-[#F59F00]" : "text-[#868E96]",
-                )}
-              />
-            </button>
-            <button
-              aria-label="가격 알림 설정"
-              onClick={() => {
-                if (existingRule) {
-                  navigate({
-                    to: "/notifications/settings/$ruleId",
-                    params: { ruleId: existingRule.id },
-                  });
-                } else {
-                  navigate({
-                    to: "/notifications/settings/new",
-                    search: { varietyId: variety, marketId: f.marketId },
-                  });
-                }
-              }}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
-            </button>
+        <DetailHeader
+          onBack={() => router.history.back()}
+          right={
+            <>
+              <button
+                aria-label="즐겨찾기"
+                onClick={() => {
+                  const added = toggleFavorite(fromMarketQuote(favInput));
+                  toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
+                }}
+                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
+              >
+                <Star
+                  className={cn(
+                    "h-5 w-5",
+                    starred ? "fill-[#F59F00] text-[#F59F00]" : "text-[#868E96]",
+                  )}
+                />
+              </button>
+              <button
+                aria-label="가격 알림 설정"
+                onClick={() => {
+                  if (existingRule) {
+                    navigate({
+                      to: "/notifications/settings/$ruleId",
+                      params: { ruleId: existingRule.id },
+                    });
+                  } else {
+                    navigate({
+                      to: "/notifications/settings/new",
+                      search: { varietyId: variety, marketId: f.marketId },
+                    });
+                  }
+                }}
+                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
+              >
+                <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
+              </button>
 
-            <button
-              aria-label="더보기"
-              onClick={() => toast("더보기 메뉴는 준비 중입니다")}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <MoreHorizontal className="h-5 w-5 text-[#495057]" />
-            </button>
-          </div>
-        </header>
+              <button
+                aria-label="더보기"
+                onClick={() => toast("더보기 메뉴는 준비 중입니다")}
+                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
+              >
+                <MoreHorizontal className="h-5 w-5 text-[#495057]" />
+              </button>
+            </>
+          }
+        />
       }
     >
       {/* Title area */}

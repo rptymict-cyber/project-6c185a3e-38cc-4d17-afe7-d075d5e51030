@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter, notFound } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { DetailHeader } from "@/components/detail-header";
 import { AppShell } from "@/components/app-shell";
 import { VarietyRow } from "@/components/market-v2/VarietyRow";
 import {
@@ -47,28 +47,26 @@ function ItemVarietiesPage() {
   return (
     <AppShell
       header={
-        <header className="sticky top-0 z-30 flex h-[52px] items-center gap-2 border-b border-[#E9ECEF] bg-background px-2">
-          <button
-            aria-label="뒤로"
-            onClick={() => router.history.back()}
-            className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <div className="flex min-w-0 flex-1 items-center gap-1.5">
-            <CropIcon name={item.name} size={22} />
-            <span className="truncate text-[17px] font-bold">
-              {item.name}
-            </span>
-            <span
-              className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-              style={{ color: "#3A8A3A", backgroundColor: "#3A8A3A1A" }}
-            >
-              {catLabel}
-            </span>
-          </div>
-          <span className="shrink-0 pr-2 text-[11px] text-[#6C757D]">07/03 07:00 기준</span>
-        </header>
+        <DetailHeader
+          onBack={() => router.history.back()}
+          center={
+            <div className="flex min-w-0 items-center gap-1.5">
+              <CropIcon name={item.name} size={20} />
+              <span className="truncate text-[15px] font-semibold text-foreground">
+                {item.name}
+              </span>
+              <span
+                className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                style={{ color: "#3A8A3A", backgroundColor: "#3A8A3A1A" }}
+              >
+                {catLabel}
+              </span>
+            </div>
+          }
+          right={
+            <span className="pr-2 text-[11px] text-[#6C757D]">07/03 07:00 기준</span>
+          }
+        />
       }
     >
       <div className="px-4 pt-3">

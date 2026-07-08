@@ -5,7 +5,8 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { ArrowLeft, Bell, ChevronDown, ChevronRight, Star } from "lucide-react";
+import { Bell, ChevronDown, ChevronRight, Star } from "lucide-react";
+import { DetailHeader } from "@/components/detail-header";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 // AlertSettingsSheet 제거됨 — 알림 규칙은 /notifications/settings/$ruleId 통합 화면 사용
@@ -129,58 +130,56 @@ function VarietyStatsPage() {
   return (
     <AppShell
       header={
-        <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-[#E9ECEF] bg-background px-2">
-          <button
-            aria-label="뒤로"
-            onClick={() => router.history.back()}
-            className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center gap-1.5">
-            <CropIcon name={crop.name} size={20} />
-            <span className="text-[15px] font-black tracking-tight text-foreground">
-              {crop.name} 통계
-            </span>
-          </div>
-          <div className="flex items-center gap-0.5">
-            <button
-              aria-label="즐겨찾기"
-              onClick={() => {
-                if (!favItem) return;
-                const added = toggleFavorite(favItem);
-                toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
-              }}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <Star
-                className={cn(
-                  "h-5 w-5",
-                  starred ? "fill-[#F59F00] text-[#F59F00]" : "text-[#868E96]",
-                )}
-              />
-            </button>
-            <button
-              aria-label="알림 설정"
-              onClick={() => {
-                if (existingAlertRule) {
-                  navigate({
-                    to: "/notifications/settings/$ruleId",
-                    params: { ruleId: existingAlertRule.id },
-                  });
-                } else {
-                  navigate({
-                    to: "/notifications/settings/new",
-                    search: { varietyId: variety, marketId: alertMarketId },
-                  });
-                }
-              }}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
-            </button>
-          </div>
-        </header>
+        <DetailHeader
+          onBack={() => router.history.back()}
+          center={
+            <div className="flex items-center gap-1.5">
+              <CropIcon name={crop.name} size={20} />
+              <span className="text-[15px] font-black tracking-tight text-foreground">
+                {crop.name} 통계
+              </span>
+            </div>
+          }
+          right={
+            <>
+              <button
+                aria-label="즐겨찾기"
+                onClick={() => {
+                  if (!favItem) return;
+                  const added = toggleFavorite(favItem);
+                  toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
+                }}
+                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
+              >
+                <Star
+                  className={cn(
+                    "h-5 w-5",
+                    starred ? "fill-[#F59F00] text-[#F59F00]" : "text-[#868E96]",
+                  )}
+                />
+              </button>
+              <button
+                aria-label="알림 설정"
+                onClick={() => {
+                  if (existingAlertRule) {
+                    navigate({
+                      to: "/notifications/settings/$ruleId",
+                      params: { ruleId: existingAlertRule.id },
+                    });
+                  } else {
+                    navigate({
+                      to: "/notifications/settings/new",
+                      search: { varietyId: variety, marketId: alertMarketId },
+                    });
+                  }
+                }}
+                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
+              >
+                <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
+              </button>
+            </>
+          }
+        />
       }
     >
       {/* Breadcrumb chip */}
@@ -299,20 +298,7 @@ function VarietyStatsPage() {
 }
 
 function MinimalHeader({ label, onBack }: { label: string; onBack: () => void }) {
-  return (
-    <header className="sticky top-0 z-30 flex h-[52px] items-center border-b border-[#E9ECEF] bg-background px-2">
-      <button
-        aria-label="뒤로"
-        onClick={onBack}
-        className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-      >
-        <ArrowLeft className="h-5 w-5" />
-      </button>
-      <span className="ml-1 text-[15px] font-black tracking-tight text-foreground">
-        {label}
-      </span>
-    </header>
-  );
+  return <DetailHeader title={label} onBack={onBack} />;
 }
 
 function SummaryCard({
