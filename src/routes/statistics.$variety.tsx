@@ -119,19 +119,54 @@ function VarietyStatsPage() {
     navigate({ to: "/market" });
   };
 
-  if (!crop || !data) {
+  if (!hasData) {
+    const titleLabel =
+      subject.itemLabel && subject.itemLabel !== variety
+        ? `${subject.itemLabel} 통계`
+        : "통계";
     return (
       <AppShell
         header={
-          <MinimalHeader label="품종 통계" onBack={() => router.history.back()} />
+          <MinimalHeader label={titleLabel} onBack={() => router.history.back()} />
         }
       >
-        <div className="px-4 py-10 text-center text-[13px] text-[#6C757D]">
-          품종을 찾을 수 없어요
+        <div className="mx-4 mt-6 rounded-[12px] border border-dashed border-[#E9ECEF] bg-[#F8F9FA] px-4 py-10 text-center">
+          <div className="text-[14px] font-bold text-foreground">
+            선택한 조건의 통계 데이터가 없습니다
+          </div>
+          <p className="mt-2 text-[12px] leading-relaxed text-[#6C757D]">
+            {subject.itemLabel && subject.varietyLabel
+              ? `${subject.itemLabel} · ${subject.varietyLabel}는(은) 아직 통계 데이터가 준비 중이에요.`
+              : "선택하신 품목은 아직 통계 데이터가 준비 중이에요."}
+            <br />
+            다른 작물을 선택해 주세요.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/statistics" })}
+            className="mt-4 inline-flex items-center rounded-[10px] border border-[#3A8A3A] bg-white px-4 py-2 text-[13px] font-bold text-[#3A8A3A] active:bg-[#F0F9F0]"
+          >
+            다른 작물 선택하기
+          </button>
         </div>
       </AppShell>
     );
   }
+
+  if (!data) {
+    return (
+      <AppShell
+        header={
+          <MinimalHeader label="통계" onBack={() => router.history.back()} />
+        }
+      >
+        <div className="px-4 py-10 text-center text-[13px] text-[#6C757D]">
+          통계 데이터를 불러오지 못했습니다
+        </div>
+      </AppShell>
+    );
+  }
+
 
   return (
     <AppShell
