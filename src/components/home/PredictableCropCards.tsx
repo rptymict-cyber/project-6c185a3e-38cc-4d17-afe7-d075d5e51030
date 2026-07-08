@@ -85,7 +85,7 @@ export function PredictableCropCards() {
               <div className="mt-2 flex items-center justify-between">
                 <ChangeBadge changePct={h.changePct} />
                 <span className="shrink-0 rounded-full bg-[#F0F9F0] px-2 py-0.5 text-[10px] font-bold text-[#3A8A3A]">
-                  AI 예측
+                  AI 가격 예측
                 </span>
               </div>
             </Link>
