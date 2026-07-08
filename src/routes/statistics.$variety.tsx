@@ -191,6 +191,10 @@ function VarietyStatsPage() {
           <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
           <ChevronDown className="ml-0.5 h-3.5 w-3.5 text-[#6C757D]" />
         </Link>
+        {/* Sub-info: 현재 선택된 시장/법인/단위 기준 */}
+        <p className="mt-2 text-[11.5px] text-[#868E96]">
+          {marketLabel} · {corpLabel === "전체" ? "전체 법인" : corpLabel} · {unitLabel}
+        </p>
       </div>
 
       {/* Tabs */}
