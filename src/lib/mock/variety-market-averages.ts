@@ -1,5 +1,5 @@
 import { CATEGORIES, type Crop } from "./crops";
-import { resolveCropSubject } from "./crop-resolver";
+import { resolveCropSubject, resolveRealCrop } from "./crop-resolver";
 import { MARKETS, type Market } from "./markets";
 
 export type CompanyAverage = {
