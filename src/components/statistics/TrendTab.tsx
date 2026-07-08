@@ -28,9 +28,17 @@ const PERIODS: { id: TrendPeriod; label: string }[] = [
   { id: "5y", label: "5년" },
 ];
 
+type ChartView = "both" | "price" | "volume";
+const VIEW_OPTIONS: { id: ChartView; label: string }[] = [
+  { id: "both", label: "가격+거래량" },
+  { id: "price", label: "가격만" },
+  { id: "volume", label: "거래량만" },
+];
+
 export function TrendTab({ varietyId }: { varietyId: string }) {
   const navigate = useNavigate();
   const [period, setPeriod] = useState<TrendPeriod>("1w");
+  const [chartView, setChartView] = useState<ChartView>("both");
   const [pickerOpen, setPickerOpen] = useState(false);
   const compareIds = useTrendCompare((s) => s.compareIds);
   const removeCompare = useTrendCompare((s) => s.removeCompare);
