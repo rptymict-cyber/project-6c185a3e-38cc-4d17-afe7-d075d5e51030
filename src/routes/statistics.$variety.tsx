@@ -82,8 +82,12 @@ function VarietyStatsPage() {
     [crop, variety, date],
   );
 
-  const starred = useWatchlist((s) => s.crops.includes(variety));
-  const toggleCrop = useWatchlist((s) => s.toggleCrop);
+  const favItem = crop ? fromCrop(crop) : null;
+  const favId = favItem ? favoriteKey(favItem) : "";
+  const starred = useFavoritePriceStore((s) =>
+    favId ? s.items.some((it) => it.id === favId) : false,
+  );
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
   const alertMarketId = data?.regions[0]?.markets[0]?.id ?? "all";
   const alertMarketLabel = data?.regions[0]?.markets[0]?.name ?? "전체";
   const hasAlert = useAlerts((s) => s.hasAnyFor(variety, alertMarketId));
