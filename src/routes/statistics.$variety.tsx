@@ -129,7 +129,7 @@ function VarietyStatsPage() {
           </button>
           <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center">
             <span className="text-[15px] font-black tracking-tight text-foreground">
-              {crop.emoji} {crop.name}
+              {crop.emoji} {crop.name} 통계
             </span>
           </div>
           <div className="flex items-center gap-0.5">
