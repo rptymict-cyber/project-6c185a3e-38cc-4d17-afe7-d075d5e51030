@@ -54,7 +54,7 @@ function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
   const navigate = useNavigate();
-  const crop = getCrop(variety);
+  const crop = resolveCropSubject(variety).crop;
   const pushRecent = useRecentStats((s) => s.push);
 
   // Statistics tab manages its own date state — do NOT share with market tab.
