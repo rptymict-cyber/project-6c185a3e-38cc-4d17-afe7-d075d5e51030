@@ -178,10 +178,9 @@ function CropSelectPage() {
 
     toast.success("조건을 적용했어요");
 
-    // 통계 흐름은 홈으로 돌아와서 4개 필드가 채워진 상태를 보여준 뒤
-    // 사용자가 CTA로 상세를 열도록 한다. statistics-detail 진입점만
-    // 상세로 바로 이동시킨다.
-    if (from === "statistics-detail" && item) {
+    // 통계 흐름에서는 홈으로 돌아가지 않고 선택한 작물의 통계 상세로 바로 이동한다.
+    // 선택한 품종이 있으면 varietyId를 우선 사용하고, "전체 품종"이면 itemId 기준으로 이동한다.
+    if ((from === "statistics" || from === "statistics-detail") && item) {
       const isAll = draft.varietyId === ALL_VARIETY_ID;
       const target = isAll ? item.id : (draft.varietyId as string);
       navigate({
