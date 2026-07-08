@@ -207,9 +207,51 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
         </label>
       </div>
 
+      {/* View segmented control */}
+      <div className="mt-3 px-4">
+        <div className="inline-flex w-full rounded-[10px] border border-[#E9ECEF] bg-[#F8F9FA] p-1">
+          {VIEW_OPTIONS.map((opt) => {
+            const active = opt.id === chartView;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setChartView(opt.id)}
+                className={cn(
+                  "flex-1 rounded-[8px] px-2 py-1.5 text-[12px] font-semibold transition-colors",
+                  active
+                    ? "bg-white text-foreground shadow-sm"
+                    : "text-[#868E96] hover:text-[#495057]",
+                )}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Chart */}
-      <div className="mt-4 px-2">
-        <TrendDualChart points={points} series={chartSeries} unitLabel="원/kg" />
+      <div className="mt-3 px-2">
+        <TrendDualChart points={points} series={chartSeries} unitLabel="원/kg" view={chartView} />
+      </div>
+
+      {/* Hint */}
+      <p className="mt-2 px-4 text-[11px] text-[#868E96]">
+        그래프를 누르면 날짜별 상세 정보가 나옵니다
+      </p>
+
+      {/* Period summary */}
+      <div className="mt-4 px-4">
+        <div className="rounded-[12px] border border-[#E9ECEF] bg-white p-3">
+          <div className="mb-2 text-[12px] font-bold text-foreground">선택 기간 요약</div>
+          <div className="grid grid-cols-4 gap-2">
+            <SummaryStat label="최고가" value={`${periodSummary.high.toLocaleString()}원`} tone="up" />
+            <SummaryStat label="최저가" value={`${periodSummary.low.toLocaleString()}원`} tone="down" />
+            <SummaryStat label="평균가" value={`${periodSummary.avg.toLocaleString()}원`} />
+            <SummaryStat label="총 거래량" value={`${periodSummary.vol.toFixed(1)}t`} />
+          </div>
+        </div>
       </div>
 
       {/* Footer link */}
