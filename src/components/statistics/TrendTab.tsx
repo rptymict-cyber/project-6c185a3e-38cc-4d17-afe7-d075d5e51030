@@ -28,9 +28,17 @@ const PERIODS: { id: TrendPeriod; label: string }[] = [
   { id: "5y", label: "5년" },
 ];
 
+type ChartView = "both" | "price" | "volume";
+const VIEW_OPTIONS: { id: ChartView; label: string }[] = [
+  { id: "both", label: "가격+거래량" },
+  { id: "price", label: "가격만" },
+  { id: "volume", label: "거래량만" },
+];
+
 export function TrendTab({ varietyId }: { varietyId: string }) {
   const navigate = useNavigate();
   const [period, setPeriod] = useState<TrendPeriod>("1w");
+  const [chartView, setChartView] = useState<ChartView>("both");
   const [pickerOpen, setPickerOpen] = useState(false);
   const compareIds = useTrendCompare((s) => s.compareIds);
   const removeCompare = useTrendCompare((s) => s.removeCompare);
@@ -88,6 +96,25 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
   );
 
   const chartSeries = yearMode ? yearSeries : baseSeries;
+
+  // Period summary — 최고가/최저가/평균가/총 거래량 across the anchor series.
+  const anchorKey = yearMode ? "2026" : (compareIds[0] ?? "all");
+  const periodSummary = useMemo(() => {
+    const prices: number[] = [];
+    let vol = 0;
+    for (const pt of points) {
+      const v = pt[anchorKey];
+      if (typeof v === "number") prices.push(v);
+      vol += pt.volume;
+    }
+    if (prices.length === 0) {
+      return { high: 0, low: 0, avg: 0, vol: 0 };
+    }
+    const high = Math.max(...prices);
+    const low = Math.min(...prices);
+    const avg = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+    return { high, low, avg, vol: Math.round(vol * 10) / 10 };
+  }, [points, anchorKey]);
 
   return (
     <div className="pb-8">
@@ -180,9 +207,51 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
         </label>
       </div>
 
+      {/* View segmented control */}
+      <div className="mt-3 px-4">
+        <div className="inline-flex w-full rounded-[10px] border border-[#E9ECEF] bg-[#F8F9FA] p-1">
+          {VIEW_OPTIONS.map((opt) => {
+            const active = opt.id === chartView;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setChartView(opt.id)}
+                className={cn(
+                  "flex-1 rounded-[8px] px-2 py-1.5 text-[12px] font-semibold transition-colors",
+                  active
+                    ? "bg-white text-foreground shadow-sm"
+                    : "text-[#868E96] hover:text-[#495057]",
+                )}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Chart */}
-      <div className="mt-4 px-2">
-        <TrendDualChart points={points} series={chartSeries} unitLabel="원/kg" />
+      <div className="mt-3 px-2">
+        <TrendDualChart points={points} series={chartSeries} unitLabel="원/kg" view={chartView} />
+      </div>
+
+      {/* Hint */}
+      <p className="mt-2 px-4 text-[11px] text-[#868E96]">
+        그래프를 누르면 날짜별 상세 정보가 나옵니다
+      </p>
+
+      {/* Period summary */}
+      <div className="mt-4 px-4">
+        <div className="rounded-[12px] border border-[#E9ECEF] bg-white p-3">
+          <div className="mb-2 text-[12px] font-bold text-foreground">선택 기간 요약</div>
+          <div className="grid grid-cols-4 gap-2">
+            <SummaryStat label="최고가" value={`${periodSummary.high.toLocaleString()}원`} tone="up" />
+            <SummaryStat label="최저가" value={`${periodSummary.low.toLocaleString()}원`} tone="down" />
+            <SummaryStat label="평균가" value={`${periodSummary.avg.toLocaleString()}원`} />
+            <SummaryStat label="총 거래량" value={`${periodSummary.vol.toFixed(1)}t`} />
+          </div>
+        </div>
       </div>
 
       {/* Footer link */}
@@ -201,6 +270,27 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
       </div>
 
       <MarketComparisonSheet open={pickerOpen} onOpenChange={setPickerOpen} />
+    </div>
+  );
+}
+
+function SummaryStat({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: "up" | "down";
+}) {
+  const color =
+    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
+  return (
+    <div>
+      <div className="text-[10.5px] font-semibold text-[#6C757D]">{label}</div>
+      <div className={cn("mt-0.5 text-[12.5px] font-black tabular-nums leading-tight", color)}>
+        {value}
+      </div>
     </div>
   );
 }

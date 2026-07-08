@@ -35,8 +35,8 @@ export const Route = createFileRoute("/statistics/$variety")({
 
 type Tab = "market" | "trend";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "market", label: "시장별 평균가격" },
-  { id: "trend", label: "시장가격 그래프" },
+  { id: "market", label: "시장별 평균가" },
+  { id: "trend", label: "가격 추이 그래프" },
 ];
 
 function formatKoreanDate(iso: string): string {
@@ -90,6 +90,9 @@ function VarietyStatsPage() {
   const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
   const setMarket = useMarketFilter((s) => s.setMarket);
   const setMarketDate = useMarketFilter((s) => s.setDate);
+  const marketLabel = useMarketFilter((s) => s.marketLabel);
+  const corpLabel = useMarketFilter((s) => s.corpLabel);
+  const unitLabel = useMarketFilter((s) => s.unit);
 
   const openInSimpleMode = (marketId: string) => {
     if (!data) return;
@@ -129,7 +132,7 @@ function VarietyStatsPage() {
           </button>
           <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center">
             <span className="text-[15px] font-black tracking-tight text-foreground">
-              {crop.emoji} {crop.name}
+              {crop.emoji} {crop.name} 통계
             </span>
           </div>
           <div className="flex items-center gap-0.5">
@@ -188,6 +191,10 @@ function VarietyStatsPage() {
           <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
           <ChevronDown className="ml-0.5 h-3.5 w-3.5 text-[#6C757D]" />
         </Link>
+        {/* Sub-info: 현재 선택된 시장/법인/단위 기준 */}
+        <p className="mt-2 text-[11.5px] text-[#868E96]">
+          {marketLabel} · {corpLabel === "전체" ? "전체 법인" : corpLabel} · {unitLabel}
+        </p>
       </div>
 
       {/* Tabs */}
@@ -233,39 +240,35 @@ function VarietyStatsPage() {
             )}
           </div>
 
-          {/* Summary cards */}
-          <div className="mt-3 grid grid-cols-4 gap-2 px-4">
+          {/* Summary cards — 전체 평균 / 전일 대비 / 거래량 */}
+          <div className="mt-3 grid grid-cols-3 gap-2 px-4">
             <SummaryCard label="전체 평균" value={`${data.overall.avgKg.toLocaleString()}원`} sub="kg당" />
             <SummaryCard
               label="전일 대비"
               value={fmtSigned(data.overall.deltaAmount) + "원"}
+              sub={`${data.overall.deltaAmount > 0 ? "▲" : data.overall.deltaAmount < 0 ? "▼" : ""} ${Math.abs(data.overall.deltaPct).toFixed(1)}%`}
               tone={toneOf(data.overall.deltaAmount)}
             />
-            <SummaryCard
-              label="등락률"
-              value={`${data.overall.deltaAmount > 0 ? "▲" : data.overall.deltaAmount < 0 ? "▼" : ""} ${Math.abs(data.overall.deltaPct).toFixed(1)}%`}
-              tone={toneOf(data.overall.deltaAmount)}
-            />
-            <SummaryCard label="거래량" value={`${data.overall.volumeTon.toFixed(1)}t`} />
+            <SummaryCard label="거래량" value={`${data.overall.volumeTon.toFixed(1)}t`} sub="총 반입량" />
           </div>
           <p className="mt-2 px-4 text-[11px] text-[#868E96]">* kg당 평균가 기준</p>
 
           <MarketAveragesTable data={data} onOpenMarket={openInSimpleMode} />
 
-          <div className="mt-3 px-4">
+          <div className="mt-4 mx-4 rounded-[10px] border border-[#E9ECEF] bg-[#F8F9FA] px-3 py-2.5 text-[11.5px] text-[#6C757D]">
+            시장 행을 누르면 법인별 평균가를 볼 수 있어요
+          </div>
+
+          <div className="mt-4 px-4">
             <button
               type="button"
               onClick={() => setTab("trend")}
-              className="flex w-full items-center justify-center gap-1.5 rounded-[10px] border border-[#E03131] bg-white py-3 text-[13.5px] font-bold text-[#E03131] active:bg-[#FFF5F5]"
+              className="flex w-full items-center justify-center gap-1.5 rounded-[10px] border border-[#3A8A3A] bg-white py-3 text-[13.5px] font-bold text-[#3A8A3A] active:bg-[#F0F9F0]"
             >
-              시장가격 그래프로 보기
+              가격 추이 그래프로 보기
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
-
-          <p className="mt-3 px-4 text-[11px] text-[#868E96]">
-            시장 행의 › 아이콘을 누르면 해당 시장의 경매 내역(간편 모드)으로 이동합니다.
-          </p>
         </div>
       )}
 
