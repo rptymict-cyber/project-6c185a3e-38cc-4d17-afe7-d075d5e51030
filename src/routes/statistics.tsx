@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, ChevronRight, Info, Search } from "lucide-react";
+import { Bell, ChevronRight, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { getCrop } from "@/lib/mock/crops";
@@ -146,17 +146,6 @@ function StatisticsHome() {
           <ChevronRight className="h-5 w-5 shrink-0 text-[#3A8A3A]" />
         </Link>
 
-        {/* Info */}
-        <section className="mt-6 rounded-[12px] border border-[#E9ECEF] bg-[#F8F9FA] p-3.5">
-          <div className="mb-1.5 flex items-center gap-1.5 text-[12.5px] font-bold text-[#495057]">
-            <Info className="h-3.5 w-3.5" /> 안내사항
-          </div>
-          <ul className="space-y-1 text-[11.5px] leading-relaxed text-[#6C757D]">
-            <li>· 해당 통계는 도매시장에 반입된 가격 기준입니다.</li>
-            <li>· 가격은 kg당 평균가격 기준으로 표시됩니다.</li>
-            <li>· 통계는 매일 06시 기준으로 업데이트됩니다.</li>
-          </ul>
-        </section>
       </div>
     </AppShell>
   );
