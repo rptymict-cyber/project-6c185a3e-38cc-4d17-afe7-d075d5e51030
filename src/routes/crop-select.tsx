@@ -237,17 +237,17 @@ function CropSelectPage() {
 
 function Header({ title, onClose }: { title: string; onClose: () => void }) {
   return (
-    <header className="sticky top-0 z-20 grid h-14 grid-cols-[1fr_auto_1fr] items-center bg-white px-3">
-      <div />
-      <h1 className="text-base font-semibold text-gray-900">{title}</h1>
+    <header className="sticky top-0 z-20 grid h-14 grid-cols-[auto_1fr_auto] items-center bg-white px-3">
       <button
         type="button"
         onClick={onClose}
-        aria-label="닫기"
-        className="ml-auto flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-100"
+        aria-label="뒤로 가기"
+        className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-100"
       >
-        <X className="h-5 w-5" />
+        <ChevronLeft className="h-5 w-5" />
       </button>
+      <h1 className="text-center text-base font-semibold text-gray-900">{title}</h1>
+      <div className="w-10" />
     </header>
   );
 }
