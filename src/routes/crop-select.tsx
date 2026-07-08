@@ -617,13 +617,11 @@ function BottomBar({
   const canApply = Boolean(draft.varietyId);
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] border-t border-gray-200 bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
-      <div className="mb-3 rounded-xl bg-green-50 px-3 py-2.5">
-        <div className="text-[11px] font-medium text-green-700">선택한 조건</div>
-        <div className="mt-0.5 text-sm font-semibold text-green-900">
-          {summary.length === 0
-            ? "-"
-            : summary.join(" > ")}
+    <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
+      <div className="mb-3 rounded-xl border border-gray-200 bg-white px-3 py-2.5">
+        <div className="text-[11px] font-medium text-gray-500">선택한 조건</div>
+        <div className="mt-1 text-sm font-semibold text-gray-900">
+          {summary.length === 0 ? "-" : summary.join(" > ")}
         </div>
       </div>
       <button
@@ -633,7 +631,7 @@ function BottomBar({
         className={cn(
           "h-12 w-full rounded-xl text-sm font-semibold transition-colors",
           canApply
-            ? "bg-green-600 text-white active:bg-green-700"
+            ? "bg-green-700 text-white active:bg-green-800"
             : "bg-gray-200 text-gray-400",
         )}
       >
@@ -655,7 +653,7 @@ function SearchInput({
   placeholder: string;
 }) {
   return (
-    <div className="flex h-11 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3">
+    <div className="flex h-11 items-center gap-2 rounded-full border border-gray-200 bg-white px-4">
       <Search className="h-4 w-4 text-gray-400" />
       <input
         value={value}
@@ -696,56 +694,36 @@ function SelectionCards({
     return item?.varieties.find((v) => v.id === draft.varietyId)?.name;
   })();
 
-  const rows: { key: string; icon: string; label: string; onRemove: () => void }[] = [];
+  const chips: { key: string; label: string; onRemove: () => void }[] = [];
   if (category) {
-    rows.push({
-      key: "cat",
-      icon: category.emoji,
-      label: category.name,
-      onRemove: onRemoveCategory,
-    });
+    chips.push({ key: "cat", label: category.name, onRemove: onRemoveCategory });
   }
   if (item) {
-    rows.push({
-      key: "item",
-      icon: item.emoji,
-      label: item.name,
-      onRemove: onRemoveItem,
-    });
+    chips.push({ key: "item", label: item.name, onRemove: onRemoveItem });
   }
   if (varietyName) {
-    rows.push({
-      key: "var",
-      icon: item?.emoji ?? "🌱",
-      label: varietyName,
-      onRemove: onRemoveVariety,
-    });
+    chips.push({ key: "var", label: varietyName, onRemove: onRemoveVariety });
   }
 
-  if (rows.length === 0) return null;
+  if (chips.length === 0) return null;
 
   return (
-    <div className="mt-3 space-y-2">
-      {rows.map((r) => (
-        <div
-          key={r.key}
-          className="flex h-12 items-center gap-3 rounded-xl border border-green-100 bg-green-50/70 px-3"
+    <div className="mt-3 flex flex-wrap gap-2">
+      {chips.map((c) => (
+        <span
+          key={c.key}
+          className="inline-flex h-8 items-center gap-1.5 rounded-full bg-green-50 pl-3 pr-2 text-xs font-medium text-gray-800"
         >
-          <span className="text-lg" aria-hidden>
-            {r.icon}
-          </span>
-          <span className="flex-1 truncate text-sm font-semibold text-green-900">
-            {r.label}
-          </span>
+          {c.label}
           <button
             type="button"
-            onClick={r.onRemove}
-            aria-label={`${r.label} 선택 해제`}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-green-700 active:bg-green-100"
+            onClick={c.onRemove}
+            aria-label={`${c.label} 선택 해제`}
+            className="flex h-5 w-5 items-center justify-center rounded-full text-gray-500 active:bg-green-100"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5" />
           </button>
-        </div>
+        </span>
       ))}
     </div>
   );
