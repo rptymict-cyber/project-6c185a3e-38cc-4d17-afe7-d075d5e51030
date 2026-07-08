@@ -193,8 +193,8 @@ function CropSelectPage() {
   );
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-gray-100">
-      <Header title={STEP_TITLE[step]} onClose={handleClose} />
+    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-white">
+      <Header title="작물 선택" onClose={handleClose} />
       <Stepper step={step} draft={draft} onStepClick={goStep} />
 
       <main className="flex-1 overflow-y-auto pb-40">
@@ -208,6 +208,7 @@ function CropSelectPage() {
         {step === 2 && (
           <Step2Item
             categoryId={draft.categoryId!}
+            selectedItemId={draft.itemId}
             onPickItem={handlePickItem}
             selectionCards={selectionCards}
           />
@@ -236,17 +237,17 @@ function CropSelectPage() {
 
 function Header({ title, onClose }: { title: string; onClose: () => void }) {
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-gray-200 bg-white px-3">
+    <header className="sticky top-0 z-20 grid h-14 grid-cols-[1fr_auto_1fr] items-center bg-white px-3">
+      <div />
+      <h1 className="text-base font-semibold text-gray-900">{title}</h1>
       <button
         type="button"
         onClick={onClose}
         aria-label="닫기"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-100"
+        className="ml-auto flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-100"
       >
         <X className="h-5 w-5" />
       </button>
-      <h1 className="text-base font-semibold text-gray-900">{title}</h1>
-      <div className="h-10 w-10" />
     </header>
   );
 }
@@ -265,74 +266,78 @@ function Stepper({
   const doneMap: Record<Step, boolean> = {
     1: Boolean(draft.categoryId) && step > 1,
     2: Boolean(draft.itemId) && step > 2,
-    3: Boolean(draft.varietyId) && false, // 3은 완료 표시 대신 active로만 유지
+    3: false,
   };
   const lockedMap: Record<Step, boolean> = {
     1: false,
     2: !draft.categoryId,
     3: !draft.itemId,
   };
-  const labels: Record<Step, string> = {
-    1: "부류",
-    2: "품목",
-    3: "품종",
-  };
-
+  const labels: Record<Step, string> = { 1: "부류 선택", 2: "품목 선택", 3: "품종 선택" };
   const stepList: Step[] = [1, 2, 3];
 
   return (
-    <div className="bg-white px-4 pb-4 pt-3">
-      <div className="flex items-center">
+    <div className="bg-white px-6 pb-5 pt-2">
+      {/* row 1: circles + connecting lines */}
+      <div className="grid grid-cols-[auto_1fr_auto_1fr_auto] items-center">
         {stepList.map((s, idx) => {
           const isActive = step === s;
           const isDone = doneMap[s];
           const isLocked = lockedMap[s] && !isActive && !isDone;
-          return (
-            <div key={s} className="flex flex-1 items-center">
-              <button
-                type="button"
-                onClick={() => onStepClick(s)}
-                disabled={isLocked}
-                className="flex flex-col items-center gap-1"
-                aria-current={isActive ? "step" : undefined}
-              >
-                <span
-                  className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors",
-                    isDone && "bg-green-600 text-white",
-                    isActive && "bg-green-700 text-white",
-                    isLocked && "bg-gray-200 text-gray-400",
-                    !isDone &&
-                      !isActive &&
-                      !isLocked &&
-                      "bg-gray-100 text-gray-500",
-                  )}
-                >
-                  {isDone ? <Check className="h-4 w-4" /> : s}
-                </span>
-                <span
-                  className={cn(
-                    "text-[11px]",
-                    isActive
-                      ? "font-semibold text-green-700"
-                      : isLocked
-                        ? "text-gray-400"
-                        : "text-gray-600",
-                  )}
-                >
-                  {labels[s]}
-                </span>
-              </button>
-              {idx < stepList.length - 1 && (
-                <div
-                  className={cn(
-                    "mx-2 h-0.5 flex-1 rounded",
-                    doneMap[s] ? "bg-green-600" : "bg-gray-200",
-                  )}
-                />
+          const circle = (
+            <button
+              key={`c-${s}`}
+              type="button"
+              onClick={() => onStepClick(s)}
+              disabled={isLocked}
+              aria-current={isActive ? "step" : undefined}
+              className={cn(
+                "flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors",
+                isDone && "bg-green-600 text-white",
+                isActive && "bg-green-600 text-white",
+                isLocked && "bg-gray-200 text-gray-400",
+                !isDone && !isActive && !isLocked && "bg-gray-200 text-gray-500",
               )}
-            </div>
+            >
+              {isDone ? <Check className="h-4 w-4" /> : s}
+            </button>
           );
+          if (idx === stepList.length - 1) return circle;
+          const nextDone = doneMap[s];
+          return [
+            circle,
+            <div
+              key={`l-${s}`}
+              className={cn(
+                "mx-2 h-0.5 rounded",
+                nextDone ? "bg-green-600" : "bg-gray-200",
+              )}
+            />,
+          ];
+        })}
+      </div>
+      {/* row 2: labels aligned under circles */}
+      <div className="mt-2 grid grid-cols-[auto_1fr_auto_1fr_auto] items-center">
+        {stepList.map((s, idx) => {
+          const isActive = step === s;
+          const isLocked = lockedMap[s] && !isActive && !doneMap[s];
+          const label = (
+            <span
+              key={`t-${s}`}
+              className={cn(
+                "w-9 text-center text-[11px]",
+                isActive
+                  ? "font-semibold text-green-700"
+                  : isLocked
+                    ? "text-gray-400"
+                    : "text-gray-600",
+              )}
+            >
+              {labels[s]}
+            </span>
+          );
+          if (idx === stepList.length - 1) return label;
+          return [label, <div key={`s-${s}`} />];
         })}
       </div>
     </div>
@@ -362,7 +367,7 @@ function Step1Category({
 
 
       {q.trim() ? (
-        <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+        <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
           {results.length === 0 ? (
             <div className="px-4 py-8 text-center text-sm text-gray-500">
               검색 결과가 없어요.
@@ -397,7 +402,7 @@ function Step1Category({
           )}
         </div>
       ) : (
-        <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+        <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
           <ul>
             {categories.map((c) => {
               const count = getItemsByCategory(c.id).length;
@@ -433,10 +438,12 @@ function Step1Category({
 
 function Step2Item({
   categoryId,
+  selectedItemId,
   onPickItem,
   selectionCards,
 }: {
   categoryId: string;
+  selectedItemId?: string;
   onPickItem: (id: string) => void;
   selectionCards: React.ReactNode;
 }) {
@@ -453,36 +460,51 @@ function Step2Item({
       <SearchInput value={q} onChange={setQ} placeholder="품목 검색" />
       {selectionCards}
 
-      <div className="mt-3 overflow-hidden rounded-2xl bg-white">
-
+      <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
         {filtered.length === 0 ? (
           <div className="px-4 py-8 text-center text-sm text-gray-500">
             해당하는 품목이 없어요.
           </div>
         ) : (
           <ul>
-            {filtered.map((it) => (
-              <li key={it.id}>
-                <button
-                  type="button"
-                  onClick={() => onPickItem(it.id)}
-                  className="flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-3.5 text-left last:border-b-0 active:bg-gray-50"
-                >
-                  <span className="flex items-center gap-3">
-                    <span className="text-xl">{it.emoji}</span>
-                    <span className="text-sm font-medium text-gray-900">
-                      {it.name}
-                    </span>
-                    {it.prediction.status === "active" && (
-                      <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">
-                        시세 예측
-                      </span>
+            {filtered.map((it) => {
+              const selected = selectedItemId === it.id;
+              return (
+                <li key={it.id}>
+                  <button
+                    type="button"
+                    onClick={() => onPickItem(it.id)}
+                    className={cn(
+                      "flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-4 text-left last:border-b-0 active:bg-gray-50",
+                      selected && "bg-green-50",
                     )}
-                  </span>
-                  <ChevronRight className="h-4 w-4 text-gray-400" />
-                </button>
-              </li>
-            ))}
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="text-xl">{it.emoji}</span>
+                      <span
+                        className={cn(
+                          "text-sm font-medium",
+                          selected ? "text-green-700" : "text-gray-900",
+                        )}
+                      >
+                        {it.name}
+                      </span>
+                      {it.prediction.status === "active" && (
+                        <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">
+                          시세 예측
+                        </span>
+                      )}
+                    </span>
+                    <ChevronRight
+                      className={cn(
+                        "h-4 w-4",
+                        selected ? "text-green-600" : "text-gray-400",
+                      )}
+                    />
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
@@ -525,7 +547,7 @@ function Step3Variety({
       {selectionCards}
 
 
-      <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+      <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
         <ul>
           {rows.map((r) => {
             const selected = selectedVarietyId === r.id;
@@ -595,13 +617,11 @@ function BottomBar({
   const canApply = Boolean(draft.varietyId);
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] border-t border-gray-200 bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
-      <div className="mb-3 rounded-xl bg-green-50 px-3 py-2.5">
-        <div className="text-[11px] font-medium text-green-700">선택한 조건</div>
-        <div className="mt-0.5 text-sm font-semibold text-green-900">
-          {summary.length === 0
-            ? "-"
-            : summary.join(" > ")}
+    <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
+      <div className="mb-3 rounded-xl border border-gray-200 bg-white px-3 py-2.5">
+        <div className="text-[11px] font-medium text-gray-500">선택한 조건</div>
+        <div className="mt-1 text-sm font-semibold text-gray-900">
+          {summary.length === 0 ? "-" : summary.join(" > ")}
         </div>
       </div>
       <button
@@ -611,7 +631,7 @@ function BottomBar({
         className={cn(
           "h-12 w-full rounded-xl text-sm font-semibold transition-colors",
           canApply
-            ? "bg-green-600 text-white active:bg-green-700"
+            ? "bg-green-700 text-white active:bg-green-800"
             : "bg-gray-200 text-gray-400",
         )}
       >
@@ -633,7 +653,7 @@ function SearchInput({
   placeholder: string;
 }) {
   return (
-    <div className="flex h-11 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3">
+    <div className="flex h-11 items-center gap-2 rounded-full border border-gray-200 bg-white px-4">
       <Search className="h-4 w-4 text-gray-400" />
       <input
         value={value}
@@ -674,56 +694,36 @@ function SelectionCards({
     return item?.varieties.find((v) => v.id === draft.varietyId)?.name;
   })();
 
-  const rows: { key: string; icon: string; label: string; onRemove: () => void }[] = [];
+  const chips: { key: string; label: string; onRemove: () => void }[] = [];
   if (category) {
-    rows.push({
-      key: "cat",
-      icon: category.emoji,
-      label: category.name,
-      onRemove: onRemoveCategory,
-    });
+    chips.push({ key: "cat", label: category.name, onRemove: onRemoveCategory });
   }
   if (item) {
-    rows.push({
-      key: "item",
-      icon: item.emoji,
-      label: item.name,
-      onRemove: onRemoveItem,
-    });
+    chips.push({ key: "item", label: item.name, onRemove: onRemoveItem });
   }
   if (varietyName) {
-    rows.push({
-      key: "var",
-      icon: item?.emoji ?? "🌱",
-      label: varietyName,
-      onRemove: onRemoveVariety,
-    });
+    chips.push({ key: "var", label: varietyName, onRemove: onRemoveVariety });
   }
 
-  if (rows.length === 0) return null;
+  if (chips.length === 0) return null;
 
   return (
-    <div className="mt-3 space-y-2">
-      {rows.map((r) => (
-        <div
-          key={r.key}
-          className="flex h-12 items-center gap-3 rounded-xl border border-green-100 bg-green-50/70 px-3"
+    <div className="mt-3 flex flex-wrap gap-2">
+      {chips.map((c) => (
+        <span
+          key={c.key}
+          className="inline-flex h-8 items-center gap-1.5 rounded-full bg-green-50 pl-3 pr-2 text-xs font-medium text-gray-800"
         >
-          <span className="text-lg" aria-hidden>
-            {r.icon}
-          </span>
-          <span className="flex-1 truncate text-sm font-semibold text-green-900">
-            {r.label}
-          </span>
+          {c.label}
           <button
             type="button"
-            onClick={r.onRemove}
-            aria-label={`${r.label} 선택 해제`}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-green-700 active:bg-green-100"
+            onClick={c.onRemove}
+            aria-label={`${c.label} 선택 해제`}
+            className="flex h-5 w-5 items-center justify-center rounded-full text-gray-500 active:bg-green-100"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5" />
           </button>
-        </div>
+        </span>
       ))}
     </div>
   );
