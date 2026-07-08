@@ -143,3 +143,6 @@ function PredictionChartBase({
     </div>
   );
 }
+
+export const PredictionChart = memo(PredictionChartBase);
+
