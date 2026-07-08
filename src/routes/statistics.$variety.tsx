@@ -35,8 +35,8 @@ export const Route = createFileRoute("/statistics/$variety")({
 
 type Tab = "market" | "trend";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "market", label: "시장별 평균가격" },
-  { id: "trend", label: "시장가격 그래프" },
+  { id: "market", label: "시장별 평균가" },
+  { id: "trend", label: "가격 추이 그래프" },
 ];
 
 function formatKoreanDate(iso: string): string {
