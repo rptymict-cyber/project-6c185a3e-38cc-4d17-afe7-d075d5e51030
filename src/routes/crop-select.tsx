@@ -47,11 +47,17 @@ export const Route = createFileRoute("/crop-select")({
  */
 const CTA_LABEL_BY_FROM: Record<string, string> = {
   market: "확인",
-  statistics: "통계 보기",
+  statistics: "선택한 작물 통계 보기",
   prediction: "예측 보기",
   home: "적용하기",
 };
 const DEFAULT_CTA_LABEL = "적용하기";
+
+const PAGE_TITLE_BY_FROM: Record<string, string> = {
+  statistics: "통계 작물 선택",
+  prediction: "예측 작물 선택",
+};
+const DEFAULT_PAGE_TITLE = "작물 선택";
 
 const STEP_TITLE: Record<Step, string> = {
   1: "부류 선택",
