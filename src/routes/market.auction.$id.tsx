@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
-import { AppShell, TopHeader } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import { getAuctionById } from "@/lib/mock/auctions";
 import { useMarketFilter } from "@/store/market";
 
@@ -29,17 +29,9 @@ function AuctionDetail() {
   return (
     <AppShell
       header={
-        <TopHeader
+        <DetailHeader
           title="경매 상세 결과"
-          left={
-            <button
-              onClick={() => router.history.back()}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-              aria-label="뒤로가기"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-          }
+          onBack={() => router.history.back()}
         />
       }
     >

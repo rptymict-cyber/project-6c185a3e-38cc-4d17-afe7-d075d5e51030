@@ -45,17 +45,9 @@ function PriceAlertPage() {
   return (
     <AppShell
       header={
-        <TopHeader
+        <DetailHeader
           title="가격 알림 설정"
-          left={
-            <button
-              onClick={() => router.history.back()}
-              aria-label="뒤로가기"
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-          }
+          onBack={() => router.history.back()}
         />
       }
     >

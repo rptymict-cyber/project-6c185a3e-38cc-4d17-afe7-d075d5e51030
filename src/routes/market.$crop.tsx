@@ -66,17 +66,9 @@ function CropDetail() {
   return (
     <AppShell
       header={
-        <TopHeader
+        <DetailHeader
           title={crop.name}
-          left={
-            <button
-              aria-label="뒤로"
-              onClick={() => router.history.back()}
-              className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-          }
+          onBack={() => router.history.back()}
           right={
             <>
               <StarToggle
