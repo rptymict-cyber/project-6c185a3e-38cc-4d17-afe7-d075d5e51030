@@ -195,7 +195,7 @@ export function getYearComparisonTrend(params: {
   marketId: CompareSeriesId; // one series only
   period: TrendPeriod;
 }): { points: YearTrendPoint[]; years: string[] } {
-  const crop = getCrop(params.varietyId);
+  const crop = resolveCropSubject(params.varietyId).crop;
   const years = ["2022", "2023", "2024", "2025", "2026"];
   if (!crop) return { points: [], years };
   const len = PERIOD_LEN[params.period];
