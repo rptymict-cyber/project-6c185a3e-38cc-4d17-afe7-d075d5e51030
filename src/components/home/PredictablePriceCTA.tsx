@@ -13,10 +13,10 @@ export function PredictablePriceCTA() {
         </span>
         <div className="flex-1 min-w-0">
           <div className="text-[13px] font-bold text-foreground">
-            AI 예상 시세를 확인해보세요
+            AI 가격 예측 보기
           </div>
           <div className="mt-0.5 text-[11px] text-[#6C757D]">
-            5개 품목의 예상 가격과 출하 참고 정보를 확인할 수 있어요
+            5개 품목의 예상 가격과 유리한 출하·매입 시점을 확인하세요
           </div>
         </div>
         <ChevronRight className="h-5 w-5 text-[#ADB5BD]" />
