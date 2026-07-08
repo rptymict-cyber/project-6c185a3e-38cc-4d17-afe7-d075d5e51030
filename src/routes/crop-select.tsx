@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
+import { Check, ChevronRight, Search, X } from "lucide-react";
+import { DetailHeader } from "@/components/detail-header";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
@@ -245,20 +246,7 @@ function CropSelectPage() {
 /* ---------- Header ---------- */
 
 function Header({ title, onClose }: { title: string; onClose: () => void }) {
-  return (
-    <header className="sticky top-0 z-20 grid h-14 grid-cols-[auto_1fr_auto] items-center bg-white px-3">
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="뒤로 가기"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-100"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
-      <h1 className="text-center text-base font-semibold text-gray-900">{title}</h1>
-      <div className="w-10" />
-    </header>
-  );
+  return <DetailHeader title={title} onBack={onClose} className="bg-white" />;
 }
 
 /* ---------- Stepper ---------- */
