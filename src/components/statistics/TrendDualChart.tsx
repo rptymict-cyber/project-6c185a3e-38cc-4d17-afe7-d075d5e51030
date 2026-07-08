@@ -83,7 +83,9 @@ export function TrendDualChart({
           </LineChart>
         </ResponsiveContainer>
       </div>
+      )}
 
+      {showVolume && (
       <div className="h-[80px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={points} margin={{ top: 4, right: 10, left: 0, bottom: 4 }}>
@@ -112,6 +114,7 @@ export function TrendDualChart({
           </BarChart>
         </ResponsiveContainer>
       </div>
+      )}
 
       {/* Legend */}
       <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 px-1">
