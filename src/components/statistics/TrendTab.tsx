@@ -301,3 +301,29 @@ function SummaryStat({
     </div>
   );
 }
+
+function priceUnitLabel(varietyId: string): string {
+  const c = getCrop(varietyId);
+  const m = c?.unit.match(/(\d+(?:\.\d+)?\s*kg)/i);
+  return m ? `원/${m[1].replace(/\s+/g, "")}` : "원/kg";
+}
+
+function ChartRangeHeader({
+  firstLabel,
+  lastLabel,
+  unitLabel,
+}: {
+  firstLabel?: string;
+  lastLabel?: string;
+  unitLabel: string;
+}) {
+  if (!firstLabel || !lastLabel) return null;
+  return (
+    <div className="mb-1 flex items-baseline justify-between px-2">
+      <span className="text-[11.5px] font-semibold text-[#495057]">
+        {firstLabel} ~ {lastLabel}
+      </span>
+      <span className="text-[11px] text-[#868E96]">평균가({unitLabel})</span>
+    </div>
+  );
+}
