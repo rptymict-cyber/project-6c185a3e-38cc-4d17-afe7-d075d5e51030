@@ -231,11 +231,12 @@ function StatisticsHome() {
       </div>
 
       {/* Date sheet */}
-      <DateSheetLite
+      <DatePickerSheet
         open={dateOpen}
         onOpenChange={setDateOpen}
         selected={date}
-        onSelect={(iso) => setDate(iso)}
+        onConfirm={(iso) => setDate(iso)}
+        hasDataFor={defaultTradingDayFilter}
       />
     </AppShell>
   );
