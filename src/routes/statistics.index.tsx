@@ -3,6 +3,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   Calendar as CalendarIcon,
   ChevronRight,
+  Layers,
+  Leaf,
   Sprout,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
