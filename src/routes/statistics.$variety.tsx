@@ -68,16 +68,20 @@ function VarietyStatsPage() {
     if (crop) pushRecent(variety);
   }, [crop, variety, pushRecent]);
 
-  // /crop-select 에서 다른 품목을 선택하고 돌아온 경우 자동으로 해당 상세로 이동
+  // /crop-select 에서 다른 작물을 선택하고 돌아온 경우 자동으로 해당 상세로 이동.
+  // route param이 varietyId(구체) 또는 itemId(전체 품종) 어느 쪽이든 정합성을 맞춘다.
   const committedItemId = useCropSelection((s) => s.committed.itemId);
+  const committedVarietyId = useCropSelection((s) => s.committed.varietyId);
   useEffect(() => {
-    if (committedItemId && committedItemId !== variety) {
-      navigate({
-        to: "/statistics/$variety",
-        params: { variety: committedItemId },
-      });
+    if (!committedItemId) return;
+    const target =
+      committedVarietyId && committedVarietyId !== "ALL"
+        ? committedVarietyId
+        : committedItemId;
+    if (target !== variety) {
+      navigate({ to: "/statistics/$variety", params: { variety: target } });
     }
-  }, [committedItemId, variety, navigate]);
+  }, [committedItemId, committedVarietyId, variety, navigate]);
 
   const data = useMemo(
     () => (crop ? getVarietyMarketAverages({ varietyId: variety, date }) : null),
