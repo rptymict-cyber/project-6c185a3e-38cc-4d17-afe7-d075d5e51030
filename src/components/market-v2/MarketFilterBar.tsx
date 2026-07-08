@@ -86,7 +86,13 @@ export function MarketFilterBar() {
         />
       </div>
 
-      <DateSheet open={dateOpen} onOpenChange={setDateOpen} />
+      <DatePickerSheet
+        open={dateOpen}
+        onOpenChange={setDateOpen}
+        selected={f.date}
+        onConfirm={(iso, label) => f.setDate(iso, label)}
+        hasDataFor={defaultTradingDayFilter}
+      />
       <MarketSheet open={marketOpen} onOpenChange={setMarketOpen} />
       <CorporationSheet open={corpOpen} onOpenChange={setCorpOpen} />
     </div>
