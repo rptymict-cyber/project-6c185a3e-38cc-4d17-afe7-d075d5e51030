@@ -15,7 +15,7 @@ import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable
 import { TrendTab } from "@/components/statistics/TrendTab";
 // NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
 // VarietyPickerSheet는 롤백 대비로 남겨두고 여기서 import 하지 않는다.
-import { getCrop } from "@/lib/mock/crops";
+import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
 import { useAlerts } from "@/store/alerts";
 import { useCropSelection } from "@/store/cropSelection";
