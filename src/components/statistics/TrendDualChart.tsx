@@ -27,18 +27,24 @@ export type TrendChartPoint = {
 /**
  * Dual chart: multi-line price (kg avg) on top + total volume bars below,
  * sharing the same x-axis. Custom tooltip shows all series sorted price-desc.
+ * `view` toggles which panels are visible.
  */
 export function TrendDualChart({
   points,
   series,
   unitLabel = "원/kg",
+  view = "both",
 }: {
   points: TrendChartPoint[];
   series: TrendChartSeries[];
   unitLabel?: string;
+  view?: "both" | "price" | "volume";
 }) {
+  const showPrice = view === "both" || view === "price";
+  const showVolume = view === "both" || view === "volume";
   return (
     <div className="w-full">
+      {showPrice && (
       <div className="h-[220px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={points} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
