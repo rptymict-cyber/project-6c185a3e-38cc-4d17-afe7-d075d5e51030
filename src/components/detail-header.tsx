@@ -1,5 +1,7 @@
-import type { ReactNode } from "react";
-import { ChevronLeft } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { ChevronLeft, Bell, RefreshCw } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 /**
@@ -7,10 +9,11 @@ import { cn } from "@/lib/utils";
  *
  * - 좌측: 뒤로가기(ChevronLeft) 버튼
  * - 중앙: 타이틀 (title) 또는 커스텀 center 노드 — 항상 화면 정중앙 정렬
- * - 우측: 액션 버튼(right). 없으면 좌측 버튼과 동일 폭의 빈 공간을 유지해
- *   중앙 타이틀이 흔들리지 않게 한다.
+ * - 우측: 액션 버튼(right). 명시하지 않으면 홈(AppHeader)과 동일하게
+ *   실시간 표시 · 새로고침 · 알림 아이콘을 기본으로 노출한다.
+ *   완전히 비우고 싶으면 `right={null}`을 명시적으로 넘긴다.
  *
- * GNB/메인 화면용 AppHeader와는 별개다. 상세로 들어가는 화면에서만 사용.
+ * GNB/메인 화면용 AppHeader와 시각적으로 동일한 톤을 유지한다.
  */
 export function DetailHeader({
   title,
@@ -25,6 +28,49 @@ export function DetailHeader({
   right?: ReactNode;
   className?: string;
 }) {
+  const [spinning, setSpinning] = useState(false);
+  const rightContent =
+    right === undefined ? (
+      <>
+        <span
+          className="relative mr-1 grid h-9 w-4 place-items-center"
+          aria-label="실시간"
+          title="실시간"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#E03131] opacity-70" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#E03131]" />
+          </span>
+        </span>
+        <button
+          type="button"
+          aria-label="새로고침"
+          onClick={() => {
+            setSpinning(true);
+            setTimeout(() => setSpinning(false), 700);
+            toast("최신 시세로 업데이트했어요");
+          }}
+          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+        >
+          <RefreshCw
+            className={cn(
+              "h-5 w-5 transition-transform",
+              spinning && "animate-spin",
+            )}
+          />
+        </button>
+        <Link
+          to="/notifications"
+          aria-label="알림"
+          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+        >
+          <Bell className="h-5 w-5" />
+        </Link>
+      </>
+    ) : (
+      right
+    );
+
   return (
     <header
       className={cn(
@@ -44,14 +90,14 @@ export function DetailHeader({
       <div className="pointer-events-none absolute inset-x-14 top-0 flex h-[52px] items-center justify-center">
         {center ??
           (title ? (
-            <span className="truncate text-[15px] font-semibold text-foreground">
+            <span className="truncate text-[15px] font-black tracking-tight text-foreground">
               {title}
             </span>
           ) : null)}
       </div>
 
-      {right ? (
-        <div className="flex items-center gap-0.5">{right}</div>
+      {rightContent ? (
+        <div className="flex items-center gap-0.5">{rightContent}</div>
       ) : (
         <div className="h-10 w-10" aria-hidden />
       )}
