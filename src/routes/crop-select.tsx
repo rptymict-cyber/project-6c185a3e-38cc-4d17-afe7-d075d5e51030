@@ -438,10 +438,12 @@ function Step1Category({
 
 function Step2Item({
   categoryId,
+  selectedItemId,
   onPickItem,
   selectionCards,
 }: {
   categoryId: string;
+  selectedItemId?: string;
   onPickItem: (id: string) => void;
   selectionCards: React.ReactNode;
 }) {
@@ -458,36 +460,51 @@ function Step2Item({
       <SearchInput value={q} onChange={setQ} placeholder="품목 검색" />
       {selectionCards}
 
-      <div className="mt-3 overflow-hidden rounded-2xl bg-white">
-
+      <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
         {filtered.length === 0 ? (
           <div className="px-4 py-8 text-center text-sm text-gray-500">
             해당하는 품목이 없어요.
           </div>
         ) : (
           <ul>
-            {filtered.map((it) => (
-              <li key={it.id}>
-                <button
-                  type="button"
-                  onClick={() => onPickItem(it.id)}
-                  className="flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-3.5 text-left last:border-b-0 active:bg-gray-50"
-                >
-                  <span className="flex items-center gap-3">
-                    <span className="text-xl">{it.emoji}</span>
-                    <span className="text-sm font-medium text-gray-900">
-                      {it.name}
-                    </span>
-                    {it.prediction.status === "active" && (
-                      <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">
-                        시세 예측
-                      </span>
+            {filtered.map((it) => {
+              const selected = selectedItemId === it.id;
+              return (
+                <li key={it.id}>
+                  <button
+                    type="button"
+                    onClick={() => onPickItem(it.id)}
+                    className={cn(
+                      "flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-4 text-left last:border-b-0 active:bg-gray-50",
+                      selected && "bg-green-50",
                     )}
-                  </span>
-                  <ChevronRight className="h-4 w-4 text-gray-400" />
-                </button>
-              </li>
-            ))}
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="text-xl">{it.emoji}</span>
+                      <span
+                        className={cn(
+                          "text-sm font-medium",
+                          selected ? "text-green-700" : "text-gray-900",
+                        )}
+                      >
+                        {it.name}
+                      </span>
+                      {it.prediction.status === "active" && (
+                        <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">
+                          시세 예측
+                        </span>
+                      )}
+                    </span>
+                    <ChevronRight
+                      className={cn(
+                        "h-4 w-4",
+                        selected ? "text-green-600" : "text-gray-400",
+                      )}
+                    />
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
