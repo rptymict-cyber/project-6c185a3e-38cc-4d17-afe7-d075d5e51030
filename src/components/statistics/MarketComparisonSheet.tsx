@@ -36,13 +36,15 @@ export function MarketComparisonSheet({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="flex max-h-[85dvh] flex-col rounded-t-2xl p-0">
-        <SheetHeader className="px-5 pt-5">
+        <SheetHeader className="shrink-0 px-5 pt-5">
           <SheetTitle className="text-[16px] font-bold">시장 추가</SheetTitle>
         </SheetHeader>
 
-        <div className="mt-2 px-5 text-[11.5px] text-[#6C757D]">
+        <div className="shrink-0 mt-2 px-5 text-[11.5px] text-[#6C757D]">
           현재 {compareIds.length}/{MAX_COMPARE}개 선택됨
         </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto">
 
         <ul className="px-2 pb-4 pt-2">
           {/* 전국 always-on row */}
