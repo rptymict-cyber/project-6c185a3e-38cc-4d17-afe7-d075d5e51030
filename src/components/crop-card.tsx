@@ -23,8 +23,10 @@ function insightFor(crop: Crop, changePct: number) {
 }
 
 export function CropCard({ crop }: { crop: Crop }) {
-  const watched = useWatchlist((s) => s.crops.includes(crop.id));
-  const toggle = useWatchlist((s) => s.toggleCrop);
+  const favItem = fromCrop(crop);
+  const favId = favoriteKey(favItem);
+  const watched = useFavoritePriceStore((s) => s.items.some((it) => it.id === favId));
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
   const changePct = ((crop.currentPrice - crop.prevPrice) / crop.prevPrice) * 100;
   const catLabel = CATEGORIES.find((c) => c.id === crop.category)?.label ?? "";
   const insight = insightFor(crop, changePct);
