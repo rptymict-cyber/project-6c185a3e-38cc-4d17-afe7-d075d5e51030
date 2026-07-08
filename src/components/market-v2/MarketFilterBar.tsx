@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { useMarketFilter } from "@/store/market";
 import { useCropSelection } from "@/store/cropSelection";
 import { getCategoryById, getItemById } from "@/lib/catalog-service";
-import { DateSheet } from "./DateSheet";
+import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { MarketSheet } from "./MarketSheet";
 import { CorporationSheet } from "./CorporationSheet";
 import { cn } from "@/lib/utils";
@@ -86,7 +86,13 @@ export function MarketFilterBar() {
         />
       </div>
 
-      <DateSheet open={dateOpen} onOpenChange={setDateOpen} />
+      <DatePickerSheet
+        open={dateOpen}
+        onOpenChange={setDateOpen}
+        selected={f.date}
+        onConfirm={(iso, label) => f.setDate(iso, label)}
+        hasDataFor={defaultTradingDayFilter}
+      />
       <MarketSheet open={marketOpen} onOpenChange={setMarketOpen} />
       <CorporationSheet open={corpOpen} onOpenChange={setCorpOpen} />
     </div>

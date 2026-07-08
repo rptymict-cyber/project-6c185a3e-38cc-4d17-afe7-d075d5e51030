@@ -9,7 +9,7 @@ import { ArrowLeft, Bell, ChevronDown, ChevronRight, Star } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 // AlertSettingsSheet 제거됨 — 알림 규칙은 /notifications/settings/$ruleId 통합 화면 사용
-import { DateSheetLite } from "@/components/date-sheet-lite";
+import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
 import { TrendTab } from "@/components/statistics/TrendTab";
 // NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
@@ -272,13 +272,12 @@ function VarietyStatsPage() {
       {tab === "trend" && <TrendTab varietyId={variety} />}
 
 
-      <DateSheetLite
+      <DatePickerSheet
         open={dateOpen}
         onOpenChange={setDateOpen}
         selected={date}
-        onSelect={(iso) => {
-          setDate(iso);
-        }}
+        onConfirm={(iso) => setDate(iso)}
+        hasDataFor={defaultTradingDayFilter}
       />
 
       {/* 알림 설정은 /notifications/settings/$ruleId (또는 /new)로 라우팅됨 */}

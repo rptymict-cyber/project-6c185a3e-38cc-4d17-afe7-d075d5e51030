@@ -13,7 +13,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
-import { DateSheetLite } from "@/components/date-sheet-lite";
+import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { getCrop } from "@/lib/mock/crops";
 import {
   getCategoryById,
@@ -231,11 +231,12 @@ function StatisticsHome() {
       </div>
 
       {/* Date sheet */}
-      <DateSheetLite
+      <DatePickerSheet
         open={dateOpen}
         onOpenChange={setDateOpen}
         selected={date}
-        onSelect={(iso) => setDate(iso)}
+        onConfirm={(iso) => setDate(iso)}
+        hasDataFor={defaultTradingDayFilter}
       />
     </AppShell>
   );
