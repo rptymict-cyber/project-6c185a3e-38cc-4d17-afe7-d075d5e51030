@@ -413,8 +413,8 @@ function Step1Category({
                       <span className="text-sm font-medium text-gray-900">
                         {c.name}
                       </span>
-                      <span className="text-xs text-gray-500">
-                        품목 {count}
+                      <span className="text-xs text-gray-400">
+                        {count}
                       </span>
                     </span>
                     <ChevronRight className="h-4 w-4 text-gray-400" />
