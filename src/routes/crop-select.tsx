@@ -357,11 +357,7 @@ function Step1Category({
 
   return (
     <div className="px-4 py-4">
-      <SearchInput
-        value={q}
-        onChange={setQ}
-        placeholder="부류 검색 (예: 하우스감귤 — 품종명으로도 검색 가능)"
-      />
+      <SearchInput value={q} onChange={setQ} placeholder="부류 검색" />
       {selectionCards}
 
 
