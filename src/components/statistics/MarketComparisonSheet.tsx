@@ -35,7 +35,7 @@ export function MarketComparisonSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-2xl p-0">
+      <SheetContent side="bottom" className="flex max-h-[85dvh] flex-col rounded-t-2xl p-0">
         <SheetHeader className="px-5 pt-5">
           <SheetTitle className="text-[16px] font-bold">시장 추가</SheetTitle>
         </SheetHeader>
