@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+<ellipse cx="30" cy="29" rx="5.2" ry="11" fill="#F6E9C7" transform="rotate(-35 30 29)" stroke="#EEDAA7" stroke-width="1"/>
+<ellipse cx="40" cy="25" rx="5.2" ry="11" fill="#F6E9C7" transform="rotate(0 40 25)" stroke="#EEDAA7" stroke-width="1"/>
+<ellipse cx="50" cy="30" rx="5.2" ry="11" fill="#F6E9C7" transform="rotate(35 50 30)" stroke="#EEDAA7" stroke-width="1"/>
+<ellipse cx="27" cy="41" rx="5.2" ry="11" fill="#F6E9C7" transform="rotate(-55 27 41)" stroke="#EEDAA7" stroke-width="1"/>
+<ellipse cx="38" cy="39" rx="5.2" ry="11" fill="#F6E9C7" transform="rotate(-10 38 39)" stroke="#EEDAA7" stroke-width="1"/>
+<ellipse cx="50" cy="42" rx="5.2" ry="11" fill="#F6E9C7" transform="rotate(28 50 42)" stroke="#EEDAA7" stroke-width="1"/>
+<ellipse cx="33" cy="53" rx="5.2" ry="11" fill="#F6E9C7" transform="rotate(-30 33 53)" stroke="#EEDAA7" stroke-width="1"/>
+<ellipse cx="45" cy="52" rx="5.2" ry="11" fill="#F6E9C7" transform="rotate(18 45 52)" stroke="#EEDAA7" stroke-width="1"/>
+<path d="M24 61 C31 66 50 66 57 61 C52 68 31 68 24 61Z" fill="#EFE2B8"/>
+</svg>
