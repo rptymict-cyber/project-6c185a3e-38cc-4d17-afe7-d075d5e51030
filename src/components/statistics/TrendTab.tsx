@@ -235,7 +235,12 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
 
       {/* Chart */}
       <div className="mt-3 px-2">
-        <TrendDualChart points={points} series={chartSeries} unitLabel="원/kg" view={chartView} />
+        <ChartRangeHeader
+          firstLabel={points[0]?.label}
+          lastLabel={points[points.length - 1]?.label}
+          unitLabel={priceUnitLabel(varietyId)}
+        />
+        <TrendDualChart points={points} series={chartSeries} unitLabel={priceUnitLabel(varietyId)} view={chartView} />
       </div>
 
       {/* Hint */}
