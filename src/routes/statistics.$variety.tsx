@@ -54,7 +54,9 @@ function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
   const navigate = useNavigate();
-  const crop = resolveCropSubject(variety).crop;
+  const subject = resolveCropSubject(variety);
+  const crop = subject.crop;
+  const hasData = hasRealStatisticsData(variety);
   const pushRecent = useRecentStats((s) => s.push);
 
   // Statistics tab manages its own date state — do NOT share with market tab.
@@ -65,8 +67,8 @@ function VarietyStatsPage() {
   // alertOpen 제거됨 — 벨 아이콘은 규칙 통합 화면으로 이동
 
   useEffect(() => {
-    if (crop) pushRecent(variety);
-  }, [crop, variety, pushRecent]);
+    if (hasData) pushRecent(variety);
+  }, [hasData, variety, pushRecent]);
 
   // /crop-select 에서 다른 작물을 선택하고 돌아온 경우 자동으로 해당 상세로 이동.
   // route param이 varietyId(구체) 또는 itemId(전체 품종) 어느 쪽이든 정합성을 맞춘다.
@@ -84,8 +86,8 @@ function VarietyStatsPage() {
   }, [committedItemId, committedVarietyId, variety, navigate]);
 
   const data = useMemo(
-    () => (crop ? getVarietyMarketAverages({ varietyId: variety, date }) : null),
-    [crop, variety, date],
+    () => (hasData ? getVarietyMarketAverages({ varietyId: variety, date }) : null),
+    [hasData, variety, date],
   );
 
   const favItem = crop ? fromCrop(crop) : null;
