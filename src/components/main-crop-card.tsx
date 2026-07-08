@@ -238,9 +238,10 @@ export function MainCropCard({ crop }: { crop: Crop }) {
         </Link>
         <Link
           to="/prediction"
+          search={{ cropId: crop.id, entrySource: "home" } as never}
           className="grid h-10 place-items-center rounded-lg bg-[#3A8A3A] text-[13px] font-semibold text-white"
         >
-          AI 예측 보기
+          AI 가격 예측 보기
         </Link>
       </div>
       {/* prevent unused var warning */}
