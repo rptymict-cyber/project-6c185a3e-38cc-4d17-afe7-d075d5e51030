@@ -79,7 +79,7 @@ export function CropCard({ crop }: { crop: Crop }) {
         <StarToggle
           active={watched}
           onClick={() => {
-            const added = toggle(crop.id);
+            const added = toggleFavorite(favItem);
             toast(added ? "즐겨찾기에 추가되었습니다 ★" : "즐겨찾기에서 제거되었습니다");
           }}
         />
