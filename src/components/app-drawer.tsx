@@ -55,8 +55,8 @@ const items: Item[] = [
   },
   {
     to: "/prediction",
-    label: "예측",
-    description: "가격 AI 예측",
+    label: "AI 가격 예측",
+    description: "유리한 출하·매입 시점",
     Icon: Sparkles,
     badge: "Beta",
   },

@@ -1,49 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
+import { PREDICTABLE_CROPS } from "@/features/prediction/mockPredictionData";
 import { cn } from "@/lib/utils";
 
-const PREDICTABLE_CROPS = [
-  {
-    id: "apple",
-    name: "사과",
-    emoji: "🍎",
-    category: "과일",
-    price: 6120,
-    changePct: -2.1,
-  },
-  {
-    id: "cabbage",
-    name: "배추",
-    emoji: "🥬",
-    category: "엽채·근채",
-    price: 2840,
-    changePct: 8.2,
-  },
-  {
-    id: "radish",
-    name: "무",
-    emoji: "🥕",
-    category: "엽채·근채",
-    price: 1760,
-    changePct: 6.1,
-  },
-  {
-    id: "onion",
-    name: "양파",
-    emoji: "🧅",
-    category: "양념채소",
-    price: 1120,
-    changePct: -4.1,
-  },
-  {
-    id: "garlic",
-    name: "마늘",
-    emoji: "🧄",
-    category: "양념채소",
-    price: 7850,
-    changePct: 3.0,
-  },
-];
+// 홈에 뿌릴 최소 시세 값 (예측 가능 5개 작물 전용)
+const HOME_PRICE: Record<
+  string,
+  { price: number; changePct: number; unitLabel: string }
+> = {
+  apple: { price: 12840, changePct: -3.2, unitLabel: "10kg" },
+  cabbage: { price: 5640, changePct: 8.2, unitLabel: "10kg" },
+  radish: { price: 7220, changePct: 6.1, unitLabel: "20kg" },
+  onion: { price: 8480, changePct: -4.1, unitLabel: "15kg" },
+  chili: { price: 9840, changePct: -1.4, unitLabel: "1kg" },
+};
 
 function ChangeBadge({ changePct }: { changePct: number }) {
   const up = changePct > 0;
@@ -65,9 +35,11 @@ export function PredictableCropCards() {
       {/* Section header */}
       <div className="flex items-end justify-between px-4">
         <div>
-          <h3 className="text-[16px] font-bold text-foreground">농산물 시세 예측</h3>
+          <h3 className="text-[16px] font-bold text-foreground">
+            AI 가격 예측
+          </h3>
           <p className="mt-0.5 text-[12px] text-[#6C757D]">
-            5개 품목은 가격 흐름과 예상 시세를 함께 볼 수 있어요
+            5개 품목의 예상 가격과 유리한 시점을 확인해보세요
           </p>
         </div>
         <Link
@@ -81,39 +53,45 @@ export function PredictableCropCards() {
 
       {/* Horizontal scroll cards */}
       <div className="no-scrollbar mt-3 flex gap-2.5 overflow-x-auto px-4 pb-1">
-        {PREDICTABLE_CROPS.map((crop) => (
-          <Link
-            key={crop.id}
-            to="/prediction"
-            search={{ crop: crop.id, entrySource: "home" }}
-            className="flex min-w-[140px] max-w-[140px] flex-col rounded-[12px] border border-[#E9ECEF] bg-white p-3.5 transition-colors active:bg-[#F8F9FA]"
-          >
-            {/* Emoji */}
-            <span className="text-[28px] leading-none">{crop.emoji}</span>
+        {PREDICTABLE_CROPS.map((crop) => {
+          const h = HOME_PRICE[crop.id] ?? {
+            price: 0,
+            changePct: 0,
+            unitLabel: "kg",
+          };
+          return (
+            <Link
+              key={crop.id}
+              to="/prediction"
+              search={{ cropId: crop.id, entrySource: "home" }}
+              className="flex min-w-[140px] max-w-[140px] flex-col rounded-[12px] border border-[#E9ECEF] bg-white p-3.5 transition-colors active:bg-[#F8F9FA]"
+            >
+              <span className="text-[28px] leading-none">{crop.emoji}</span>
 
-            {/* Name + category */}
-            <div className="mt-2 flex items-center gap-1.5">
-              <span className="text-[14px] font-bold text-foreground">{crop.name}</span>
-              <span className="shrink-0 rounded-md bg-[#F1F3F5] px-1.5 py-0.5 text-[10px] font-semibold text-[#6C757D]">
-                {crop.category}
-              </span>
-            </div>
+              <div className="mt-2 flex items-center gap-1.5">
+                <span className="text-[14px] font-bold text-foreground">
+                  {crop.name}
+                </span>
+                <span className="shrink-0 rounded-md bg-[#F1F3F5] px-1.5 py-0.5 text-[10px] font-semibold text-[#6C757D]">
+                  {crop.categoryName}
+                </span>
+              </div>
 
-            {/* Price */}
-            <div className="mt-1.5 text-[12px] font-medium text-[#6C757D]">
-              {crop.price.toLocaleString()}원/kg
-            </div>
+              <div className="mt-1.5 text-[12px] font-medium text-[#6C757D]">
+                {h.price.toLocaleString()}원/{h.unitLabel}
+              </div>
 
-            {/* Change + badge row */}
-            <div className="mt-2 flex items-center justify-between">
-              <ChangeBadge changePct={crop.changePct} />
-              <span className="shrink-0 rounded-full bg-[#F0F9F0] px-2 py-0.5 text-[10px] font-bold text-[#3A8A3A]">
-                예상 시세
-              </span>
-            </div>
-          </Link>
-        ))}
+              <div className="mt-2 flex items-center justify-between">
+                <ChangeBadge changePct={h.changePct} />
+                <span className="shrink-0 rounded-full bg-[#F0F9F0] px-2 py-0.5 text-[10px] font-bold text-[#3A8A3A]">
+                  AI 예측
+                </span>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
 }
+

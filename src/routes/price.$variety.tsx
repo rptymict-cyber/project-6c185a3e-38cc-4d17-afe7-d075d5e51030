@@ -180,7 +180,7 @@ function VarietyDetailPage() {
           </span>
           {isPredictable && (
             <span className="inline-flex items-center rounded-full border border-[#3A8A3A]/30 bg-[#F0F9F0] px-2 py-0.5 text-[11px] font-bold text-[#1F5C1F]">
-              시세 예측 가능
+              AI 가격 예측 가능
             </span>
           )}
         </div>
@@ -201,10 +201,10 @@ function VarietyDetailPage() {
           {isPredictable && (
             <Link
               to="/prediction"
-              search={{ crop: f.itemId, entrySource: "detail" } as never}
+              search={{ cropId: f.itemId, entrySource: "detail" } as never}
               className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-[#3A8A3A] px-2.5 py-1 text-[11.5px] font-bold text-[#1F5C1F] active:bg-[#F0F9F0]"
             >
-              AI 시세 예측 보기
+              AI 가격 예측 보기
               <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           )}
