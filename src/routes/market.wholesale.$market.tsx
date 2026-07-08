@@ -5,6 +5,7 @@ import { AppShell } from "@/components/app-shell";
 import { MARKETS } from "@/lib/mock/markets";
 import { ITEMS } from "@/lib/mock/items";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 export const Route = createFileRoute("/market/wholesale/$market")({
   loader: ({ params }) => {
@@ -123,7 +124,10 @@ function WholesaleDetailPage() {
                 active ? "bg-[#3A8A3A] text-white" : "bg-[#F8F9FA] text-[#6C757D]",
               )}
             >
-              {c.emoji} {c.name}
+              <span className="inline-flex items-center gap-1">
+                <CropIcon name={c.name} size={16} />
+                {c.name}
+              </span>
             </button>
           );
         })}

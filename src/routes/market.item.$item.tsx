@@ -8,6 +8,7 @@ import {
   itemTotalVolume,
   ITEM_CATEGORIES,
 } from "@/lib/mock/items";
+import { CropIcon } from "@/components/crop-icon";
 
 export const Route = createFileRoute("/market/item/$item")({
   loader: ({ params }) => {

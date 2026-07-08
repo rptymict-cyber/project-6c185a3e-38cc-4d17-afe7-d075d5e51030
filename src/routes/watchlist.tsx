@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
 import type { FavoritePriceItem } from "@/features/favorites/types";
 import { useMarketFilter } from "@/store/market";
@@ -236,10 +237,10 @@ function FavoriteCard({
       >
         <div className="flex items-start gap-3">
           <div
-            className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-muted text-2xl"
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-muted"
             aria-hidden
           >
-            {item.emoji ?? "🌾"}
+            <CropIcon name={item.cropName} size={28} />
           </div>
           <div className="min-w-0 flex-1">
             {item.isPredictable && (
