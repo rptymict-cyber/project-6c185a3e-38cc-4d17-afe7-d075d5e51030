@@ -24,6 +24,7 @@ import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
 import { fromCrop } from "@/features/favorites/favoriteMappers";
 import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 export const Route = createFileRoute("/statistics/$variety")({
   component: VarietyStatsPage,
@@ -136,9 +137,10 @@ function VarietyStatsPage() {
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center">
+          <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center gap-1.5">
+            <CropIcon name={crop.name} size={20} />
             <span className="text-[15px] font-black tracking-tight text-foreground">
-              {crop.emoji} {crop.name} 통계
+              {crop.name} 통계
             </span>
           </div>
           <div className="flex items-center gap-0.5">
