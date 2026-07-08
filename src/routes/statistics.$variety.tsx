@@ -298,20 +298,7 @@ function VarietyStatsPage() {
 }
 
 function MinimalHeader({ label, onBack }: { label: string; onBack: () => void }) {
-  return (
-    <header className="sticky top-0 z-30 flex h-[52px] items-center border-b border-[#E9ECEF] bg-background px-2">
-      <button
-        aria-label="뒤로"
-        onClick={onBack}
-        className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-      >
-        <ArrowLeft className="h-5 w-5" />
-      </button>
-      <span className="ml-1 text-[15px] font-black tracking-tight text-foreground">
-        {label}
-      </span>
-    </header>
-  );
+  return <DetailHeader title={label} onBack={onBack} />;
 }
 
 function SummaryCard({
