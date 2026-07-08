@@ -627,12 +627,14 @@ function BottomBar({
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
-      <div className="mb-3 rounded-xl border border-gray-200 bg-white px-3 py-2.5">
-        <div className="text-[11px] font-medium text-gray-500">선택한 조건</div>
-        <div className="mt-1 text-sm font-semibold text-gray-900">
-          {summary.length === 0 ? "-" : summary.join(" > ")}
+      {summary.length > 0 && (
+        <div className="mb-3 rounded-xl border border-gray-200 bg-white px-3 py-2.5">
+          <div className="text-[11px] font-medium text-gray-500">선택한 조건</div>
+          <div className="mt-1 text-sm font-semibold text-gray-900">
+            {summary.join(" > ")}
+          </div>
         </div>
-      </div>
+      )}
       <button
         type="button"
         onClick={onApply}
