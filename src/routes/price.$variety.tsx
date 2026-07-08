@@ -96,14 +96,35 @@ function VarietyDetailPage() {
   const [tab, setTab] = useState<Tab>("chart");
   const [period, setPeriod] = useState<DetailPeriod>("1w");
 
-  const starred = useWatchlist((s) => s.crops.includes(variety));
-  const toggleCrop = useWatchlist((s) => s.toggleCrop);
-  const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
-  const existingRule = useAlerts((s) => s.getByKey(variety, f.marketId));
   const crop = getCrop(f.itemId);
   const isPredictable = Boolean(
     crop?.isPredictable && crop.predictionStatus === "available",
   );
+  const favInput = {
+    itemId: f.itemId,
+    itemName: f.itemLabel,
+    emoji,
+    varietyId: variety,
+    varietyName: f.varietyLabel,
+    marketId: f.marketId,
+    marketName: f.marketLabel,
+    corporationId: f.corpId === "all" ? undefined : f.corpId,
+    corporationName: f.corpLabel,
+    unit: quote.unit,
+    quote,
+    isPredictable,
+  };
+  const favId = favoriteKey({
+    cropId: f.itemId,
+    varietyId: variety,
+    marketId: f.marketId,
+    corporationId: f.corpId === "all" ? undefined : f.corpId,
+    unit: quote.unit,
+  });
+  const starred = useFavoritePriceStore((s) => s.items.some((it) => it.id === favId));
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
+  const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
+  const existingRule = useAlerts((s) => s.getByKey(variety, f.marketId));
 
 
   const up = quote.prevPct > 0;
