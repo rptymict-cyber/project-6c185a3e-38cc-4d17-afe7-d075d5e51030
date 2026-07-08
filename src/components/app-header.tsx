@@ -61,16 +61,7 @@ export function AppHeader({
       <div className="flex items-center gap-0.5">
         {right ?? (
           <>
-            <span
-              className="relative mr-1 grid h-9 w-4 place-items-center"
-              aria-label="실시간"
-              title="실시간"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#E03131] opacity-70" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#E03131]" />
-              </span>
-            </span>
+            {/* 실시간 표시(빨간 점)는 제거됨 */}
             <button
               aria-label="새로고침"
               onClick={() => {
