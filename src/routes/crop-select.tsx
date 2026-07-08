@@ -47,11 +47,17 @@ export const Route = createFileRoute("/crop-select")({
  */
 const CTA_LABEL_BY_FROM: Record<string, string> = {
   market: "확인",
-  statistics: "통계 보기",
+  statistics: "선택한 작물 통계 보기",
   prediction: "예측 보기",
   home: "적용하기",
 };
 const DEFAULT_CTA_LABEL = "적용하기";
+
+const PAGE_TITLE_BY_FROM: Record<string, string> = {
+  statistics: "통계 작물 선택",
+  prediction: "예측 작물 선택",
+};
+const DEFAULT_PAGE_TITLE = "작물 선택";
 
 const STEP_TITLE: Record<Step, string> = {
   1: "부류 선택",
@@ -91,8 +97,8 @@ function CropSelectPage() {
   const [step, setStep] = useState<Step>(initialStep);
 
   const returnTo = returnPath && returnPath.startsWith("/") ? returnPath : "/";
-  const ctaLabel =
-    (from && CTA_LABEL_BY_FROM[from]) ?? DEFAULT_CTA_LABEL;
+  const ctaLabel = (from && CTA_LABEL_BY_FROM[from]) ?? DEFAULT_CTA_LABEL;
+  const pageTitle = (from && PAGE_TITLE_BY_FROM[from]) ?? DEFAULT_PAGE_TITLE;
 
   // 마운트 시 draft를 committed로부터 초기화
   useEffect(() => {
@@ -227,7 +233,7 @@ function CropSelectPage() {
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-white">
-      <Header title="작물 선택" onClose={handleClose} />
+      <Header title={pageTitle} onClose={handleClose} />
       <Stepper step={step} draft={draft} onStepClick={goStep} />
 
       <main className="flex-1 overflow-y-auto pb-40">

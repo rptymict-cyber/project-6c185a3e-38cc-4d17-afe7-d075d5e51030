@@ -18,12 +18,14 @@ import {
 } from "@/lib/mock/variety-trend";
 import { useTrendCompare } from "@/store/trend-compare";
 import { useMarketFilter } from "@/store/market";
+import { getCrop } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 
 const PERIODS: { id: TrendPeriod; label: string }[] = [
   { id: "1w", label: "1주" },
-  { id: "1m", label: "1달" },
-  { id: "3m", label: "3달" },
+  { id: "2w", label: "2주" },
+  { id: "1m", label: "1개월" },
+  { id: "3m", label: "3개월" },
   { id: "1y", label: "1년" },
   { id: "5y", label: "5년" },
 ];
@@ -233,7 +235,12 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
 
       {/* Chart */}
       <div className="mt-3 px-2">
-        <TrendDualChart points={points} series={chartSeries} unitLabel="원/kg" view={chartView} />
+        <ChartRangeHeader
+          firstLabel={points[0]?.label}
+          lastLabel={points[points.length - 1]?.label}
+          unitLabel={priceUnitLabel(varietyId)}
+        />
+        <TrendDualChart points={points} series={chartSeries} unitLabel={priceUnitLabel(varietyId)} view={chartView} />
       </div>
 
       {/* Hint */}
@@ -291,6 +298,32 @@ function SummaryStat({
       <div className={cn("mt-0.5 text-[12.5px] font-black tabular-nums leading-tight", color)}>
         {value}
       </div>
+    </div>
+  );
+}
+
+function priceUnitLabel(varietyId: string): string {
+  const c = getCrop(varietyId);
+  const m = c?.unit.match(/(\d+(?:\.\d+)?\s*kg)/i);
+  return m ? `원/${m[1].replace(/\s+/g, "")}` : "원/kg";
+}
+
+function ChartRangeHeader({
+  firstLabel,
+  lastLabel,
+  unitLabel,
+}: {
+  firstLabel?: string;
+  lastLabel?: string;
+  unitLabel: string;
+}) {
+  if (!firstLabel || !lastLabel) return null;
+  return (
+    <div className="mb-1 flex items-baseline justify-between px-2">
+      <span className="text-[11.5px] font-semibold text-[#495057]">
+        {firstLabel} ~ {lastLabel}
+      </span>
+      <span className="text-[11px] text-[#868E96]">평균가({unitLabel})</span>
     </div>
   );
 }

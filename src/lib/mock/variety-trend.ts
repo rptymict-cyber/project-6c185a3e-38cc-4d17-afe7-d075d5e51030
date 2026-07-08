@@ -1,10 +1,11 @@
 import { getCrop, type Crop } from "./crops";
 import { MARKETS } from "./markets";
 
-export type TrendPeriod = "1w" | "1m" | "3m" | "1y" | "5y";
+export type TrendPeriod = "1w" | "2w" | "1m" | "3m" | "1y" | "5y";
 
 export const PERIOD_LEN: Record<TrendPeriod, number> = {
   "1w": 7,
+  "2w": 14,
   "1m": 30,
   "3m": 12, // weekly points
   "1y": 12, // monthly points
@@ -13,6 +14,7 @@ export const PERIOD_LEN: Record<TrendPeriod, number> = {
 
 export const PERIOD_STEP_DAYS: Record<TrendPeriod, number> = {
   "1w": 1,
+  "2w": 1,
   "1m": 1,
   "3m": 7,
   "1y": 30,
@@ -83,7 +85,7 @@ function labelForOffset(period: TrendPeriod, iso: string): string {
   const d = new Date(iso);
   const m = d.getMonth() + 1;
   const day = d.getDate();
-  if (period === "1w" || period === "1m") return `${m}/${day}`;
+  if (period === "1w" || period === "2w" || period === "1m") return `${m}/${day}`;
   if (period === "3m") return `${m}/${day}`;
   if (period === "1y") return `${m}월`;
   return `${String(d.getFullYear()).slice(2)}.${m}`;
@@ -147,7 +149,7 @@ function baseSeriesForSeriesId(
   const base = cropPerKg * factor;
   const len = PERIOD_LEN[period];
   const seed = hash(`${crop.id}:${seriesId}:${period}:${extraSeed}`);
-  const spread = period === "1w" ? 0.05 : period === "1m" ? 0.06 : period === "3m" ? 0.08 : period === "1y" ? 0.1 : 0.14;
+  const spread = period === "1w" ? 0.05 : period === "2w" ? 0.055 : period === "1m" ? 0.06 : period === "3m" ? 0.08 : period === "1y" ? 0.1 : 0.14;
   return seriesFor(base, len, seed, spread);
 }
 
