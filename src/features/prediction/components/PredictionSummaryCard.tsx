@@ -19,7 +19,11 @@ export function PredictionSummaryCard({
     { label: "최고 예상가", value: `${max.toLocaleString()}원`, color: "text-[#E03131]" },
     { label: "최저 예상가", value: `${min.toLocaleString()}원`, color: "text-[#1971C2]" },
     { label: "평균 예상가", value: `${avg.toLocaleString()}원`, color: "text-foreground" },
-    { label: "신뢰도", value: `${prediction.confidenceScore}%`, color: "text-foreground" },
+    {
+      label: "예측 기간",
+      value: `${prediction.predictionRangeDays}일`,
+      color: "text-foreground",
+    },
   ];
 
   return (
