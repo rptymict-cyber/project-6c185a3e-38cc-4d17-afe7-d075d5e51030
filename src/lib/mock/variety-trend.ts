@@ -1,5 +1,5 @@
 import { type Crop } from "./crops";
-import { resolveCropSubject } from "./crop-resolver";
+import { resolveRealCrop } from "./crop-resolver";
 import { MARKETS } from "./markets";
 
 export type TrendPeriod = "1w" | "2w" | "1m" | "3m" | "1y" | "5y";
@@ -159,7 +159,7 @@ export function getVarietyTrend(params: {
   seriesIds: CompareSeriesId[];
   period: TrendPeriod;
 }): TrendPoint[] {
-  const crop = resolveCropSubject(params.varietyId).crop;
+  const crop = resolveRealCrop(params.varietyId);
   if (!crop) return [];
   const dates = backDates(params.period, REFERENCE_END);
   const perSeries: Record<string, number[]> = {};
@@ -195,7 +195,7 @@ export function getYearComparisonTrend(params: {
   marketId: CompareSeriesId; // one series only
   period: TrendPeriod;
 }): { points: YearTrendPoint[]; years: string[] } {
-  const crop = resolveCropSubject(params.varietyId).crop;
+  const crop = resolveRealCrop(params.varietyId);
   const years = ["2022", "2023", "2024", "2025", "2026"];
   if (!crop) return { points: [], years };
   const len = PERIOD_LEN[params.period];

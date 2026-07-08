@@ -15,7 +15,7 @@ import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable
 import { TrendTab } from "@/components/statistics/TrendTab";
 // NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
 // VarietyPickerSheet는 롤백 대비로 남겨두고 여기서 import 하지 않는다.
-import { resolveCropSubject } from "@/lib/mock/crop-resolver";
+import { hasRealStatisticsData, resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
 import { useAlerts } from "@/store/alerts";
 import { useCropSelection } from "@/store/cropSelection";
@@ -54,7 +54,9 @@ function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
   const navigate = useNavigate();
-  const crop = resolveCropSubject(variety).crop;
+  const subject = resolveCropSubject(variety);
+  const crop = subject.crop;
+  const hasData = hasRealStatisticsData(variety);
   const pushRecent = useRecentStats((s) => s.push);
 
   // Statistics tab manages its own date state — do NOT share with market tab.
@@ -65,8 +67,8 @@ function VarietyStatsPage() {
   // alertOpen 제거됨 — 벨 아이콘은 규칙 통합 화면으로 이동
 
   useEffect(() => {
-    if (crop) pushRecent(variety);
-  }, [crop, variety, pushRecent]);
+    if (hasData) pushRecent(variety);
+  }, [hasData, variety, pushRecent]);
 
   // /crop-select 에서 다른 작물을 선택하고 돌아온 경우 자동으로 해당 상세로 이동.
   // route param이 varietyId(구체) 또는 itemId(전체 품종) 어느 쪽이든 정합성을 맞춘다.
@@ -84,8 +86,8 @@ function VarietyStatsPage() {
   }, [committedItemId, committedVarietyId, variety, navigate]);
 
   const data = useMemo(
-    () => (crop ? getVarietyMarketAverages({ varietyId: variety, date }) : null),
-    [crop, variety, date],
+    () => (hasData ? getVarietyMarketAverages({ varietyId: variety, date }) : null),
+    [hasData, variety, date],
   );
 
   const favItem = crop ? fromCrop(crop) : null;
@@ -117,19 +119,54 @@ function VarietyStatsPage() {
     navigate({ to: "/market" });
   };
 
-  if (!crop || !data) {
+  if (!hasData) {
+    const titleLabel =
+      subject.itemLabel && subject.itemLabel !== variety
+        ? `${subject.itemLabel} 통계`
+        : "통계";
     return (
       <AppShell
         header={
-          <MinimalHeader label="품종 통계" onBack={() => router.history.back()} />
+          <MinimalHeader label={titleLabel} onBack={() => router.history.back()} />
         }
       >
-        <div className="px-4 py-10 text-center text-[13px] text-[#6C757D]">
-          품종을 찾을 수 없어요
+        <div className="mx-4 mt-6 rounded-[12px] border border-dashed border-[#E9ECEF] bg-[#F8F9FA] px-4 py-10 text-center">
+          <div className="text-[14px] font-bold text-foreground">
+            선택한 조건의 통계 데이터가 없습니다
+          </div>
+          <p className="mt-2 text-[12px] leading-relaxed text-[#6C757D]">
+            {subject.itemLabel && subject.varietyLabel
+              ? `${subject.itemLabel} · ${subject.varietyLabel}는(은) 아직 통계 데이터가 준비 중이에요.`
+              : "선택하신 품목은 아직 통계 데이터가 준비 중이에요."}
+            <br />
+            다른 작물을 선택해 주세요.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/statistics" })}
+            className="mt-4 inline-flex items-center rounded-[10px] border border-[#3A8A3A] bg-white px-4 py-2 text-[13px] font-bold text-[#3A8A3A] active:bg-[#F0F9F0]"
+          >
+            다른 작물 선택하기
+          </button>
         </div>
       </AppShell>
     );
   }
+
+  if (!data) {
+    return (
+      <AppShell
+        header={
+          <MinimalHeader label="통계" onBack={() => router.history.back()} />
+        }
+      >
+        <div className="px-4 py-10 text-center text-[13px] text-[#6C757D]">
+          통계 데이터를 불러오지 못했습니다
+        </div>
+      </AppShell>
+    );
+  }
+
 
   return (
     <AppShell

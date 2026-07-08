@@ -1,5 +1,5 @@
 import { CATEGORIES, type Crop } from "./crops";
-import { resolveCropSubject } from "./crop-resolver";
+import { resolveCropSubject, resolveRealCrop } from "./crop-resolver";
 import { MARKETS, type Market } from "./markets";
 
 export type CompanyAverage = {
@@ -153,7 +153,10 @@ export function getVarietyMarketAverages(params: {
   date: string;
 }): VarietyMarketAverages | null {
   const subject = resolveCropSubject(params.varietyId);
-  const crop = subject.crop;
+  // 실제 통계 데이터가 있는 품목만 표시. 없으면 mock fallback을
+  // 실제처럼 노출하지 않는다.
+  const crop = resolveRealCrop(params.varietyId);
+  if (!crop) return null;
 
   const { effective, label, requestedLabel, different } = resolveEffective(params.date);
   const seed = hash(`${crop.id}:${effective}`);
