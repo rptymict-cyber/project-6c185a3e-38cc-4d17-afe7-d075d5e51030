@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, ChevronRight, Info, Search } from "lucide-react";
+import { Bell, ChevronRight, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { getCrop } from "@/lib/mock/crops";
