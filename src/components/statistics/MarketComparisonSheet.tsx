@@ -145,9 +145,20 @@ export function MarketComparisonSheet({
           ))}
         </ul>
 
-        <p className="px-5 pb-6 text-[11px] text-[#868E96]">
-          전국은 모든 시장의 평균입니다.
-        </p>
+          <p className="px-5 pb-6 text-[11px] text-[#868E96]">
+            전국은 모든 시장의 평균입니다.
+          </p>
+        </div>
+
+        <div className="shrink-0 border-t border-[#E9ECEF] bg-white px-5 py-3">
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="flex w-full items-center justify-center rounded-[12px] bg-[#3A8A3A] py-3 text-[14px] font-black text-white active:bg-[#2F6F2F]"
+          >
+            완료
+          </button>
+        </div>
       </SheetContent>
     </Sheet>
   );
