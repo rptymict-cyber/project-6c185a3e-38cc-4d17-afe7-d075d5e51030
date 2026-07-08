@@ -20,7 +20,9 @@ import { useAlerts } from "@/store/alerts";
 import { useCropSelection } from "@/store/cropSelection";
 import { useMarketFilter } from "@/store/market";
 import { useRecentStats } from "@/store/recent-stats";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromCrop } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/statistics/$variety")({
@@ -80,8 +82,12 @@ function VarietyStatsPage() {
     [crop, variety, date],
   );
 
-  const starred = useWatchlist((s) => s.crops.includes(variety));
-  const toggleCrop = useWatchlist((s) => s.toggleCrop);
+  const favItem = crop ? fromCrop(crop) : null;
+  const favId = favItem ? favoriteKey(favItem) : "";
+  const starred = useFavoritePriceStore((s) =>
+    favId ? s.items.some((it) => it.id === favId) : false,
+  );
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
   const alertMarketId = data?.regions[0]?.markets[0]?.id ?? "all";
   const alertMarketLabel = data?.regions[0]?.markets[0]?.name ?? "전체";
   const hasAlert = useAlerts((s) => s.hasAnyFor(variety, alertMarketId));
@@ -139,7 +145,8 @@ function VarietyStatsPage() {
             <button
               aria-label="즐겨찾기"
               onClick={() => {
-                const added = toggleCrop(variety);
+                if (!favItem) return;
+                const added = toggleFavorite(favItem);
                 toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
               }}
               className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"

@@ -2,7 +2,9 @@ import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import type { Crop } from "@/lib/mock/crops";
 import { CATEGORIES } from "@/lib/mock/crops";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromCrop } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { Sparkline } from "./sparkline";
 import { PriceBadge } from "./price-badge";
 import { StarToggle } from "./star-toggle";
@@ -21,8 +23,10 @@ function insightFor(crop: Crop, changePct: number) {
 }
 
 export function CropCard({ crop }: { crop: Crop }) {
-  const watched = useWatchlist((s) => s.crops.includes(crop.id));
-  const toggle = useWatchlist((s) => s.toggleCrop);
+  const favItem = fromCrop(crop);
+  const favId = favoriteKey(favItem);
+  const watched = useFavoritePriceStore((s) => s.items.some((it) => it.id === favId));
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
   const changePct = ((crop.currentPrice - crop.prevPrice) / crop.prevPrice) * 100;
   const catLabel = CATEGORIES.find((c) => c.id === crop.category)?.label ?? "";
   const insight = insightFor(crop, changePct);
@@ -75,7 +79,7 @@ export function CropCard({ crop }: { crop: Crop }) {
         <StarToggle
           active={watched}
           onClick={() => {
-            const added = toggle(crop.id);
+            const added = toggleFavorite(favItem);
             toast(added ? "즐겨찾기에 추가되었습니다 ★" : "즐겨찾기에서 제거되었습니다");
           }}
         />

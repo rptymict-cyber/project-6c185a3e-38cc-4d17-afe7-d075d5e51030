@@ -1,98 +1,23 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  Check,
-  ChevronDown,
-  ChevronLeft,
-  GripVertical,
-  Info,
-  MoreVertical,
-  Pencil,
-  Search,
-  Star,
-  X,
-} from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Check, ChevronDown, Search, Star, X } from "lucide-react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import {
-  DndContext,
-  PointerSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  arrayMove,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { AppShell, TopHeader } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
-import { CROPS, getCrop, type Crop } from "@/lib/mock/crops";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import type { FavoritePriceItem } from "@/features/favorites/types";
+import { useMarketFilter } from "@/store/market";
 
 type Filter = "all" | "ai";
-type Sort = "updated" | "priceDesc" | "priceAsc" | "changeDesc" | "manual";
+type Sort = "updated" | "createdDesc" | "priceDesc" | "priceAsc";
 
 const SORT_LABEL: Record<Sort, string> = {
   updated: "최근 업데이트순",
-  priceDesc: "높은 가격순",
-  priceAsc: "낮은 가격순",
-  changeDesc: "변동률순",
-  manual: "직접 정렬순",
+  createdDesc: "최근 저장순",
+  priceDesc: "가격 높은순",
+  priceAsc: "가격 낮은순",
 };
-
-/** Display item derived from a Crop + user context defaults. */
-type WatchItem = {
-  id: string;
-  cropId: string;
-  emoji: string;
-  category: string;
-  varietyName: string;
-  marketName: string;
-  corporation: string;
-  origin: string;
-  unitLabel: string;
-  price: number;
-  changePct: number;
-  lastAuctionAt: string;
-  aiReady: boolean;
-};
-
-function toWatchItem(crop: Crop): WatchItem {
-  const unitLabel = crop.unit.replace(/^원\s*\//, "");
-  const changePct =
-    crop.prevPrice > 0 ? ((crop.currentPrice - crop.prevPrice) / crop.prevPrice) * 100 : 0;
-  return {
-    id: crop.id,
-    cropId: crop.id,
-    emoji: crop.emoji,
-    category: crop.name,
-    varietyName: `${crop.name}(일반)`,
-    marketName: "서울가락",
-    corporation: "서울청과(주)",
-    origin: "전국 평균",
-    unitLabel,
-    price: crop.currentPrice,
-    changePct,
-    lastAuctionAt: crop.updatedAt,
-    aiReady: Boolean(crop.aiReady),
-  };
-}
 
 export const Route = createFileRoute("/watchlist")({
   component: WatchlistPage,
@@ -108,600 +33,279 @@ export const Route = createFileRoute("/watchlist")({
 });
 
 function WatchlistPage() {
-  const cropIds = useWatchlist((s) => s.crops);
-  const removeCrop = useWatchlist((s) => s.removeCrop);
-  const setCropOrder = useWatchlist((s) => s.setCropOrder);
-  const toggleCrop = useWatchlist((s) => s.toggleCrop);
-
-  const items = useMemo<WatchItem[]>(() => {
-    return cropIds
-      .map((id) => getCrop(id))
-      .filter((c): c is Crop => Boolean(c))
-      .map(toWatchItem);
-  }, [cropIds]);
-
-  const [editing, setEditing] = useState(false);
-  const [draftIds, setDraftIds] = useState<string[]>([]);
-  const originalRef = useRef<string[]>([]);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const items = useFavoritePriceStore((s) => s.items);
+  const removeFavorite = useFavoritePriceStore((s) => s.removeFavorite);
 
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("updated");
   const [sortOpen, setSortOpen] = useState(false);
 
-  // hydration-safe mount flag (kept for consistency; timestamps are static strings)
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  const enterEdit = () => {
-    setDraftIds(cropIds);
-    originalRef.current = cropIds;
-    setSelected(new Set());
-    setEditing(true);
-  };
-  const exitEdit = (persist: boolean) => {
-    if (persist) setCropOrder(draftIds);
-    setEditing(false);
-    setSelected(new Set());
-  };
-
   const filtered = useMemo(() => {
     let arr = items.slice();
-    if (filter === "ai") arr = arr.filter((q) => q.aiReady);
+    if (filter === "ai") arr = arr.filter((it) => it.isPredictable);
     if (query.trim()) {
       const q = query.trim().toLowerCase();
       arr = arr.filter((it) =>
-        [it.category, it.varietyName, it.marketName, it.corporation, it.origin, it.unitLabel]
+        [it.cropName, it.varietyName, it.marketName, it.corporationName, it.originName, it.unit]
+          .filter(Boolean)
           .join(" ")
           .toLowerCase()
           .includes(q),
       );
     }
-    if (sort === "priceDesc") arr.sort((a, b) => b.price - a.price);
-    else if (sort === "priceAsc") arr.sort((a, b) => a.price - b.price);
-    else if (sort === "changeDesc")
-      arr.sort((a, b) => Math.abs(b.changePct) - Math.abs(a.changePct));
-    // "updated" and "manual" keep insertion order
+    if (sort === "priceDesc") arr.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+    else if (sort === "priceAsc") arr.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+    else if (sort === "createdDesc")
+      arr.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+    else
+      arr.sort((a, b) => ((b.updatedAt ?? "") > (a.updatedAt ?? "") ? 1 : -1));
     return arr;
   }, [items, filter, sort, query]);
 
-  const draftItems = useMemo<WatchItem[]>(() => {
-    return draftIds
-      .map((id) => getCrop(id))
-      .filter((c): c is Crop => Boolean(c))
-      .map(toWatchItem);
-  }, [draftIds]);
-
-  const toggleSelect = (id: string) =>
-    setSelected((prev) => {
-      const n = new Set(prev);
-      if (n.has(id)) n.delete(id);
-      else n.add(id);
-      return n;
-    });
-
-  const handleRemoveOne = (item: WatchItem) => {
-    removeCrop(item.cropId);
-    toast("즐겨찾기에서 제거되었습니다.", {
-      action: {
-        label: "실행 취소",
-        onClick: () => toggleCrop(item.cropId),
-      },
-    });
-  };
-
   return (
-    <AppShell
-      header={
-        editing ? (
-          <TopHeader
-            title="즐겨찾기 편집"
-            left={
-              <button
-                type="button"
-                onClick={() => exitEdit(false)}
-                aria-label="편집 취소"
-                className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-[#F1F3F5]"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-            }
-            right={
-              <button
-                type="button"
-                onClick={() => {
-                  exitEdit(true);
-                  toast("변경사항이 저장되었습니다.");
-                }}
-                className="min-h-[36px] rounded-md px-2 text-[14px] font-semibold text-primary"
-              >
-                완료
-              </button>
-            }
-          />
-        ) : (
-          <AppHeader title="농산물 시세 조회" />
-        )
-      }
-      bottom={
-        editing ? (
-          <div className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[430px] border-t border-border bg-background px-4 pb-[env(safe-area-inset-bottom)] pt-3">
-            <div className="flex items-center gap-2 pb-3">
-              <button
-                type="button"
-                onClick={() => exitEdit(false)}
-                className="flex-1 rounded-lg border border-input bg-secondary py-3 text-[14px] font-bold text-secondary-foreground"
-              >
-                취소
-              </button>
-              <button
-                type="button"
-                onClick={() => selected.size > 0 && setConfirmOpen(true)}
-                disabled={selected.size === 0}
-                className={cn(
-                  "flex-[1.4] rounded-lg py-3 text-[14px] font-bold transition-colors",
-                  selected.size === 0
-                    ? "bg-muted text-muted-foreground opacity-60"
-                    : "bg-destructive text-destructive-foreground",
-                )}
-              >
-                {selected.size > 0 ? `삭제 (${selected.size})` : "삭제"}
-              </button>
-            </div>
-            <p className="pb-2 text-center text-[11px] text-muted-foreground">
-              ⓘ 드래그하여 순서를 변경할 수 있습니다.
-            </p>
-          </div>
-        ) : null
-      }
-    >
-      {editing ? (
-        <EditView
-          draft={draftItems}
-          onReorder={(ids) => setDraftIds(ids)}
-          selected={selected}
-          toggleSelect={toggleSelect}
-        />
+    <AppShell header={<AppHeader title="농산물 시세 조회" />}>
+      <div className="px-4 pt-4">
+        <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
+        <p className="mt-1 text-[13px] text-muted-foreground">
+          총 <span className="font-semibold text-foreground">{items.length}</span>개의
+          저장한 시세 조건
+        </p>
+      </div>
+
+      {items.length === 0 ? (
+        <EmptyState />
       ) : (
-        <NormalView
-          items={items}
-          filtered={filtered}
-          query={query}
-          setQuery={setQuery}
-          filter={filter}
-          setFilter={setFilter}
-          sort={sort}
-          setSort={setSort}
-          sortOpen={sortOpen}
-          setSortOpen={setSortOpen}
-          onEdit={enterEdit}
-          onRemove={handleRemoveOne}
-          mounted={mounted}
-        />
+        <>
+          <div className="px-4 pt-3">
+            <label className="flex h-11 items-center gap-2 rounded-xl border border-input bg-secondary/50 px-3">
+              <Search className="h-4 w-4 text-muted-foreground" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="품목, 품종, 시장명으로 검색하세요"
+                className="min-w-0 flex-1 bg-transparent text-[13.5px] outline-none placeholder:text-muted-foreground"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  aria-label="지우기"
+                  className="grid h-6 w-6 place-items-center rounded-full text-muted-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </label>
+          </div>
+
+          <div className="mt-3 flex items-center gap-2 px-4">
+            <div className="flex flex-1 items-center gap-2">
+              {(
+                [
+                  ["all", "전체"],
+                  ["ai", "AI 예측"],
+                ] as const
+              ).map(([id, label]) => {
+                const active = filter === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setFilter(id)}
+                    className={cn(
+                      "h-8 rounded-full border px-3 text-[12.5px] font-semibold",
+                      active
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-input bg-background text-foreground",
+                    )}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setSortOpen(!sortOpen)}
+                className="inline-flex h-8 items-center gap-1 rounded-full border border-input bg-background px-3 text-[12px] font-semibold text-foreground"
+              >
+                {SORT_LABEL[sort]}
+                <ChevronDown className="h-3.5 w-3.5" />
+              </button>
+              {sortOpen && (
+                <>
+                  <button
+                    type="button"
+                    aria-label="닫기"
+                    onClick={() => setSortOpen(false)}
+                    className="fixed inset-0 z-40"
+                  />
+                  <ul className="absolute right-0 top-9 z-50 w-[160px] overflow-hidden rounded-lg border border-border bg-background shadow-md">
+                    {(Object.keys(SORT_LABEL) as Sort[]).map((s) => (
+                      <li key={s}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSort(s);
+                            setSortOpen(false);
+                          }}
+                          className={cn(
+                            "flex w-full items-center justify-between px-3 py-2.5 text-[12.5px]",
+                            sort === s ? "font-bold text-primary" : "text-foreground",
+                          )}
+                        >
+                          {SORT_LABEL[s]}
+                          {sort === s && <Check className="h-3.5 w-3.5" />}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center px-6 pb-16 pt-16 text-center">
+              <p className="text-[13px] text-muted-foreground">
+                조건에 맞는 저장된 시세가 없어요
+              </p>
+            </div>
+          ) : (
+            <ul className="space-y-2 px-4 py-4">
+              {filtered.map((it) => (
+                <FavoriteCard
+                  key={it.id}
+                  item={it}
+                  onRemove={() => {
+                    removeFavorite(it.id);
+                    toast("즐겨찾기에서 제거되었습니다");
+                  }}
+                />
+              ))}
+            </ul>
+          )}
+        </>
       )}
-
-      {editing && <div className="h-[120px]" aria-hidden />}
-
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>즐겨찾기를 삭제하시겠습니까?</AlertDialogTitle>
-            <AlertDialogDescription>
-              선택한 {selected.size}개의 즐겨찾기를 삭제하시겠습니까?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                const ids = Array.from(selected);
-                // remove from draft + persist immediately via store
-                ids.forEach((id) => removeCrop(id));
-                setDraftIds((d) => d.filter((x) => !selected.has(x)));
-                originalRef.current = originalRef.current.filter((x) => !selected.has(x));
-                setSelected(new Set());
-                setConfirmOpen(false);
-                toast("선택한 즐겨찾기가 삭제되었습니다.");
-              }}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              삭제
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </AppShell>
   );
 }
 
-/* -------------------- Normal view -------------------- */
-
-function NormalView({
-  items,
-  filtered,
-  query,
-  setQuery,
-  filter,
-  setFilter,
-  sort,
-  setSort,
-  sortOpen,
-  setSortOpen,
-  onEdit,
+function FavoriteCard({
+  item,
   onRemove,
-  mounted,
 }: {
-  items: WatchItem[];
-  filtered: WatchItem[];
-  query: string;
-  setQuery: (v: string) => void;
-  filter: Filter;
-  setFilter: (f: Filter) => void;
-  sort: Sort;
-  setSort: (s: Sort) => void;
-  sortOpen: boolean;
-  setSortOpen: (v: boolean) => void;
-  onEdit: () => void;
-  onRemove: (q: WatchItem) => void;
-  mounted: boolean;
+  item: FavoritePriceItem;
+  onRemove: () => void;
 }) {
-  void mounted;
-  return (
-    <>
-      <div className="flex items-end justify-between px-4 pt-4">
-        <div>
-          <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
-          <p className="mt-1 text-[13px] text-muted-foreground">
-            총 <span className="font-semibold text-foreground">{items.length}</span>개의 즐겨찾기
-          </p>
-        </div>
-        {items.length > 0 && (
-          <button
-            type="button"
-            onClick={onEdit}
-            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-primary px-3 text-[13px] font-bold text-primary hover:bg-primary/5"
-          >
-            <Pencil className="h-3.5 w-3.5" />
-            편집
-          </button>
-        )}
-      </div>
+  const navigate = useNavigate();
+  const setItem = useMarketFilter((s) => s.setItem);
+  const setMarket = useMarketFilter((s) => s.setMarket);
+  const setCorp = useMarketFilter((s) => s.setCorp);
+  const setUnit = useMarketFilter((s) => s.setUnit);
+  const rising = (item.changeRate ?? 0) >= 0;
+  const flat = Math.abs(item.changeRate ?? 0) < 0.05;
 
-      <div className="px-4 pt-3">
-        <label className="flex h-11 items-center gap-2 rounded-xl border border-input bg-secondary/50 px-3">
-          <Search className="h-4 w-4 text-muted-foreground" />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="품목, 품종, 시장명으로 검색하세요"
-            className="min-w-0 flex-1 bg-transparent text-[13.5px] outline-none placeholder:text-muted-foreground"
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={() => setQuery("")}
-              aria-label="지우기"
-              className="grid h-6 w-6 place-items-center rounded-full text-muted-foreground hover:bg-muted"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </label>
-      </div>
+  const handleOpen = () => {
+    // Sync market filter so the detail page reads the saved condition.
+    setItem({
+      categoryId: "all",
+      categoryLabel: "",
+      itemId: item.cropId,
+      itemLabel: item.cropName,
+      varietyId: item.varietyId ?? item.cropId,
+      varietyLabel: item.varietyName ?? item.cropName,
+    });
+    setMarket(item.marketId, item.marketName);
+    setCorp(item.corporationId ?? "all", item.corporationName ?? "전체");
+    setUnit(item.unit);
+    navigate({
+      to: "/price/$variety",
+      params: { variety: item.varietyId ?? item.cropId },
+    });
+  };
 
-      <div className="mt-3 flex items-center gap-2 px-4">
-        <div className="flex flex-1 items-center gap-2">
-          {([
-            ["all", "전체"],
-            ["ai", "AI 예측"],
-          ] as const).map(([id, label]) => {
-            const active = filter === id;
-            return (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setFilter(id)}
-                className={cn(
-                  "h-8 rounded-full border px-3 text-[12.5px] font-semibold",
-                  active
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-input bg-background text-foreground",
-                )}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => setSortOpen(!sortOpen)}
-            className="inline-flex h-8 items-center gap-1 rounded-full border border-input bg-background px-3 text-[12px] font-semibold text-foreground"
-          >
-            {SORT_LABEL[sort]}
-            <ChevronDown className="h-3.5 w-3.5" />
-          </button>
-          {sortOpen && (
-            <>
-              <button
-                type="button"
-                aria-label="닫기"
-                onClick={() => setSortOpen(false)}
-                className="fixed inset-0 z-40"
-              />
-              <ul className="absolute right-0 top-9 z-50 w-[160px] overflow-hidden rounded-lg border border-border bg-background shadow-md">
-                {(Object.keys(SORT_LABEL) as Sort[]).map((s) => (
-                  <li key={s}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSort(s);
-                        setSortOpen(false);
-                      }}
-                      className={cn(
-                        "flex w-full items-center justify-between px-3 py-2.5 text-[12.5px] hover:bg-muted",
-                        sort === s ? "font-bold text-primary" : "text-foreground",
-                      )}
-                    >
-                      {SORT_LABEL[s]}
-                      {sort === s && <Check className="h-3.5 w-3.5" />}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
-      </div>
-
-      <div className="mx-4 mt-3 flex gap-2 rounded-[10px] bg-muted px-3 py-2.5 text-[11.5px] leading-relaxed text-muted-foreground">
-        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        <span>별표를 누르면 즐겨찾기에서 해제됩니다.</span>
-      </div>
-
-      {filtered.length === 0 ? (
-        <EmptyState hasAny={items.length > 0} />
-      ) : (
-        <ul className="space-y-2 px-4 py-4">
-          {filtered.map((q) => (
-            <NormalCard key={q.id} q={q} onRemove={() => onRemove(q)} />
-          ))}
-        </ul>
-      )}
-    </>
-  );
-}
-
-function PredictionBadge({ aiReady }: { aiReady: boolean }) {
-  if (!aiReady) return null;
-  return (
-    <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
-      AI 예측
-    </span>
-  );
-}
-
-function NormalCard({ q, onRemove }: { q: WatchItem; onRemove: () => void }) {
-  const rising = q.changePct >= 0;
-  const flat = Math.abs(q.changePct) < 0.05;
   return (
     <li className="rounded-2xl border border-border bg-background p-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
-      {/* Top row: emoji + identity + star/more */}
-      <div className="flex items-start gap-3">
-        <div
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-muted text-2xl"
-          aria-hidden
-        >
-          {q.emoji}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          {q.aiReady && (
-            <div className="mb-1">
-              <PredictionBadge aiReady={q.aiReady} />
+      <button
+        type="button"
+        onClick={handleOpen}
+        className="block w-full text-left"
+      >
+        <div className="flex items-start gap-3">
+          <div
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-muted text-2xl"
+            aria-hidden
+          >
+            {item.emoji ?? "🌾"}
+          </div>
+          <div className="min-w-0 flex-1">
+            {item.isPredictable && (
+              <div className="mb-1">
+                <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                  AI 예측
+                </span>
+              </div>
+            )}
+            <div className="truncate text-[15px] font-bold text-foreground">
+              {item.cropName}
+              {item.varietyName ? ` · ${item.varietyName}` : ""}
             </div>
-          )}
-          <div className="truncate text-[15px] font-bold text-foreground">
-            {q.category} · {q.varietyName}
+            <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
+              {item.marketName} · {item.corporationName ?? "전체 법인"}
+            </div>
+            <div className="truncate text-[12px] text-muted-foreground">
+              {item.originName ?? "전체 산지"} · {item.unit} 기준
+              {item.grade ? ` · ${item.grade}` : ""}
+            </div>
           </div>
-          <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
-            {q.marketName} · {q.corporation}
-          </div>
-          <div className="truncate text-[12px] text-muted-foreground">
-            {q.origin} · {q.unitLabel} 기준
-          </div>
-        </div>
-
-        <div className="flex shrink-0 items-center gap-0.5">
           <button
             type="button"
-            onClick={onRemove}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
             aria-label="즐겨찾기에서 제거"
-            className="grid h-8 w-8 place-items-center rounded-full text-amber-500"
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-amber-500"
           >
             <Star className="h-5 w-5 fill-amber-400" />
           </button>
-          <button
-            type="button"
-            aria-label="더 보기"
-            className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground"
-          >
-            <MoreVertical className="h-4 w-4" />
-          </button>
         </div>
-      </div>
 
-      {/* Price row */}
-      <div className="mt-3 flex items-end justify-between gap-3 border-t border-border/60 pt-3">
-        <div className="min-w-0">
-          <div className="font-data text-[20px] font-bold leading-none tabular-nums text-foreground">
-            {q.price.toLocaleString()}
-            <span className="ml-1 text-[12px] font-medium text-muted-foreground">
-              원 / {q.unitLabel}
-            </span>
-          </div>
-          <div className="mt-1.5 text-[11px] text-muted-foreground">
-            최근 거래 {q.lastAuctionAt}
-          </div>
-        </div>
-        <div className="flex shrink-0 flex-col items-end gap-1">
-          <span
-            className={cn(
-              "inline-flex items-center whitespace-nowrap rounded-md px-2 py-1 text-[12px] font-bold tabular-nums",
-              flat
-                ? "bg-muted text-muted-foreground"
-                : rising
-                  ? "bg-[#FFE3E3] text-[#E03131]"
-                  : "bg-[#DBE4FF] text-[#1971C2]",
+        <div className="mt-3 flex items-end justify-between gap-3 border-t border-border/60 pt-3">
+          <div className="min-w-0">
+            <div className="font-data text-[20px] font-bold leading-none tabular-nums text-foreground">
+              {(item.price ?? 0).toLocaleString()}
+              <span className="ml-1 text-[12px] font-medium text-muted-foreground">
+                원 / {item.unit}
+              </span>
+            </div>
+            {item.kgPrice != null && item.kgPrice !== item.price && (
+              <div className="mt-1 text-[11.5px] text-muted-foreground">
+                kg당 {item.kgPrice.toLocaleString()}원
+              </div>
             )}
-          >
-            {flat ? "— 0.0%" : `${rising ? "▲ +" : "▼ "}${q.changePct.toFixed(1)}%`}
-          </span>
-          <span className="text-[10.5px] text-muted-foreground">전일 대비</span>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        <Link
-          to="/price/$variety"
-          params={{ variety: q.cropId }}
-          className="grid h-9 place-items-center rounded-lg border border-primary text-[13px] font-bold text-primary"
-        >
-          시세 보기
-        </Link>
-        <Link
-          to="/price/$variety"
-          params={{ variety: q.cropId }}
-          hash="auctions"
-          className="grid h-9 place-items-center rounded-lg border border-primary text-[13px] font-bold text-primary"
-        >
-          최근 경매
-        </Link>
-      </div>
-    </li>
-  );
-}
-
-/* -------------------- Edit view -------------------- */
-
-function EditView({
-  draft,
-  onReorder,
-  selected,
-  toggleSelect,
-}: {
-  draft: WatchItem[];
-  onReorder: (ids: string[]) => void;
-  selected: Set<string>;
-  toggleSelect: (id: string) => void;
-}) {
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } }),
-  );
-
-  const onDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e;
-    if (!over || active.id === over.id) return;
-    const oldIndex = draft.findIndex((q) => q.id === active.id);
-    const newIndex = draft.findIndex((q) => q.id === over.id);
-    if (oldIndex < 0 || newIndex < 0) return;
-    onReorder(arrayMove(draft, oldIndex, newIndex).map((q) => q.id));
-  };
-
-  return (
-    <>
-      <div className="px-4 pt-3 text-[13px] font-semibold text-primary">
-        {selected.size}개 선택됨
-      </div>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-        <SortableContext items={draft.map((q) => q.id)} strategy={verticalListSortingStrategy}>
-          <ul className="space-y-2 px-4 py-3">
-            {draft.map((q) => (
-              <SortableEditCard
-                key={q.id}
-                q={q}
-                checked={selected.has(q.id)}
-                onCheck={() => toggleSelect(q.id)}
-              />
-            ))}
-          </ul>
-        </SortableContext>
-      </DndContext>
-    </>
-  );
-}
-
-function SortableEditCard({
-  q,
-  checked,
-  onCheck,
-}: {
-  q: WatchItem;
-  checked: boolean;
-  onCheck: () => void;
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: q.id,
-  });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-  const rising = q.changePct >= 0;
-  const flat = Math.abs(q.changePct) < 0.05;
-
-  return (
-    <li
-      ref={setNodeRef}
-      style={style}
-      className={cn(
-        "rounded-2xl border border-border bg-background p-3",
-        isDragging ? "z-10 shadow-lg" : "shadow-[0_1px_2px_rgba(0,0,0,0.03)]",
-      )}
-    >
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onCheck}
-          aria-pressed={checked}
-          aria-label={checked ? "선택 해제" : "선택"}
-          className={cn(
-            "grid h-6 w-6 shrink-0 place-items-center rounded-md border",
-            checked
-              ? "border-primary bg-primary text-primary-foreground"
-              : "border-input bg-background",
-          )}
-        >
-          {checked && <Check className="h-4 w-4" strokeWidth={3} />}
-        </button>
-
-        <div
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-muted text-2xl"
-          aria-hidden
-        >
-          {q.emoji}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-[14px] font-bold text-foreground">
-            {q.category} · {q.varietyName}
+            {item.updatedAt && (
+              <div className="mt-1 text-[11px] text-muted-foreground">
+                {item.updatedAt} 업데이트
+              </div>
+            )}
+            {(item.auctionCount != null || item.totalVolume != null) && (
+              <div className="mt-0.5 text-[11px] text-muted-foreground">
+                {item.auctionCount != null ? `경매 ${item.auctionCount}건` : ""}
+                {item.auctionCount != null && item.totalVolume != null ? " · " : ""}
+                {item.totalVolume != null
+                  ? `거래량 ${item.totalVolume.toLocaleString()}t`
+                  : ""}
+              </div>
+            )}
           </div>
-          <div className="mt-0.5 truncate text-[11.5px] text-muted-foreground">
-            {q.marketName} · {q.unitLabel} 기준
-          </div>
-          <div className="mt-1 flex items-center gap-2">
-            <span className="font-data text-[13px] font-bold tabular-nums text-foreground">
-              {q.price.toLocaleString()}
-              <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">원</span>
-            </span>
+          <div className="flex shrink-0 flex-col items-end gap-1">
             <span
               className={cn(
-                "rounded-md px-1.5 py-0.5 text-[10.5px] font-bold tabular-nums",
+                "inline-flex items-center whitespace-nowrap rounded-md px-2 py-1 text-[12px] font-bold tabular-nums",
                 flat
                   ? "bg-muted text-muted-foreground"
                   : rising
@@ -709,57 +313,39 @@ function SortableEditCard({
                     : "bg-[#DBE4FF] text-[#1971C2]",
               )}
             >
-              {flat ? "0.0%" : `${rising ? "+" : ""}${q.changePct.toFixed(1)}%`}
+              {flat
+                ? "— 0.0%"
+                : `${rising ? "▲ +" : "▼ "}${(item.changeRate ?? 0).toFixed(1)}%`}
             </span>
+            <span className="text-[10.5px] text-muted-foreground">전일 대비</span>
           </div>
         </div>
-
-        <button
-          type="button"
-          aria-label="순서 변경"
-          className="grid h-10 w-9 shrink-0 cursor-grab touch-none place-items-center rounded-md text-muted-foreground active:cursor-grabbing"
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical className="h-5 w-5" />
-        </button>
-      </div>
+      </button>
     </li>
   );
 }
 
-/* -------------------- Empty -------------------- */
-
-function EmptyState({ hasAny }: { hasAny: boolean }) {
+function EmptyState() {
   return (
     <div className="flex flex-col items-center px-6 pb-16 pt-20 text-center">
       <Star
-        className="mb-5"
+        className="mb-5 text-[#B2DFB2]"
         size={48}
-        color="hsl(var(--muted))"
-        fill="hsl(var(--muted))"
         strokeWidth={1.5}
       />
       <h3 className="text-[16px] font-bold text-foreground">
-        {hasAny ? "조건에 맞는 즐겨찾기가 없어요" : "즐겨찾기가 없어요"}
+        저장한 시세 조건이 아직 없어요
       </h3>
-      <p className="mt-2 text-[13px] text-muted-foreground">
-        {hasAny
-          ? "검색어나 필터를 바꿔서 다시 확인해보세요"
-          : "시세 화면에서 별표를 눌러 조건을 저장해보세요"}
+      <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+        시세 화면에서 별표를 누르면 자주 보는 작물과<br />
+        시장 조건을 여기에 모아볼 수 있어요.
       </p>
-      {!hasAny && (
-        <Link
-          to="/crop-select"
-          search={{ from: "watchlist", return: "/watchlist" }}
-          className="mt-6 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-[14px] font-bold text-primary-foreground"
-        >
-          작물 찾아보기
-        </Link>
-      )}
+      <Link
+        to="/market"
+        className="mt-6 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-[14px] font-bold text-primary-foreground"
+      >
+        시세 보러가기
+      </Link>
     </div>
   );
 }
-
-// Preload crops for tree-shaking safety
-void CROPS;

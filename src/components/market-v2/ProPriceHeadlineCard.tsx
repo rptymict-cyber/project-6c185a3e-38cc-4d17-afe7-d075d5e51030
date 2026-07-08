@@ -6,7 +6,10 @@ import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/mock/market-analysis";
 import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
+import { getCrop } from "@/lib/mock/crops";
 import { UnitSheet } from "./UnitSheet";
 
 const EMOJI: Record<string, string> = {
@@ -46,10 +49,19 @@ export function ProPriceHeadlineCard({
   const flat = quote.prevPct === 0;
   const changeColor = flat ? "text-[#6C757D]" : up ? "text-[#E03131]" : "text-[#1971C2]";
   const [unitOpen, setUnitOpen] = useState(false);
-  const isFav = useWatchlist((s) => s.crops.includes(itemId));
-  const toggleCrop = useWatchlist((s) => s.toggleCrop);
-  const navigate = useNavigate();
   const marketId = useMarketFilter((s) => s.marketId);
+  const corpId = useMarketFilter((s) => s.corpId);
+  const corpLabel = useMarketFilter((s) => s.corpLabel);
+  const favKey = favoriteKey({
+    cropId: itemId,
+    varietyId,
+    marketId,
+    corporationId: corpId === "all" ? undefined : corpId,
+    unit: quote.unit,
+  });
+  const isFav = useFavoritePriceStore((s) => s.items.some((it) => it.id === favKey));
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
+  const navigate = useNavigate();
   const hasAlert = useAlerts((s) => s.hasAnyFor(varietyId, marketId));
   const existingRule = useAlerts((s) => s.getByKey(varietyId, marketId));
 
@@ -66,7 +78,25 @@ export function ProPriceHeadlineCard({
             <button
               type="button"
               onClick={() => {
-                const added = toggleCrop(itemId);
+                const crop = getCrop(itemId);
+                const added = toggleFavorite(
+                  fromMarketQuote({
+                    itemId,
+                    itemName: itemLabel,
+                    emoji,
+                    varietyId,
+                    varietyName: varietyLabel,
+                    marketId,
+                    marketName: marketLabel,
+                    corporationId: corpId === "all" ? undefined : corpId,
+                    corporationName: corpLabel,
+                    unit: quote.unit,
+                    quote,
+                    isPredictable: Boolean(
+                      crop?.isPredictable && crop.predictionStatus === "available",
+                    ),
+                  }),
+                );
                 toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 제거했어요");
               }}
               aria-label="즐겨찾기"

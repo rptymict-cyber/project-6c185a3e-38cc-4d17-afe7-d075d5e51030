@@ -9,7 +9,9 @@ import { PriceVolumeChart } from "@/components/price-volume-chart";
 import { StarToggle } from "@/components/star-toggle";
 import { getCrop, seriesFor } from "@/lib/mock/crops";
 import { useUi } from "@/store/ui";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromCrop } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/market/$crop")({
@@ -38,8 +40,12 @@ function CropDetail() {
   const crop = getCrop(cropId);
   const period = useUi((s) => s.period);
   const setPeriod = useUi((s) => s.setPeriod);
-  const watched = useWatchlist((s) => s.crops.includes(cropId));
-  const toggle = useWatchlist((s) => s.toggleCrop);
+  const favItem = crop ? fromCrop(crop) : null;
+  const favId = favItem ? favoriteKey(favItem) : "";
+  const watched = useFavoritePriceStore((s) =>
+    favId ? s.items.some((it) => it.id === favId) : false,
+  );
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
   const router = useRouter();
 
   const series = useMemo(() => (crop ? seriesFor(crop.id, period) : []), [crop, period]);
@@ -76,7 +82,8 @@ function CropDetail() {
               <StarToggle
                 active={watched}
                 onClick={() => {
-                  const added = toggle(cropId);
+                  if (!favItem) return;
+                  const added = toggleFavorite(favItem);
                   toast(added ? "즐겨찾기에 추가되었습니다 ★" : "즐겨찾기에서 제거되었습니다");
                 }}
               />

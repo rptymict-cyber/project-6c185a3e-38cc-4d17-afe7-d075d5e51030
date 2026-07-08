@@ -21,7 +21,9 @@ import {
 } from "@/lib/mock/variety-detail";
 import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
 
 
@@ -94,14 +96,35 @@ function VarietyDetailPage() {
   const [tab, setTab] = useState<Tab>("chart");
   const [period, setPeriod] = useState<DetailPeriod>("1w");
 
-  const starred = useWatchlist((s) => s.crops.includes(variety));
-  const toggleCrop = useWatchlist((s) => s.toggleCrop);
-  const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
-  const existingRule = useAlerts((s) => s.getByKey(variety, f.marketId));
   const crop = getCrop(f.itemId);
   const isPredictable = Boolean(
     crop?.isPredictable && crop.predictionStatus === "available",
   );
+  const favInput = {
+    itemId: f.itemId,
+    itemName: f.itemLabel,
+    emoji,
+    varietyId: variety,
+    varietyName: f.varietyLabel,
+    marketId: f.marketId,
+    marketName: f.marketLabel,
+    corporationId: f.corpId === "all" ? undefined : f.corpId,
+    corporationName: f.corpLabel,
+    unit: quote.unit,
+    quote,
+    isPredictable,
+  };
+  const favId = favoriteKey({
+    cropId: f.itemId,
+    varietyId: variety,
+    marketId: f.marketId,
+    corporationId: f.corpId === "all" ? undefined : f.corpId,
+    unit: quote.unit,
+  });
+  const starred = useFavoritePriceStore((s) => s.items.some((it) => it.id === favId));
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
+  const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
+  const existingRule = useAlerts((s) => s.getByKey(variety, f.marketId));
 
 
   const up = quote.prevPct > 0;
@@ -125,7 +148,7 @@ function VarietyDetailPage() {
             <button
               aria-label="즐겨찾기"
               onClick={() => {
-                const added = toggleCrop(variety);
+                const added = toggleFavorite(fromMarketQuote(favInput));
                 toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
               }}
               className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
