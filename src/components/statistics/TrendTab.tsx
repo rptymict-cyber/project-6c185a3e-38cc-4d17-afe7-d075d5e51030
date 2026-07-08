@@ -22,8 +22,9 @@ import { cn } from "@/lib/utils";
 
 const PERIODS: { id: TrendPeriod; label: string }[] = [
   { id: "1w", label: "1주" },
-  { id: "1m", label: "1달" },
-  { id: "3m", label: "3달" },
+  { id: "2w", label: "2주" },
+  { id: "1m", label: "1개월" },
+  { id: "3m", label: "3개월" },
   { id: "1y", label: "1년" },
   { id: "5y", label: "5년" },
 ];
