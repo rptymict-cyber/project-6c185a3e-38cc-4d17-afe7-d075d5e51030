@@ -367,7 +367,7 @@ function Step1Category({
 
 
       {q.trim() ? (
-        <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+        <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
           {results.length === 0 ? (
             <div className="px-4 py-8 text-center text-sm text-gray-500">
               검색 결과가 없어요.
@@ -402,7 +402,7 @@ function Step1Category({
           )}
         </div>
       ) : (
-        <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+        <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
           <ul>
             {categories.map((c) => {
               const count = getItemsByCategory(c.id).length;
@@ -547,7 +547,7 @@ function Step3Variety({
       {selectionCards}
 
 
-      <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+      <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
         <ul>
           {rows.map((r) => {
             const selected = selectedVarietyId === r.id;
