@@ -43,7 +43,7 @@ export const Route = createFileRoute("/crop-select")({
  * 새 화면을 추가할 때 여기에 매핑만 추가하면 된다.
  */
 const CTA_LABEL_BY_FROM: Record<string, string> = {
-  market: "시세 보기",
+  market: "확인",
   statistics: "통계 보기",
   watchlist: "즐겨찾기에 추가",
   prediction: "예측 보기",
