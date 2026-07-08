@@ -16,6 +16,7 @@ import {
 } from "@/features/prediction/mockPredictionData";
 import type { PredictionRangeDays } from "@/features/prediction/types";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 interface PredictionSearch {
   cropId?: string;
@@ -106,7 +107,7 @@ function PredictionPage() {
               onClick={() => setCropSheetOpen(true)}
               className="flex min-w-0 items-center gap-2 text-left"
             >
-              <span className="text-[28px] leading-none">{prediction.emoji}</span>
+              <CropIcon name={prediction.cropName} size={32} />
               <div className="min-w-0">
                 <div className="flex items-center gap-1 text-[16px] font-bold text-foreground">
                   {prediction.cropName}

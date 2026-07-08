@@ -12,6 +12,7 @@ import {
   type SearchResult,
 } from "@/lib/catalog-service";
 import { useCropSelection } from "@/store/cropSelection";
+import { CropIcon } from "@/components/crop-icon";
 
 type Step = 1 | 2 | 3;
 
@@ -413,7 +414,7 @@ function Step1Category({
                     className="flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-3.5 text-left last:border-b-0 active:bg-gray-50"
                   >
                     <span className="flex items-center gap-3">
-                      <span className="text-xl">{c.emoji}</span>
+                      <CropIcon categoryId={c.id} size={24} />
                       <span className="text-sm font-medium text-gray-900">
                         {c.name}
                       </span>
@@ -479,7 +480,7 @@ function Step2Item({
                     )}
                   >
                     <span className="flex items-center gap-3">
-                      <span className="text-xl">{it.emoji}</span>
+                      <CropIcon name={it.name} size={24} />
                       <span
                         className={cn(
                           "text-sm font-medium",

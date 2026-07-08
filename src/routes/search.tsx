@@ -4,6 +4,7 @@ import { ArrowLeft, Search as SearchIcon, X, TrendingUp } from "lucide-react";
 import { CATEGORIES, CROPS, type Crop } from "@/lib/mock/crops";
 import { MARKETS, type Market } from "@/lib/mock/markets";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 export const Route = createFileRoute("/search")({
   component: SearchPage,
@@ -161,8 +162,8 @@ function SearchPage() {
                           onClick={() => openCrop(c)}
                           className="flex w-full items-center gap-3 px-4 py-3 text-left"
                         >
-                          <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface text-[18px]">
-                            {c.emoji}
+                          <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface">
+                            <CropIcon name={c.name} size={22} />
                           </span>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
@@ -285,7 +286,7 @@ function SearchPage() {
                     onClick={() => openCrop(c)}
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-[13px] font-semibold text-foreground"
                   >
-                    <span>{c.emoji}</span>
+                    <CropIcon name={c.name} size={16} />
                     {c.name}
                   </button>
                 ))}

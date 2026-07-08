@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import type { Crop } from "@/lib/mock/crops";
+import { CropIcon } from "@/components/crop-icon";
 
 function changeInfo(c: Crop) {
   const pct = ((c.currentPrice - c.prevPrice) / c.prevPrice) * 100;
@@ -22,6 +23,7 @@ export function CropPriceCard({ crop, grade = "특" }: { crop: Crop; grade?: str
       className="block w-[168px] shrink-0 rounded-2xl bg-white p-3 shadow-[0_1px_4px_rgba(0,0,0,0.06)] ring-1 ring-[#F1F3F5]"
     >
       <div className="flex items-center gap-1.5">
+        <CropIcon name={crop.name} size={22} />
         <span className="text-[14px] font-bold text-foreground">{crop.name}</span>
         <span className="rounded bg-[#F1F3F5] px-1 py-0.5 text-[10px] font-medium text-[#6C757D]">
           {grade}

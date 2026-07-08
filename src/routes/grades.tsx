@@ -3,6 +3,7 @@ import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { CROPS } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 export const Route = createFileRoute("/grades")({
   component: GradesPage,
@@ -31,7 +32,7 @@ function GradesPage() {
             return (
               <li key={c.id} className="rounded-[10px] bg-surface p-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">{c.emoji}</span>
+                  <CropIcon name={c.name} size={22} />
                   <span className="text-[15px] font-bold">{c.name}</span>
                   <span className="ml-auto text-[11px] text-muted-foreground">
                     {c.updatedAt}

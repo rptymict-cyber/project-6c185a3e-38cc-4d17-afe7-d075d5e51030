@@ -3,6 +3,7 @@ import { Star } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 export type RankingItem = {
   rank: number;
@@ -32,8 +33,8 @@ export function CropRankingRow({ item }: { item: RankingItem }) {
         params={{ crop: item.cropId }}
         className="flex flex-1 items-center gap-3 min-w-0"
       >
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-[20px]">
-          {item.emoji}
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F1F3F5]">
+          <CropIcon name={item.name} size={22} />
         </span>
         <div className="min-w-0 flex-1">
           <div className="truncate text-[14px] font-bold text-foreground">{item.name}</div>

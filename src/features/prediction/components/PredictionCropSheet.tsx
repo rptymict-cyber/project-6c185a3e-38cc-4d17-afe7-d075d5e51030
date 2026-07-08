@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sheet";
 import { PREDICTABLE_CROPS } from "../mockPredictionData";
 import { cn } from "@/lib/utils";
+import { CropIcon } from "@/components/crop-icon";
 
 export function PredictionCropSheet({
   open,
@@ -85,7 +86,7 @@ export function PredictionCropSheet({
                         active && "bg-[#F0F9F0]",
                       )}
                     >
-                      <span className="text-xl">{c.emoji}</span>
+                      <CropIcon name={c.name} size={24} />
                       <div className="min-w-0 flex-1">
                         <div
                           className={cn(

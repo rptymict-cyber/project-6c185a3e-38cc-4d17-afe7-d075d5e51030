@@ -1,4 +1,5 @@
 import { PriceBadge } from "@/components/price-badge";
+import { CropIcon } from "@/components/crop-icon";
 import type { TopCrop } from "./types";
 
 export function MarketCropRow({
@@ -19,9 +20,7 @@ export function MarketCropRow({
         <span className="w-5 text-center text-[13px] font-bold text-[#3A8A3A] tabular-nums">
           {rank}
         </span>
-        <span className="text-2xl" aria-hidden>
-          {crop.emoji}
-        </span>
+        <CropIcon name={crop.name} size={28} />
         <div className="min-w-0 flex-1">
           <div className="text-[15px] font-semibold text-foreground">{crop.name}</div>
           <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
