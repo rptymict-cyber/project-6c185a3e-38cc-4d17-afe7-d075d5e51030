@@ -423,7 +423,7 @@ function Step1Category({
                     className="flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-3.5 text-left last:border-b-0 active:bg-gray-50"
                   >
                     <span className="flex items-center gap-3">
-                      <CropIcon categoryId={c.id} size={24} />
+                      <CropIcon iconKey={c.iconKey} size={24} />
                       <span className="text-sm font-medium text-gray-900">
                         {c.name}
                       </span>
