@@ -6,7 +6,10 @@ import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/mock/market-analysis";
 import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
-import { useWatchlist } from "@/store/watchlist";
+import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
+import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
+import { favoriteKey } from "@/features/favorites/favoriteKey";
+import { getCrop } from "@/lib/mock/crops";
 import { UnitSheet } from "./UnitSheet";
 
 const EMOJI: Record<string, string> = {
