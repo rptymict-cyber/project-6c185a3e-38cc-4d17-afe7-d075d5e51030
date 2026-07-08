@@ -173,7 +173,7 @@ export function RuleForm({
 
       <div className="h-28" aria-hidden />
 
-      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] border-t border-[#E9ECEF] bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 backdrop-blur">
+      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] border-t border-[#E9ECEF] bg-background px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
         <div className="flex gap-2">
           {isEdit && (
             <button

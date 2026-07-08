@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   CartesianGrid,
   ComposedChart,
@@ -39,7 +40,7 @@ function CustomTooltip({
   );
 }
 
-export function PredictionChart({
+function PredictionChartBase({
   points,
 }: {
   points: PredictionPoint[];
@@ -142,3 +143,6 @@ export function PredictionChart({
     </div>
   );
 }
+
+export const PredictionChart = memo(PredictionChartBase);
+

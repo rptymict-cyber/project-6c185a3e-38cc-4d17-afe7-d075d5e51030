@@ -95,7 +95,7 @@ function CropDetail() {
         />
       }
       bottom={
-        <div className="fixed inset-x-0 bottom-[60px] z-30 mx-auto w-full max-w-[430px] border-t border-border bg-background/95 px-4 py-2.5 backdrop-blur">
+        <div className="fixed inset-x-0 bottom-[60px] z-30 mx-auto w-full max-w-[430px] border-t border-border bg-background px-4 py-2.5">
           <div className="flex items-center justify-between text-[12px]">
             <div>
               <span className="text-muted-foreground">총 거래량</span>
