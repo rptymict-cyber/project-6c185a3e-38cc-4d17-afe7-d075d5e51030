@@ -92,7 +92,7 @@ function PredictionPage() {
 
   if (!prediction || !cropMeta) {
     return (
-      <AppShell header={<DetailHeader title="AI 가격 예측" />}>
+      <AppShell header={<DetailHeader title="AI 가격 예측" onBack={() => window.history.back()} />}>
         <div className="grid min-h-[60vh] place-items-center px-6 text-center text-[13px] text-[#6C757D]">
           예측 정보를 불러올 수 없어요.
         </div>
@@ -113,7 +113,7 @@ function PredictionPage() {
   const isPositiveForUser = isFarmer ? priceDiff > 0 : priceDiff < 0;
 
   return (
-    <AppShell header={<DetailHeader title="AI 가격 예측" />}>
+    <AppShell header={<DetailHeader title="AI 가격 예측" onBack={() => window.history.back()} />}>
       <div className="px-4 pb-16 pt-3">
         {/* 1. 상단 조건 선택 그리드 */}
         <PredictionConditionGrid
