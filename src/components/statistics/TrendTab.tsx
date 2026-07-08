@@ -98,6 +98,7 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
   );
 
   const chartSeries = yearMode ? yearSeries : baseSeries;
+  const hasTrendData = points.length > 0;
 
   // Period summary — 최고가/최저가/평균가/총 거래량 across the anchor series.
   const anchorKey = yearMode ? "2026" : (compareIds[0] ?? "all");
