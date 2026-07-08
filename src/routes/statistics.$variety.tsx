@@ -255,20 +255,20 @@ function VarietyStatsPage() {
 
           <MarketAveragesTable data={data} onOpenMarket={openInSimpleMode} />
 
-          <div className="mt-3 px-4">
+          <div className="mt-4 mx-4 rounded-[10px] border border-[#E9ECEF] bg-[#F8F9FA] px-3 py-2.5 text-[11.5px] text-[#6C757D]">
+            시장 행을 누르면 법인별 평균가를 볼 수 있어요
+          </div>
+
+          <div className="mt-4 px-4">
             <button
               type="button"
               onClick={() => setTab("trend")}
-              className="flex w-full items-center justify-center gap-1.5 rounded-[10px] border border-[#E03131] bg-white py-3 text-[13.5px] font-bold text-[#E03131] active:bg-[#FFF5F5]"
+              className="flex w-full items-center justify-center gap-1.5 rounded-[10px] border border-[#3A8A3A] bg-white py-3 text-[13.5px] font-bold text-[#3A8A3A] active:bg-[#F0F9F0]"
             >
-              시장가격 그래프로 보기
+              가격 추이 그래프로 보기
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
-
-          <p className="mt-3 px-4 text-[11px] text-[#868E96]">
-            시장 행의 › 아이콘을 누르면 해당 시장의 경매 내역(간편 모드)으로 이동합니다.
-          </p>
         </div>
       )}
 
