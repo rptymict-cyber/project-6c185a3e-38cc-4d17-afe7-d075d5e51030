@@ -233,7 +233,7 @@ function CropSelectPage() {
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-white">
-      <Header title="작물 선택" onClose={handleClose} />
+      <Header title={pageTitle} onClose={handleClose} />
       <Stepper step={step} draft={draft} onStepClick={goStep} />
 
       <main className="flex-1 overflow-y-auto pb-40">
