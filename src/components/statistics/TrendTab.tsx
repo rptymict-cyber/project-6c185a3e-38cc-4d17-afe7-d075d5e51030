@@ -273,3 +273,24 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
     </div>
   );
 }
+
+function SummaryStat({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: "up" | "down";
+}) {
+  const color =
+    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
+  return (
+    <div>
+      <div className="text-[10.5px] font-semibold text-[#6C757D]">{label}</div>
+      <div className={cn("mt-0.5 text-[12.5px] font-black tabular-nums leading-tight", color)}>
+        {value}
+      </div>
+    </div>
+  );
+}
