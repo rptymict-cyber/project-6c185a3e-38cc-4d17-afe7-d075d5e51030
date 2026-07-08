@@ -173,7 +173,6 @@ export function DatePickerSheet({
               weekday: "text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal [&:first-child]:text-[#E03131]",
             }}
             className="p-3 pointer-events-auto [--cell-size:2.25rem]"
-            classNamesOverride={undefined as never}
           />
         </div>
 
