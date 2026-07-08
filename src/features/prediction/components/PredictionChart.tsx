@@ -40,7 +40,7 @@ function CustomTooltip({
   );
 }
 
-export function PredictionChart({
+function PredictionChartBase({
   points,
 }: {
   points: PredictionPoint[];
