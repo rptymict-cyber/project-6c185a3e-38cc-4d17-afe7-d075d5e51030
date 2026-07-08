@@ -18,6 +18,7 @@ import {
 } from "@/lib/mock/variety-trend";
 import { useTrendCompare } from "@/store/trend-compare";
 import { useMarketFilter } from "@/store/market";
+import { getCrop } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 
 const PERIODS: { id: TrendPeriod; label: string }[] = [
