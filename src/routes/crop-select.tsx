@@ -13,6 +13,7 @@ import {
   type SearchResult,
 } from "@/lib/catalog-service";
 import { useCropSelection } from "@/store/cropSelection";
+import { useMarketFilter } from "@/store/market";
 import { CropIcon } from "@/components/crop-icon";
 
 type Step = 1 | 2 | 3;
@@ -143,8 +144,30 @@ function CropSelectPage() {
   };
 
   const handleApply = () => {
-    if (!draft.varietyId) return;
+    if (!draft.varietyId || !draft.categoryId || !draft.itemId) return;
     commitDraft();
+
+    // /crop-select에서 확정한 작물을 시세 화면(useMarketFilter)과도 동기화한다.
+    // 카탈로그 코드/ID를 기준으로 라벨을 재계산해 라벨-데이터 불일치가 생기지 않게 한다.
+    const category = getCategoryById(draft.categoryId);
+    const item = getItemById(draft.itemId);
+    if (category && item) {
+      const isAll = draft.varietyId === ALL_VARIETY_ID;
+      const variety = isAll
+        ? undefined
+        : item.varieties.find((v) => v.id === draft.varietyId);
+      const varietyId = isAll ? `${item.id}:ALL` : (variety?.id ?? `${item.id}:ALL`);
+      const varietyLabel = isAll ? "전체 품종" : (variety?.name ?? "전체 품종");
+      useMarketFilter.getState().setItem({
+        categoryId: category.id,
+        categoryLabel: category.name,
+        itemId: item.id,
+        itemLabel: item.name,
+        varietyId,
+        varietyLabel,
+      });
+    }
+
     toast.success("조건을 적용했어요");
     navigate({ to: returnTo });
   };
