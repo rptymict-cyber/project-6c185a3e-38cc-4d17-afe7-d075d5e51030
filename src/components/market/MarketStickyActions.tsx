@@ -14,11 +14,11 @@ export function MarketStickyActions({ cropId }: { cropId: string }) {
         </button>
         <button
           onClick={() =>
-            navigate({ to: "/prediction", search: { crop: cropId, entrySource: "market" } as never })
+            navigate({ to: "/prediction", search: { cropId: cropId, entrySource: "market" } as never })
           }
           className="flex-1 rounded-[10px] bg-[#3A8A3A] py-3 text-[14px] font-bold text-white active:bg-[#2F6F2F]"
         >
-          예상 시세 보기
+          AI 가격 예측 보기
         </button>
       </div>
     </div>
