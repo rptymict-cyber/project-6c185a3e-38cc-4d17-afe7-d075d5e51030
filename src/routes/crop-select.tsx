@@ -193,8 +193,8 @@ function CropSelectPage() {
   );
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-gray-100">
-      <Header title={STEP_TITLE[step]} onClose={handleClose} />
+    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-white">
+      <Header title="작물 선택" onClose={handleClose} />
       <Stepper step={step} draft={draft} onStepClick={goStep} />
 
       <main className="flex-1 overflow-y-auto pb-40">
@@ -208,6 +208,7 @@ function CropSelectPage() {
         {step === 2 && (
           <Step2Item
             categoryId={draft.categoryId!}
+            selectedItemId={draft.itemId}
             onPickItem={handlePickItem}
             selectionCards={selectionCards}
           />
