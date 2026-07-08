@@ -40,8 +40,12 @@ function CropDetail() {
   const crop = getCrop(cropId);
   const period = useUi((s) => s.period);
   const setPeriod = useUi((s) => s.setPeriod);
-  const watched = useWatchlist((s) => s.crops.includes(cropId));
-  const toggle = useWatchlist((s) => s.toggleCrop);
+  const favItem = crop ? fromCrop(crop) : null;
+  const favId = favItem ? favoriteKey(favItem) : "";
+  const watched = useFavoritePriceStore((s) =>
+    favId ? s.items.some((it) => it.id === favId) : false,
+  );
+  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
   const router = useRouter();
 
   const series = useMemo(() => (crop ? seriesFor(crop.id, period) : []), [crop, period]);
