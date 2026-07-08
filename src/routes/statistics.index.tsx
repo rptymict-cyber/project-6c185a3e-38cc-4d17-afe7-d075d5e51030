@@ -12,7 +12,7 @@ import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
 
-export const Route = createFileRoute("/statistics")({
+export const Route = createFileRoute("/statistics/")({
   component: StatisticsHome,
   head: () => ({
     meta: [
