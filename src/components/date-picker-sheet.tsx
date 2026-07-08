@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { ko } from "date-fns/locale";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
 
 /**
  * 프로젝트 공용 날짜 선택 시트.
@@ -35,37 +35,9 @@ function fromISO(iso: string): Date {
   return new Date(y, (m ?? 1) - 1, d ?? 1);
 }
 
-function humanLabel(iso: string, suffix?: string): string {
+function humanLabel(iso: string): string {
   const dt = fromISO(iso);
-  const base = `${dt.getMonth() + 1}월 ${dt.getDate()}일 (${WEEK_KO[dt.getDay()]})`;
-  return suffix ? `${base} · ${suffix}` : base;
-}
-
-function shortDate(iso: string): string {
-  const dt = fromISO(iso);
-  return `${dt.getMonth() + 1}/${dt.getDate()} (${WEEK_KO[dt.getDay()]})`;
-}
-
-/** 오늘·최근 거래일·전 거래일 계산. 일요일은 휴장으로 간주. */
-function computeQuickDates(hasDataFor: (iso: string) => boolean) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayISO = toISO(today);
-
-  const findPrevTrading = (start: Date, skipSelf = false): string => {
-    const d = new Date(start);
-    if (skipSelf) d.setDate(d.getDate() - 1);
-    for (let i = 0; i < 400; i++) {
-      const iso = toISO(d);
-      if (d.getDay() !== 0 && hasDataFor(iso)) return iso;
-      d.setDate(d.getDate() - 1);
-    }
-    return toISO(start);
-  };
-
-  const recent = findPrevTrading(today, false);
-  const prev = findPrevTrading(fromISO(recent), true);
-  return { todayISO, recent, prev };
+  return `${dt.getMonth() + 1}월 ${dt.getDate()}일 (${WEEK_KO[dt.getDay()]})`;
 }
 
 export function DatePickerSheet({
@@ -77,12 +49,14 @@ export function DatePickerSheet({
 }: DatePickerSheetProps) {
   const has = hasDataFor ?? (() => true);
   const [draft, setDraft] = useState<string>(selected);
+  const [month, setMonth] = useState<Date>(selected ? fromISO(selected) : new Date());
 
   useEffect(() => {
-    if (open) setDraft(selected);
+    if (open) {
+      setDraft(selected);
+      setMonth(selected ? fromISO(selected) : new Date());
+    }
   }, [open, selected]);
-
-  const { todayISO, recent, prev } = useMemo(() => computeQuickDates(has), [has]);
 
   const commit = (iso: string, label: string) => {
     onConfirm(iso, label);
@@ -91,14 +65,14 @@ export function DatePickerSheet({
 
   const draftDate = draft ? fromISO(draft) : undefined;
 
-  const quicks = [
-    { key: "recent", iso: recent, title: "최근 거래일", sub: shortDate(recent) },
-    { key: "today", iso: todayISO, title: "오늘", sub: shortDate(todayISO) },
-    { key: "prev", iso: prev, title: "전 거래일", sub: shortDate(prev) },
-  ];
+  const goToday = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    setMonth(today);
+    setDraft(toISO(today));
+  };
 
   const isDisabled = (date: Date): boolean => {
-    // 미래 날짜와 데이터 없는 날 비활성
     const dOnly = new Date(date);
     dOnly.setHours(0, 0, 0, 0);
     const t = new Date();
@@ -122,72 +96,49 @@ export function DatePickerSheet({
           </button>
         </div>
 
-        {/* Quick buttons — commit immediately */}
-        <div className="grid grid-cols-3 gap-2 px-5 pt-4">
-          {quicks.map((q) => {
-            const active = selected === q.iso;
-            return (
-              <button
-                key={q.key}
-                onClick={() => commit(q.iso, humanLabel(q.iso, q.title))}
-                className={cn(
-                  "rounded-[10px] border px-2 py-2.5 text-center",
-                  active ? "border-[#3A8A3A] bg-[#F0F9F0]" : "border-[#E9ECEF] bg-white",
-                )}
-              >
-                <div
-                  className={cn(
-                    "text-[12px] font-semibold",
-                    active ? "text-[#1F5C1F]" : "text-[#6C757D]",
-                  )}
-                >
-                  {q.title}
-                </div>
-                <div className="mt-0.5 text-[13px] font-bold text-foreground">{q.sub}</div>
-              </button>
-            );
-          })}
+        {/* Today shortcut */}
+        <div className="flex items-center px-5 pt-3">
+          <button
+            type="button"
+            onClick={goToday}
+            className="text-[13px] font-semibold text-primary underline underline-offset-4"
+          >
+            오늘
+          </button>
         </div>
 
         {/* Calendar */}
-        <div className="mt-3 flex justify-center px-2">
+        <div className="mt-1 flex justify-center px-2">
           <Calendar
             mode="single"
+            locale={ko}
             selected={draftDate}
             onSelect={(d) => {
               if (d) setDraft(toISO(d));
             }}
-            month={draftDate}
+            month={month}
+            onMonthChange={setMonth}
             disabled={isDisabled}
-            modifiers={{
-              hasData: (date: Date) => has(toISO(date)),
-              sunday: (date: Date) => date.getDay() === 0,
-            }}
-            modifiersClassNames={{
-              hasData:
-                "after:pointer-events-none after:absolute after:bottom-1 after:left-1/2 after:h-1 after:w-1 after:-translate-x-1/2 after:rounded-full after:bg-[#3A8A3A]",
+            formatters={{
+              formatCaption: (date) => `${date.getFullYear()}년 ${date.getMonth() + 1}월`,
+              formatWeekdayName: (date) => WEEK_KO[date.getDay()],
             }}
             classNames={{
               today:
-                "bg-[#E7F5E7] text-[#1F5C1F] rounded-md data-[selected=true]:bg-transparent data-[selected=true]:text-inherit",
-              weekday: "text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal [&:first-child]:text-[#E03131]",
+                "text-primary font-bold data-[selected=true]:text-primary-foreground",
+              weekday:
+                "text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal [&:first-child]:text-[#E03131]",
             }}
-            className="p-3 pointer-events-auto [--cell-size:2.25rem]"
+            className="p-3 pointer-events-auto [--cell-size:2.5rem]"
           />
         </div>
-
-        {/* Note */}
-        <p className="px-5 pt-2 text-[11.5px] leading-relaxed text-[#868E96]">
-          점 표시는 경매 데이터가 있는 날입니다. 휴장일은 선택할 수 없습니다.
-        </p>
 
         {/* Confirm button */}
         <div className="px-5 pb-6 pt-4">
           <button
             type="button"
-            disabled={!draft || draft === selected ? false : false}
             onClick={() => draft && commit(draft, humanLabel(draft))}
-            className="w-full rounded-[12px] bg-[#3A8A3A] py-3.5 text-[14.5px] font-bold text-white active:bg-[#2F6F2F]"
+            className="w-full rounded-[12px] bg-primary py-3.5 text-[14.5px] font-bold text-primary-foreground active:opacity-90"
           >
             완료
           </button>
