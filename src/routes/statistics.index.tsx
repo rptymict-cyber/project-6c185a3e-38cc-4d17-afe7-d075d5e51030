@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import {
-  Calendar as CalendarIcon,
-  ChevronRight,
-  Layers,
-  Leaf,
-  Sprout,
-} from "lucide-react";
+import { Calendar as CalendarIcon, ChevronRight, Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
@@ -58,6 +52,11 @@ function StatisticsHome() {
         ? "전체 품종"
         : item.varieties.find((v) => v.id === committed.varietyId)?.name;
 
+  const cropLabel =
+    category && item && varietyName
+      ? `${category.name} · ${item.name} · ${varietyName}`
+      : undefined;
+
   const [date, setDate] = useState("2025-07-05");
   const [dateOpen, setDateOpen] = useState(false);
 
@@ -73,11 +72,8 @@ function StatisticsHome() {
   };
 
   return (
-    <AppShell
-      header={<AppHeader title="농산물 통계" />}
-    >
+    <AppShell header={<AppHeader title="농산물 통계" />}>
       <div className="px-4 pb-24 pt-4">
-        {/* 메인 카드 */}
         <section className="rounded-[14px] border border-[#E9ECEF] bg-white p-4">
           <h2 className="text-[16px] font-black text-foreground">농산물 가격 통계</h2>
           <p className="mt-1 text-[12.5px] text-[#6C757D]">
@@ -91,26 +87,27 @@ function StatisticsHome() {
               value={formatKoreanDate(date)}
               onClick={() => setDateOpen(true)}
             />
-            <CropFieldLink
-              icon={<Layers className="h-3.5 w-3.5" />}
-              label="부류"
-              value={category?.name}
-              placeholder="부류 선택"
-            />
-            <CropFieldLink
-              icon={<Leaf className="h-3.5 w-3.5" />}
-              label="품목"
-              value={item?.name}
-              placeholder={category ? "품목 선택" : "부류 먼저 선택"}
-              disabled={!category}
-            />
-            <CropFieldLink
-              icon={<Sprout className="h-3.5 w-3.5" />}
-              label="품종"
-              value={varietyName}
-              placeholder={item ? "품종 선택" : "품목 먼저 선택"}
-              disabled={!item}
-            />
+            <Link
+              to="/crop-select"
+              search={CROP_SELECT_SEARCH}
+              className="flex w-full items-center gap-3 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-3 text-left active:bg-[#F8F9FA]"
+            >
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-[#495057]">
+                <Sprout className="h-3.5 w-3.5" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[11px] font-medium text-[#868E96]">작물</span>
+                <span
+                  className={cn(
+                    "block truncate text-[14px] font-bold",
+                    cropLabel ? "text-foreground" : "text-[#ADB5BD]",
+                  )}
+                >
+                  {cropLabel ?? "작물 선택"}
+                </span>
+              </span>
+              <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
+            </Link>
           </div>
 
           <button
@@ -124,11 +121,10 @@ function StatisticsHome() {
                 : "bg-[#E9ECEF] text-[#ADB5BD]",
             )}
           >
-            {"통계 조회\u00a0"}
+            통계 조회
           </button>
         </section>
 
-        {/* 최근 본 통계 */}
         {recent.length > 0 && (
           <section className="mt-6">
             <div className="mb-2 flex items-baseline justify-between">
@@ -225,49 +221,5 @@ function FieldButton({
       </span>
       <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
     </button>
-  );
-}
-
-function CropFieldLink(props: {
-  icon: React.ReactNode;
-  label: string;
-  value?: string;
-  placeholder?: string;
-  disabled?: boolean;
-}) {
-  const { icon, label, value, placeholder, disabled } = props;
-  if (disabled) {
-    return (
-      <FieldButton
-        icon={icon}
-        label={label}
-        value={value}
-        placeholder={placeholder}
-        disabled
-      />
-    );
-  }
-  return (
-    <Link
-      to="/crop-select"
-      search={CROP_SELECT_SEARCH}
-      className="flex w-full items-center gap-3 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-3 text-left active:bg-[#F8F9FA]"
-    >
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-[#495057]">
-        {icon}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-[11px] font-medium text-[#868E96]">{label}</span>
-        <span
-          className={cn(
-            "block truncate text-[14px] font-bold",
-            value ? "text-foreground" : "text-[#ADB5BD]",
-          )}
-        >
-          {value ?? placeholder ?? "선택"}
-        </span>
-      </span>
-      <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
-    </Link>
   );
 }
