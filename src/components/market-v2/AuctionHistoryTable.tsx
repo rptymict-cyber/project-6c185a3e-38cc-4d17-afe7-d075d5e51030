@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, LayoutList, Table as TableIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useMarketFilter } from "@/store/market";
 import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 20;
-type ViewMode = "list" | "table";
+
+
 
 export function AuctionHistoryTable() {
   const f = useMarketFilter();
