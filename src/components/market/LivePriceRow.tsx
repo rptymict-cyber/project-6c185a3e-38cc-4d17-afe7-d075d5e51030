@@ -1,0 +1,60 @@
+import { CropIcon } from "@/components/crop-icon";
+import { PriceBadge } from "@/components/price-badge";
+import type { LivePriceRow } from "@/lib/services/live-prices";
+
+/**
+ * 거래소 앱 스타일 컬럼 정렬 행:
+ * 순위 · 아이콘 · 품목명(+시장·단위 보조) · 현재가(원/kg) · 등락률 chip · 거래량
+ */
+export function LivePriceRowItem({
+  rank,
+  row,
+  onClick,
+}: {
+  rank: number;
+  row: LivePriceRow;
+  onClick: () => void;
+}) {
+  return (
+    <li className="border-t border-[#F1F3F5] first:border-t-0">
+      <button
+        onClick={onClick}
+        className="grid w-full grid-cols-[20px_28px_1fr_auto_auto_auto] items-center gap-2 px-3 py-2.5 text-left active:bg-secondary"
+      >
+        <span className="text-center text-[12px] font-bold tabular-nums text-[#3A8A3A]">
+          {rank}
+        </span>
+        <CropIcon name={row.name} size={28} />
+        <div className="min-w-0">
+          <div className="truncate text-[14px] font-semibold text-foreground">{row.name}</div>
+          <div className="mt-0.5 truncate text-[10.5px] text-muted-foreground">
+            {row.market} · {row.unit}
+          </div>
+        </div>
+        <div className="text-right font-data text-[14px] font-bold tabular-nums text-foreground">
+          {row.pricePerKg.toLocaleString()}
+          <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">원/kg</span>
+        </div>
+        <div className="text-right">
+          <PriceBadge changePct={row.changePct} />
+        </div>
+        <div className="w-[54px] text-right text-[11px] tabular-nums text-muted-foreground">
+          {row.volumeTon.toFixed(1)}t
+        </div>
+      </button>
+    </li>
+  );
+}
+
+export function LivePriceHeader() {
+  return (
+    <div className="grid grid-cols-[20px_28px_1fr_auto_auto_auto] items-center gap-2 border-b border-[#F1F3F5] bg-[#FAFBFC] px-3 py-1.5 text-[10.5px] font-semibold text-muted-foreground">
+      <span></span>
+      <span></span>
+      <span>품목</span>
+      <span className="text-right">현재가</span>
+      <span className="w-[56px] text-right">등락률</span>
+      <span className="w-[54px] text-right">거래량</span>
+    </div>
+  );
+}

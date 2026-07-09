@@ -15,6 +15,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as PredictionRouteImport } from './routes/prediction'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketRouteImport } from './routes/market'
+import { Route as LiveRouteImport } from './routes/live'
 import { Route as GradesRouteImport } from './routes/grades'
 import { Route as DataGuideRouteImport } from './routes/data-guide'
 import { Route as CropSelectRouteImport } from './routes/crop-select'
@@ -64,6 +65,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GradesRoute = GradesRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/crop-select': typeof CropSelectRoute
   '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
+  '/live': typeof LiveRoute
   '/market': typeof MarketRouteWithChildren
   '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
@@ -204,6 +211,7 @@ export interface FileRoutesByTo {
   '/crop-select': typeof CropSelectRoute
   '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
+  '/live': typeof LiveRoute
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/crop-select': typeof CropSelectRoute
   '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
+  '/live': typeof LiveRoute
   '/market': typeof MarketRouteWithChildren
   '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/crop-select'
     | '/data-guide'
     | '/grades'
+    | '/live'
     | '/market'
     | '/notifications'
     | '/prediction'
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
     | '/crop-select'
     | '/data-guide'
     | '/grades'
+    | '/live'
     | '/prediction'
     | '/search'
     | '/settings'
@@ -313,6 +324,7 @@ export interface FileRouteTypes {
     | '/crop-select'
     | '/data-guide'
     | '/grades'
+    | '/live'
     | '/market'
     | '/notifications'
     | '/prediction'
@@ -342,6 +354,7 @@ export interface RootRouteChildren {
   CropSelectRoute: typeof CropSelectRoute
   DataGuideRoute: typeof DataGuideRoute
   GradesRoute: typeof GradesRoute
+  LiveRoute: typeof LiveRoute
   MarketRoute: typeof MarketRouteWithChildren
   NotificationsRoute: typeof NotificationsRouteWithChildren
   PredictionRoute: typeof PredictionRoute
@@ -396,6 +409,13 @@ declare module '@tanstack/react-router' {
       path: '/market'
       fullPath: '/market'
       preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/grades': {
@@ -609,6 +629,7 @@ const rootRouteChildren: RootRouteChildren = {
   CropSelectRoute: CropSelectRoute,
   DataGuideRoute: DataGuideRoute,
   GradesRoute: GradesRoute,
+  LiveRoute: LiveRoute,
   MarketRoute: MarketRouteWithChildren,
   NotificationsRoute: NotificationsRouteWithChildren,
   PredictionRoute: PredictionRoute,
