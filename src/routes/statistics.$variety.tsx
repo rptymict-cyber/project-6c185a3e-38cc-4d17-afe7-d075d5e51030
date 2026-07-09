@@ -84,22 +84,12 @@ function VarietyStatsPage() {
   const hasAlert = useAlerts((s) => s.hasAnyFor(variety, alertMarketId));
   const existingAlertRule = useAlerts((s) => s.getByKey(variety, alertMarketId));
 
-  const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
-  const setMarket = useMarketFilter((s) => s.setMarket);
-  const setMarketDate = useMarketFilter((s) => s.setDate);
   const marketLabel = useMarketFilter((s) => s.marketLabel);
   const corpLabel = useMarketFilter((s) => s.corpLabel);
   const unitLabel = useMarketFilter((s) => s.unit);
 
-  const openInSimpleMode = (marketId: string) => {
-    const market = data.regions
-      .flatMap((r) => r.markets)
-      .find((m) => m.id === marketId);
-    setSimpleMode(true);
-    setMarket(marketId, market?.name ?? "");
-    setMarketDate(data.effectiveDate, `${data.effectiveDateLabel} · 최근 거래일`);
-    navigate({ to: "/market" });
-  };
+
+
 
 
   return (
@@ -235,7 +225,7 @@ function VarietyStatsPage() {
           </div>
           <p className="mt-2 px-4 text-[11px] text-[#868E96]">* kg당 평균가 기준</p>
 
-          <MarketAveragesTable data={data} onOpenMarket={openInSimpleMode} />
+          <MarketAveragesTable data={data} />
 
           <div className="mt-4 mx-4 rounded-[10px] border border-[#E9ECEF] bg-[#F8F9FA] px-3 py-2.5 text-[11.5px] text-[#6C757D]">
             시장 행을 누르면 법인별 평균가를 볼 수 있어요

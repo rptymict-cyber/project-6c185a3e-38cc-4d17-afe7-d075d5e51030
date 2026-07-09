@@ -7,7 +7,6 @@ import {
   type TrendChartPoint,
   type TrendChartSeries,
 } from "./TrendDualChart";
-import { Switch } from "@/components/ui/switch";
 import {
   decodeSeriesId,
   getVarietyTrend,
@@ -22,13 +21,12 @@ import { getCrop } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 
 const PERIODS: { id: TrendPeriod; label: string }[] = [
-  { id: "1w", label: "1주" },
-  { id: "2w", label: "2주" },
-  { id: "1m", label: "1개월" },
-  { id: "3m", label: "3개월" },
-  { id: "1y", label: "1년" },
-  { id: "5y", label: "5년" },
+  { id: "1w", label: "일주일" },
+  { id: "2w", label: "보름" },
+  { id: "5y-w", label: "주간 5년" },
+  { id: "5y-y", label: "연간 5년" },
 ];
+
 
 type ChartView = "both" | "price" | "volume";
 const VIEW_OPTIONS: { id: ChartView; label: string }[] = [
@@ -44,9 +42,9 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const compareIds = useTrendCompare((s) => s.compareIds);
   const removeCompare = useTrendCompare((s) => s.removeCompare);
-  const yearMode = useTrendCompare((s) => s.yearMode);
-  const setYearMode = useTrendCompare((s) => s.setYearMode);
   const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
+  const yearMode = period === "5y-w";
+
 
   // Base series (non-year mode).
   const baseSeries: TrendChartSeries[] = useMemo(
@@ -180,9 +178,9 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
         )}
       </div>
 
-      {/* Period chips + year-mode toggle */}
-      <div className="mt-4 flex items-center gap-2 px-4">
-        <div className="no-scrollbar flex flex-1 gap-1.5 overflow-x-auto">
+      {/* Period chips */}
+      <div className="mt-4 px-4">
+        <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
           {PERIODS.map((p) => {
             const active = p.id === period;
             return (
@@ -200,15 +198,8 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
             );
           })}
         </div>
-        <label className="flex shrink-0 items-center gap-1.5 text-[11.5px] font-semibold text-[#495057]">
-          지난 5년
-          <Switch
-            checked={yearMode}
-            onCheckedChange={setYearMode}
-            className="data-[state=checked]:bg-[#3A8A3A]"
-          />
-        </label>
       </div>
+
 
       {/* View segmented control */}
       <div className="mt-3 px-4">
