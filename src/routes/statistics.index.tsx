@@ -124,7 +124,7 @@ function StatisticsHome() {
                 : "bg-[#E9ECEF] text-[#ADB5BD]",
             )}
           >
-            통계 보기
+            {"통계 조회\u00a0"}
           </button>
         </section>
 
