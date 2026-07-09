@@ -88,6 +88,7 @@ export const useMarketFilter = create<MarketFilterState>()(
       corpLabel: "전체",
       unit: "8kg 기준",
       simpleMode: true,
+      simpleViewMode: "table",
       proTab: "chart",
       setDate: (date, dateLabel) => set({ date, dateLabel }),
       setItem: (p) => set(p),
@@ -97,6 +98,7 @@ export const useMarketFilter = create<MarketFilterState>()(
       setUnit: (unit) => set({ unit }),
       setSimpleMode: (simpleMode) => set({ simpleMode }),
       toggleSimpleMode: () => set((s) => ({ simpleMode: !s.simpleMode })),
+      setSimpleViewMode: (simpleViewMode) => set({ simpleViewMode }),
       setProTab: (proTab) => set({ proTab }),
     }),
     {
