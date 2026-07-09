@@ -2,12 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import {
   createFileRoute,
   Link,
-  useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { Bell, Calendar, ChevronDown, ChevronRight, Star } from "lucide-react";
+import { Calendar, ChevronDown, ChevronRight } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
-import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 // AlertSettingsSheet 제거됨 — 알림 규칙은 /notifications/settings/$ruleId 통합 화면 사용
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
@@ -17,14 +15,10 @@ import { TrendTab } from "@/components/statistics/TrendTab";
 // VarietyPickerSheet는 롤백 대비로 남겨두고 여기서 import 하지 않는다.
 import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
-import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
 import { useRecentStats } from "@/store/recent-stats";
-import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
-import { fromCrop } from "@/features/favorites/favoriteMappers";
-import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
-import { CropIcon } from "@/components/crop-icon";
+
 
 export const Route = createFileRoute("/statistics/$variety")({
   component: VarietyStatsPage,
@@ -46,9 +40,8 @@ const TABS: { id: Tab; label: string }[] = [
 function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
-  const navigate = useNavigate();
+  
   const subject = resolveCropSubject(variety);
-  const crop = subject.crop;
   const pushRecent = useRecentStats((s) => s.push);
 
   // Statistics tab manages its own date state — do NOT share with market tab.
@@ -56,7 +49,6 @@ function VarietyStatsPage() {
   const [dateOpen, setDateOpen] = useState(false);
 
   const [tab, setTab] = useState<Tab>("market");
-  // alertOpen 제거됨 — 벨 아이콘은 규칙 통합 화면으로 이동
 
   useEffect(() => {
     pushRecent(variety);
@@ -67,20 +59,12 @@ function VarietyStatsPage() {
     [variety, date],
   );
 
-  const favItem = fromCrop(crop);
-  const favId = favoriteKey(favItem);
-  const starred = useFavoritePriceStore((s) =>
-    favId ? s.items.some((it) => it.id === favId) : false,
-  );
-  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
-  const alertMarketId = data?.regions[0]?.markets[0]?.id ?? "all";
-  const alertMarketLabel = data?.regions[0]?.markets[0]?.name ?? "전체";
-  const hasAlert = useAlerts((s) => s.hasAnyFor(variety, alertMarketId));
-  const existingAlertRule = useAlerts((s) => s.getByKey(variety, alertMarketId));
-
   const marketLabel = useMarketFilter((s) => s.marketLabel);
   const corpLabel = useMarketFilter((s) => s.corpLabel);
   const unitLabel = useMarketFilter((s) => s.unit);
+
+  void subject;
+
 
 
 
@@ -90,56 +74,13 @@ function VarietyStatsPage() {
     <AppShell
       header={
         <DetailHeader
+          title="시장별 가격 비교"
           onBack={() => router.history.back()}
-          center={
-            <div className="flex items-center gap-1.5">
-              <CropIcon name={crop?.name ?? subject.itemLabel} size={20} />
-              <span className="text-[15px] font-black tracking-tight text-foreground">
-                {subject.itemLabel || crop.name} 통계
-              </span>
-            </div>
-          }
-          right={
-            <>
-              <button
-                aria-label="즐겨찾기"
-                onClick={() => {
-                  const added = toggleFavorite(favItem);
-                  toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
-                }}
-                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-              >
-                <Star
-                  className={cn(
-                    "h-5 w-5",
-                    starred ? "fill-[#F59F00] text-[#F59F00]" : "text-[#868E96]",
-                  )}
-                />
-              </button>
-              <button
-                aria-label="알림 설정"
-                onClick={() => {
-                  if (existingAlertRule) {
-                    navigate({
-                      to: "/notifications/settings/$ruleId",
-                      params: { ruleId: existingAlertRule.id },
-                    });
-                  } else {
-                    navigate({
-                      to: "/notifications/settings/new",
-                      search: { varietyId: variety, marketId: alertMarketId },
-                    });
-                  }
-                }}
-                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-              >
-                <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
-              </button>
-            </>
-          }
+          right={null}
         />
       }
     >
+
       {/* Breadcrumb chip */}
       <div className="px-4 pt-4">
         <Link
@@ -249,8 +190,8 @@ function VarietyStatsPage() {
         hasDataFor={defaultTradingDayFilter}
       />
 
-      {/* 알림 설정은 /notifications/settings/$ruleId (또는 /new)로 라우팅됨 */}
-      {alertMarketLabel && null}
+
+
     </AppShell>
   );
 }

@@ -5,7 +5,7 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { Bell, ChevronRight, MoreHorizontal, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { Bell, ChevronRight, Star, TrendingDown, TrendingUp } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
@@ -138,6 +138,7 @@ function VarietyDetailPage() {
     <AppShell
       header={
         <DetailHeader
+          title="시세 상세"
           onBack={() => router.history.back()}
           right={
             <>
@@ -175,17 +176,10 @@ function VarietyDetailPage() {
               >
                 <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
               </button>
-
-              <button
-                aria-label="더보기"
-                onClick={() => toast("더보기 메뉴는 준비 중입니다")}
-                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-              >
-                <MoreHorizontal className="h-5 w-5 text-[#495057]" />
-              </button>
             </>
           }
         />
+
       }
     >
       {/* Title area */}

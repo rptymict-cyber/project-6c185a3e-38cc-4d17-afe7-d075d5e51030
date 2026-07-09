@@ -72,7 +72,7 @@ function StatisticsHome() {
   };
 
   return (
-    <AppShell header={<AppHeader title="농산물 통계" />}>
+    <AppShell header={<AppHeader title="시장별 가격 비교" />}>
       <div className="px-4 pb-24 pt-4">
         <section className="rounded-[14px] border border-[#E9ECEF] bg-white p-4">
           <h2 className="text-[16px] font-black text-foreground">농산물 가격 통계</h2>

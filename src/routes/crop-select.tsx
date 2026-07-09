@@ -55,12 +55,8 @@ const CTA_LABEL_BY_FROM: Record<string, string> = {
 const DEFAULT_CTA_LABEL = "적용하기";
 const SILENT_APPLY_FROM = new Set(["statistics", "statistics-detail"]);
 
-const PAGE_TITLE_BY_FROM: Record<string, string> = {
-  statistics: "통계 작물 선택",
-  "statistics-detail": "통계 작물 선택",
-  prediction: "예측 작물 선택",
-};
 const DEFAULT_PAGE_TITLE = "작물 선택";
+
 
 const STEP_TITLE: Record<Step, string> = {
   1: "부류 선택",
@@ -101,7 +97,7 @@ function CropSelectPage() {
 
   const returnTo = returnPath && returnPath.startsWith("/") ? returnPath : "/";
   const ctaLabel = (from && CTA_LABEL_BY_FROM[from]) ?? DEFAULT_CTA_LABEL;
-  const pageTitle = (from && PAGE_TITLE_BY_FROM[from]) ?? DEFAULT_PAGE_TITLE;
+  const pageTitle = DEFAULT_PAGE_TITLE;
 
   // 마운트 시 draft를 committed로부터 초기화
   useEffect(() => {
