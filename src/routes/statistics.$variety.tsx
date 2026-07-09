@@ -95,11 +95,10 @@ function VarietyStatsPage() {
           <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
           <ChevronDown className="ml-0.5 h-3.5 w-3.5 text-[#6C757D]" />
         </Link>
-        {/* Sub-info: 현재 선택된 시장/법인/단위 기준 */}
-        <p className="mt-2 text-[11.5px] text-[#868E96]">
-          {marketLabel} · {corpLabel === "전체" ? "전체 법인" : corpLabel} · {unitLabel}
-        </p>
+        {/* Sub-info: 통계 화면은 시장 비교이므로 특정 시장을 고정하지 않음 */}
+        <p className="mt-2 text-[11.5px] text-[#868E96]">kg당 평균가 · 경매일 기준</p>
       </div>
+
 
       {/* Tabs */}
       <div className="mt-4 border-b border-[#E9ECEF]">
