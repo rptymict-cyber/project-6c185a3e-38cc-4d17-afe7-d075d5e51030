@@ -151,15 +151,12 @@ function buildMarketAverage(
 export function getVarietyMarketAverages(params: {
   varietyId: string;
   date: string;
-}): VarietyMarketAverages | null {
+}): VarietyMarketAverages {
   const subject = resolveCropSubject(params.varietyId);
-  // 실제 통계 데이터가 있는 품목만 표시. 없으면 mock fallback을
-  // 실제처럼 노출하지 않는다.
   const crop = resolveRealCrop(params.varietyId);
-  if (!crop) return null;
 
   const { effective, label, requestedLabel, different } = resolveEffective(params.date);
-  const seed = hash(`${crop.id}:${effective}`);
+  const seed = hash(`${params.varietyId}:${crop.name}:${effective}`);
 
   const rows = MARKETS.map((m) => buildMarketAverage(crop, m, seed));
 
