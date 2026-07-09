@@ -97,7 +97,7 @@ function CropSelectPage() {
 
   const returnTo = returnPath && returnPath.startsWith("/") ? returnPath : "/";
   const ctaLabel = (from && CTA_LABEL_BY_FROM[from]) ?? DEFAULT_CTA_LABEL;
-  const pageTitle = (from && PAGE_TITLE_BY_FROM[from]) ?? DEFAULT_PAGE_TITLE;
+  const pageTitle = DEFAULT_PAGE_TITLE;
 
   // 마운트 시 draft를 committed로부터 초기화
   useEffect(() => {
