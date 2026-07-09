@@ -46,12 +46,6 @@ function Home() {
             search: { crop: id, tab: "chart" },
           });
         }}
-        onOpenAuction={() => {
-          router.navigate({
-            to: "/market",
-            search: { crop: "cabbage", tab: "auction" },
-          });
-        }}
       />
     </AppShell>
   );
