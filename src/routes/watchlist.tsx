@@ -65,7 +65,7 @@ function WatchlistPage() {
   }, [items, filter, sort, query]);
 
   return (
-    <AppShell header={<AppHeader title="농산물 시세 조회" />}>
+    <AppShell header={<AppHeader title="즐겨찾기" />}>
       <div className="px-4 pt-4">
         <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
