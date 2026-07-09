@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, LayoutList, Table as TableIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useMarketFilter } from "@/store/market";
 import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 20;
-type ViewMode = "list" | "table";
+
+
 
 export function AuctionHistoryTable() {
   const f = useMarketFilter();
@@ -23,8 +24,8 @@ export function AuctionHistoryTable() {
     [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
   );
 
-  const [view, setView] = useState<ViewMode>("list");
   const [page, setPage] = useState(1);
+
 
   const summary = useMemo(() => {
     if (all.length === 0) {
@@ -69,30 +70,13 @@ export function AuctionHistoryTable() {
         <SummaryCell label="kg당" value={`${summary.avgPerKg.toLocaleString()}원`} />
       </div>
 
-      {/* View toggle */}
-      <div className="mt-3 flex items-center justify-end">
-        <div className="inline-flex overflow-hidden rounded-[10px] border border-[#E9ECEF] bg-white">
-          <ToggleBtn active={view === "list"} onClick={() => setView("list")}>
-            <LayoutList className="h-3.5 w-3.5" /> 리스트
-          </ToggleBtn>
-          <ToggleBtn active={view === "table"} onClick={() => setView("table")}>
-            <TableIcon className="h-3.5 w-3.5" /> 표
-          </ToggleBtn>
-        </div>
-      </div>
-
-      {/* Data area */}
+      {/* Data area — table only */}
       {visible.length === 0 ? (
         <EmptyRow />
-      ) : view === "list" ? (
-        <div className="mt-3 space-y-2">
-          {visible.map((r: AuctionRecord) => (
-            <AuctionListItem key={r.id} r={r} />
-          ))}
-        </div>
       ) : (
         <AuctionTable rows={visible} />
       )}
+
 
       {page < totalPages && (
         <button
@@ -106,68 +90,8 @@ export function AuctionHistoryTable() {
   );
 }
 
-function ToggleBtn({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "flex items-center gap-1 px-3 py-1.5 text-[12px] font-semibold",
-        active ? "bg-[#1F5C1F] text-white" : "bg-white text-[#495057]",
-      )}
-    >
-      {children}
-    </button>
-  );
-}
 
-function AuctionListItem({ r }: { r: AuctionRecord }) {
-  const mmdd = r.auctionDate.slice(5).replace("-", "/");
-  const path = `${r.category} / ${r.cropName} / ${r.varietyName}`;
-  return (
-    <Link
-      to="/market/auction/$id"
-      params={{ id: r.id }}
-      className="block rounded-[12px] border border-[#E9ECEF] bg-white p-4 active:bg-[#F8F9FA]"
-    >
-      <div className="flex items-center gap-3">
-        <div className="min-w-0 flex-1">
-          {/* Row 1: path + time */}
-          <div className="flex items-center justify-between gap-2">
-            <span className="truncate text-[13px] font-bold text-[#212529]">
-              {path}
-            </span>
-            <span className="shrink-0 text-[12px] text-[#868E96]">
-              {mmdd} {r.auctionClock}
-            </span>
-          </div>
-          {/* Row 2: price + meta */}
-          <div className="mt-1.5 flex flex-wrap items-center gap-x-1 gap-y-0.5">
-            <span className="text-[15px] font-bold text-[#E03131]">
-              {r.price.toLocaleString()}원
-            </span>
-            <span className="text-[11.5px] text-[#868E96]">
-              · 수량 {r.count}건 · 규격 {r.packageLabel} · 출하지 {r.origin}
-            </span>
-          </div>
-          {/* Row 3: corporation */}
-          <div className="mt-0.5 text-[11.5px] text-[#868E96]">
-            법인 {r.corporationName}
-          </div>
-        </div>
-        <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
-      </div>
-    </Link>
-  );
-}
+
 
 function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
   return (
