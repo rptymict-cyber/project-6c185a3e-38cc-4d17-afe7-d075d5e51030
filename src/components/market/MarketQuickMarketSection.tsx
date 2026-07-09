@@ -9,7 +9,7 @@ export function MarketQuickMarketSection({
   return (
     <section className="mt-6 px-4">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-[14px] font-bold text-foreground">도매시장 빠른 조회</h3>
+        <h3 className="text-[14px] font-bold text-foreground">도매시장 조회</h3>
         <button
           onClick={() => {
             if (onMoreClick) {
