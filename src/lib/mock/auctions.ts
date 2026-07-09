@@ -86,6 +86,11 @@ export type AuctionFilter = {
 };
 
 /** Base list before secondary filters. Count varies by combination. */
+/** Shared count helper: 상단 요약과 경매내역 탭이 반드시 같은 값을 쓰도록. */
+export function countAuctions(f: AuctionFilter): number {
+  return listAuctions(f).length;
+}
+
 export function listAuctions(f: AuctionFilter): AuctionRecord[] {
   const key = `${f.itemLabel}|${f.varietyLabel}|${f.marketId}|${f.date}`;
   const rand = seeded(hash(key));
