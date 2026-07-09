@@ -70,30 +70,13 @@ export function AuctionHistoryTable() {
         <SummaryCell label="kg당" value={`${summary.avgPerKg.toLocaleString()}원`} />
       </div>
 
-      {/* View toggle */}
-      <div className="mt-3 flex items-center justify-end">
-        <div className="inline-flex overflow-hidden rounded-[10px] border border-[#E9ECEF] bg-white">
-          <ToggleBtn active={view === "list"} onClick={() => setView("list")}>
-            <LayoutList className="h-3.5 w-3.5" /> 리스트
-          </ToggleBtn>
-          <ToggleBtn active={view === "table"} onClick={() => setView("table")}>
-            <TableIcon className="h-3.5 w-3.5" /> 표
-          </ToggleBtn>
-        </div>
-      </div>
-
-      {/* Data area */}
+      {/* Data area — table only */}
       {visible.length === 0 ? (
         <EmptyRow />
-      ) : view === "list" ? (
-        <div className="mt-3 space-y-2">
-          {visible.map((r: AuctionRecord) => (
-            <AuctionListItem key={r.id} r={r} />
-          ))}
-        </div>
       ) : (
         <AuctionTable rows={visible} />
       )}
+
 
       {page < totalPages && (
         <button
