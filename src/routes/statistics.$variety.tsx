@@ -48,7 +48,7 @@ function VarietyStatsPage() {
   const [date, setDate] = useState("2025-07-05");
   const [dateOpen, setDateOpen] = useState(false);
 
-  const [tab, setTab] = useState<Tab>("market");
+  const [tab, setTab] = useState<Tab>("table");
 
   useEffect(() => {
     pushRecent(variety);
@@ -59,11 +59,8 @@ function VarietyStatsPage() {
     [variety, date],
   );
 
-  const marketLabel = useMarketFilter((s) => s.marketLabel);
-  const corpLabel = useMarketFilter((s) => s.corpLabel);
-  const unitLabel = useMarketFilter((s) => s.unit);
-
   void subject;
+
 
 
 
