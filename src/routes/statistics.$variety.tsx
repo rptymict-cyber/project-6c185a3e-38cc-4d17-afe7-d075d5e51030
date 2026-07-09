@@ -90,56 +90,13 @@ function VarietyStatsPage() {
     <AppShell
       header={
         <DetailHeader
+          title="시장별 가격 비교"
           onBack={() => router.history.back()}
-          center={
-            <div className="flex items-center gap-1.5">
-              <CropIcon name={crop?.name ?? subject.itemLabel} size={20} />
-              <span className="text-[15px] font-black tracking-tight text-foreground">
-                {subject.itemLabel || crop.name} 통계
-              </span>
-            </div>
-          }
-          right={
-            <>
-              <button
-                aria-label="즐겨찾기"
-                onClick={() => {
-                  const added = toggleFavorite(favItem);
-                  toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 삭제했어요");
-                }}
-                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-              >
-                <Star
-                  className={cn(
-                    "h-5 w-5",
-                    starred ? "fill-[#F59F00] text-[#F59F00]" : "text-[#868E96]",
-                  )}
-                />
-              </button>
-              <button
-                aria-label="알림 설정"
-                onClick={() => {
-                  if (existingAlertRule) {
-                    navigate({
-                      to: "/notifications/settings/$ruleId",
-                      params: { ruleId: existingAlertRule.id },
-                    });
-                  } else {
-                    navigate({
-                      to: "/notifications/settings/new",
-                      search: { varietyId: variety, marketId: alertMarketId },
-                    });
-                  }
-                }}
-                className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-              >
-                <Bell className={cn("h-5 w-5", hasAlert ? "text-[#3A8A3A]" : "text-[#868E96]")} />
-              </button>
-            </>
-          }
+          right={null}
         />
       }
     >
+
       {/* Breadcrumb chip */}
       <div className="px-4 pt-4">
         <Link
