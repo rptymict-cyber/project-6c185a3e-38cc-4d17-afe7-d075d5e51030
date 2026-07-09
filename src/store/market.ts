@@ -34,6 +34,7 @@ export const SORT_LABEL: Record<MarketSortKey, string> = {
 // ---------------------------------------------------------------------------
 
 export type ProTab = "chart" | "auctions" | "compare" | "company" | "origin" | "variety";
+export type SimpleViewMode = "table" | "list";
 
 export type MarketFilterState = {
   date: string;
@@ -50,6 +51,7 @@ export type MarketFilterState = {
   corpLabel: string;
   unit: string;
   simpleMode: boolean;
+  simpleViewMode: SimpleViewMode;
   proTab: ProTab;
   setDate: (iso: string, label: string) => void;
   setItem: (p: {
@@ -65,6 +67,7 @@ export type MarketFilterState = {
   setUnit: (u: string) => void;
   setSimpleMode: (v: boolean) => void;
   toggleSimpleMode: () => void;
+  setSimpleViewMode: (v: SimpleViewMode) => void;
   setProTab: (t: ProTab) => void;
 };
 
@@ -85,6 +88,7 @@ export const useMarketFilter = create<MarketFilterState>()(
       corpLabel: "전체",
       unit: "8kg 기준",
       simpleMode: true,
+      simpleViewMode: "table",
       proTab: "chart",
       setDate: (date, dateLabel) => set({ date, dateLabel }),
       setItem: (p) => set(p),
@@ -94,6 +98,7 @@ export const useMarketFilter = create<MarketFilterState>()(
       setUnit: (unit) => set({ unit }),
       setSimpleMode: (simpleMode) => set({ simpleMode }),
       toggleSimpleMode: () => set((s) => ({ simpleMode: !s.simpleMode })),
+      setSimpleViewMode: (simpleViewMode) => set({ simpleViewMode }),
       setProTab: (proTab) => set({ proTab }),
     }),
     {
