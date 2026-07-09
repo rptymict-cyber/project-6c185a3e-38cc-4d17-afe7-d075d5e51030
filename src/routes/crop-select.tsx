@@ -293,7 +293,7 @@ function CropSelectPage() {
 /* ---------- Header ---------- */
 
 function Header({ title, onClose }: { title: string; onClose: () => void }) {
-  return <DetailHeader title={title} onBack={onClose} className="bg-white" />;
+  return <DetailHeader title={title} onBack={onClose} right={null} className="bg-white" />;
 }
 
 /* ---------- Stepper ---------- */
