@@ -71,15 +71,20 @@ function VarietyStatsPage() {
     <AppShell
       header={
         <DetailHeader
-          title="시장별 가격 비교"
+          title="통계"
           onBack={() => router.history.back()}
           right={null}
         />
       }
     >
 
-      {/* Breadcrumb chip */}
+      {/* Body section title */}
       <div className="px-4 pt-4">
+        <h2 className="text-[16px] font-black text-foreground">시장별 가격 비교</h2>
+      </div>
+
+      {/* Breadcrumb chip */}
+      <div className="mt-2 px-4">
         <Link
           to="/crop-select"
           search={{
