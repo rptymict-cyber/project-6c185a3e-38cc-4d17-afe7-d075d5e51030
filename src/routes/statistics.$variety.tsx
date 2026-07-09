@@ -2,12 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import {
   createFileRoute,
   Link,
-  useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { Bell, Calendar, ChevronDown, ChevronRight, Star } from "lucide-react";
+import { Calendar, ChevronDown, ChevronRight } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
-import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 // AlertSettingsSheet 제거됨 — 알림 규칙은 /notifications/settings/$ruleId 통합 화면 사용
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
@@ -17,14 +15,10 @@ import { TrendTab } from "@/components/statistics/TrendTab";
 // VarietyPickerSheet는 롤백 대비로 남겨두고 여기서 import 하지 않는다.
 import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
-import { useAlerts } from "@/store/alerts";
 import { useMarketFilter } from "@/store/market";
 import { useRecentStats } from "@/store/recent-stats";
-import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
-import { fromCrop } from "@/features/favorites/favoriteMappers";
-import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { cn } from "@/lib/utils";
-import { CropIcon } from "@/components/crop-icon";
+
 
 export const Route = createFileRoute("/statistics/$variety")({
   component: VarietyStatsPage,
