@@ -1,14 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  Menu,
-  Sparkles,
-  BarChart2,
-  Award,
-  Bell,
-  Info,
-  ChevronRight,
-} from "lucide-react";
+import { Menu, ChevronRight, ChevronDown } from "lucide-react";
 import {
   Sheet,
   SheetClose,
@@ -17,49 +9,110 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { ComponentType } from "react";
 
-type Item = {
-  to: string;
+type Node = {
   label: string;
-  description?: string;
-  Icon: ComponentType<{ className?: string }>;
+  to?: string;
   badge?: string;
+  children?: Node[];
 };
 
-const items: Item[] = [
+// GNB 5개를 최상위 노드로, 하위 페이지를 자식 노드로 구성한 사이트맵.
+const TREE: Node[] = [
   {
-    to: "/prediction",
+    label: "홈",
+    to: "/",
+    children: [
+      { label: "실시간 시세", to: "/live" },
+      { label: "도매시장별 조회", to: "/market/wholesale" },
+      { label: "품목별 조회", to: "/market/item" },
+    ],
+  },
+  {
+    label: "시세 조회",
+    to: "/market",
+    children: [{ label: "검색", to: "/search" }],
+  },
+  {
+    label: "즐겨찾기",
+    to: "/watchlist",
+  },
+  {
+    label: "통계 (시장별 가격 비교)",
+    to: "/statistics",
+    children: [{ label: "시장별 가격 비교", to: "/compare" }],
+  },
+  {
+    label: "설정",
+    to: "/settings",
+    children: [
+      { label: "알림", to: "/notifications" },
+      { label: "알림 설정", to: "/notifications/settings" },
+      { label: "데이터 기준 안내", to: "/data-guide" },
+    ],
+  },
+  {
     label: "AI 시세 예측",
-    description: "유리한 출하·매입 시점 확인",
-    Icon: Sparkles,
+    to: "/prediction",
     badge: "Beta",
   },
   {
-    to: "/compare",
-    label: "시장별 가격 비교",
-    description: "여러 도매시장을 한눈에 비교",
-    Icon: BarChart2,
-  },
-  {
-    to: "/grades",
     label: "등급별 가격 정보",
-    description: "상·중·하 등급별 시세",
-    Icon: Award,
-  },
-  {
-    to: "/notifications/settings",
-    label: "알림 설정",
-    description: "가격 변동 알림 규칙 관리",
-    Icon: Bell,
-  },
-  {
-    to: "/data-guide",
-    label: "데이터 기준 안내",
-    description: "출처·기준일·단위 안내",
-    Icon: Info,
+    to: "/grades",
   },
 ];
+
+function TreeItem({ node, depth = 0 }: { node: Node; depth?: number }) {
+  const [open, setOpen] = useState(depth === 0);
+  const hasChildren = !!node.children?.length;
+
+  return (
+    <li>
+      <div className="flex items-center">
+        <SheetClose asChild>
+          <Link
+            to={node.to ?? "/"}
+            className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-3 py-2 hover:bg-secondary"
+            style={{ paddingLeft: 12 + depth * 14 }}
+          >
+            <span
+              className={
+                "min-w-0 flex-1 truncate " +
+                (depth === 0
+                  ? "text-[14px] font-bold text-foreground"
+                  : "text-[13px] font-medium text-foreground")
+              }
+            >
+              {node.label}
+            </span>
+            {node.badge && (
+              <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">
+                {node.badge}
+              </span>
+            )}
+            {!hasChildren && <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
+          </Link>
+        </SheetClose>
+        {hasChildren && (
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="mr-2 grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-secondary"
+            aria-label={open ? "접기" : "펼치기"}
+          >
+            {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </button>
+        )}
+      </div>
+      {hasChildren && open && (
+        <ul className="grid gap-0.5">
+          {node.children!.map((c) => (
+            <TreeItem key={c.label} node={c} depth={depth + 1} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
 
 export function AppDrawerTrigger() {
   const [open, setOpen] = useState(false);
@@ -75,7 +128,7 @@ export function AppDrawerTrigger() {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="flex w-[280px] max-w-[85vw] flex-col bg-background p-0"
+        className="flex w-[300px] max-w-[85vw] flex-col bg-background p-0"
       >
         <SheetHeader className="flex-row items-center justify-between space-y-0 border-b border-border px-4 py-3">
           <SheetTitle className="flex items-center gap-1.5 text-[15px] font-black">
@@ -85,39 +138,13 @@ export function AppDrawerTrigger() {
             AGDICT
           </SheetTitle>
         </SheetHeader>
-        <nav className="flex-1 overflow-y-auto px-2 py-3">
+        <div className="border-b border-border px-4 py-2 text-[11px] font-semibold text-muted-foreground">
+          더보기
+        </div>
+        <nav className="flex-1 overflow-y-auto px-1 py-2">
           <ul className="grid gap-0.5">
-            {items.map((it) => (
-              <li key={`${it.to}-${it.label}`}>
-                <SheetClose asChild>
-                  <Link
-                    to={it.to}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-secondary"
-                  >
-                    <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface text-primary">
-                      <it.Icon className="h-4.5 w-4.5" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex items-center gap-1.5">
-                        <span className="text-[14px] font-semibold text-foreground">
-                          {it.label}
-                        </span>
-                        {it.badge && (
-                          <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">
-                            {it.badge}
-                          </span>
-                        )}
-                      </span>
-                      {it.description && (
-                        <span className="block text-[11px] text-muted-foreground">
-                          {it.description}
-                        </span>
-                      )}
-                    </span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  </Link>
-                </SheetClose>
-              </li>
+            {TREE.map((n) => (
+              <TreeItem key={n.label} node={n} />
             ))}
           </ul>
         </nav>

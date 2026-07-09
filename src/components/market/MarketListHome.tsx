@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { Link } from "@tanstack/react-router";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
 import { PredictableCropCards } from "@/components/home/PredictableCropCards";
-import { MarketCropRow } from "./MarketCropRow";
-import { MarketQuickMarketSection } from "./MarketQuickMarketSection";
+import { RealtimeSection } from "./RealtimeSection";
+import { HomeMarketQuickSection } from "./HomeMarketQuickSection";
+import { HomeItemQuickSection } from "./HomeItemQuickSection";
 import { MarketRecentAuctionSection } from "./MarketRecentAuctionSection";
-import { TOP_CROPS } from "./types";
+import type { LiveSort } from "@/lib/services/live-prices";
 
-const SORTS = ["인기조회", "상승률", "하락률", "거래량", "가격변동"];
+const HOME_LIMIT = 5;
 
 export function MarketListHome({
   onSelectCrop,
@@ -19,15 +18,8 @@ export function MarketListHome({
   onSelectCrop: (id: string) => void;
   onOpenAuction: () => void;
 }) {
-  const [sort, setSort] = useState("상승률");
-
-  const sorted = [...TOP_CROPS].sort((a, b) => {
-    if (sort === "상승률") return b.changePct - a.changePct;
-    if (sort === "하락률") return a.changePct - b.changePct;
-    if (sort === "거래량") return b.volumeTon - a.volumeTon;
-    if (sort === "가격변동") return Math.abs(b.changePct) - Math.abs(a.changePct);
-    return 0;
-  });
+  const navigate = useNavigate();
+  const [sort, setSort] = useState<LiveSort>("up");
 
   return (
     <div className="pb-6">
@@ -42,50 +34,30 @@ export function MarketListHome({
         </Link>
       </div>
 
-
       <PredictableCropCards />
 
-      {/* 실시간 품목 시세 TOP */}
+      {/* 실시간 시세 */}
       <section className="mt-6 px-4">
-        <h3 className="mb-2 text-[14px] font-bold text-foreground">실시간 품목 시세 TOP</h3>
-        <div className="no-scrollbar mb-2 flex gap-1.5 overflow-x-auto">
-          {SORTS.map((s) => {
-            const active = s === sort;
-            return (
-              <button
-                key={s}
-                onClick={() => setSort(s)}
-                className={cn(
-                  "shrink-0 rounded-full px-3 py-1 text-[12px] font-semibold",
-                  active
-                    ? "bg-[#3A8A3A] text-white"
-                    : "bg-[#F1F3F5] text-muted-foreground",
-                )}
-              >
-                {s}
-              </button>
-            );
-          })}
+        <div className="mb-2 flex items-center justify-between">
+          <h3 className="text-[14px] font-bold text-foreground">실시간 시세</h3>
+          <button
+            onClick={() => navigate({ to: "/live", search: { sort } })}
+            className="text-[12px] font-medium text-muted-foreground"
+          >
+            더보기 ›
+          </button>
         </div>
-        <ul className="overflow-hidden rounded-[10px] bg-surface">
-          {sorted.map((c, i) => (
-            <MarketCropRow
-              key={c.id}
-              rank={i + 1}
-              crop={c}
-              onClick={() => onSelectCrop(c.id)}
-            />
-          ))}
-        </ul>
-        <button
-          onClick={() => toast("더 많은 품목은 준비 중입니다")}
-          className="mt-2 w-full rounded-[10px] border border-[#E9ECEF] bg-background py-2.5 text-[13px] font-semibold text-foreground active:bg-secondary"
-        >
-          더보기 ›
-        </button>
+        <RealtimeSection
+          sort={sort}
+          onSortChange={setSort}
+          onSelect={onSelectCrop}
+          limit={HOME_LIMIT}
+        />
       </section>
 
-      <MarketQuickMarketSection />
+      <HomeMarketQuickSection />
+      <HomeItemQuickSection />
+
       <MarketRecentAuctionSection onMore={onOpenAuction} />
 
       <DataSourceNotice />

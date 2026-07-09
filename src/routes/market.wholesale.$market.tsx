@@ -79,7 +79,7 @@ function WholesaleDetailPage() {
     <AppShell
       header={
         <DetailHeader
-          title={market.name}
+          title="도매시장별 조회"
           onBack={() => router.history.back()}
           right={
             <span className="pr-2 text-[11px] text-[#6C757D]">07/03 07:00 기준</span>
@@ -105,8 +105,14 @@ function WholesaleDetailPage() {
         </div>
       }
     >
+      {/* 선택 시장 칩 */}
+      <div className="px-4 pb-1 pt-3">
+        <span className="inline-flex items-center rounded-full bg-[#F0F9F0] px-3 py-1 text-[12px] font-semibold text-[#3A8A3A]">
+          {market.name}
+        </span>
+      </div>
       {/* 작물 칩 */}
-      <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-1 pt-3">
+      <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-1 pt-2">
         {CROP_POOL.map((c) => {
           const active = c.id === selected;
           return (

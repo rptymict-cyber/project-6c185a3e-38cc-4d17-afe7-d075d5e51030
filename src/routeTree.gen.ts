@@ -15,6 +15,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as PredictionRouteImport } from './routes/prediction'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketRouteImport } from './routes/market'
+import { Route as LiveRouteImport } from './routes/live'
 import { Route as GradesRouteImport } from './routes/grades'
 import { Route as DataGuideRouteImport } from './routes/data-guide'
 import { Route as CropSelectRouteImport } from './routes/crop-select'
@@ -29,6 +30,8 @@ import { Route as PriceVarietyRouteImport } from './routes/price.$variety'
 import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
 import { Route as MarketCropRouteImport } from './routes/market.$crop'
 import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
+import { Route as MarketWholesaleIndexRouteImport } from './routes/market.wholesale.index'
+import { Route as MarketItemIndexRouteImport } from './routes/market.item.index'
 import { Route as PriceVarietyAlertRouteImport } from './routes/price.$variety.alert'
 import { Route as NotificationsSettingsNewRouteImport } from './routes/notifications.settings.new'
 import { Route as NotificationsSettingsRuleIdRouteImport } from './routes/notifications.settings.$ruleId'
@@ -64,6 +67,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GradesRoute = GradesRouteImport.update({
@@ -137,6 +145,16 @@ const NotificationsSettingsIndexRoute =
     path: '/',
     getParentRoute: () => NotificationsSettingsRoute,
   } as any)
+const MarketWholesaleIndexRoute = MarketWholesaleIndexRouteImport.update({
+  id: '/wholesale/',
+  path: '/wholesale/',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketItemIndexRoute = MarketItemIndexRouteImport.update({
+  id: '/item/',
+  path: '/item/',
+  getParentRoute: () => MarketRoute,
+} as any)
 const PriceVarietyAlertRoute = PriceVarietyAlertRouteImport.update({
   id: '/alert',
   path: '/alert',
@@ -176,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/crop-select': typeof CropSelectRoute
   '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
+  '/live': typeof LiveRoute
   '/market': typeof MarketRouteWithChildren
   '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
@@ -196,6 +215,8 @@ export interface FileRoutesByFullPath {
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
+  '/market/item/': typeof MarketItemIndexRoute
+  '/market/wholesale/': typeof MarketWholesaleIndexRoute
   '/notifications/settings/': typeof NotificationsSettingsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -204,6 +225,7 @@ export interface FileRoutesByTo {
   '/crop-select': typeof CropSelectRoute
   '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
+  '/live': typeof LiveRoute
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
@@ -221,6 +243,8 @@ export interface FileRoutesByTo {
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
+  '/market/item': typeof MarketItemIndexRoute
+  '/market/wholesale': typeof MarketWholesaleIndexRoute
   '/notifications/settings': typeof NotificationsSettingsIndexRoute
 }
 export interface FileRoutesById {
@@ -230,6 +254,7 @@ export interface FileRoutesById {
   '/crop-select': typeof CropSelectRoute
   '/data-guide': typeof DataGuideRoute
   '/grades': typeof GradesRoute
+  '/live': typeof LiveRoute
   '/market': typeof MarketRouteWithChildren
   '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
@@ -250,6 +275,8 @@ export interface FileRoutesById {
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
+  '/market/item/': typeof MarketItemIndexRoute
+  '/market/wholesale/': typeof MarketWholesaleIndexRoute
   '/notifications/settings/': typeof NotificationsSettingsIndexRoute
 }
 export interface FileRouteTypes {
@@ -260,6 +287,7 @@ export interface FileRouteTypes {
     | '/crop-select'
     | '/data-guide'
     | '/grades'
+    | '/live'
     | '/market'
     | '/notifications'
     | '/prediction'
@@ -280,6 +308,8 @@ export interface FileRouteTypes {
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
     | '/price/$variety/alert'
+    | '/market/item/'
+    | '/market/wholesale/'
     | '/notifications/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -288,6 +318,7 @@ export interface FileRouteTypes {
     | '/crop-select'
     | '/data-guide'
     | '/grades'
+    | '/live'
     | '/prediction'
     | '/search'
     | '/settings'
@@ -305,6 +336,8 @@ export interface FileRouteTypes {
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
     | '/price/$variety/alert'
+    | '/market/item'
+    | '/market/wholesale'
     | '/notifications/settings'
   id:
     | '__root__'
@@ -313,6 +346,7 @@ export interface FileRouteTypes {
     | '/crop-select'
     | '/data-guide'
     | '/grades'
+    | '/live'
     | '/market'
     | '/notifications'
     | '/prediction'
@@ -333,6 +367,8 @@ export interface FileRouteTypes {
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
     | '/price/$variety/alert'
+    | '/market/item/'
+    | '/market/wholesale/'
     | '/notifications/settings/'
   fileRoutesById: FileRoutesById
 }
@@ -342,6 +378,7 @@ export interface RootRouteChildren {
   CropSelectRoute: typeof CropSelectRoute
   DataGuideRoute: typeof DataGuideRoute
   GradesRoute: typeof GradesRoute
+  LiveRoute: typeof LiveRoute
   MarketRoute: typeof MarketRouteWithChildren
   NotificationsRoute: typeof NotificationsRouteWithChildren
   PredictionRoute: typeof PredictionRoute
@@ -396,6 +433,13 @@ declare module '@tanstack/react-router' {
       path: '/market'
       fullPath: '/market'
       preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/grades': {
@@ -496,6 +540,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsSettingsIndexRouteImport
       parentRoute: typeof NotificationsSettingsRoute
     }
+    '/market/wholesale/': {
+      id: '/market/wholesale/'
+      path: '/wholesale'
+      fullPath: '/market/wholesale/'
+      preLoaderRoute: typeof MarketWholesaleIndexRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/item/': {
+      id: '/market/item/'
+      path: '/item'
+      fullPath: '/market/item/'
+      preLoaderRoute: typeof MarketItemIndexRouteImport
+      parentRoute: typeof MarketRoute
+    }
     '/price/$variety/alert': {
       id: '/price/$variety/alert'
       path: '/alert'
@@ -547,6 +605,8 @@ interface MarketRouteChildren {
   MarketAuctionIdRoute: typeof MarketAuctionIdRoute
   MarketItemItemRoute: typeof MarketItemItemRoute
   MarketWholesaleMarketRoute: typeof MarketWholesaleMarketRoute
+  MarketItemIndexRoute: typeof MarketItemIndexRoute
+  MarketWholesaleIndexRoute: typeof MarketWholesaleIndexRoute
 }
 
 const MarketRouteChildren: MarketRouteChildren = {
@@ -555,6 +615,8 @@ const MarketRouteChildren: MarketRouteChildren = {
   MarketAuctionIdRoute: MarketAuctionIdRoute,
   MarketItemItemRoute: MarketItemItemRoute,
   MarketWholesaleMarketRoute: MarketWholesaleMarketRoute,
+  MarketItemIndexRoute: MarketItemIndexRoute,
+  MarketWholesaleIndexRoute: MarketWholesaleIndexRoute,
 }
 
 const MarketRouteWithChildren =
@@ -609,6 +671,7 @@ const rootRouteChildren: RootRouteChildren = {
   CropSelectRoute: CropSelectRoute,
   DataGuideRoute: DataGuideRoute,
   GradesRoute: GradesRoute,
+  LiveRoute: LiveRoute,
   MarketRoute: MarketRouteWithChildren,
   NotificationsRoute: NotificationsRouteWithChildren,
   PredictionRoute: PredictionRoute,
