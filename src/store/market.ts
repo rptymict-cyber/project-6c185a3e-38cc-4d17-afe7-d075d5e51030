@@ -34,6 +34,7 @@ export const SORT_LABEL: Record<MarketSortKey, string> = {
 // ---------------------------------------------------------------------------
 
 export type ProTab = "chart" | "auctions" | "compare" | "company" | "origin" | "variety";
+export type SimpleViewMode = "table" | "list";
 
 export type MarketFilterState = {
   date: string;
@@ -50,6 +51,7 @@ export type MarketFilterState = {
   corpLabel: string;
   unit: string;
   simpleMode: boolean;
+  simpleViewMode: SimpleViewMode;
   proTab: ProTab;
   setDate: (iso: string, label: string) => void;
   setItem: (p: {
@@ -65,6 +67,7 @@ export type MarketFilterState = {
   setUnit: (u: string) => void;
   setSimpleMode: (v: boolean) => void;
   toggleSimpleMode: () => void;
+  setSimpleViewMode: (v: SimpleViewMode) => void;
   setProTab: (t: ProTab) => void;
 };
 
