@@ -55,8 +55,6 @@ export function MarketListHome({
       <HomeMarketQuickSection />
       <HomeItemQuickSection />
 
-      <MarketRecentAuctionSection onMore={onOpenAuction} />
-
       <DataSourceNotice />
     </div>
   );
