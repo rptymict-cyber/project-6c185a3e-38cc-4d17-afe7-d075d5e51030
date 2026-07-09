@@ -40,7 +40,7 @@ const TABS: { id: Tab; label: string }[] = [
 function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
-  const navigate = useNavigate();
+  
   const subject = resolveCropSubject(variety);
   const pushRecent = useRecentStats((s) => s.push);
 
