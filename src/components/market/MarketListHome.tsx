@@ -12,10 +12,8 @@ const HOME_LIMIT = 5;
 
 export function MarketListHome({
   onSelectCrop,
-  onOpenAuction,
 }: {
   onSelectCrop: (id: string) => void;
-  onOpenAuction: () => void;
 }) {
   const navigate = useNavigate();
   const [sort, setSort] = useState<LiveSort>("up");
