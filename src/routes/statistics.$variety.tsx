@@ -190,8 +190,8 @@ function VarietyStatsPage() {
         hasDataFor={defaultTradingDayFilter}
       />
 
-      {/* 알림 설정은 /notifications/settings/$ruleId (또는 /new)로 라우팅됨 */}
-      {alertMarketLabel && null}
+
+
     </AppShell>
   );
 }
