@@ -11,6 +11,7 @@ import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
 import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { getCrop } from "@/lib/mock/crops";
 import { UnitSheet } from "./UnitSheet";
+import { countAuctions } from "@/lib/mock/auctions";
 
 const EMOJI: Record<string, string> = {
   eggplant: "🍆",
@@ -52,6 +53,16 @@ export function ProPriceHeadlineCard({
   const marketId = useMarketFilter((s) => s.marketId);
   const corpId = useMarketFilter((s) => s.corpId);
   const corpLabel = useMarketFilter((s) => s.corpLabel);
+  const categoryLabel = useMarketFilter((s) => s.categoryLabel);
+  const date = useMarketFilter((s) => s.date);
+  const auctionCount = countAuctions({
+    categoryLabel,
+    itemLabel,
+    varietyLabel,
+    marketLabel,
+    marketId,
+    date,
+  });
   const favKey = favoriteKey({
     cropId: itemId,
     varietyId,
@@ -180,7 +191,7 @@ export function ProPriceHeadlineCard({
           <Stat label="전일 대비" value={fmtPct(quote.prevPct)} tone={toneOf(quote.prevPct)} />
           <Stat label="전주 대비" value={fmtPct(quote.weekPct)} tone={toneOf(quote.weekPct)} />
           <Stat label="전년 동기" value={fmtPct(quote.yearPct)} tone={toneOf(quote.yearPct)} />
-          <Stat label="경매" value={`${quote.boxes > 0 ? Math.round(quote.volumeTon * 1.6) : 0}건`} tone="neutral" />
+          <Stat label="경매" value={`${auctionCount}건`} tone="neutral" />
         </div>
 
         {/* Footer */}
