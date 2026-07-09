@@ -1,40 +1,28 @@
 import { useMemo } from "react";
-import type { VarietyMarketAverages } from "@/lib/mock/variety-market-averages";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { getMarketVolumeStats } from "@/lib/services/market-volume-stats";
 
-type Row = { id: string; name: string; volumeTon: number; pct: number };
+// 브랜드 그린 계열 그라데이션 + 기타는 회색
+const SLICE_COLORS = ["#2F7A2F", "#3A8A3A", "#5AA85A", "#82C182", "#B4DDB4"];
+const ETC_COLOR = "#CED4DA";
 
-export function VolumeByMarketTab({ data }: { data: VarietyMarketAverages }) {
-  const { rows, totalVol, marketCount, topName } = useMemo(() => {
-    const all = data.regions.flatMap((g) => g.markets);
-    const total = all.reduce((s, m) => s + m.volumeTon, 0);
-    const sorted = [...all].sort((a, b) => b.volumeTon - a.volumeTon);
-    const top = sorted.slice(0, 5);
-    const rest = sorted.slice(5);
-    const restSum = rest.reduce((s, m) => s + m.volumeTon, 0);
+export function VolumeByMarketTab({
+  varietyId,
+  date,
+}: {
+  varietyId: string;
+  date: string;
+}) {
+  const stats = useMemo(
+    () => getMarketVolumeStats({ variety: varietyId, date }),
+    [varietyId, date],
+  );
 
-    const rows: Row[] = top.map((m) => ({
-      id: m.id,
-      name: m.name,
-      volumeTon: m.volumeTon,
-      pct: total > 0 ? (m.volumeTon / total) * 100 : 0,
-    }));
-    if (restSum > 0) {
-      rows.push({
-        id: "__etc",
-        name: "기타",
-        volumeTon: Math.round(restSum * 10) / 10,
-        pct: total > 0 ? (restSum / total) * 100 : 0,
-      });
-    }
-    return {
-      rows,
-      totalVol: Math.round(total * 10) / 10,
-      marketCount: all.length,
-      topName: sorted[0]?.name ?? "-",
-    };
-  }, [data]);
-
-  const maxVol = rows.reduce((m, r) => Math.max(m, r.volumeTon), 0);
+  const chartData = stats.breakdown.map((b, i) => ({
+    name: b.market,
+    value: b.volume,
+    color: b.id === "__etc" ? ETC_COLOR : SLICE_COLORS[i % SLICE_COLORS.length],
+  }));
 
   return (
     <div className="pb-8">
@@ -45,33 +33,71 @@ export function VolumeByMarketTab({ data }: { data: VarietyMarketAverages }) {
 
       {/* Summary cards */}
       <div className="mt-3 grid grid-cols-3 gap-2 px-4">
-        <SummaryCard label="총 거래량" value={`${totalVol.toFixed(1)}t`} />
-        <SummaryCard label="거래 시장 수" value={`${marketCount}곳`} />
-        <SummaryCard label="최대 거래 시장" value={topName} small />
+        <SummaryCard label="총 거래량" value={`${stats.total.toFixed(1)}t`} />
+        <SummaryCard label="거래 시장 수" value={`${stats.marketCount}곳`} />
+        <SummaryCard label="최대 거래 시장" value={stats.topMarket} small />
       </div>
 
-      {/* Bar list */}
-      <div className="mx-4 mt-3 overflow-hidden rounded-[10px] border border-[#E9ECEF] bg-white">
-        {rows.map((r, i) => (
-          <div
-            key={r.id}
-            className={i > 0 ? "border-t border-[#F1F3F5] px-3 py-2.5" : "px-3 py-2.5"}
-          >
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="truncate text-[13px] font-bold text-foreground">{r.name}</span>
-              <span className="shrink-0 text-[12px] tabular-nums text-[#495057]">
-                <span className="font-bold text-foreground">{r.volumeTon.toFixed(1)}t</span>
-                <span className="ml-1.5 text-[#868E96]">{r.pct.toFixed(1)}%</span>
-              </span>
+      {/* Donut */}
+      <div className="mx-4 mt-3 rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-4">
+        <div className="relative mx-auto h-[200px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={chartData}
+                dataKey="value"
+                nameKey="name"
+                innerRadius={62}
+                outerRadius={92}
+                stroke="#fff"
+                strokeWidth={2}
+                isAnimationActive={false}
+              >
+                {chartData.map((d, i) => (
+                  <Cell key={i} fill={d.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+            <div className="text-[20px] font-black tabular-nums text-foreground">
+              {stats.total.toFixed(1)}t
             </div>
-            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[#F1F3F5]">
-              <div
-                className={r.id === "__etc" ? "h-full bg-[#ADB5BD]" : "h-full bg-[#3A8A3A]"}
-                style={{ width: maxVol > 0 ? `${(r.volumeTon / maxVol) * 100}%` : "0%" }}
-              />
-            </div>
+            <div className="mt-0.5 text-[11px] text-[#868E96]">총 거래량</div>
           </div>
-        ))}
+        </div>
+
+        {/* Legend list */}
+        <ul className="mt-4 divide-y divide-[#F1F3F5]">
+          {stats.breakdown.map((b, i) => {
+            const color =
+              b.id === "__etc" ? ETC_COLOR : SLICE_COLORS[i % SLICE_COLORS.length];
+            return (
+              <li
+                key={b.id}
+                className="flex items-center justify-between gap-2 py-2"
+              >
+                <div className="flex min-w-0 items-center gap-2">
+                  <span
+                    className="h-2.5 w-2.5 shrink-0 rounded-sm"
+                    style={{ backgroundColor: color }}
+                  />
+                  <span className="truncate text-[13px] font-bold text-foreground">
+                    {b.market}
+                  </span>
+                </div>
+                <span className="shrink-0 text-[12px] tabular-nums text-[#495057]">
+                  <span className="font-bold text-foreground">
+                    {b.volume.toFixed(1)}t
+                  </span>
+                  <span className="ml-1.5 text-[#868E96]">
+                    {(b.ratio * 100).toFixed(1)}%
+                  </span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       <div className="mt-4 mx-4 rounded-[10px] border border-[#E9ECEF] bg-[#F8F9FA] px-3 py-2.5 text-[11.5px] text-[#6C757D]">
