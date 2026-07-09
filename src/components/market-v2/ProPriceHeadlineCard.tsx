@@ -11,6 +11,7 @@ import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
 import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { getCrop } from "@/lib/mock/crops";
 import { UnitSheet } from "./UnitSheet";
+import { countAuctions } from "@/lib/mock/auctions";
 
 const EMOJI: Record<string, string> = {
   eggplant: "🍆",
