@@ -12,6 +12,8 @@ import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { RatePromptModal } from "../components/RatePromptModal";
+
 
 function NotFoundComponent() {
   return (
@@ -123,6 +125,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      <RatePromptModal />
       <Toaster
         position="bottom-center"
         offset={68}
@@ -138,5 +141,6 @@ function RootComponent() {
         }}
       />
     </QueryClientProvider>
+
   );
 }
