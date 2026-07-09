@@ -5,10 +5,8 @@ import { cn } from "@/lib/utils";
 
 export function MarketAveragesTable({
   data,
-  onOpenMarket,
 }: {
   data: VarietyMarketAverages;
-  onOpenMarket: (marketId: string) => void;
 }) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const toggle = (id: string) =>
@@ -58,7 +56,6 @@ export function MarketAveragesTable({
               markets={group.markets}
               expanded={expanded}
               onToggle={toggle}
-              onOpenMarket={onOpenMarket}
             />
           ))}
         </tbody>
@@ -72,13 +69,11 @@ function RegionRows({
   markets,
   expanded,
   onToggle,
-  onOpenMarket,
 }: {
   region: string;
   markets: MarketAverage[];
   expanded: Record<string, boolean>;
   onToggle: (id: string) => void;
-  onOpenMarket: (marketId: string) => void;
 }) {
   return (
     <>
@@ -98,7 +93,6 @@ function RegionRows({
             market={m}
             open={open}
             onToggle={() => onToggle(m.id)}
-            onOpenMarket={() => onOpenMarket(m.id)}
           />
         );
       })}
@@ -110,39 +104,30 @@ function MarketRowGroup({
   market,
   open,
   onToggle,
-  onOpenMarket,
 }: {
   market: MarketAverage;
   open: boolean;
   onToggle: () => void;
-  onOpenMarket: () => void;
 }) {
   return (
     <>
-      <tr className="border-t border-[#F1F3F5]">
+      <tr
+        className="cursor-pointer border-t border-[#F1F3F5] hover:bg-[#F8F9FA]"
+        onClick={onToggle}
+      >
         <td className="py-2.5 pl-1 align-middle">
           <div className="flex items-center gap-0.5">
-            <button
-              type="button"
-              onClick={onToggle}
+            <span
               aria-label={open ? "접기" : "펼치기"}
-              className="grid h-6 w-6 place-items-center rounded hover:bg-[#F1F3F5]"
+              className="grid h-6 w-6 place-items-center rounded"
             >
               {open ? (
                 <ChevronDown className="h-3.5 w-3.5 text-[#495057]" />
               ) : (
                 <ChevronRight className="h-3.5 w-3.5 text-[#495057]" />
               )}
-            </button>
+            </span>
             <span className="font-bold text-foreground">{market.name}</span>
-            <button
-              type="button"
-              onClick={onOpenMarket}
-              aria-label="경매 내역 보기"
-              className="ml-auto grid h-6 w-6 place-items-center rounded hover:bg-[#F1F3F5]"
-            >
-              <ChevronRight className="h-3.5 w-3.5 text-[#ADB5BD]" />
-            </button>
           </div>
         </td>
         <td className="py-2.5 text-right font-bold text-foreground">
@@ -181,6 +166,7 @@ function MarketRowGroup({
     </>
   );
 }
+
 
 function fmtAmount(v: number): string {
   if (v === 0) return "0";
