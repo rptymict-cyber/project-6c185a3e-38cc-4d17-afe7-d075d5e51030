@@ -149,7 +149,7 @@ function StatisticsHome() {
                       className="flex items-center gap-3 px-3 py-3"
                     >
                       <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#F1F3F5]">
-                        <CropIcon name={c.name} size={24} />
+                        <CropIcon name={c?.name ?? subject.itemLabel} size={24} />
                       </span>
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-[13.5px] font-bold text-foreground">
