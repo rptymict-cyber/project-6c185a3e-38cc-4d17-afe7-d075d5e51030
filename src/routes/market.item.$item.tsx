@@ -48,27 +48,27 @@ function ItemVarietiesPage() {
     <AppShell
       header={
         <DetailHeader
+          title="품목별 조회"
           onBack={() => router.history.back()}
-          center={
-            <div className="flex min-w-0 items-center gap-1.5">
-              <CropIcon name={item.name} size={20} />
-              <span className="truncate text-[15px] font-semibold text-foreground">
-                {item.name}
-              </span>
-              <span
-                className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-                style={{ color: "#3A8A3A", backgroundColor: "#3A8A3A1A" }}
-              >
-                {catLabel}
-              </span>
-            </div>
-          }
           right={
             <span className="pr-2 text-[11px] text-[#6C757D]">07/03 07:00 기준</span>
           }
         />
       }
     >
+      {/* 선택 품목 칩 */}
+      <div className="flex items-center gap-1.5 px-4 pt-3">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F0F9F0] px-3 py-1 text-[12px] font-semibold text-[#3A8A3A]">
+          <CropIcon name={item.name} size={16} />
+          {item.name}
+        </span>
+        <span
+          className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+          style={{ color: "#3A8A3A", backgroundColor: "#3A8A3A1A" }}
+        >
+          {catLabel}
+        </span>
+      </div>
       <div className="px-4 pt-3">
         <div className="grid grid-cols-3 rounded-[12px] bg-[#F8F9FA] px-2 py-3">
           {[
