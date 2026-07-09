@@ -228,7 +228,7 @@ function VarietyStatsPage() {
           </div>
           <p className="mt-2 px-4 text-[11px] text-[#868E96]">* kg당 평균가 기준</p>
 
-          <MarketAveragesTable data={data} onOpenMarket={openInSimpleMode} />
+          <MarketAveragesTable data={data} />
 
           <div className="mt-4 mx-4 rounded-[10px] border border-[#E9ECEF] bg-[#F8F9FA] px-3 py-2.5 text-[11.5px] text-[#6C757D]">
             시장 행을 누르면 법인별 평균가를 볼 수 있어요
