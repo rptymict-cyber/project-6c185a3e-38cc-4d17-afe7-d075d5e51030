@@ -51,19 +51,31 @@ function LivePage() {
       }
     >
       <div className="px-4 pt-3">
-        <RealtimeSection
-          sort={sort as LiveSort}
-          onSortChange={(s) => {
-            setOffset(0);
-            navigate({ search: { sort: s } });
-          }}
-          onSelect={(id) =>
-            navigate({ to: "/market", search: { crop: id, tab: "chart" } })
-          }
-          limit={0}
-          showHeaderRow={false}
-        />
-        {/* full list */}
+        <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
+          {(["up", "down", "vol"] as LiveSort[]).map((s) => {
+            const active = s === sort;
+            const label = s === "up" ? "상승률순" : s === "down" ? "하락률순" : "거래량순";
+            return (
+              <button
+                key={s}
+                onClick={() => {
+                  setOffset(0);
+                  navigate({ search: { sort: s } });
+                }}
+                className={
+                  "shrink-0 rounded-full px-3 py-1 text-[12px] font-semibold " +
+                  (active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-muted-foreground")
+                }
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-1.5 text-[10.5px] text-muted-foreground">
+          {sort === "vol" ? "전국 거래량 합계" : "전국 평균가 기준 등락률"}
+        </p>
+
         <div className="mt-2 overflow-hidden rounded-[10px] bg-surface">
           <LivePriceHeader />
           <ul>
