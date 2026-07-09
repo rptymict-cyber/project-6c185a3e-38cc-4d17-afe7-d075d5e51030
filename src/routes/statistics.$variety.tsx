@@ -177,7 +177,7 @@ function VarietyStatsPage() {
 
       {tab === "chart" && <TrendTab varietyId={variety} />}
 
-      {tab === "volume" && <VolumeByMarketTab data={data} />}
+      {tab === "volume" && <VolumeByMarketTab varietyId={variety} date={date} />}
 
 
 
