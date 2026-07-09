@@ -125,6 +125,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      <RatePromptModal />
       <Toaster
         position="bottom-center"
         offset={68}
@@ -140,5 +141,6 @@ function RootComponent() {
         }}
       />
     </QueryClientProvider>
+
   );
 }
