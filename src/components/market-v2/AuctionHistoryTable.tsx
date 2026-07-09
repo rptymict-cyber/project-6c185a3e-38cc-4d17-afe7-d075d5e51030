@@ -24,10 +24,8 @@ export function AuctionHistoryTable() {
     [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
   );
 
-  const [, setView] = useState(0);
-  void setView;
-
   const [page, setPage] = useState(1);
+
 
   const summary = useMemo(() => {
     if (all.length === 0) {
