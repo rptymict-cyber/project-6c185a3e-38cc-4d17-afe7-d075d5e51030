@@ -5,7 +5,7 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { Bell, ChevronRight, MoreHorizontal, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { Bell, ChevronRight, Star, TrendingDown, TrendingUp } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
