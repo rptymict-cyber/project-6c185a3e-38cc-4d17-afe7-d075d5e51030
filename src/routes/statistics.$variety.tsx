@@ -124,7 +124,7 @@ function VarietyStatsPage() {
         </div>
       </div>
 
-      {tab === "market" && (
+      {tab === "table" && (
         <div className="pb-6">
           {/* Date selector card (matches 시세 탭 조회 날짜 카드) */}
           <div className="px-4 pt-4">
