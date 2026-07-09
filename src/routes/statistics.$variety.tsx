@@ -7,15 +7,13 @@ import {
 import { Calendar, ChevronDown, ChevronRight } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
 import { AppShell } from "@/components/app-shell";
-// AlertSettingsSheet 제거됨 — 알림 규칙은 /notifications/settings/$ruleId 통합 화면 사용
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
 import { TrendTab } from "@/components/statistics/TrendTab";
+import { VolumeByMarketTab } from "@/components/statistics/VolumeByMarketTab";
 // NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
-// VarietyPickerSheet는 롤백 대비로 남겨두고 여기서 import 하지 않는다.
 import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
-import { useMarketFilter } from "@/store/market";
 import { useRecentStats } from "@/store/recent-stats";
 import { cn } from "@/lib/utils";
 
@@ -24,17 +22,19 @@ export const Route = createFileRoute("/statistics/$variety")({
   component: VarietyStatsPage,
   head: () => ({
     meta: [
-      { title: "품종 통계 — AGDICT" },
-      { name: "description", content: "품종별 시장 평균가와 도매법인 세부 비교." },
+      { title: "시장별 가격 비교 — AGDICT" },
+      { name: "description", content: "품종별 시장별 가격 비교와 거래량 흐름." },
     ],
   }),
 });
 
-type Tab = "market" | "trend";
+type Tab = "table" | "chart" | "volume";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "market", label: "시장별 평균가격" },
-  { id: "trend", label: "시장가격 그래프" },
+  { id: "table", label: "표로 보기" },
+  { id: "chart", label: "그래프로 보기" },
+  { id: "volume", label: "시장별 거래량" },
 ];
+
 
 
 function VarietyStatsPage() {
@@ -48,7 +48,7 @@ function VarietyStatsPage() {
   const [date, setDate] = useState("2025-07-05");
   const [dateOpen, setDateOpen] = useState(false);
 
-  const [tab, setTab] = useState<Tab>("market");
+  const [tab, setTab] = useState<Tab>("table");
 
   useEffect(() => {
     pushRecent(variety);
@@ -59,11 +59,8 @@ function VarietyStatsPage() {
     [variety, date],
   );
 
-  const marketLabel = useMarketFilter((s) => s.marketLabel);
-  const corpLabel = useMarketFilter((s) => s.corpLabel);
-  const unitLabel = useMarketFilter((s) => s.unit);
-
   void subject;
+
 
 
 
@@ -98,11 +95,10 @@ function VarietyStatsPage() {
           <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
           <ChevronDown className="ml-0.5 h-3.5 w-3.5 text-[#6C757D]" />
         </Link>
-        {/* Sub-info: 현재 선택된 시장/법인/단위 기준 */}
-        <p className="mt-2 text-[11.5px] text-[#868E96]">
-          {marketLabel} · {corpLabel === "전체" ? "전체 법인" : corpLabel} · {unitLabel}
-        </p>
+        {/* Sub-info: 통계 화면은 시장 비교이므로 특정 시장을 고정하지 않음 */}
+        <p className="mt-2 text-[11.5px] text-[#868E96]">kg당 평균가 · 경매일 기준</p>
       </div>
+
 
       {/* Tabs */}
       <div className="mt-4 border-b border-[#E9ECEF]">
@@ -128,7 +124,7 @@ function VarietyStatsPage() {
         </div>
       </div>
 
-      {tab === "market" && (
+      {tab === "table" && (
         <div className="pb-6">
           {/* Date selector card (matches 시세 탭 조회 날짜 카드) */}
           <div className="px-4 pt-4">
@@ -179,7 +175,10 @@ function VarietyStatsPage() {
         </div>
       )}
 
-      {tab === "trend" && <TrendTab varietyId={variety} />}
+      {tab === "chart" && <TrendTab varietyId={variety} />}
+
+      {tab === "volume" && <VolumeByMarketTab data={data} />}
+
 
 
       <DatePickerSheet

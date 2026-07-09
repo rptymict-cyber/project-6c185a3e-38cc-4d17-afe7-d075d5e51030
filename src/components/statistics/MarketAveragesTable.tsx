@@ -53,11 +53,12 @@ export function MarketAveragesTable({
             <RegionRows
               key={group.region}
               region={group.region}
-              markets={group.markets}
+              markets={[...group.markets].sort((a, b) => b.avgKg - a.avgKg)}
               expanded={expanded}
               onToggle={toggle}
             />
           ))}
+
         </tbody>
       </table>
     </div>
