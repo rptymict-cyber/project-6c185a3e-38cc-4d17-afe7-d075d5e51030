@@ -2,25 +2,22 @@ import { type Crop } from "./crops";
 import { resolveRealCrop } from "./crop-resolver";
 import { MARKETS } from "./markets";
 
-export type TrendPeriod = "1w" | "2w" | "1m" | "3m" | "1y" | "5y";
+export type TrendPeriod = "1w" | "2w" | "5y-w" | "5y-y";
 
 export const PERIOD_LEN: Record<TrendPeriod, number> = {
   "1w": 7,
-  "2w": 14,
-  "1m": 30,
-  "3m": 12, // weekly points
-  "1y": 12, // monthly points
-  "5y": 20, // quarterly points
+  "2w": 15,
+  "5y-w": 12, // 12 weekly points around anchor, compared across 5 years
+  "5y-y": 60, // 60 monthly points spanning the last 5 years
 };
 
 export const PERIOD_STEP_DAYS: Record<TrendPeriod, number> = {
   "1w": 1,
   "2w": 1,
-  "1m": 1,
-  "3m": 7,
-  "1y": 30,
-  "5y": 90,
+  "5y-w": 7,
+  "5y-y": 30,
 };
+
 
 export type CompareSeriesId = string; // "all" | marketId | `${marketId}:${company}`
 
