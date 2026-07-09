@@ -128,16 +128,6 @@ function StatisticsHome() {
           </button>
         </section>
 
-        {/* 안내사항 */}
-        <section className="mt-4 rounded-[12px] border border-[#E9ECEF] bg-[#F8F9FA] p-3">
-          <div className="text-[12px] font-bold text-[#495057]">안내사항</div>
-          <ul className="mt-1.5 space-y-1 text-[11.5px] leading-relaxed text-[#6C757D]">
-            <li>· 해당 통계는 도매시장 반입 가격 기준입니다.</li>
-            <li>· 가격은 선택 단위 기준 평균가격입니다.</li>
-            <li>· 통계는 데이터 제공 시점에 따라 지연될 수 있습니다.</li>
-          </ul>
-        </section>
-
         {/* 최근 본 통계 */}
         {recent.length > 0 && (
           <section className="mt-6">
