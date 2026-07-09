@@ -6,17 +6,14 @@ import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { RealtimeSection } from "./RealtimeSection";
 import { HomeMarketQuickSection } from "./HomeMarketQuickSection";
 import { HomeItemQuickSection } from "./HomeItemQuickSection";
-import { MarketRecentAuctionSection } from "./MarketRecentAuctionSection";
 import type { LiveSort } from "@/lib/services/live-prices";
 
 const HOME_LIMIT = 5;
 
 export function MarketListHome({
   onSelectCrop,
-  onOpenAuction,
 }: {
   onSelectCrop: (id: string) => void;
-  onOpenAuction: () => void;
 }) {
   const navigate = useNavigate();
   const [sort, setSort] = useState<LiveSort>("up");
@@ -57,8 +54,6 @@ export function MarketListHome({
 
       <HomeMarketQuickSection />
       <HomeItemQuickSection />
-
-      <MarketRecentAuctionSection onMore={onOpenAuction} />
 
       <DataSourceNotice />
     </div>
