@@ -147,7 +147,7 @@ function baseSeriesForSeriesId(
   const base = cropPerKg * factor;
   const len = PERIOD_LEN[period];
   const seed = hash(`${crop.id}:${seriesId}:${period}:${extraSeed}`);
-  const spread = period === "1w" ? 0.05 : period === "2w" ? 0.055 : period === "1m" ? 0.06 : period === "3m" ? 0.08 : period === "1y" ? 0.1 : 0.14;
+  const spread = period === "1w" ? 0.05 : period === "2w" ? 0.055 : period === "5y-w" ? 0.09 : 0.14;
   return seriesFor(base, len, seed, spread);
 }
 
