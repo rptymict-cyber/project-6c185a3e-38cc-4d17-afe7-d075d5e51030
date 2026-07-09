@@ -25,7 +25,7 @@ export function MarketAveragesTable({
         <thead>
           <tr className="bg-[#F8F9FA] text-[#6C757D]">
             <th className="py-2 pl-2 text-left font-semibold">시장</th>
-            <th className="py-2 text-right font-semibold">kg당 평균</th>
+            <th className="py-2 text-right font-semibold">kg당 평균가</th>
             <th className="py-2 text-right font-semibold">전일대비</th>
             <th className="py-2 text-right font-semibold">등락률</th>
             <th className="py-2 pr-2 text-right font-semibold">수량(톤)</th>
