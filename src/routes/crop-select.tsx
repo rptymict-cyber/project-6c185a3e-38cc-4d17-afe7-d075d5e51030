@@ -177,7 +177,9 @@ function CropSelectPage() {
       });
     }
 
-    toast.success("조건을 적용했어요");
+    if (!from || !SILENT_APPLY_FROM.has(from)) {
+      toast.success("조건을 적용했어요");
+    }
 
     // 통계 흐름에서는 홈으로 돌아가지 않고 선택한 작물의 통계 상세로 바로 이동한다.
     // 선택한 품종이 있으면 varietyId를 우선 사용하고, "전체 품종"이면 itemId 기준으로 이동한다.
