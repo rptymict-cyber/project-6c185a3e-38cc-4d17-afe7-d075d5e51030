@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
 import { useMarketFilter } from "@/store/market";
 import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
 import { cn } from "@/lib/utils";
+import { SimpleViewToggle } from "./SimpleViewToggle";
 
 const PAGE_SIZE = 20;
 
