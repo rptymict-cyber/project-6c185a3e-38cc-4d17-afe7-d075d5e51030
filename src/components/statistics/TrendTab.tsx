@@ -42,9 +42,9 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const compareIds = useTrendCompare((s) => s.compareIds);
   const removeCompare = useTrendCompare((s) => s.removeCompare);
-  const yearMode = useTrendCompare((s) => s.yearMode);
-  const setYearMode = useTrendCompare((s) => s.setYearMode);
   const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
+  const yearMode = period === "5y-w";
+
 
   // Base series (non-year mode).
   const baseSeries: TrendChartSeries[] = useMemo(
