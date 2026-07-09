@@ -175,9 +175,9 @@ function VarietyStatsPage() {
           onBack={() => router.history.back()}
           center={
             <div className="flex items-center gap-1.5">
-              <CropIcon name={crop.name} size={20} />
+              <CropIcon name={crop?.name ?? subject.itemLabel} size={20} />
               <span className="text-[15px] font-black tracking-tight text-foreground">
-                {crop.name} 통계
+                {crop?.name ?? subject.itemLabel} 통계
               </span>
             </div>
           }
