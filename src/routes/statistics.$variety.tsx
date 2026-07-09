@@ -91,15 +91,8 @@ function VarietyStatsPage() {
   const corpLabel = useMarketFilter((s) => s.corpLabel);
   const unitLabel = useMarketFilter((s) => s.unit);
 
-  const openInSimpleMode = (marketId: string) => {
-    const market = data.regions
-      .flatMap((r) => r.markets)
-      .find((m) => m.id === marketId);
-    setSimpleMode(true);
-    setMarket(marketId, market?.name ?? "");
-    setMarketDate(data.effectiveDate, `${data.effectiveDateLabel} · 최근 거래일`);
-    navigate({ to: "/market" });
-  };
+
+
 
 
   return (
