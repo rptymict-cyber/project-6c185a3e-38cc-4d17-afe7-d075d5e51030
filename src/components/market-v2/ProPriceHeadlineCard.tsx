@@ -53,6 +53,16 @@ export function ProPriceHeadlineCard({
   const marketId = useMarketFilter((s) => s.marketId);
   const corpId = useMarketFilter((s) => s.corpId);
   const corpLabel = useMarketFilter((s) => s.corpLabel);
+  const categoryLabel = useMarketFilter((s) => s.categoryLabel);
+  const date = useMarketFilter((s) => s.date);
+  const auctionCount = countAuctions({
+    categoryLabel,
+    itemLabel,
+    varietyLabel,
+    marketLabel,
+    marketId,
+    date,
+  });
   const favKey = favoriteKey({
     cropId: itemId,
     varietyId,
