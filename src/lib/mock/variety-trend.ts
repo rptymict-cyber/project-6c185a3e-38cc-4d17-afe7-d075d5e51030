@@ -83,11 +83,11 @@ function labelForOffset(period: TrendPeriod, iso: string): string {
   const d = new Date(iso);
   const m = d.getMonth() + 1;
   const day = d.getDate();
-  if (period === "1w" || period === "2w" || period === "1m") return `${m}/${day}`;
-  if (period === "3m") return `${m}/${day}`;
-  if (period === "1y") return `${m}월`;
-  return `${String(d.getFullYear()).slice(2)}.${m}`;
+  if (period === "1w" || period === "2w") return `${m}/${day}`;
+  if (period === "5y-w") return `${m}/${day}`;
+  return `${String(d.getFullYear()).slice(2)}.${String(m).padStart(2, "0")}`;
 }
+
 
 // -----------------------------------------------------------------------------
 // public API
