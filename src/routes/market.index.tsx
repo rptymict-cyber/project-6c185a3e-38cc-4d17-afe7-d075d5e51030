@@ -55,13 +55,7 @@ function MarketPage() {
       </div>
 
       {f.simpleMode ? (
-        <>
-          <SimpleViewToggle
-            value={f.simpleViewMode}
-            onChange={f.setSimpleViewMode}
-          />
-          {f.simpleViewMode === "table" ? <AuctionHistoryTable /> : <SimpleModeView />}
-        </>
+        f.simpleViewMode === "table" ? <AuctionHistoryTable /> : <SimpleModeView />
       ) : (
         <ProAnalysisSection />
       )}
