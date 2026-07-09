@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Star, ShieldCheck, MessageSquare, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
+import { Star, MessageSquare, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "설정 — AGDICT" },
-      { name: "description", content: "피드백, 앱 평가, 개인정보 처리방침." },
+      { name: "description", content: "피드백, 앱 평가." },
     ],
   }),
 });
@@ -47,8 +47,6 @@ function SettingsPage() {
 
         <SectionLabel className="mt-8">정보</SectionLabel>
         <div className="overflow-hidden rounded-[10px] bg-surface">
-          <PrivacyRow />
-          <div className="mx-4 h-px bg-border" />
           <div className="flex items-center justify-between px-4 py-4">
             <div>
               <div className="text-[14px] font-semibold text-foreground">
@@ -337,60 +335,6 @@ function MessageRow() {
         </div>
       </DrawerContent>
     </Drawer>
-  );
-}
-
-/* ---------------- Privacy (expand) ---------------- */
-
-function PrivacyRow() {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-3 px-4 py-4 text-left"
-      >
-        <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#F0F9F0] text-[#3A8A3A]">
-          <ShieldCheck className="h-5 w-5" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="text-[14px] font-semibold text-foreground">
-            개인정보 처리방침
-          </div>
-          <div className="text-[11px] text-muted-foreground">
-            AGDICT가 수집·이용하는 정보
-          </div>
-        </div>
-        {open ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground" />
-        ) : (
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        )}
-      </button>
-      {open && (
-        <div className="border-t border-border bg-background px-5 py-4 text-[12px] leading-relaxed text-foreground/90">
-          <p className="font-semibold">1. 수집 항목</p>
-          <p className="mt-1 text-muted-foreground">
-            AGDICT는 회원가입 없이 이용할 수 있으며, 개인을 식별할 수 있는 정보를
-            수집하지 않습니다. 즐겨찾기·설정은 기기의 로컬 저장소에만 저장됩니다.
-          </p>
-          <p className="mt-3 font-semibold">2. 이용 목적</p>
-          <p className="mt-1 text-muted-foreground">
-            제출된 피드백은 서비스 개선 목적으로만 사용됩니다.
-          </p>
-          <p className="mt-3 font-semibold">3. 데이터 보관</p>
-          <p className="mt-1 text-muted-foreground">
-            로컬 데이터는 사용자가 앱을 삭제하거나 브라우저 저장소를 지울 때 함께
-            제거됩니다.
-          </p>
-          <p className="mt-3 font-semibold">4. 문의</p>
-          <p className="mt-1 text-muted-foreground">
-            개인정보 관련 문의는 "피드백 보내기"를 통해 접수해 주세요.
-          </p>
-        </div>
-      )}
-    </>
   );
 }
 
