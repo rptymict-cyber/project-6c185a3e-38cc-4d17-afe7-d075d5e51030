@@ -72,12 +72,12 @@ function StatisticsHome() {
   };
 
   return (
-    <AppShell header={<AppHeader title="시장별 가격 비교" />}>
+    <AppShell header={<AppHeader title="통계" />}>
       <div className="px-4 pb-24 pt-4">
         <section className="rounded-[14px] border border-[#E9ECEF] bg-white p-4">
-          <h2 className="text-[16px] font-black text-foreground">농산물 가격 통계</h2>
+          <h2 className="text-[16px] font-black text-foreground">시장별 가격 비교</h2>
           <p className="mt-1 text-[12.5px] text-[#6C757D]">
-            원하는 조건을 선택하고 통계를 확인해보세요.
+            조회 날짜와 작물을 선택하면 시장별 평균가를 비교할 수 있어요.
           </p>
 
           <div className="mt-4 flex flex-col gap-2">
