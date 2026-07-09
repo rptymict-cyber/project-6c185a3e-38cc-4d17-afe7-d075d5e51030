@@ -191,7 +191,7 @@ export function ProPriceHeadlineCard({
           <Stat label="전일 대비" value={fmtPct(quote.prevPct)} tone={toneOf(quote.prevPct)} />
           <Stat label="전주 대비" value={fmtPct(quote.weekPct)} tone={toneOf(quote.weekPct)} />
           <Stat label="전년 동기" value={fmtPct(quote.yearPct)} tone={toneOf(quote.yearPct)} />
-          <Stat label="경매" value={`${quote.boxes > 0 ? Math.round(quote.volumeTon * 1.6) : 0}건`} tone="neutral" />
+          <Stat label="경매" value={`${auctionCount}건`} tone="neutral" />
         </div>
 
         {/* Footer */}
