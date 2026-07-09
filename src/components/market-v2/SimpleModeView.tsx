@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import { useMarketFilter } from "@/store/market";
 import { listAuctions, summarize } from "@/lib/mock/auctions";
+import { SimpleViewToggle } from "./SimpleViewToggle";
+import { cn } from "@/lib/utils";
 
 export function SimpleModeView() {
   const f = useMarketFilter();
@@ -29,6 +31,7 @@ export function SimpleModeView() {
     [rows],
   );
   const recent = rows.slice(0, 3);
+  const dateLabel = f.date.replaceAll("-", ".");
 
   const goAllAuctions = () => {
     setProTab("auctions");
@@ -36,18 +39,33 @@ export function SimpleModeView() {
   };
 
   return (
-    <section className="mt-4 px-4">
-      <h3 className="text-[13.5px] font-bold text-foreground">간편 요약</h3>
+    <section className="px-4 pb-8 pt-4">
+      {/* Common header — matches table view */}
+      <div>
+        <div className="flex items-baseline gap-2">
+          <h3 className="text-[15px] font-bold text-foreground">경매내역</h3>
+          <span className="text-[15px] font-black text-[#3A8A3A]">
+            총 {rows.length}건
+          </span>
+        </div>
+        <div className="mt-1 text-[11.5px] text-[#868E96]">
+          {dateLabel} 기준 · {f.marketLabel} · {f.corpLabel} 법인
+        </div>
+      </div>
 
-      {/* 4 stat grid */}
-      <div className="mt-2 grid grid-cols-4 gap-2">
-        <SimpleStat label="평균가" value={`${summary.avgPrice.toLocaleString()}원`} />
-        <SimpleStat label="거래량" value={`${volumeTon}t`} />
-        <SimpleStat
-          label="kg당 평균가"
-          value={`${summary.avgPricePerKg.toLocaleString()}원`}
+      {/* Summary — same 3-cell layout as table view */}
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        <SummaryCell label="평균가" value={`${summary.avgPrice.toLocaleString()}원`} />
+        <SummaryCell label="거래량" value={`${volumeTon}t`} />
+        <SummaryCell label="kg당" value={`${summary.avgPricePerKg.toLocaleString()}원`} />
+      </div>
+
+      {/* View mode toggle — right-aligned chip */}
+      <div className="mt-3 flex justify-end">
+        <SimpleViewToggle
+          value={f.simpleViewMode}
+          onChange={f.setSimpleViewMode}
         />
-        <SimpleStat label="경매 건수" value={`${rows.length}건`} />
       </div>
 
       {/* Recent 3 auctions */}
@@ -105,17 +123,25 @@ export function SimpleModeView() {
         경매내역 전체보기 ({rows.length}건)
         <ChevronRight className="h-4 w-4" />
       </button>
-
-      <div className="h-6" />
     </section>
   );
 }
 
-function SimpleStat({ label, value }: { label: string; value: string }) {
+function SummaryCell({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: "up" | "down";
+}) {
+  const color =
+    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
   return (
     <div className="flex flex-col items-center gap-0.5 rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2.5">
       <span className="text-[10.5px] text-[#868E96]">{label}</span>
-      <span className="text-[12.5px] font-bold text-foreground">{value}</span>
+      <span className={cn("text-[13px] font-bold", color)}>{value}</span>
     </div>
   );
 }
