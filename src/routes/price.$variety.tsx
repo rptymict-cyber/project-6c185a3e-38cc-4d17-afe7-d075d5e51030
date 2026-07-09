@@ -338,6 +338,18 @@ function ChartTab({
         <PriceVolumeChart series={series} period={seriesPeriod} />
       </div>
 
+      {/* Legend */}
+      <ul className="mt-2 flex items-center justify-center gap-4 whitespace-nowrap px-1">
+        <li className="inline-flex items-center gap-1.5 text-[12px] text-[#495057]">
+          <span className="h-[3px] w-5 rounded-full bg-[#E03131]" />
+          kg당 평균가
+        </li>
+        <li className="inline-flex items-center gap-1.5 text-[12px] text-[#495057]">
+          <span className="h-2.5 w-2.5 rounded-[2px] bg-[rgba(224,49,49,0.18)]" />
+          거래량
+        </li>
+      </ul>
+
       <div className="mt-3 grid grid-cols-3 gap-2">
         <SummaryCard label="최고가" value={`${series.max.toLocaleString()}원`} tone="up" />
         <SummaryCard label="최저가" value={`${series.min.toLocaleString()}원`} tone="down" />
@@ -352,7 +364,7 @@ function ChartTab({
       </div>
 
       <div className="mt-4 rounded-[10px] bg-[#F8F9FA] px-3 py-2 text-[11.5px] text-[#868E96]">
-        ※ 차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
+        ※ 차트는 선택한 조건의 kg당 평균가와 거래량을 표시합니다.
       </div>
 
     </div>
