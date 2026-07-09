@@ -42,12 +42,6 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "trend", label: "시장가격 그래프" },
 ];
 
-function formatKoreanDate(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  const dt = new Date(y, (m ?? 1) - 1, d ?? 1);
-  const wd = ["일", "월", "화", "수", "목", "금", "토"][dt.getDay()];
-  return `${y}년 ${m}월 ${d}일 (${wd})`;
-}
 
 function VarietyStatsPage() {
   const { variety } = Route.useParams();
