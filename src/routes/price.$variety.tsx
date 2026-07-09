@@ -5,7 +5,7 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { Bell, ChevronRight, MoreHorizontal, Search, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { Bell, ChevronRight, MoreHorizontal, Star, TrendingDown, TrendingUp } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
@@ -196,7 +196,6 @@ function VarietyDetailPage() {
           </h1>
           <span className="inline-flex items-center gap-1 rounded-full bg-[#F1F3F5] px-2 py-0.5 text-[11px] font-semibold text-[#495057]">
             {f.itemLabel} · {f.categoryLabel}
-            <Search className="h-3 w-3" />
           </span>
           {isPredictable && (
             <span className="inline-flex items-center rounded-full border border-[#3A8A3A]/30 bg-[#F0F9F0] px-2 py-0.5 text-[11px] font-bold text-[#1F5C1F]">
