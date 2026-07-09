@@ -231,16 +231,6 @@ function VarietyStatsPage() {
             시장 행을 누르면 법인별 평균가를 볼 수 있어요
           </div>
 
-          <div className="mt-4 px-4">
-            <button
-              type="button"
-              onClick={() => setTab("trend")}
-              className="flex w-full items-center justify-center gap-1.5 rounded-[10px] border border-[#3A8A3A] bg-white py-3 text-[13.5px] font-bold text-[#3A8A3A] active:bg-[#F0F9F0]"
-            >
-              가격 추이 그래프로 보기
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
         </div>
       )}
 
