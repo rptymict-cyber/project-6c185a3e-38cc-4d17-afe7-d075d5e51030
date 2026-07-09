@@ -178,9 +178,9 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
         )}
       </div>
 
-      {/* Period chips + year-mode toggle */}
-      <div className="mt-4 flex items-center gap-2 px-4">
-        <div className="no-scrollbar flex flex-1 gap-1.5 overflow-x-auto">
+      {/* Period chips */}
+      <div className="mt-4 px-4">
+        <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
           {PERIODS.map((p) => {
             const active = p.id === period;
             return (
@@ -198,15 +198,8 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
             );
           })}
         </div>
-        <label className="flex shrink-0 items-center gap-1.5 text-[11.5px] font-semibold text-[#495057]">
-          지난 5년
-          <Switch
-            checked={yearMode}
-            onCheckedChange={setYearMode}
-            className="data-[state=checked]:bg-[#3A8A3A]"
-          />
-        </label>
       </div>
+
 
       {/* View segmented control */}
       <div className="mt-3 px-4">
