@@ -195,14 +195,23 @@ function VarietyStatsPage() {
 
       {tab === "market" && (
         <div className="pb-6">
-          {/* Date button */}
+          {/* Date selector card (matches 시세 탭 조회 날짜 카드) */}
           <div className="px-4 pt-4">
             <button
+              type="button"
               onClick={() => setDateOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-[#E9ECEF] bg-white px-3 py-1.5 text-[13px] font-semibold text-foreground"
+              className="flex min-h-16 w-full flex-col items-start gap-1 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
             >
-              {formatKoreanDate(date)}
-              <ChevronDown className="h-3.5 w-3.5 text-[#6C757D]" />
+              <span className="flex items-center gap-1 text-[11px] font-medium text-[#868E96]">
+                <Calendar className="h-3.5 w-3.5" />
+                조회 날짜
+              </span>
+              <span className="flex w-full items-center justify-between">
+                <span className="truncate text-[14px] font-bold text-foreground">
+                  {date.replaceAll("-", ".")}
+                </span>
+                <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#ADB5BD]" />
+              </span>
             </button>
 
             {data.differentFromRequest && (
@@ -211,6 +220,7 @@ function VarietyStatsPage() {
               </div>
             )}
           </div>
+
 
           {/* Summary cards — 전체 평균 / 전일 대비 / 거래량 */}
           <div className="mt-3 grid grid-cols-3 gap-2 px-4">
