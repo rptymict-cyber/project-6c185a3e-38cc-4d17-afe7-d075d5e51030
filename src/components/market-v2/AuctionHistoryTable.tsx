@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
 import { useMarketFilter } from "@/store/market";
 import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
 import { cn } from "@/lib/utils";
+import { SimpleViewToggle } from "./SimpleViewToggle";
 
 const PAGE_SIZE = 20;
 
@@ -68,6 +68,14 @@ export function AuctionHistoryTable() {
         <SummaryCell label="평균가" value={`${summary.avg.toLocaleString()}원`} />
         <SummaryCell label="거래량" value={`${summary.volumeTon}t`} />
         <SummaryCell label="kg당" value={`${summary.avgPerKg.toLocaleString()}원`} />
+      </div>
+
+      {/* View mode toggle — right-aligned chip */}
+      <div className="mt-3 flex justify-end">
+        <SimpleViewToggle
+          value={f.simpleViewMode}
+          onChange={f.setSimpleViewMode}
+        />
       </div>
 
       {/* Data area — table only */}

@@ -8,7 +8,6 @@ import { ProPriceHeadlineCard } from "@/components/market-v2/ProPriceHeadlineCar
 import { ProAnalysisSection } from "@/components/market-v2/ProAnalysisSection";
 import { AuctionHistoryTable } from "@/components/market-v2/AuctionHistoryTable";
 import { SimpleModeView } from "@/components/market-v2/SimpleModeView";
-import { SimpleViewToggle } from "@/components/market-v2/SimpleViewToggle";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useMarketFilter } from "@/store/market";
 
@@ -56,13 +55,7 @@ function MarketPage() {
       </div>
 
       {f.simpleMode ? (
-        <>
-          <SimpleViewToggle
-            value={f.simpleViewMode}
-            onChange={f.setSimpleViewMode}
-          />
-          {f.simpleViewMode === "table" ? <AuctionHistoryTable /> : <SimpleModeView />}
-        </>
+        f.simpleViewMode === "table" ? <AuctionHistoryTable /> : <SimpleModeView />
       ) : (
         <ProAnalysisSection />
       )}
