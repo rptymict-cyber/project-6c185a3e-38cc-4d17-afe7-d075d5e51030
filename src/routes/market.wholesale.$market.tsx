@@ -79,7 +79,7 @@ function WholesaleDetailPage() {
     <AppShell
       header={
         <DetailHeader
-          title={market.name}
+          title="도매시장별 조회"
           onBack={() => router.history.back()}
           right={
             <span className="pr-2 text-[11px] text-[#6C757D]">07/03 07:00 기준</span>
