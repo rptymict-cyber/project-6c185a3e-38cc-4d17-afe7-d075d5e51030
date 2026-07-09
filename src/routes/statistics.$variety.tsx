@@ -42,7 +42,6 @@ function VarietyStatsPage() {
   const router = useRouter();
   const navigate = useNavigate();
   const subject = resolveCropSubject(variety);
-  const crop = subject.crop;
   const pushRecent = useRecentStats((s) => s.push);
 
   // Statistics tab manages its own date state — do NOT share with market tab.
@@ -50,7 +49,6 @@ function VarietyStatsPage() {
   const [dateOpen, setDateOpen] = useState(false);
 
   const [tab, setTab] = useState<Tab>("market");
-  // alertOpen 제거됨 — 벨 아이콘은 규칙 통합 화면으로 이동
 
   useEffect(() => {
     pushRecent(variety);
@@ -61,20 +59,12 @@ function VarietyStatsPage() {
     [variety, date],
   );
 
-  const favItem = fromCrop(crop);
-  const favId = favoriteKey(favItem);
-  const starred = useFavoritePriceStore((s) =>
-    favId ? s.items.some((it) => it.id === favId) : false,
-  );
-  const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
-  const alertMarketId = data?.regions[0]?.markets[0]?.id ?? "all";
-  const alertMarketLabel = data?.regions[0]?.markets[0]?.name ?? "전체";
-  const hasAlert = useAlerts((s) => s.hasAnyFor(variety, alertMarketId));
-  const existingAlertRule = useAlerts((s) => s.getByKey(variety, alertMarketId));
-
   const marketLabel = useMarketFilter((s) => s.marketLabel);
   const corpLabel = useMarketFilter((s) => s.corpLabel);
   const unitLabel = useMarketFilter((s) => s.unit);
+
+  void subject;
+
 
 
 
