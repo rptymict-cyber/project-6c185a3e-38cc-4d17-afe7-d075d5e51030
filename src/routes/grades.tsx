@@ -18,7 +18,7 @@ export const Route = createFileRoute("/grades")({
 function GradesPage() {
   const withGrades = CROPS.filter((c) => c.grades);
   return (
-    <AppShell header={<AppHeader title="등급 정보" />}>
+    <AppShell header={<AppHeader title="등급별 가격 정보" />}>
       <div className="px-4 pt-4 pb-8">
         <div className="rounded-[10px] bg-accent px-4 py-3 text-[12px] leading-relaxed text-accent-foreground">
           KAMIS 기준 <strong>상·중·하</strong> 3등급 시세입니다. 등급 구분이
