@@ -7,15 +7,13 @@ import {
 import { Calendar, ChevronDown, ChevronRight } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
 import { AppShell } from "@/components/app-shell";
-// AlertSettingsSheet 제거됨 — 알림 규칙은 /notifications/settings/$ruleId 통합 화면 사용
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
 import { TrendTab } from "@/components/statistics/TrendTab";
+import { VolumeByMarketTab } from "@/components/statistics/VolumeByMarketTab";
 // NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
-// VarietyPickerSheet는 롤백 대비로 남겨두고 여기서 import 하지 않는다.
 import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
-import { useMarketFilter } from "@/store/market";
 import { useRecentStats } from "@/store/recent-stats";
 import { cn } from "@/lib/utils";
 
@@ -24,17 +22,19 @@ export const Route = createFileRoute("/statistics/$variety")({
   component: VarietyStatsPage,
   head: () => ({
     meta: [
-      { title: "품종 통계 — AGDICT" },
-      { name: "description", content: "품종별 시장 평균가와 도매법인 세부 비교." },
+      { title: "시장별 가격 비교 — AGDICT" },
+      { name: "description", content: "품종별 시장별 가격 비교와 거래량 흐름." },
     ],
   }),
 });
 
-type Tab = "market" | "trend";
+type Tab = "table" | "chart" | "volume";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "market", label: "시장별 평균가격" },
-  { id: "trend", label: "시장가격 그래프" },
+  { id: "table", label: "표로 보기" },
+  { id: "chart", label: "그래프로 보기" },
+  { id: "volume", label: "시장별 거래량" },
 ];
+
 
 
 function VarietyStatsPage() {
