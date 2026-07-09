@@ -1,6 +1,4 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { DetailHeader } from "@/components/detail-header";
@@ -9,12 +7,14 @@ import type { LiveSort } from "@/lib/services/live-prices";
 import { getLivePrices } from "@/lib/services/live-prices";
 import { LivePriceHeader, LivePriceRowItem } from "@/components/market/LivePriceRow";
 
-const searchSchema = z.object({
-  sort: fallback(z.enum(["up", "down", "vol"]), "up").default("up"),
-});
+type LiveSearch = { sort: LiveSort };
 
 export const Route = createFileRoute("/live")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (raw: Record<string, unknown>): LiveSearch => {
+    const s = raw.sort;
+    const sort: LiveSort = s === "down" || s === "vol" ? s : "up";
+    return { sort };
+  },
   head: () => ({
     meta: [
       { title: "실시간 시세 — AGDICT" },
