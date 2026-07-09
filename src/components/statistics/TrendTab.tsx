@@ -7,7 +7,6 @@ import {
   type TrendChartPoint,
   type TrendChartSeries,
 } from "./TrendDualChart";
-import { Switch } from "@/components/ui/switch";
 import {
   decodeSeriesId,
   getVarietyTrend,
@@ -22,13 +21,12 @@ import { getCrop } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 
 const PERIODS: { id: TrendPeriod; label: string }[] = [
-  { id: "1w", label: "1주" },
-  { id: "2w", label: "2주" },
-  { id: "1m", label: "1개월" },
-  { id: "3m", label: "3개월" },
-  { id: "1y", label: "1년" },
-  { id: "5y", label: "5년" },
+  { id: "1w", label: "일주일" },
+  { id: "2w", label: "보름" },
+  { id: "5y-w", label: "주간 5년" },
+  { id: "5y-y", label: "연간 5년" },
 ];
+
 
 type ChartView = "both" | "price" | "volume";
 const VIEW_OPTIONS: { id: ChartView; label: string }[] = [
