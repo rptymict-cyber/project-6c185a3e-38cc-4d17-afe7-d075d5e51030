@@ -30,6 +30,7 @@ import { Route as PriceVarietyRouteImport } from './routes/price.$variety'
 import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
 import { Route as MarketCropRouteImport } from './routes/market.$crop'
 import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
+import { Route as MarketWholesaleIndexRouteImport } from './routes/market.wholesale.index'
 import { Route as PriceVarietyAlertRouteImport } from './routes/price.$variety.alert'
 import { Route as NotificationsSettingsNewRouteImport } from './routes/notifications.settings.new'
 import { Route as NotificationsSettingsRuleIdRouteImport } from './routes/notifications.settings.$ruleId'
@@ -143,6 +144,11 @@ const NotificationsSettingsIndexRoute =
     path: '/',
     getParentRoute: () => NotificationsSettingsRoute,
   } as any)
+const MarketWholesaleIndexRoute = MarketWholesaleIndexRouteImport.update({
+  id: '/wholesale/',
+  path: '/wholesale/',
+  getParentRoute: () => MarketRoute,
+} as any)
 const PriceVarietyAlertRoute = PriceVarietyAlertRouteImport.update({
   id: '/alert',
   path: '/alert',
@@ -203,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
+  '/market/wholesale/': typeof MarketWholesaleIndexRoute
   '/notifications/settings/': typeof NotificationsSettingsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -229,6 +236,7 @@ export interface FileRoutesByTo {
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
+  '/market/wholesale': typeof MarketWholesaleIndexRoute
   '/notifications/settings': typeof NotificationsSettingsIndexRoute
 }
 export interface FileRoutesById {
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
   '/price/$variety/alert': typeof PriceVarietyAlertRoute
+  '/market/wholesale/': typeof MarketWholesaleIndexRoute
   '/notifications/settings/': typeof NotificationsSettingsIndexRoute
 }
 export interface FileRouteTypes {
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
     | '/price/$variety/alert'
+    | '/market/wholesale/'
     | '/notifications/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -316,6 +326,7 @@ export interface FileRouteTypes {
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
     | '/price/$variety/alert'
+    | '/market/wholesale'
     | '/notifications/settings'
   id:
     | '__root__'
@@ -345,6 +356,7 @@ export interface FileRouteTypes {
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
     | '/price/$variety/alert'
+    | '/market/wholesale/'
     | '/notifications/settings/'
   fileRoutesById: FileRoutesById
 }
@@ -516,6 +528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsSettingsIndexRouteImport
       parentRoute: typeof NotificationsSettingsRoute
     }
+    '/market/wholesale/': {
+      id: '/market/wholesale/'
+      path: '/wholesale'
+      fullPath: '/market/wholesale/'
+      preLoaderRoute: typeof MarketWholesaleIndexRouteImport
+      parentRoute: typeof MarketRoute
+    }
     '/price/$variety/alert': {
       id: '/price/$variety/alert'
       path: '/alert'
@@ -567,6 +586,7 @@ interface MarketRouteChildren {
   MarketAuctionIdRoute: typeof MarketAuctionIdRoute
   MarketItemItemRoute: typeof MarketItemItemRoute
   MarketWholesaleMarketRoute: typeof MarketWholesaleMarketRoute
+  MarketWholesaleIndexRoute: typeof MarketWholesaleIndexRoute
 }
 
 const MarketRouteChildren: MarketRouteChildren = {
@@ -575,6 +595,7 @@ const MarketRouteChildren: MarketRouteChildren = {
   MarketAuctionIdRoute: MarketAuctionIdRoute,
   MarketItemItemRoute: MarketItemItemRoute,
   MarketWholesaleMarketRoute: MarketWholesaleMarketRoute,
+  MarketWholesaleIndexRoute: MarketWholesaleIndexRoute,
 }
 
 const MarketRouteWithChildren =
