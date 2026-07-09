@@ -160,7 +160,6 @@ export function getVarietyTrend(params: {
   period: TrendPeriod;
 }): TrendPoint[] {
   const crop = resolveRealCrop(params.varietyId);
-  if (!crop) return [];
   const dates = backDates(params.period, REFERENCE_END);
   const perSeries: Record<string, number[]> = {};
   for (const id of params.seriesIds) {
@@ -197,7 +196,6 @@ export function getYearComparisonTrend(params: {
 }): { points: YearTrendPoint[]; years: string[] } {
   const crop = resolveRealCrop(params.varietyId);
   const years = ["2022", "2023", "2024", "2025", "2026"];
-  if (!crop) return { points: [], years };
   const len = PERIOD_LEN[params.period];
   const step = PERIOD_STEP_DAYS[params.period];
 
