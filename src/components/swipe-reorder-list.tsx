@@ -47,10 +47,7 @@ export function SwipeReorderList({
       const dy = e.clientY - st.startY;
       setDragOffset(dy);
       const delta = Math.round(dy / st.height);
-      const targetIndex = Math.max(
-        0,
-        Math.min(st.order.length - 1, st.startIndex + delta),
-      );
+      const targetIndex = Math.max(0, Math.min(st.order.length - 1, st.startIndex + delta));
       if (targetIndex !== order.indexOf(dragId)) {
         const next = st.order.filter((id) => id !== dragId);
         next.splice(targetIndex, 0, dragId);
@@ -180,10 +177,7 @@ function SwipeRow({
       </button>
       {/* foreground content */}
       <div
-        className={cn(
-          "relative flex items-stretch bg-surface",
-          className,
-        )}
+        className={cn("relative flex items-stretch bg-surface", className)}
         style={{
           transform: `translateX(${tx}px)`,
           transition: startX.current === null ? "transform 180ms ease" : "none",
@@ -237,10 +231,7 @@ function SwipeRow({
           )}
         >
           <GripVertical
-            className={cn(
-              "shrink-0",
-              dragHandlePosition === "top-right" ? "h-4 w-4" : "h-5 w-5",
-            )}
+            className={cn("shrink-0", dragHandlePosition === "top-right" ? "h-4 w-4" : "h-5 w-5")}
           />
         </button>
       </div>
