@@ -5,10 +5,11 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { Calendar as CalendarIcon, ChevronDown, ChevronRight, Sprout } from "lucide-react";
+import { Calendar as CalendarIcon, Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
+import { FullSelectCard } from "@/components/common/ConditionSelectCard";
 import { useCropSelection } from "@/store/cropSelection";
 import { getCategoryById, getItemById } from "@/lib/catalog-service";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
