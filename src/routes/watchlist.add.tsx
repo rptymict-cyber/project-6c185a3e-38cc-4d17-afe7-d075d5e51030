@@ -114,7 +114,6 @@ function WatchlistAddPage() {
           right={null}
         />
       }
-      showBottomNav={false}
     >
       <div className="flex flex-col gap-3 px-4 pt-4">
         {/* 품목 선택 */}
