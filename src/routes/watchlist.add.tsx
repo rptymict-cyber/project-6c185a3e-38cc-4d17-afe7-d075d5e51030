@@ -119,7 +119,7 @@ function WatchlistAddPage() {
         {/* 품목 선택 */}
         <section className="rounded-2xl border border-border bg-background p-4">
           <div className="mb-2 text-[12px] font-semibold text-muted-foreground">
-            품목
+            작물
           </div>
           <button
             type="button"
@@ -133,11 +133,7 @@ function WatchlistAddPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-[15px] font-bold text-foreground">
-                    {item!.name}
-                    {variety ? ` · ${variety.name}` : " · 전체 품종"}
-                  </div>
-                  <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
-                    {category?.name ?? "부류"}
+                    {`${category?.name ?? ""} · ${item!.name} · ${variety?.name ?? "전체 품종"}`}
                   </div>
                 </div>
               </>
