@@ -32,9 +32,9 @@ function ChangeBadge({ changePct }: { changePct: number }) {
 
 export function PredictableCropCards() {
   return (
-    <section className="mt-6">
+    <section className="mx-4 mt-6 rounded-2xl border border-[#EEF0F2] bg-white p-4">
       {/* Section header */}
-      <div className="flex items-end justify-between px-4">
+      <div className="flex items-start justify-between">
         <div>
           <h3 className="text-[16px] font-bold text-foreground">
             AI 가격 예측
@@ -45,7 +45,7 @@ export function PredictableCropCards() {
         </div>
         <Link
           to="/prediction"
-          className="flex items-center gap-0.5 text-[12px] font-semibold text-[#3A8A3A]"
+          className="flex shrink-0 items-center gap-0.5 text-[12px] font-semibold text-[#6C757D]"
         >
           더보기
           <ChevronRight className="h-3.5 w-3.5" />
@@ -53,7 +53,7 @@ export function PredictableCropCards() {
       </div>
 
       {/* Horizontal scroll cards */}
-      <div className="no-scrollbar mt-3 flex gap-2.5 overflow-x-auto px-4 pb-1">
+      <div className="no-scrollbar -mx-4 mt-3 flex gap-2.5 overflow-x-auto px-4 pb-1">
         {PREDICTABLE_CROPS.map((crop) => {
           const h = HOME_PRICE[crop.id] ?? {
             price: 0,
@@ -65,28 +65,21 @@ export function PredictableCropCards() {
               key={crop.id}
               to="/prediction"
               search={{ cropId: crop.id, entrySource: "home" }}
-              className="flex min-w-[140px] max-w-[140px] flex-col rounded-[12px] border border-[#E9ECEF] bg-white p-3.5 transition-colors active:bg-[#F8F9FA]"
+              className="flex min-w-[132px] max-w-[132px] items-center gap-2 rounded-[12px] bg-[#F4F8F3] p-2.5 transition-colors active:bg-[#EAF2E8]"
             >
-              <CropIcon name={crop.name} size={32} />
-
-              <div className="mt-2 flex items-center gap-1.5">
-                <span className="text-[14px] font-bold text-foreground">
+              <div className="grid h-10 w-10 shrink-0 place-items-center">
+                <CropIcon name={crop.name} size={36} />
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="truncate text-[13px] font-bold text-foreground">
                   {crop.name}
                 </span>
-                <span className="shrink-0 rounded-md bg-[#F1F3F5] px-1.5 py-0.5 text-[10px] font-semibold text-[#6C757D]">
-                  {crop.categoryName}
+                <span className="mt-0.5 truncate text-[11px] font-medium text-[#495057] tabular-nums">
+                  {h.price.toLocaleString()}원/{h.unitLabel}
                 </span>
-              </div>
-
-              <div className="mt-1.5 text-[12px] font-medium text-[#6C757D]">
-                {h.price.toLocaleString()}원/{h.unitLabel}
-              </div>
-
-              <div className="mt-2 flex items-center justify-between">
-                <ChangeBadge changePct={h.changePct} />
-                <span className="shrink-0 rounded-full bg-[#F0F9F0] px-2 py-0.5 text-[10px] font-bold text-[#3A8A3A]">
-                  AI 가격 예측
-                </span>
+                <div className="mt-0.5">
+                  <ChangeBadge changePct={h.changePct} />
+                </div>
               </div>
             </Link>
           );
@@ -95,4 +88,5 @@ export function PredictableCropCards() {
     </section>
   );
 }
+
 
