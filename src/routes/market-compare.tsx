@@ -40,8 +40,10 @@ function MarketComparePage() {
       ? "전체 품종"
       : item.varieties.find((v) => v.id === committed.varietyId)?.name;
 
-  const cropLabel = item && varietyName ? `${item.name} · ${varietyName}` : undefined;
-  const cropSubLabel = category?.name;
+  const cropLabel =
+    category && item && varietyName
+      ? `${category.name} · ${item.name} · ${varietyName}`
+      : undefined;
 
   const varietyId =
     item && (!committed.varietyId || committed.varietyId === "ALL")
