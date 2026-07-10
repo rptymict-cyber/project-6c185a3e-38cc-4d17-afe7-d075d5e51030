@@ -145,13 +145,20 @@ function WatchlistPage() {
               </p>
             </div>
           ) : (
-            <SwipeReorderList
-              items={rows}
-              onDelete={handleDelete}
-              onReorder={handleReorder}
-            />
+            <>
+              <SwipeReorderList
+                items={rows}
+                onDelete={handleDelete}
+                onReorder={handleReorder}
+              />
+              {!isSearching && filtered.length > 1 && (
+                <p className="pb-6 text-center text-[12px] text-muted-foreground">
+                  <span className="mr-1 tracking-tighter">⋮⋮</span>
+                  를 드래그해 순서를 바꿀 수 있어요
+                </p>
+              )}
+            </>
           )}
-
         </>
       )}
 
@@ -202,8 +209,11 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
     });
   };
 
+  const kgPrice = item.kgPrice ?? item.price ?? 0;
+  const unitPrice = item.price ?? 0;
+
   return (
-    <div className="rounded-2xl border border-border bg-background p-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+    <div className="rounded-2xl border border-border bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
       <button
         type="button"
         onClick={handleOpen}
@@ -211,64 +221,69 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
       >
         <div className="flex items-start gap-3">
           <div
-            className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-muted"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-muted"
             aria-hidden
           >
-            <CropIcon name={item.cropName} size={28} />
+            <CropIcon name={item.cropName} size={26} />
           </div>
           <div className="min-w-0 flex-1">
-            {item.isPredictable && (
-              <div className="mb-1">
-                <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
-                  AI 가격 예측
-                </span>
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0 flex-1">
+                {item.isPredictable && (
+                  <div className="mb-1">
+                    <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                      AI 가격 예측
+                    </span>
+                  </div>
+                )}
+                <div className="truncate text-[15px] font-bold text-foreground">
+                  {item.cropName}
+                  {item.varietyName ? ` · ${item.varietyName}` : ""}
+                </div>
+                <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
+                  {item.marketName} · {item.corporationName ?? "전체 법인"}
+                </div>
+                <div className="truncate text-[12px] text-muted-foreground">
+                  {item.originName ?? "전체 산지"} · {unitLabel} 기준
+                  {item.grade ? ` · ${item.grade}` : ""}
+                </div>
               </div>
-            )}
-            <div className="truncate text-[15px] font-bold text-foreground">
-              {item.cropName}
-              {item.varietyName ? ` · ${item.varietyName}` : ""}
-            </div>
-            <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
-              {item.marketName} · {item.corporationName ?? "전체 법인"}
-            </div>
-            <div className="truncate text-[12px] text-muted-foreground">
-              {item.originName ?? "전체 산지"} · {unitLabel} 기준
-              {item.grade ? ` · ${item.grade}` : ""}
+              <Star
+                className="mt-0.5 h-5 w-5 shrink-0 text-[#F5B301]"
+                fill="#F5B301"
+                strokeWidth={1.5}
+                aria-hidden
+              />
             </div>
           </div>
         </div>
 
-        <div className="mt-3 flex items-end justify-between gap-3 border-t border-border/60 pt-3">
+        <div className="mt-3 flex items-end justify-between gap-3">
           <div className="min-w-0">
-            <div className="font-data text-[20px] font-bold leading-none tabular-nums text-foreground">
-              {(item.price ?? 0).toLocaleString()}
-              <span className="ml-1 text-[12px] font-medium text-muted-foreground">
-                원 / {unitLabel}
+            <div className="flex items-baseline gap-1">
+              <span className="font-data text-[26px] font-black leading-none tabular-nums text-foreground">
+                {kgPrice.toLocaleString()}
+              </span>
+              <span className="text-[12px] font-medium text-muted-foreground">
+                원/kg
               </span>
             </div>
-            {item.kgPrice != null && item.kgPrice !== item.price && (
-              <div className="mt-1 text-[11.5px] text-muted-foreground">
-                kg당 {item.kgPrice.toLocaleString()}원
-              </div>
-            )}
-            {item.totalVolume != null && (
-              <div className="mt-1 text-[11px] text-muted-foreground">
-                거래량 {item.totalVolume.toLocaleString()}t
-                {item.auctionCount != null
-                  ? ` · 경매 ${item.auctionCount}건`
-                  : ""}
-              </div>
-            )}
+            <div className="mt-1.5 text-[11.5px] text-muted-foreground">
+              {unitLabel} 기준 {unitPrice.toLocaleString()}원
+              {item.totalVolume != null
+                ? ` · 거래량 ${item.totalVolume.toLocaleString()}t`
+                : ""}
+            </div>
           </div>
           <div className="flex shrink-0 flex-col items-end gap-1">
             <span
               className={cn(
-                "inline-flex items-center whitespace-nowrap rounded-md px-2 py-1 text-[12px] font-bold tabular-nums",
+                "inline-flex items-center whitespace-nowrap text-[13px] font-bold tabular-nums",
                 flat
-                  ? "bg-muted text-muted-foreground"
+                  ? "text-muted-foreground"
                   : rising
-                    ? "bg-[#FFE3E3] text-[#E03131]"
-                    : "bg-[#DBE4FF] text-[#1971C2]",
+                    ? "text-[#E03131]"
+                    : "text-[#1971C2]",
               )}
             >
               {flat
