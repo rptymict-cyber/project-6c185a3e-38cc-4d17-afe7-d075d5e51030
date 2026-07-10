@@ -31,7 +31,7 @@ function AuctionDetail() {
     <AppShell
       header={
         <DetailHeader
-          title="경매 상세"
+          title="경매 상세 결과"
           onBack={() => router.history.back()}
         />
       }
