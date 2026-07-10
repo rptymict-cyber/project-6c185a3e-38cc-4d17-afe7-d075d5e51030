@@ -53,7 +53,7 @@ export function PredictableCropCards() {
       </div>
 
       {/* Horizontal scroll cards */}
-      <div className="no-scrollbar -mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-1">
+      <div className="no-scrollbar -mx-4 mt-3 flex gap-[11px] overflow-x-auto px-4 pb-1">
         {PREDICTABLE_CROPS.map((crop) => {
           const h = HOME_PRICE[crop.id] ?? {
             price: 0,
@@ -65,7 +65,7 @@ export function PredictableCropCards() {
               key={crop.id}
               to="/prediction"
               search={{ cropId: crop.id, entrySource: "home" }}
-              className="flex min-w-[156px] flex-col rounded-[14px] border border-[#EEF0F2] bg-white p-3.5 transition-colors active:bg-[#F8F9FA]"
+              className="flex w-[150px] min-w-[150px] flex-col rounded-[14px] border border-[#EEF0F2] bg-white p-3.5 transition-colors active:bg-[#F8F9FA]"
             >
               <div className="mb-2.5 h-10 w-10">
                 <CropIcon name={crop.name} size={40} />
