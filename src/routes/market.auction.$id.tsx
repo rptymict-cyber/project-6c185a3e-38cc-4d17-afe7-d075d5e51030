@@ -14,6 +14,7 @@ export const Route = createFileRoute("/market/auction/$id")({
   }),
 });
 
+
 function AuctionDetail() {
   const { id } = Route.useParams();
   const router = useRouter();
