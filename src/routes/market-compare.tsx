@@ -75,49 +75,27 @@ function MarketComparePage() {
       header={<AppHeader title="시장별 가격 비교" showBell={false} />}
     >
       <div className="px-4 pb-24 pt-4">
-        {/* Big crop selector */}
-        <Link
-          to="/crop-select"
-          search={{ from: "market-compare", return: "/market-compare" }}
-          className="flex w-full items-center gap-3 rounded-[14px] border border-[#E9ECEF] bg-white px-4 py-4 text-left active:bg-[#F8F9FA]"
-        >
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-[#3A8A3A]">
-            <Sprout className="h-5 w-5" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[11px] font-semibold text-[#868E96]">비교 품목</span>
-            <span
-              className={cn(
-                "block truncate text-[22px] font-black leading-tight",
-                cropLabel ? "text-foreground" : "text-[#ADB5BD]",
-              )}
-            >
-              {cropLabel ?? "작물 선택"}
-            </span>
-            {cropSubLabel && (
-              <span className="mt-0.5 block truncate text-[11.5px] text-[#868E96]">
-                {cropSubLabel}
-              </span>
-            )}
-          </span>
-          <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
-        </Link>
-
-        {/* Date + basis */}
-        <div className="mt-3 flex items-center justify-between">
-          <button
-            type="button"
+        {/* 작물 + 조회 날짜 Full 선택 카드 */}
+        <div className="flex flex-col gap-2">
+          <FullSelectCard
+            icon={<Sprout className="h-3.5 w-3.5" />}
+            label="작물"
+            value={cropLabel}
+            placeholder="작물 선택"
+            to="/crop-select"
+            search={{ from: "market-compare", return: "/market-compare" }}
+          />
+          <FullSelectCard
+            icon={<CalendarIcon className="h-3.5 w-3.5" />}
+            label="조회 날짜"
+            value={date.replaceAll("-", ".")}
             onClick={() => setDateOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#F1F3F5] px-3 py-1.5 text-[12px] font-semibold text-[#495057]"
-          >
-            <CalendarIcon className="h-3.5 w-3.5" />
-            <span>{date.replaceAll("-", ".")}</span>
-            <ChevronDown className="h-3.5 w-3.5 text-[#6C757D]" />
-          </button>
-          <span className="text-[11.5px] text-[#868E96]">
-            kg당 평균가 · 경매일 기준 · 전체 시장
-          </span>
+          />
         </div>
+        <p className="mt-2 text-right text-[11.5px] text-[#868E96]">
+          kg당 평균가 · 경매일 기준 · 전체 시장
+        </p>
+
 
         {!data && (
           <div className="mt-8 rounded-[12px] border border-dashed border-[#E9ECEF] bg-white px-4 py-12 text-center">
