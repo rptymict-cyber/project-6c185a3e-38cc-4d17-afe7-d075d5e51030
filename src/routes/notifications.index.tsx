@@ -69,25 +69,19 @@ function NotificationsPage() {
   return (
     <AppShell
       header={
-        <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-[#E9ECEF] bg-background px-2">
-          <button
-            aria-label="뒤로"
-            onClick={() => router.history.back()}
-            className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 text-[15px] font-black tracking-tight text-foreground">
-            알림
-          </span>
-          <Link
-            to="/notifications/settings"
-            aria-label="알림 설정"
-            className="grid h-9 w-9 place-items-center rounded-full text-[#495057] hover:bg-secondary"
-          >
-            <Settings className="h-5 w-5" />
-          </Link>
-        </header>
+        <DetailHeader
+          title="알림"
+          onBack={() => router.history.back()}
+          right={
+            <Link
+              to="/notifications/settings"
+              aria-label="알림 설정"
+              className="grid h-9 w-9 place-items-center rounded-full text-[#495057] hover:bg-secondary"
+            >
+              <Settings className="h-5 w-5" />
+            </Link>
+          }
+        />
       }
     >
       {sorted.length === 0 ? (
