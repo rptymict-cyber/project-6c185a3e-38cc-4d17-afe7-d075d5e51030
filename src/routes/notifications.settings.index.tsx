@@ -3,6 +3,7 @@ import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-r
 import { Bell, ChevronRight, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import { Switch } from "@/components/ui/switch";
 import { SwipeReorderList } from "@/components/swipe-reorder-list";
 import { GeneralNotiSettings } from "@/components/notifications/GeneralNotiSettings";
