@@ -72,13 +72,15 @@ export function AuctionHistoryTable() {
         <SummaryCell label="kg당" value={`${summary.avgPerKg.toLocaleString()}원`} />
       </div>
 
-      {/* View mode toggle — right-aligned chip */}
-      <div className="mt-3 flex justify-end">
-        <SimpleViewToggle
-          value={f.simpleViewMode}
-          onChange={f.setSimpleViewMode}
-        />
-      </div>
+      {/* View mode toggle — only in simple mode (spec: pro mode is table-only) */}
+      {f.simpleMode && (
+        <div className="mt-3 flex justify-end">
+          <SimpleViewToggle
+            value={f.simpleViewMode}
+            onChange={f.setSimpleViewMode}
+          />
+        </div>
+      )}
 
       {/* Data area — table only */}
       {visible.length === 0 ? (
@@ -86,6 +88,7 @@ export function AuctionHistoryTable() {
       ) : (
         <AuctionTable rows={visible} />
       )}
+
 
 
       {page < totalPages && (
