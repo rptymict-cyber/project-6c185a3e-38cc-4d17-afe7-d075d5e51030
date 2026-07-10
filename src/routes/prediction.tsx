@@ -114,7 +114,7 @@ function PredictionPage() {
   const isPositiveForUser = isFarmer ? priceDiff > 0 : priceDiff < 0;
 
   return (
-    <AppShell header={<DetailHeader title="AI 가격 예측" onBack={() => router.history.back()} />}>
+    <AppShell header={<AppHeader title="AI 시세 예측" />}>
       <div className="px-4 pb-16 pt-3">
         {/* 1. 상단 조건 선택 그리드 */}
         <PredictionConditionGrid
