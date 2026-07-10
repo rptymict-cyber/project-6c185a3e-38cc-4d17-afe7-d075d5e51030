@@ -34,8 +34,8 @@ export function HomeItemQuickSection() {
         {fixed.map((it) => (
           <div key={it.id} className="relative">
             <Link
-              to="/market/item/$item"
-              params={{ item: it.id }}
+              to="/market/item"
+              search={{ item: it.id }}
               className={cn(
                 "flex shrink-0 flex-col items-center gap-1.5",
                 editing && "pointer-events-none",
