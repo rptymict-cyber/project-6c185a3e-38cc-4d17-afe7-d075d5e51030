@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
-import { DetailHeader } from "@/components/detail-header";
+import { AppHeader } from "@/components/app-header";
 import { PredictionChart } from "@/features/prediction/components/PredictionChart";
 import { PredictionCompareCards } from "@/features/prediction/components/PredictionCompareCards";
 import { PredictionConditionGrid } from "@/features/prediction/components/PredictionConditionGrid";
