@@ -78,19 +78,6 @@ function NotificationSettingsPage() {
           />
         </div>
       )}
-
-      {/* FAB */}
-      <Link
-        to="/crop-select"
-        search={{
-          from: "alert-create",
-          return: "/notifications/settings/new",
-        }}
-        aria-label="알림 추가"
-        className="fixed bottom-6 right-6 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#3A8A3A] text-white shadow-lg active:bg-[#2F6F2F]"
-      >
-        <Plus className="h-6 w-6" />
-      </Link>
     </AppShell>
   );
 }
