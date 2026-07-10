@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { Bell, ChevronDown, ChevronRight, Clock, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Bell, ChevronDown, Clock, Star, TrendingDown, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/mock/market-analysis";
@@ -10,8 +10,10 @@ import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
 import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
 import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { getCrop } from "@/lib/mock/crops";
+import { CropIcon } from "@/components/crop-icon";
 import { UnitSheet } from "./UnitSheet";
 import { countAuctions } from "@/lib/mock/auctions";
+
 
 const EMOJI: Record<string, string> = {
   eggplant: "🍆",
