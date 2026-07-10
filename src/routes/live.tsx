@@ -32,7 +32,9 @@ export const Route = createFileRoute("/live")({
   component: LivePage,
 });
 
-const PAGE_SIZE = 10;
+import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButton";
+
+const PAGE_SIZE = LIST_PAGE_SIZE;
 
 function LivePage() {
   const { sort } = Route.useSearch();
