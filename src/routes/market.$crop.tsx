@@ -68,7 +68,7 @@ function CropDetail() {
     <AppShell
       header={
         <DetailHeader
-          title={crop.name}
+          title="시세 상세"
           onBack={() => router.history.back()}
           right={
             <>
