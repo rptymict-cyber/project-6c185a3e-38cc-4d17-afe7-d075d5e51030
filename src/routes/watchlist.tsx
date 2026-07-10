@@ -120,10 +120,11 @@ function WatchlistPage() {
                 items={rows}
                 onDelete={handleDelete}
                 onReorder={handleReorder}
-                className="rounded-2xl border border-border bg-background"
-                wrapperClassName="rounded-2xl"
+                className="w-full bg-background box-border"
+                wrapperClassName="w-full box-border rounded-2xl border border-border bg-background overflow-hidden"
                 dragHandlePosition="top-right"
               />
+
               {!isSearching && filtered.length > 1 && (
                 <p className="pb-6 text-center text-[12px] text-muted-foreground">
                   <span className="mr-1 tracking-tighter">⋮⋮</span>를 드래그해 순서를 바꿀 수 있어요
@@ -203,11 +204,12 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
                 </div>
               </div>
               <Star
-                className="mr-8 h-5 w-5 shrink-0 text-[#F5B301]"
+                className="mr-9 h-5 w-5 shrink-0 text-[#F5B301]"
                 fill="#F5B301"
                 strokeWidth={1.5}
                 aria-hidden
               />
+
             </div>
             <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
               {item.marketName} · {item.corporationName ?? "전체 법인"}
