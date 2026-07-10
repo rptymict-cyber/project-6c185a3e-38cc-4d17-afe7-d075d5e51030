@@ -36,6 +36,7 @@ type Item = {
 const MENU: Item[] = [
   { label: "AI 시세 예측", to: "/prediction", icon: Sparkles, badge: "Beta" },
   { label: "실시간 시세", to: "/live", icon: Activity },
+  { label: "농산물 소식", to: "/news", icon: Newspaper },
   { label: "도매시장별 조회", to: "/market/wholesale", icon: Store },
   { label: "품목별 조회", to: "/market/item", icon: Package },
   { label: "시세 조회", to: "/market", icon: LineChart },
