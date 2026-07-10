@@ -130,6 +130,9 @@ function SwipeRow({
   onDelete,
   onGripDown,
   children,
+  className,
+  wrapperClassName,
+  dragHandlePosition = "center",
 }: {
   id: string;
   open: boolean;
@@ -140,6 +143,9 @@ function SwipeRow({
   onDelete: () => void;
   onGripDown: (e: React.PointerEvent) => void;
   children: ReactNode;
+  className?: string;
+  wrapperClassName?: string;
+  dragHandlePosition?: "center" | "top-right";
 }) {
   const [tx, setTx] = useState(open ? -SWIPE_MAX : 0);
   const startX = useRef<number | null>(null);
