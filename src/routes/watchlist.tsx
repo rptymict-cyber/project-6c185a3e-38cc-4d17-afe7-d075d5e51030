@@ -150,6 +150,9 @@ function WatchlistPage() {
                 items={rows}
                 onDelete={handleDelete}
                 onReorder={handleReorder}
+                className="rounded-2xl border border-border bg-background"
+                wrapperClassName="rounded-2xl"
+                dragHandlePosition="top-right"
               />
               {!isSearching && filtered.length > 1 && (
                 <p className="pb-6 text-center text-[12px] text-muted-foreground">
