@@ -1,73 +1,207 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { ChevronDown, Check } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DetailHeader } from "@/components/detail-header";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { MARKETS } from "@/lib/mock/markets";
-import { useHomeFixed } from "@/store/homeFixedItems";
-import { Check, Plus } from "lucide-react";
+import { ITEMS } from "@/lib/mock/items";
+import { CropIcon } from "@/components/crop-icon";
+import { cn } from "@/lib/utils";
+
+const DEFAULT_MARKET = "seoul-garak";
+
+type WholesaleSearch = { m?: string };
 
 export const Route = createFileRoute("/market/wholesale/")({
+  validateSearch: (raw: Record<string, unknown>): WholesaleSearch => ({
+    m: typeof raw.m === "string" ? raw.m : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "도매시장별 조회 — AGDICT" },
-      { name: "description", content: "전국 도매시장 목록에서 원하는 시장을 선택하세요." },
+      {
+        name: "description",
+        content: "선택한 도매시장의 품목별 시세를 확인하세요.",
+      },
     ],
   }),
-  component: WholesaleIndexPage,
+  component: WholesaleBrowsePage,
 });
 
-function WholesaleIndexPage() {
-  const fixed = useHomeFixed((s) => s.markets);
-  const addMarket = useHomeFixed((s) => s.addMarket);
-  const removeMarket = useHomeFixed((s) => s.removeMarket);
 
-  const grouped = MARKETS.reduce<Record<string, typeof MARKETS>>((acc, m) => {
-    (acc[m.region] = acc[m.region] || []).push(m);
-    return acc;
-  }, {});
+function WholesaleBrowsePage() {
+  const { m } = Route.useSearch();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const market =
+    MARKETS.find((x) => x.id === m) ??
+    MARKETS.find((x) => x.id === DEFAULT_MARKET) ??
+    MARKETS[0];
+
+  // 시장별 품목 리스트 (mock) — 시장 오프셋으로 결정론적 가격
+  const items = useMemo(() => {
+    const offset = MARKETS.findIndex((x) => x.id === market.id);
+    return ITEMS.map((it, i) => {
+      const base = it.varieties[0]?.pricePerKg ?? 3000;
+      const change = it.varieties[0]?.changePct ?? 0;
+      const factor = 1 + ((offset + i) % 7) * 0.012;
+      return {
+        id: it.id,
+        name: it.name,
+        priceKg: Math.round(base * factor),
+        changePct: +(change + ((offset - 1) * 0.3)).toFixed(1),
+      };
+    });
+  }, [market.id]);
+
+  const grouped = useMemo(() => {
+    return MARKETS.reduce<Record<string, typeof MARKETS>>((acc, x) => {
+      (acc[x.region] = acc[x.region] || []).push(x);
+      return acc;
+    }, {});
+  }, []);
+
+  const selectMarket = (id: string) => {
+    setOpen(false);
+    navigate({
+      to: "/market/wholesale",
+      search: { m: id },
+      replace: true,
+    });
+  };
 
   return (
     <AppShell
-      header={<DetailHeader title="도매시장별 조회" onBack={() => history.back()} />}
+      header={
+        <DetailHeader
+          title="도매시장별 조회"
+          onBack={() => history.back()}
+        />
+      }
     >
       <div className="px-4 pb-8 pt-3">
-        <p className="mb-3 text-[12px] text-muted-foreground">
-          홈에 고정하려면 오른쪽 + 버튼을 눌러 추가하세요.
-        </p>
-        {Object.entries(grouped).map(([region, list]) => (
-          <section key={region} className="mb-5">
-            <h3 className="mb-2 text-[13px] font-bold text-foreground">{region}</h3>
-            <ul className="overflow-hidden rounded-[10px] bg-surface">
-              {list.map((m) => {
-                const isFixed = fixed.includes(m.id);
-                return (
-                  <li
-                    key={m.id}
-                    className="flex items-center gap-2 border-t border-[#F1F3F5] px-3 py-3 first:border-t-0"
-                  >
-                    <Link
-                      to="/market/wholesale/$market"
-                      params={{ market: m.id }}
-                      className="min-w-0 flex-1"
+        {/* 선택 시장 드롭다운 */}
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerTrigger asChild>
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-[12px] border border-[#E9ECEF] bg-white px-4 py-3.5 text-left active:bg-[#F8F9FA]"
+            >
+              <div className="min-w-0">
+                <div className="text-[11px] font-semibold text-[#3A8A3A]">
+                  선택된 도매시장
+                </div>
+                <div className="mt-0.5 text-[16px] font-bold text-foreground">
+                  {market.name}
+                </div>
+                <div className="text-[11px] text-muted-foreground">
+                  {market.region}
+                </div>
+              </div>
+              <ChevronDown className="h-5 w-5 text-muted-foreground" />
+            </button>
+          </DrawerTrigger>
+          <DrawerContent className="mx-auto max-h-[80vh] max-w-[430px] bg-background">
+            <div className="mx-auto mt-2 h-1 w-8 rounded-full bg-[#E9ECEF]" />
+            <div className="px-4 pb-3 pt-3">
+              <h3 className="text-center text-[15px] font-bold text-foreground">
+                도매시장 선택
+              </h3>
+            </div>
+            <div className="overflow-y-auto px-4 pb-6">
+              {Object.entries(grouped).map(([region, list]) => (
+                <section key={region} className="mb-4">
+                  <h4 className="mb-1.5 px-1 text-[12px] font-bold text-muted-foreground">
+                    {region}
+                  </h4>
+                  <ul className="overflow-hidden rounded-[10px] bg-surface">
+                    {list.map((x) => {
+                      const active = x.id === market.id;
+                      return (
+                        <li key={x.id}>
+                          <button
+                            type="button"
+                            onClick={() => selectMarket(x.id)}
+                            className={cn(
+                              "flex w-full items-center justify-between border-t border-[#F1F3F5] px-3 py-3 text-left first:border-t-0",
+                              active && "bg-[#F0F9F0]",
+                            )}
+                          >
+                            <div>
+                              <div
+                                className={cn(
+                                  "text-[14px] font-semibold text-foreground",
+                                  active && "text-[#3A8A3A]",
+                                )}
+                              >
+                                {x.name}
+                              </div>
+                              <div className="text-[11px] text-muted-foreground">
+                                {x.region}
+                              </div>
+                            </div>
+                            {active && (
+                              <Check className="h-4 w-4 text-[#3A8A3A]" />
+                            )}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </DrawerContent>
+        </Drawer>
+
+        {/* 품목 리스트 */}
+        <h3 className="mb-2 mt-6 px-1 text-[12px] font-bold text-muted-foreground">
+          {market.name} 거래 품목
+        </h3>
+        <ul className="overflow-hidden rounded-[10px] bg-surface">
+          {items.map((it, idx) => {
+            const up = it.changePct >= 0;
+            return (
+              <li key={it.id}>
+                <Link
+                  to="/market/wholesale/$market"
+                  params={{ market: market.id }}
+                  className={cn(
+                    "flex items-center gap-3 border-t border-[#F1F3F5] px-3 py-3.5",
+                    idx === 0 && "border-t-0",
+                  )}
+                >
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#F0F9F0]">
+                    <CropIcon name={it.name} size={24} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[14px] font-semibold text-foreground">
+                      {it.name}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground">
+                      kg당 평균
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-data text-[14px] font-bold tabular-nums text-foreground">
+                      {it.priceKg.toLocaleString()}원
+                    </div>
+                    <div
+                      className={cn(
+                        "text-[11px] font-semibold tabular-nums",
+                        up ? "text-[#DC2626]" : "text-[#2563EB]",
+                      )}
                     >
-                      <div className="text-[14px] font-semibold text-foreground">{m.name}</div>
-                      <div className="text-[11px] text-muted-foreground">{m.region}</div>
-                    </Link>
-                    <button
-                      onClick={() => (isFixed ? removeMarket(m.id) : addMarket(m.id))}
-                      className={
-                        "grid h-8 w-8 place-items-center rounded-full " +
-                        (isFixed ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-muted-foreground")
-                      }
-                      aria-label={isFixed ? "홈에서 제거" : "홈에 추가"}
-                    >
-                      {isFixed ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        ))}
+                      {up ? "▲" : "▼"} {Math.abs(it.changePct).toFixed(1)}%
+                    </div>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </AppShell>
   );

@@ -47,7 +47,7 @@ export function PredictableCropCards() {
           to="/prediction"
           className="flex items-center gap-0.5 text-[12px] font-semibold text-[#3A8A3A]"
         >
-          전체보기
+          더보기
           <ChevronRight className="h-3.5 w-3.5" />
         </Link>
       </div>
