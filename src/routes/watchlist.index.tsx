@@ -11,7 +11,7 @@ import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
 import type { FavoritePriceItem } from "@/features/favorites/types";
 import { useMarketFilter } from "@/store/market";
 
-export const Route = createFileRoute("/watchlist")({
+export const Route = createFileRoute("/watchlist/")({
   component: WatchlistPage,
   head: () => ({
     meta: [
