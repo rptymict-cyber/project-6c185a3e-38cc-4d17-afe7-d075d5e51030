@@ -14,6 +14,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as PredictionRouteImport } from './routes/prediction'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as NewsRouteImport } from './routes/news'
 import { Route as MarketCompareRouteImport } from './routes/market-compare'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as LiveRouteImport } from './routes/live'
@@ -64,6 +65,11 @@ const PredictionRoute = PredictionRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketCompareRoute = MarketCompareRouteImport.update({
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/live': typeof LiveRoute
   '/market': typeof MarketRouteWithChildren
   '/market-compare': typeof MarketCompareRoute
+  '/news': typeof NewsRoute
   '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/grades': typeof GradesRoute
   '/live': typeof LiveRoute
   '/market-compare': typeof MarketCompareRoute
+  '/news': typeof NewsRoute
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/live': typeof LiveRoute
   '/market': typeof MarketRouteWithChildren
   '/market-compare': typeof MarketCompareRoute
+  '/news': typeof NewsRoute
   '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
@@ -308,6 +317,7 @@ export interface FileRouteTypes {
     | '/live'
     | '/market'
     | '/market-compare'
+    | '/news'
     | '/notifications'
     | '/prediction'
     | '/search'
@@ -340,6 +350,7 @@ export interface FileRouteTypes {
     | '/grades'
     | '/live'
     | '/market-compare'
+    | '/news'
     | '/prediction'
     | '/search'
     | '/settings'
@@ -371,6 +382,7 @@ export interface FileRouteTypes {
     | '/live'
     | '/market'
     | '/market-compare'
+    | '/news'
     | '/notifications'
     | '/prediction'
     | '/search'
@@ -405,6 +417,7 @@ export interface RootRouteChildren {
   LiveRoute: typeof LiveRoute
   MarketRoute: typeof MarketRouteWithChildren
   MarketCompareRoute: typeof MarketCompareRoute
+  NewsRoute: typeof NewsRoute
   NotificationsRoute: typeof NotificationsRouteWithChildren
   PredictionRoute: typeof PredictionRoute
   SearchRoute: typeof SearchRoute
@@ -451,6 +464,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/market-compare': {
@@ -725,6 +745,7 @@ const rootRouteChildren: RootRouteChildren = {
   LiveRoute: LiveRoute,
   MarketRoute: MarketRouteWithChildren,
   MarketCompareRoute: MarketCompareRoute,
+  NewsRoute: NewsRoute,
   NotificationsRoute: NotificationsRouteWithChildren,
   PredictionRoute: PredictionRoute,
   SearchRoute: SearchRoute,
