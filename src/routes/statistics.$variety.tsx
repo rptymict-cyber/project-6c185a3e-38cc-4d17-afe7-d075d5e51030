@@ -78,43 +78,19 @@ function VarietyStatsPage() {
       }
     >
 
-      {/* Big crop selector — 상단 큰 카드 */}
+      {/* 작물 선택 — Full 카드 (breadcrumb chip 제거, 카드 하나만 유지) */}
       <div className="px-4 pt-4">
-        <Link
+        <FullSelectCard
+          icon={<Sprout className="h-3.5 w-3.5" />}
+          label="작물"
+          value={`${data.breadcrumb.categoryLabel} · ${data.breadcrumb.itemLabel} · ${data.breadcrumb.varietyLabel}`}
           to="/crop-select"
           search={{
             from: "statistics-detail",
             return: `/statistics/${variety}`,
           }}
-          className="flex w-full items-center gap-3 rounded-[14px] border border-[#E9ECEF] bg-white px-4 py-3.5 text-left active:bg-[#F8F9FA]"
-        >
-          <span className="min-w-0 flex-1">
-            <span className="block text-[11px] font-semibold text-[#868E96]">조회 작물</span>
-            <span className="mt-0.5 block truncate text-[20px] font-black leading-tight text-foreground">
-              {data.breadcrumb.itemLabel} · {data.breadcrumb.varietyLabel}
-            </span>
-          </span>
-          <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
-        </Link>
+        />
         <p className="mt-2 text-[11.5px] text-[#868E96]">kg당 평균가 · 경매일 기준</p>
-      </div>
-
-      {/* Breadcrumb chip — 부류 › 품목 › 품종 */}
-      <div className="mt-2 px-4">
-        <Link
-          to="/crop-select"
-          search={{
-            from: "statistics-detail",
-            return: `/statistics/${variety}`,
-          }}
-          className="inline-flex items-center gap-1.5 rounded-full bg-[#F1F3F5] px-3 py-1.5 text-[12px] font-semibold text-[#495057]"
-        >
-          <span>{data.breadcrumb.categoryLabel}</span>
-          <ChevronRight className="h-3 w-3 text-[#ADB5BD]" />
-          <span>{data.breadcrumb.itemLabel}</span>
-          <ChevronRight className="h-3 w-3 text-[#ADB5BD]" />
-          <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
-        </Link>
       </div>
 
 
