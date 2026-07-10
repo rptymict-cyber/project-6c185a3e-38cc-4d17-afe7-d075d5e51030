@@ -3,12 +3,12 @@ import { Search } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
 import { HomeAgriNewsSection } from "@/components/home/HomeAgriNewsSection";
+import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { RealtimeSection } from "./RealtimeSection";
 import {
   HomeFeatureCard,
   WholesaleMarketIllustration,
   ItemBasketIllustration,
-  AIPredictionIllustration,
 } from "@/components/home/HomeFeatureCard";
 import type { LiveSort } from "@/lib/services/live-prices";
 
