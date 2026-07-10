@@ -108,6 +108,9 @@ export function SwipeReorderList({
               };
               setDragId(id);
             }}
+            className={className}
+            wrapperClassName={wrapperClassName}
+            dragHandlePosition={dragHandlePosition}
           >
             {item.render()}
           </SwipeRow>
