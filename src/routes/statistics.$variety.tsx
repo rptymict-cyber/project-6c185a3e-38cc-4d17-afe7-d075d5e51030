@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   createFileRoute,
-  Link,
   useRouter,
 } from "@tanstack/react-router";
-import { Calendar, ChevronDown, ChevronRight } from "lucide-react";
+import { Calendar, Sprout } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
 import { AppShell } from "@/components/app-shell";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
 import { TrendTab } from "@/components/statistics/TrendTab";
 import { VolumeByMarketTab } from "@/components/statistics/VolumeByMarketTab";
+import { CompactSelectCard, FullSelectCard } from "@/components/common/ConditionSelectCard";
 // NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
 import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
@@ -78,43 +78,19 @@ function VarietyStatsPage() {
       }
     >
 
-      {/* Big crop selector — 상단 큰 카드 */}
+      {/* 작물 선택 — Full 카드 (breadcrumb chip 제거, 카드 하나만 유지) */}
       <div className="px-4 pt-4">
-        <Link
+        <FullSelectCard
+          icon={<Sprout className="h-3.5 w-3.5" />}
+          label="작물"
+          value={`${data.breadcrumb.categoryLabel} · ${data.breadcrumb.itemLabel} · ${data.breadcrumb.varietyLabel}`}
           to="/crop-select"
           search={{
             from: "statistics-detail",
             return: `/statistics/${variety}`,
           }}
-          className="flex w-full items-center gap-3 rounded-[14px] border border-[#E9ECEF] bg-white px-4 py-3.5 text-left active:bg-[#F8F9FA]"
-        >
-          <span className="min-w-0 flex-1">
-            <span className="block text-[11px] font-semibold text-[#868E96]">조회 작물</span>
-            <span className="mt-0.5 block truncate text-[20px] font-black leading-tight text-foreground">
-              {data.breadcrumb.itemLabel} · {data.breadcrumb.varietyLabel}
-            </span>
-          </span>
-          <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
-        </Link>
+        />
         <p className="mt-2 text-[11.5px] text-[#868E96]">kg당 평균가 · 경매일 기준</p>
-      </div>
-
-      {/* Breadcrumb chip — 부류 › 품목 › 품종 */}
-      <div className="mt-2 px-4">
-        <Link
-          to="/crop-select"
-          search={{
-            from: "statistics-detail",
-            return: `/statistics/${variety}`,
-          }}
-          className="inline-flex items-center gap-1.5 rounded-full bg-[#F1F3F5] px-3 py-1.5 text-[12px] font-semibold text-[#495057]"
-        >
-          <span>{data.breadcrumb.categoryLabel}</span>
-          <ChevronRight className="h-3 w-3 text-[#ADB5BD]" />
-          <span>{data.breadcrumb.itemLabel}</span>
-          <ChevronRight className="h-3 w-3 text-[#ADB5BD]" />
-          <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
-        </Link>
       </div>
 
 
@@ -146,22 +122,13 @@ function VarietyStatsPage() {
         <div className="pb-6">
           {/* Date selector card (matches 시세 탭 조회 날짜 카드) */}
           <div className="px-4 pt-4">
-            <button
-              type="button"
+            <CompactSelectCard
+              icon={<Calendar className="h-3.5 w-3.5" />}
+              label="조회 날짜"
+              value={date.replaceAll("-", ".")}
               onClick={() => setDateOpen(true)}
-              className="flex min-h-16 w-full flex-col items-start gap-1 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
-            >
-              <span className="flex items-center gap-1 text-[11px] font-medium text-[#868E96]">
-                <Calendar className="h-3.5 w-3.5" />
-                조회 날짜
-              </span>
-              <span className="flex w-full items-center justify-between">
-                <span className="truncate text-[14px] font-bold text-foreground">
-                  {date.replaceAll("-", ".")}
-                </span>
-                <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#ADB5BD]" />
-              </span>
-            </button>
+            />
+
 
             {data.differentFromRequest && (
               <div className="mt-2 rounded-[8px] bg-[#F0F9F0] px-3 py-2 text-[11.5px] font-semibold text-[#1F5C1F]">

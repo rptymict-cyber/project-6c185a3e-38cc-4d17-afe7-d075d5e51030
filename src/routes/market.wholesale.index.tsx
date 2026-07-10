@@ -93,7 +93,7 @@ function WholesaleBrowsePage() {
             >
               <div className="min-w-0">
                 <div className="text-[11px] font-semibold text-[#3A8A3A]">
-                  선택된 도매시장
+                  도매시장
                 </div>
                 <div className="mt-0.5 text-[16px] font-bold text-foreground">
                   {market.name}

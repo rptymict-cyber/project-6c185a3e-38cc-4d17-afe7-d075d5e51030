@@ -30,10 +30,7 @@ const CROP_SELECT_SEARCH = {
 };
 
 function formatKoreanDate(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  const dt = new Date(y, (m ?? 1) - 1, d ?? 1);
-  const wd = ["일", "월", "화", "수", "목", "금", "토"][dt.getDay()];
-  return `${y}년 ${m}월 ${d}일 (${wd})`;
+  return iso.replaceAll("-", ".");
 }
 
 function StatisticsHome() {
