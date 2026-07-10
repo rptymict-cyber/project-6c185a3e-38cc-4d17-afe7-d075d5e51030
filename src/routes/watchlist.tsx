@@ -216,7 +216,7 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
   const unitPrice = item.price ?? 0;
 
   return (
-    <div className="rounded-2xl border border-border bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+    <div className="bg-background p-4">
       <button
         type="button"
         onClick={handleOpen}
@@ -232,36 +232,31 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
-                {item.isPredictable && (
-                  <div className="mb-1">
-                    <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
-                      AI 가격 예측
-                    </span>
-                  </div>
-                )}
                 <div className="truncate text-[15px] font-bold text-foreground">
                   {item.cropName}
                   {item.varietyName ? ` · ${item.varietyName}` : ""}
                 </div>
-                <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
-                  {item.marketName} · {item.corporationName ?? "전체 법인"}
-                </div>
-                <div className="truncate text-[12px] text-muted-foreground">
-                  {item.originName ?? "전체 산지"} · {unitLabel} 기준
-                  {item.grade ? ` · ${item.grade}` : ""}
-                </div>
               </div>
               <Star
-                className="mt-0.5 h-5 w-5 shrink-0 text-[#F5B301]"
+                className="mr-8 h-5 w-5 shrink-0 text-[#F5B301]"
                 fill="#F5B301"
                 strokeWidth={1.5}
                 aria-hidden
               />
             </div>
+            <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
+              {item.marketName} · {item.corporationName ?? "전체 법인"}
+            </div>
+            <div className="truncate text-[12px] text-muted-foreground">
+              {item.originName ?? "전체 산지"} · {unitLabel} 기준
+              {item.grade ? ` · ${item.grade}` : ""}
+            </div>
           </div>
         </div>
 
-        <div className="mt-3 flex items-end justify-between gap-3">
+        <div className="my-3 border-t border-[#F1F3F5]" />
+
+        <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-baseline gap-1">
               <span className="font-data text-[26px] font-black leading-none tabular-nums text-foreground">
@@ -281,7 +276,7 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
           <div className="flex shrink-0 flex-col items-end gap-1">
             <span
               className={cn(
-                "inline-flex items-center whitespace-nowrap text-[13px] font-bold tabular-nums",
+                "inline-flex items-center whitespace-nowrap text-[15px] font-bold tabular-nums",
                 flat
                   ? "text-muted-foreground"
                   : rising
@@ -293,7 +288,7 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
                 ? "— 0.0%"
                 : `${rising ? "▲ +" : "▼ "}${(item.changeRate ?? 0).toFixed(1)}%`}
             </span>
-            <span className="text-[10.5px] text-muted-foreground">
+            <span className="text-[11px] text-muted-foreground">
               전일 대비
             </span>
           </div>
