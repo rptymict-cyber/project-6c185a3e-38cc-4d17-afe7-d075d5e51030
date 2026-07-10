@@ -23,6 +23,8 @@ export interface FavoritePriceItem {
   totalVolume?: number;
   isPredictable?: boolean;
   createdAt: string;
+  /** 수동 정렬 순서. 낮을수록 위. 없으면 최근 등록순으로 fallback. */
+  order?: number;
 }
 
 export type FavoriteCondition = Pick<
