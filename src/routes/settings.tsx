@@ -45,7 +45,7 @@ function openStoreReview() {
 
 function SettingsPage() {
   return (
-    <AppShell header={<AppHeader title="설정" />}>
+    <AppShell header={<AppHeader title="설정" showRefresh={false} showBell={false} />}>
       <div className="px-4 pt-4 pb-8">
         <SectionLabel>알림</SectionLabel>
         <div className="overflow-hidden rounded-[10px] bg-surface">

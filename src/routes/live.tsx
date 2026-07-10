@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/app-shell";
-import { DetailHeader } from "@/components/detail-header";
+import { AppHeader } from "@/components/app-header";
 // RealtimeSection reused only on home; /live renders its own list.
 import type { LiveSort } from "@/lib/services/live-prices";
 import { getLivePrices } from "@/lib/services/live-prices";
@@ -44,9 +44,10 @@ function LivePage() {
   return (
     <AppShell
       header={
-        <DetailHeader
+        <AppHeader
           title="실시간 시세"
-          onBack={() => history.back()}
+          showBell={false}
+          showSearch
         />
       }
     >

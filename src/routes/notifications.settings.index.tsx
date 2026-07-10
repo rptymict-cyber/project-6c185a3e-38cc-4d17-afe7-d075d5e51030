@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Bell, ChevronRight, Plus } from "lucide-react";
+import { Bell, ChevronRight, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import { Switch } from "@/components/ui/switch";
 import { SwipeReorderList } from "@/components/swipe-reorder-list";
 import { GeneralNotiSettings } from "@/components/notifications/GeneralNotiSettings";
@@ -60,18 +61,10 @@ function NotificationSettingsPage() {
   return (
     <AppShell
       header={
-        <header className="sticky top-0 z-30 flex h-[52px] items-center border-b border-[#E9ECEF] bg-background px-2">
-          <button
-            aria-label="뒤로"
-            onClick={() => router.history.back()}
-            className="grid h-9 w-9 place-items-center rounded-full hover:bg-secondary"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 text-[15px] font-black tracking-tight text-foreground">
-            알림 설정
-          </span>
-        </header>
+        <DetailHeader
+          title="알림 설정"
+          onBack={() => router.history.back()}
+        />
       }
     >
       <GeneralNotiSettings />

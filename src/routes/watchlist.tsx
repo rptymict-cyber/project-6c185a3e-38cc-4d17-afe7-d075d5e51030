@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Plus, RefreshCw, Search, Star, X } from "lucide-react";
+import { Plus, Search, Star, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
@@ -41,7 +41,6 @@ function WatchlistPage() {
   const removeFavorite = useFavoritePriceStore((s) => s.removeFavorite);
   const setOrder = useFavoritePriceStore((s) => s.setOrder);
   const [query, setQuery] = useState("");
-  const [spinning, setSpinning] = useState(false);
 
   const sorted = useMemo(() => sortFavorites(items), [items]);
 
@@ -58,21 +57,6 @@ function WatchlistPage() {
   }, [sorted, query]);
 
   const isSearching = query.trim().length > 0;
-
-  const rightSlot = (
-    <button
-      type="button"
-      aria-label="새로고침"
-      onClick={() => {
-        setSpinning(true);
-        setTimeout(() => setSpinning(false), 700);
-        toast("최신 시세로 업데이트했어요");
-      }}
-      className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-    >
-      <RefreshCw className={cn("h-5 w-5 transition-transform", spinning && "animate-spin")} />
-    </button>
-  );
 
   const rows: SRItem[] = filtered.map((it) => ({
     id: it.id,
@@ -91,7 +75,7 @@ function WatchlistPage() {
   };
 
   return (
-    <AppShell header={<AppHeader title="즐겨찾기" right={rightSlot} />}>
+    <AppShell header={<AppHeader title="즐겨찾기" showRefresh={false} showBell={false} />}>
       <div className="px-4 pt-4">
         <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">

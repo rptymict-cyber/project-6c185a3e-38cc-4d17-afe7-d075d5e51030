@@ -37,7 +37,7 @@ function ComparePage() {
   const worst = rows[rows.length - 1];
 
   return (
-    <AppShell header={<AppHeader title="시장별 비교" />}>
+    <AppShell header={<AppHeader title="시장별 가격 비교" showBell={false} />}>
       <div className="px-4 pt-4 pb-8">
         <label className="block rounded-[10px] bg-surface px-3 py-2.5">
           <div className="text-[11px] font-semibold text-muted-foreground">비교 품목</div>

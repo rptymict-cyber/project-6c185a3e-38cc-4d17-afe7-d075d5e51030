@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { Calendar as CalendarIcon, ChevronDown, ChevronRight, Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { DetailHeader } from "@/components/detail-header";
+import { AppHeader } from "@/components/app-header";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { useCropSelection } from "@/store/cropSelection";
 import { getCategoryById, getItemById } from "@/lib/catalog-service";
@@ -70,7 +70,7 @@ function MarketComparePage() {
 
   return (
     <AppShell
-      header={<DetailHeader title="시장별 가격 비교" onBack={() => router.history.back()} />}
+      header={<AppHeader title="시장별 가격 비교" showBell={false} />}
     >
       <div className="px-4 pb-24 pt-4">
         {/* Big crop selector */}

@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { DetailHeader } from "@/components/detail-header";
+import { AppHeader } from "@/components/app-header";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { ITEMS, ITEM_CATEGORIES } from "@/lib/mock/items";
 import { MARKETS } from "@/lib/mock/markets";
@@ -75,7 +75,7 @@ function ItemBrowsePage() {
 
   return (
     <AppShell
-      header={<DetailHeader title="품목별 조회" onBack={() => history.back()} />}
+      header={<AppHeader title="품목별 조회" showRefresh={false} showBell={false} showSearch />}
     >
       <div className="px-4 pb-8 pt-3">
         {/* 선택 품목 드롭다운 */}

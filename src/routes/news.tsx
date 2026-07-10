@@ -22,7 +22,7 @@ export const Route = createFileRoute("/news")({
 
 function NewsPage() {
   return (
-    <AppShell header={<AppHeader title="농산물 소식" />}>
+    <AppShell header={<AppHeader title="농산물 소식" showRefresh={false} showBell={false} />}>
       <div className="px-4 pb-24 pt-4">
         <div className="mb-2 flex items-center justify-between">
           <p className="text-[12.5px] text-[#6C757D]">
