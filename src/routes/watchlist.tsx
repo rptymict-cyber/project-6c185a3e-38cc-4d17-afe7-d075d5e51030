@@ -204,11 +204,12 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
                 </div>
               </div>
               <Star
-                className="mr-8 h-5 w-5 shrink-0 text-[#F5B301]"
+                className="mr-9 h-5 w-5 shrink-0 text-[#F5B301]"
                 fill="#F5B301"
                 strokeWidth={1.5}
                 aria-hidden
               />
+
             </div>
             <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
               {item.marketName} · {item.corporationName ?? "전체 법인"}
