@@ -1,8 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
-import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { AppShell } from "@/components/app-shell";
 import { DetailHeader } from "@/components/detail-header";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
@@ -13,12 +11,34 @@ import { cn } from "@/lib/utils";
 
 const DEFAULT_MARKET = "seoul-garak";
 
-const searchSchema = z.object({
-  m: fallback(z.string(), DEFAULT_MARKET).default(DEFAULT_MARKET),
-});
+type WholesaleSearch = { m?: string };
 
 export const Route = createFileRoute("/market/wholesale/")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (raw: Record<string, unknown>): WholesaleSearch => ({
+    m: typeof raw.m === "string" ? raw.m : undefined,
+  }),
+  head: () => ({
+    meta: [
+      { title: "도매시장별 조회 — AGDICT" },
+      {
+        name: "description",
+        content: "선택한 도매시장의 품목별 시세를 확인하세요.",
+      },
+    ],
+  }),
+  component: WholesaleBrowsePage,
+});
+
+function WholesaleBrowsePage() {
+  const { m } = Route.useSearch();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const market =
+    MARKETS.find((x) => x.id === m) ??
+    MARKETS.find((x) => x.id === DEFAULT_MARKET) ??
+    MARKETS[0];
+
   head: () => ({
     meta: [
       { title: "도매시장별 조회 — AGDICT" },
