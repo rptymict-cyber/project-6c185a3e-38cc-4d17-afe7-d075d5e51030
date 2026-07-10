@@ -196,16 +196,20 @@ function Row({
 
 /* ---------------- Rating (bottom sheet) ---------------- */
 
-function RatingRow({ onSubmitted }: { onSubmitted: () => void }) {
+function RatingRow() {
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [step, setStep] = useState<"form" | "store">("form");
+  const [submittedRating, setSubmittedRating] = useState(0);
 
   const reset = () => {
     setRating(0);
     setText("");
     setSubmitting(false);
+    setStep("form");
+    setSubmittedRating(0);
   };
 
   const canSubmit = rating > 0 && !submitting;
@@ -223,9 +227,21 @@ function RatingRow({ onSubmitted }: { onSubmitted: () => void }) {
       toast("전송에 실패했어요. 잠시 후 다시 시도해 주세요");
       return;
     }
+    setSubmitting(false);
+    setSubmittedRating(rating);
+    if (rating >= 4) {
+      setStep("store");
+    } else {
+      setOpen(false);
+      reset();
+      toast("소중한 의견 감사합니다 🙏");
+    }
+  };
+
+  const goStore = () => {
+    openStoreReview();
     setOpen(false);
     reset();
-    onSubmitted();
   };
 
   return (
@@ -248,65 +264,109 @@ function RatingRow({ onSubmitted }: { onSubmitted: () => void }) {
       </DrawerTrigger>
       <DrawerContent className="mx-auto max-w-[430px] bg-background">
         <div className="mx-auto mt-2 h-1 w-8 rounded-full bg-[#E9ECEF]" />
-        <div className="px-5 pb-6 pt-4">
-          <h3 className="text-center text-[17px] font-bold text-foreground">
-            앱이 마음에 드셨나요?
-          </h3>
-          <p className="mt-1 text-center text-[12px] text-muted-foreground">
-            여러분의 별점이 큰 힘이 됩니다
-          </p>
+        {step === "form" ? (
+          <div className="px-5 pb-6 pt-4">
+            <h3 className="text-center text-[17px] font-bold text-foreground">
+              앱이 마음에 드셨나요?
+            </h3>
+            <p className="mt-1 text-center text-[12px] text-muted-foreground">
+              여러분의 별점이 큰 힘이 됩니다
+            </p>
 
-          <div className="mt-5 flex items-center justify-center gap-1.5">
-            {[1, 2, 3, 4, 5].map((n) => {
-              const active = n <= rating;
-              return (
-                <button
-                  key={n}
-                  type="button"
-                  aria-label={`${n}점`}
-                  onClick={() => setRating(n)}
-                  className="p-1"
-                >
-                  <Star
-                    size={36}
-                    strokeWidth={1.5}
-                    color={active ? "#F08C00" : "#E9ECEF"}
-                    fill={active ? "#F08C00" : "transparent"}
-                  />
-                </button>
-              );
-            })}
+            <div className="mt-5 flex items-center justify-center gap-1.5">
+              {[1, 2, 3, 4, 5].map((n) => {
+                const active = n <= rating;
+                return (
+                  <button
+                    key={n}
+                    type="button"
+                    aria-label={`${n}점`}
+                    onClick={() => setRating(n)}
+                    className="p-1"
+                  >
+                    <Star
+                      size={36}
+                      strokeWidth={1.5}
+                      color={active ? "#F08C00" : "#E9ECEF"}
+                      fill={active ? "#F08C00" : "transparent"}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-5">
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value.slice(0, 200))}
+                placeholder="불편한 점이나 개선 의견을 남겨주세요"
+                className="h-[120px] w-full resize-none rounded-[10px] bg-[#F8F9FA] px-3 py-3 text-[13px] outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-[#3A8A3A]/30"
+                maxLength={200}
+              />
+              <div className="mt-1 text-right text-[11px] text-muted-foreground">
+                {text.length}/200
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={submit}
+              disabled={!canSubmit}
+              className={cn(
+                "mt-3 w-full rounded-lg py-3 text-[14px] font-bold text-white transition-colors",
+                canSubmit ? "bg-[#3A8A3A]" : "bg-[#ADB5BD]",
+              )}
+            >
+              {submitting ? "전송 중..." : "제출하기"}
+            </button>
           </div>
-
-          <div className="mt-5">
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value.slice(0, 200))}
-              placeholder="불편한 점이나 개선 의견을 남겨주세요"
-              className="h-[120px] w-full resize-none rounded-[10px] bg-[#F8F9FA] px-3 py-3 text-[13px] outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-[#3A8A3A]/30"
-              maxLength={200}
-            />
-            <div className="mt-1 text-right text-[11px] text-muted-foreground">
-              {text.length}/200
+        ) : (
+          <div className="px-5 pb-6 pt-4">
+            <div className="flex items-center justify-center gap-1">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <Star
+                  key={n}
+                  size={22}
+                  strokeWidth={1.5}
+                  color={n <= submittedRating ? "#F08C00" : "#E9ECEF"}
+                  fill={n <= submittedRating ? "#F08C00" : "transparent"}
+                />
+              ))}
+            </div>
+            <h3 className="mt-3 text-center text-[16px] font-bold text-foreground">
+              ⭐ {submittedRating}점 감사합니다!
+            </h3>
+            <p className="mt-2 text-center text-[13px] leading-relaxed text-muted-foreground">
+              앱스토어에도 리뷰를 남겨주시면
+              <br />
+              다른 농업인에게 큰 도움이 됩니다.
+            </p>
+            <div className="mt-5 grid gap-2">
+              <button
+                type="button"
+                onClick={goStore}
+                className="w-full rounded-lg bg-[#3A8A3A] py-3 text-[14px] font-bold text-white"
+              >
+                스토어에 리뷰 쓰기
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  reset();
+                }}
+                className="w-full rounded-lg bg-[#F1F3F5] py-3 text-[14px] font-semibold text-foreground"
+              >
+                다음에
+              </button>
             </div>
           </div>
-
-          <button
-            type="button"
-            onClick={submit}
-            disabled={!canSubmit}
-            className={cn(
-              "mt-3 w-full rounded-lg py-3 text-[14px] font-bold text-white transition-colors",
-              canSubmit ? "bg-[#3A8A3A]" : "bg-[#ADB5BD]",
-            )}
-          >
-            {submitting ? "전송 중..." : "제출하기"}
-          </button>
-        </div>
+        )}
       </DrawerContent>
     </Drawer>
   );
 }
+
 
 /* ---------------- Message (bottom sheet) ---------------- */
 
