@@ -5,7 +5,7 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { Calendar as CalendarIcon, Sprout } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronRight, Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
