@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { DetailHeader } from "@/components/detail-header";
+import { AppHeader } from "@/components/app-header";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { MARKETS } from "@/lib/mock/markets";
 import { ITEMS } from "@/lib/mock/items";
