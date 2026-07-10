@@ -8,6 +8,7 @@ import {
   Store,
   Package,
   LineChart,
+  Newspaper,
   Star,
   BarChart3,
   Scale,
