@@ -56,6 +56,9 @@ export function MarketListHome({
 
       <HomeAgriNewsSection />
 
+      {/* AI 가격 예측 (compact) */}
+      <PredictableCropCards />
+
       {/* 주요 진입 카드 */}
       <section className="mt-6 flex flex-col gap-3 px-4">
         <HomeFeatureCard
@@ -69,12 +72,6 @@ export function MarketListHome({
           title="품목별 조회"
           to="/market/item"
           image={<ItemBasketIllustration />}
-        />
-        <HomeFeatureCard
-          eyebrow="AI가 예측한 미래 시세를 확인하세요"
-          title="AI 시세 예측"
-          to="/prediction"
-          image={<AIPredictionIllustration />}
         />
       </section>
 
