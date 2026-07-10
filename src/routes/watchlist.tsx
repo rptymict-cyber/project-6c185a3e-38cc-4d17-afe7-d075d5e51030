@@ -91,7 +91,7 @@ function WatchlistPage() {
   };
 
   return (
-    <AppShell header={<AppHeader title="즐겨찾기" right={rightSlot} />}>
+    <AppShell header={<AppHeader title="즐겨찾기" showRefresh={false} showBell={false} />}>
       <div className="px-4 pt-4">
         <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
