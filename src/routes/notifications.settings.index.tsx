@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { Bell, ChevronRight, Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { DetailHeader } from "@/components/detail-header";
@@ -69,24 +69,7 @@ function NotificationSettingsPage() {
     >
       <GeneralNotiSettings />
 
-      <h3 className="mb-2 mt-6 px-5 text-[12px] font-bold text-muted-foreground">
-        개별 알림 규칙
-      </h3>
-      {sorted.length === 0 ? (
-        <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-          <div className="grid h-16 w-16 place-items-center rounded-full bg-[#F1F3F5]">
-            <Bell className="h-7 w-7 text-[#ADB5BD]" />
-          </div>
-          <p className="mt-4 text-[15px] font-bold text-foreground">
-            설정된 알림이 없어요
-          </p>
-          <p className="mt-1 text-[12px] text-muted-foreground">
-            + 버튼을 눌러 품종·시장을 선택하고
-            <br />
-            알림 조건을 등록해 보세요
-          </p>
-        </div>
-      ) : (
+      {sorted.length > 0 && (
         <div className="pb-24">
           <SwipeReorderList
             items={items}
