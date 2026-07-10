@@ -88,12 +88,7 @@ export function AuctionHistoryTable() {
 
 
       {page < totalPages && (
-        <button
-          onClick={() => setPage((p) => p + 1)}
-          className="mt-3 flex h-11 w-full items-center justify-center gap-1 rounded-[10px] border border-[#E9ECEF] bg-white text-[13px] font-semibold text-[#495057]"
-        >
-          더 불러오기 ({page}/{totalPages} 페이지)
-        </button>
+        <LoadMoreButton onClick={() => setPage((p) => p + 1)} />
       )}
     </div>
   );
