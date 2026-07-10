@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Star, MessageSquare, ChevronRight } from "lucide-react";
+import { Star, MessageSquare, ChevronRight, Bell, Info } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
@@ -9,13 +9,6 @@ import {
   DrawerContent,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -24,29 +17,62 @@ export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "설정 — AGDICT" },
-      { name: "description", content: "피드백, 앱 평가." },
+      { name: "description", content: "알림 설정, 피드백, 앱 평가." },
     ],
   }),
 });
 
-const APP_STORE_URL =
-  "https://apps.apple.com/kr/app/id0000000000"; // placeholder
+// 스토어 등록 후 값만 채우면 자동 연결됩니다.
+const STORE_URLS = { ios: "", android: "" };
+
+function openStoreReview() {
+  try {
+    const ua =
+      typeof navigator !== "undefined" ? navigator.userAgent || "" : "";
+    const isIOS = /iPad|iPhone|iPod/.test(ua);
+    const url = isIOS ? STORE_URLS.ios : STORE_URLS.android;
+    if (url) {
+      window.location.href = url;
+      return true;
+    }
+    toast("스토어 등록 후 이용하실 수 있어요");
+    return false;
+  } catch {
+    toast("스토어로 이동할 수 없어요");
+    return false;
+  }
+}
 
 function SettingsPage() {
-  const [thanksOpen, setThanksOpen] = useState(false);
-
   return (
     <AppShell header={<AppHeader title="설정" />}>
       <div className="px-4 pt-4 pb-8">
-        <SectionLabel>피드백</SectionLabel>
+        <SectionLabel>알림</SectionLabel>
         <div className="overflow-hidden rounded-[10px] bg-surface">
-          <RatingRow onSubmitted={() => setThanksOpen(true)} />
+          <LinkRow
+            to="/notifications/settings"
+            icon={<Bell className="h-5 w-5" />}
+            title="알림 설정"
+            subtitle="시세·경매 알림 수신 관리"
+          />
+        </div>
+
+        <SectionLabel className="mt-8">피드백</SectionLabel>
+        <div className="overflow-hidden rounded-[10px] bg-surface">
+          <RatingRow />
           <div className="mx-4 h-px bg-border" />
           <MessageRow />
         </div>
 
         <SectionLabel className="mt-8">정보</SectionLabel>
         <div className="overflow-hidden rounded-[10px] bg-surface">
+          <LinkRow
+            to="/data-guide"
+            icon={<Info className="h-5 w-5" />}
+            title="데이터 기준 안내"
+            subtitle="가격 단위·출처·기준일 안내"
+          />
+          <div className="mx-4 h-px bg-border" />
           <div className="flex items-center justify-between px-4 py-4">
             <div>
               <div className="text-[14px] font-semibold text-foreground">
@@ -66,11 +92,40 @@ function SettingsPage() {
           AGDICT · 농산물 시세 조회
         </div>
       </div>
-
-      <ThanksDialog open={thanksOpen} onOpenChange={setThanksOpen} />
     </AppShell>
   );
 }
+
+function LinkRow({
+  to,
+  icon,
+  title,
+  subtitle,
+}: {
+  to: string;
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+}) {
+  return (
+    <Link
+      to={to}
+      className="flex w-full items-center gap-3 px-4 py-4 text-left"
+    >
+      <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#F0F9F0] text-[#3A8A3A]">
+        {icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-[14px] font-semibold text-foreground">{title}</div>
+        {subtitle && (
+          <div className="text-[11px] text-muted-foreground">{subtitle}</div>
+        )}
+      </div>
+      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+    </Link>
+  );
+}
+
 
 function SectionLabel({
   children,
@@ -141,16 +196,20 @@ function Row({
 
 /* ---------------- Rating (bottom sheet) ---------------- */
 
-function RatingRow({ onSubmitted }: { onSubmitted: () => void }) {
+function RatingRow() {
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [step, setStep] = useState<"form" | "store">("form");
+  const [submittedRating, setSubmittedRating] = useState(0);
 
   const reset = () => {
     setRating(0);
     setText("");
     setSubmitting(false);
+    setStep("form");
+    setSubmittedRating(0);
   };
 
   const canSubmit = rating > 0 && !submitting;
@@ -168,9 +227,21 @@ function RatingRow({ onSubmitted }: { onSubmitted: () => void }) {
       toast("전송에 실패했어요. 잠시 후 다시 시도해 주세요");
       return;
     }
+    setSubmitting(false);
+    setSubmittedRating(rating);
+    if (rating >= 4) {
+      setStep("store");
+    } else {
+      setOpen(false);
+      reset();
+      toast("소중한 의견 감사합니다 🙏");
+    }
+  };
+
+  const goStore = () => {
+    openStoreReview();
     setOpen(false);
     reset();
-    onSubmitted();
   };
 
   return (
@@ -193,65 +264,109 @@ function RatingRow({ onSubmitted }: { onSubmitted: () => void }) {
       </DrawerTrigger>
       <DrawerContent className="mx-auto max-w-[430px] bg-background">
         <div className="mx-auto mt-2 h-1 w-8 rounded-full bg-[#E9ECEF]" />
-        <div className="px-5 pb-6 pt-4">
-          <h3 className="text-center text-[17px] font-bold text-foreground">
-            앱이 마음에 드셨나요?
-          </h3>
-          <p className="mt-1 text-center text-[12px] text-muted-foreground">
-            여러분의 별점이 큰 힘이 됩니다
-          </p>
+        {step === "form" ? (
+          <div className="px-5 pb-6 pt-4">
+            <h3 className="text-center text-[17px] font-bold text-foreground">
+              앱이 마음에 드셨나요?
+            </h3>
+            <p className="mt-1 text-center text-[12px] text-muted-foreground">
+              여러분의 별점이 큰 힘이 됩니다
+            </p>
 
-          <div className="mt-5 flex items-center justify-center gap-1.5">
-            {[1, 2, 3, 4, 5].map((n) => {
-              const active = n <= rating;
-              return (
-                <button
-                  key={n}
-                  type="button"
-                  aria-label={`${n}점`}
-                  onClick={() => setRating(n)}
-                  className="p-1"
-                >
-                  <Star
-                    size={36}
-                    strokeWidth={1.5}
-                    color={active ? "#F08C00" : "#E9ECEF"}
-                    fill={active ? "#F08C00" : "transparent"}
-                  />
-                </button>
-              );
-            })}
+            <div className="mt-5 flex items-center justify-center gap-1.5">
+              {[1, 2, 3, 4, 5].map((n) => {
+                const active = n <= rating;
+                return (
+                  <button
+                    key={n}
+                    type="button"
+                    aria-label={`${n}점`}
+                    onClick={() => setRating(n)}
+                    className="p-1"
+                  >
+                    <Star
+                      size={36}
+                      strokeWidth={1.5}
+                      color={active ? "#F08C00" : "#E9ECEF"}
+                      fill={active ? "#F08C00" : "transparent"}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-5">
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value.slice(0, 200))}
+                placeholder="불편한 점이나 개선 의견을 남겨주세요"
+                className="h-[120px] w-full resize-none rounded-[10px] bg-[#F8F9FA] px-3 py-3 text-[13px] outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-[#3A8A3A]/30"
+                maxLength={200}
+              />
+              <div className="mt-1 text-right text-[11px] text-muted-foreground">
+                {text.length}/200
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={submit}
+              disabled={!canSubmit}
+              className={cn(
+                "mt-3 w-full rounded-lg py-3 text-[14px] font-bold text-white transition-colors",
+                canSubmit ? "bg-[#3A8A3A]" : "bg-[#ADB5BD]",
+              )}
+            >
+              {submitting ? "전송 중..." : "제출하기"}
+            </button>
           </div>
-
-          <div className="mt-5">
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value.slice(0, 200))}
-              placeholder="불편한 점이나 개선 의견을 남겨주세요"
-              className="h-[120px] w-full resize-none rounded-[10px] bg-[#F8F9FA] px-3 py-3 text-[13px] outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-[#3A8A3A]/30"
-              maxLength={200}
-            />
-            <div className="mt-1 text-right text-[11px] text-muted-foreground">
-              {text.length}/200
+        ) : (
+          <div className="px-5 pb-6 pt-4">
+            <div className="flex items-center justify-center gap-1">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <Star
+                  key={n}
+                  size={22}
+                  strokeWidth={1.5}
+                  color={n <= submittedRating ? "#F08C00" : "#E9ECEF"}
+                  fill={n <= submittedRating ? "#F08C00" : "transparent"}
+                />
+              ))}
+            </div>
+            <h3 className="mt-3 text-center text-[16px] font-bold text-foreground">
+              ⭐ {submittedRating}점 감사합니다!
+            </h3>
+            <p className="mt-2 text-center text-[13px] leading-relaxed text-muted-foreground">
+              앱스토어에도 리뷰를 남겨주시면
+              <br />
+              다른 농업인에게 큰 도움이 됩니다.
+            </p>
+            <div className="mt-5 grid gap-2">
+              <button
+                type="button"
+                onClick={goStore}
+                className="w-full rounded-lg bg-[#3A8A3A] py-3 text-[14px] font-bold text-white"
+              >
+                스토어에 리뷰 쓰기
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  reset();
+                }}
+                className="w-full rounded-lg bg-[#F1F3F5] py-3 text-[14px] font-semibold text-foreground"
+              >
+                다음에
+              </button>
             </div>
           </div>
-
-          <button
-            type="button"
-            onClick={submit}
-            disabled={!canSubmit}
-            className={cn(
-              "mt-3 w-full rounded-lg py-3 text-[14px] font-bold text-white transition-colors",
-              canSubmit ? "bg-[#3A8A3A]" : "bg-[#ADB5BD]",
-            )}
-          >
-            {submitting ? "전송 중..." : "제출하기"}
-          </button>
-        </div>
+        )}
       </DrawerContent>
     </Drawer>
   );
 }
+
 
 /* ---------------- Message (bottom sheet) ---------------- */
 
@@ -335,48 +450,5 @@ function MessageRow() {
         </div>
       </DrawerContent>
     </Drawer>
-  );
-}
-
-/* ---------------- Thanks dialog ---------------- */
-
-function ThanksDialog({
-  open,
-  onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (o: boolean) => void;
-}) {
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="mx-auto max-w-[340px] rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-center text-[17px]">
-            소중한 의견 감사합니다! 🙏
-          </DialogTitle>
-          <DialogDescription className="text-center">
-            앱스토어에도 별점을 남겨주시면 큰 도움이 됩니다.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="mt-2 grid gap-2">
-          <a
-            href={APP_STORE_URL}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => onOpenChange(false)}
-            className="grid place-items-center rounded-lg bg-[#3A8A3A] py-2.5 text-[14px] font-bold text-white"
-          >
-            앱스토어 리뷰 남기기
-          </a>
-          <button
-            type="button"
-            onClick={() => onOpenChange(false)}
-            className="grid place-items-center rounded-lg bg-[#F1F3F5] py-2.5 text-[14px] font-semibold text-foreground"
-          >
-            닫기
-          </button>
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 }
