@@ -162,6 +162,7 @@ function SwipeRow({
       className={cn(
         "relative overflow-hidden rounded-[10px]",
         dragging && "z-10 shadow-lg",
+        wrapperClassName,
       )}
       style={{
         transform: dragging ? `translateY(${dragOffset}px)` : undefined,
