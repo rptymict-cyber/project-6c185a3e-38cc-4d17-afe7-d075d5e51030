@@ -9,7 +9,6 @@ import {
   HomeFeatureCard,
   WholesaleMarketIllustration,
   ItemBasketIllustration,
-  AIPredictionIllustration,
 } from "@/components/home/HomeFeatureCard";
 import type { LiveSort } from "@/lib/services/live-prices";
 
