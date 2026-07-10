@@ -29,27 +29,6 @@ export const Route = createFileRoute("/market/wholesale/")({
   component: WholesaleBrowsePage,
 });
 
-function WholesaleBrowsePage() {
-  const { m } = Route.useSearch();
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-
-  const market =
-    MARKETS.find((x) => x.id === m) ??
-    MARKETS.find((x) => x.id === DEFAULT_MARKET) ??
-    MARKETS[0];
-
-  head: () => ({
-    meta: [
-      { title: "도매시장별 조회 — AGDICT" },
-      {
-        name: "description",
-        content: "선택한 도매시장의 품목별 시세를 확인하세요.",
-      },
-    ],
-  }),
-  component: WholesaleBrowsePage,
-});
 
 function WholesaleBrowsePage() {
   const { m } = Route.useSearch();
