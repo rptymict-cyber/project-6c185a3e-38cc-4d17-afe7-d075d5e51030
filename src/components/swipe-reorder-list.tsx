@@ -180,7 +180,10 @@ function SwipeRow({
       </button>
       {/* foreground content */}
       <div
-        className="relative flex items-stretch bg-surface"
+        className={cn(
+          "relative flex items-stretch bg-surface",
+          className,
+        )}
         style={{
           transform: `translateX(${tx}px)`,
           transition: startX.current === null ? "transform 180ms ease" : "none",
