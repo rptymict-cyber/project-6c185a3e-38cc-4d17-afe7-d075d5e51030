@@ -95,12 +95,7 @@ function LivePage() {
           </ul>
         </div>
         {rows.length < total && (
-          <button
-            onClick={() => setOffset((o) => o + PAGE_SIZE)}
-            className="mt-3 w-full rounded-[10px] border border-[#E9ECEF] bg-background py-2.5 text-[13px] font-semibold text-foreground active:bg-secondary"
-          >
-            더 불러오기
-          </button>
+          <LoadMoreButton onClick={() => setOffset((o) => o + PAGE_SIZE)} />
         )}
         <p className="mt-4 text-center text-[10.5px] text-muted-foreground">
           정렬/집계는 서버 기준입니다. 클라이언트에서 순서를 바꾸지 않습니다.
