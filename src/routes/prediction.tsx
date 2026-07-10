@@ -122,7 +122,7 @@ function PredictionPage() {
           quantityLabel={`${quantityBoxes}상자`}
           cropLabel={`${cropMeta.categoryName} · ${cropMeta.name} · ${cropMeta.varietyName}`}
           marketLabel={marketName}
-          viewpointLabel={isFarmer ? "농가" : "도매인"}
+          viewpointLabel={isFarmer ? "농가" : "도매상"}
           onQuantityClick={() => setQtySheetOpen(true)}
           onCropClick={() => setCropSheetOpen(true)}
           onMarketClick={() => setMarketSheetOpen(true)}
