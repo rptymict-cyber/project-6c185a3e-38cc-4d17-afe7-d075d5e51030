@@ -152,9 +152,6 @@ function WatchlistPage() {
             />
           )}
 
-          <p className="px-4 pb-6 text-center text-[11.5px] text-muted-foreground">
-            시세는 약 1분 주기로 일괄 갱신돼요
-          </p>
         </>
       )}
 
