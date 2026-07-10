@@ -18,7 +18,7 @@ export function CorporationSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="max-h-[75dvh] overflow-y-auto rounded-t-2xl p-0">
         <SheetHeader className="px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">도매법인 선택</SheetTitle>
+          <SheetTitle className="text-[16px] font-bold">법인 선택</SheetTitle>
         </SheetHeader>
         <div className="px-5 pt-1 text-[12px] text-[#6C757D]">{marketLabel} 소속</div>
         <ul className="px-2 pb-6 pt-2">

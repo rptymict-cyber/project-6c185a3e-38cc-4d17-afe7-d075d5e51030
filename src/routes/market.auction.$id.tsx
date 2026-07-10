@@ -14,6 +14,7 @@ export const Route = createFileRoute("/market/auction/$id")({
   }),
 });
 
+
 function AuctionDetail() {
   const { id } = Route.useParams();
   const router = useRouter();
@@ -30,7 +31,7 @@ function AuctionDetail() {
     <AppShell
       header={
         <DetailHeader
-          title="경매 상세"
+          title="경매 상세 결과"
           onBack={() => router.history.back()}
         />
       }
@@ -47,7 +48,7 @@ function AuctionDetail() {
       ) : (
         <dl className="mx-4 mt-4 divide-y divide-[#F1F3F5] rounded-[12px] border border-[#E9ECEF] bg-white">
           <Row label="경매시간" value={`${record.auctionTime}`} />
-          <Row label="부류" value={record.category} />
+          <Row label="분류" value={record.category} />
           <Row label="품목" value={record.cropName} />
           <Row label="품종" value={record.varietyName} />
           <Row label="규격" value={record.packageLabel} />

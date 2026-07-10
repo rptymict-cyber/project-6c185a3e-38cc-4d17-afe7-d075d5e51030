@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { Bell, ChevronDown, ChevronRight, Clock, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Bell, ChevronDown, Clock, Star, TrendingDown, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/mock/market-analysis";
@@ -10,27 +10,13 @@ import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
 import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
 import { favoriteKey } from "@/features/favorites/favoriteKey";
 import { getCrop } from "@/lib/mock/crops";
+import { CropIcon } from "@/components/crop-icon";
 import { UnitSheet } from "./UnitSheet";
 import { countAuctions } from "@/lib/mock/auctions";
 
-const EMOJI: Record<string, string> = {
-  eggplant: "🍆",
-  cucumber: "🥒",
-  tomato: "🍅",
-  watermelon: "🍉",
-  apple: "🍎",
-  pear: "🍐",
-  grape: "🍇",
-  cabbage: "🥬",
-  lettuce: "🥗",
-  garlic: "🧄",
-  onion: "🧅",
-  chili: "🌶️",
-  radish: "🥕",
-  carrot: "🥕",
-};
 
 export function ProPriceHeadlineCard({
+
   itemId,
   itemLabel,
   varietyId,
@@ -45,7 +31,6 @@ export function ProPriceHeadlineCard({
   marketLabel: string;
   quote: MarketQuote;
 }) {
-  const emoji = EMOJI[itemId] ?? "🌾";
   const up = quote.prevPct > 0;
   const flat = quote.prevPct === 0;
   const changeColor = flat ? "text-[#6C757D]" : up ? "text-[#E03131]" : "text-[#1971C2]";
@@ -76,15 +61,27 @@ export function ProPriceHeadlineCard({
   const hasAlert = useAlerts((s) => s.hasAnyFor(varietyId, marketId));
   const existingRule = useAlerts((s) => s.getByKey(varietyId, marketId));
 
+  const marketCondLabel = marketId === "all" ? "전체시장" : marketLabel;
+  const corpCondLabel = corpId === "all" ? "전체법인" : corpLabel;
+
   return (
     <>
       <div className="mt-4 rounded-[14px] border border-[#E9ECEF] bg-white p-4">
-        {/* Title row with actions */}
-        <div className="flex items-center justify-between gap-2">
-          <span className="min-w-0 truncate text-[12.5px] text-[#495057]">
-            <span className="mr-1">{emoji}</span>
-            {itemLabel} · {varietyLabel} · {marketLabel}
-          </span>
+        {/* Header row: crop icon + item·variety (large) — right: ★ / 🔔 only */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] bg-[#F0F9F0]">
+              <CropIcon name={itemLabel} size={28} />
+            </div>
+            <div className="min-w-0">
+              <div className="truncate text-[16px] font-black leading-tight text-foreground">
+                {itemLabel} · {varietyLabel}
+              </div>
+              <div className="mt-1 truncate text-[12px] font-medium text-[#868E96]">
+                {marketCondLabel} · {corpCondLabel}
+              </div>
+            </div>
+          </div>
           <div className="flex shrink-0 items-center gap-0.5">
             <button
               type="button"
@@ -94,7 +91,7 @@ export function ProPriceHeadlineCard({
                   fromMarketQuote({
                     itemId,
                     itemName: itemLabel,
-                    emoji,
+                    emoji: "🌾",
                     varietyId,
                     varietyName: varietyLabel,
                     marketId,
@@ -111,10 +108,10 @@ export function ProPriceHeadlineCard({
                 toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 제거했어요");
               }}
               aria-label="즐겨찾기"
-              className="grid h-8 w-8 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
+              className="grid h-9 w-9 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
             >
               <Star
-                className={cn("h-4 w-4", isFav && "fill-[#F59F00] text-[#F59F00]")}
+                className={cn("h-[18px] w-[18px]", isFav && "fill-[#F59F00] text-[#F59F00]")}
               />
             </button>
             <button
@@ -133,30 +130,18 @@ export function ProPriceHeadlineCard({
                 }
               }}
               aria-label="알림 설정"
-              className="grid h-8 w-8 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
+              className="grid h-9 w-9 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
             >
-              <Bell className={cn("h-4 w-4", hasAlert && "text-[#3A8A3A]")} />
+              <Bell className={cn("h-[18px] w-[18px]", hasAlert && "text-[#3A8A3A]")} />
             </button>
-            <Link
-              to="/price/$variety"
-              params={{ variety: varietyId }}
-              aria-label="상세 보기"
-              className="grid h-8 w-8 place-items-center rounded-full text-[#ADB5BD] active:bg-[#F1F3F5]"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Link>
           </div>
         </div>
 
-        <div className="mt-2 flex items-end justify-between">
+        <div className="mt-3 flex items-end justify-between">
           <div className="flex items-baseline gap-1">
-            <Link
-              to="/price/$variety"
-              params={{ variety: varietyId }}
-              className="text-[30px] font-black leading-none tracking-tight text-foreground"
-            >
+            <span className="text-[30px] font-black leading-none tracking-tight text-foreground">
               {quote.price.toLocaleString()}
-            </Link>
+            </span>
             <button
               type="button"
               onClick={(e) => {
@@ -178,6 +163,7 @@ export function ProPriceHeadlineCard({
             <span className="mt-0.5 text-[11px] font-medium text-[#868E96]">전일 대비</span>
           </div>
         </div>
+
 
         {/* Effective date badge */}
         <div className="mt-3 flex items-center gap-1 rounded-[8px] bg-[#F0F9F0] px-2.5 py-1.5 text-[11.5px] font-medium text-[#1F5C1F]">

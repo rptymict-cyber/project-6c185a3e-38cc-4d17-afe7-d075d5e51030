@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useMarketFilter } from "@/store/market";
 import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,7 @@ import { SimpleViewToggle } from "./SimpleViewToggle";
 import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButton";
 
 const PAGE_SIZE = LIST_PAGE_SIZE;
+
 
 
 
@@ -71,13 +72,15 @@ export function AuctionHistoryTable() {
         <SummaryCell label="kg당" value={`${summary.avgPerKg.toLocaleString()}원`} />
       </div>
 
-      {/* View mode toggle — right-aligned chip */}
-      <div className="mt-3 flex justify-end">
-        <SimpleViewToggle
-          value={f.simpleViewMode}
-          onChange={f.setSimpleViewMode}
-        />
-      </div>
+      {/* View mode toggle — only in simple mode (spec: pro mode is table-only) */}
+      {f.simpleMode && (
+        <div className="mt-3 flex justify-end">
+          <SimpleViewToggle
+            value={f.simpleViewMode}
+            onChange={f.setSimpleViewMode}
+          />
+        </div>
+      )}
 
       {/* Data area — table only */}
       {visible.length === 0 ? (
@@ -85,6 +88,7 @@ export function AuctionHistoryTable() {
       ) : (
         <AuctionTable rows={visible} />
       )}
+
 
 
       {page < totalPages && (
@@ -98,6 +102,7 @@ export function AuctionHistoryTable() {
 
 
 function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
+  const navigate = useNavigate();
   return (
     <div className="mt-3 overflow-x-auto rounded-[12px] border border-[#E9ECEF] bg-white">
       <table className="w-full min-w-[640px] border-collapse text-[11.5px]">
@@ -115,20 +120,18 @@ function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr key={r.id} className="border-t border-[#F1F3F5]">
+            <tr
+              key={r.id}
+              onClick={() =>
+                navigate({ to: "/market/auction/$id", params: { id: r.id } })
+              }
+              className="cursor-pointer border-t border-[#F1F3F5] hover:bg-[#F8F9FA] active:bg-[#F1F3F5]"
+            >
               <Td>{i + 1}</Td>
               <Td className="whitespace-nowrap">
                 {r.auctionDate.slice(5).replace("-", "/")} {r.auctionClock}
               </Td>
-              <Td>
-                <Link
-                  to="/market/auction/$id"
-                  params={{ id: r.id }}
-                  className="text-[#1F5C1F] underline-offset-2 hover:underline"
-                >
-                  {r.varietyName}
-                </Link>
-              </Td>
+              <Td className="font-semibold text-[#1F5C1F]">{r.varietyName}</Td>
               <Td>{r.origin}</Td>
               <Td className="whitespace-nowrap text-right font-bold text-[#E03131]">
                 {r.price.toLocaleString()}
@@ -143,6 +146,7 @@ function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
     </div>
   );
 }
+
 
 function Th({ children, className }: { children: React.ReactNode; className?: string }) {
   return (

@@ -38,7 +38,7 @@ function MarketPage() {
   });
 
   return (
-    <AppShell header={<AppHeader title="시세 조회" showSearch />}>
+    <AppShell header={<AppHeader title="시세 조회" />}>
       <MarketSearchBar />
       <MarketFilterBar />
 
