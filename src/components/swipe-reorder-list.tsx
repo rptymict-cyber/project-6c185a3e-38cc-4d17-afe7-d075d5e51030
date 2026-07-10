@@ -11,10 +11,16 @@ export function SwipeReorderList({
   items,
   onDelete,
   onReorder,
+  className,
+  wrapperClassName,
+  dragHandlePosition = "center",
 }: {
   items: SRItem[];
   onDelete: (id: string) => void;
   onReorder: (ids: string[]) => void;
+  className?: string;
+  wrapperClassName?: string;
+  dragHandlePosition?: "center" | "top-right";
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
