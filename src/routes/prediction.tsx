@@ -120,7 +120,7 @@ function PredictionPage() {
         <PredictionConditionGrid
           quantityHeading={isFarmer ? "출하량" : "매입량"}
           quantityLabel={`${quantityBoxes}상자`}
-          cropLabel={prediction.cropName}
+          cropLabel={`${cropMeta.categoryName} · ${cropMeta.name} · ${cropMeta.varietyName}`}
           marketLabel={marketName}
           viewpointLabel={isFarmer ? "농가" : "도매인"}
           onQuantityClick={() => setQtySheetOpen(true)}
