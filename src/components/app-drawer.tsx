@@ -44,7 +44,7 @@ const MENU: Item[] = [
   { label: "즐겨찾기", to: "/watchlist", icon: Star },
   { label: "통계", to: "/statistics", icon: BarChart3 },
   { label: "설정", to: "/settings", icon: Settings },
-  { label: "알림 설정", to: "/notifications/settings", icon: Bell },
+  
   { label: "데이터 기준 안내", to: "/data-guide", icon: Info },
 ];
 
