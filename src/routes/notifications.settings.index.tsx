@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { Switch } from "@/components/ui/switch";
 import { SwipeReorderList } from "@/components/swipe-reorder-list";
+import { GeneralNotiSettings } from "@/components/notifications/GeneralNotiSettings";
 import { useAlerts, type PriceAlertRule } from "@/store/alerts";
 import { cn } from "@/lib/utils";
 
