@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   createFileRoute,
-  Link,
   useRouter,
 } from "@tanstack/react-router";
-import { Calendar, ChevronDown, ChevronRight } from "lucide-react";
+import { Calendar, Sprout } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
 import { AppShell } from "@/components/app-shell";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
 import { TrendTab } from "@/components/statistics/TrendTab";
 import { VolumeByMarketTab } from "@/components/statistics/VolumeByMarketTab";
+import { FullSelectCard } from "@/components/common/ConditionSelectCard";
 // NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
 import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
