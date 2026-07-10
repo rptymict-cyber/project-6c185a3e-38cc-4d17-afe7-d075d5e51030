@@ -3,6 +3,7 @@ import { Newspaper } from "lucide-react";
 import {
   AGRI_NEWS_TYPE_COLOR,
   mockAgriNews,
+  type AgriNewsItem,
 } from "@/lib/mock/agri-news";
 
 export function HomeAgriNewsSection() {
@@ -31,11 +32,9 @@ export function HomeAgriNewsSection() {
             >
               <Link
                 to="/news"
-                className="flex items-start gap-3 px-4 py-3 active:bg-[#F8F9FA]"
+                className="flex items-start gap-3.5 px-4 py-3.5 active:bg-[#F8F9FA]"
               >
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F0F9F0]">
-                  <Newspaper className="h-4 w-4 text-[#3A8A3A]" />
-                </span>
+                <NewsThumb item={n} size={72} radius={12} />
                 <div className="min-w-0 flex-1">
                   <div
                     className="text-[11.5px] font-bold"
@@ -43,7 +42,7 @@ export function HomeAgriNewsSection() {
                   >
                     {n.typeLabel}
                   </div>
-                  <div className="mt-0.5 truncate text-[13.5px] font-bold text-foreground">
+                  <div className="mt-0.5 line-clamp-2 text-[13.5px] font-bold leading-snug text-foreground">
                     {n.title}
                   </div>
                   <p className="mt-0.5 line-clamp-2 text-[12px] leading-[1.5] text-[#6C757D]">
@@ -59,5 +58,40 @@ export function HomeAgriNewsSection() {
         </ul>
       </div>
     </section>
+  );
+}
+
+function NewsThumb({
+  item,
+  size,
+  radius,
+}: {
+  item: AgriNewsItem;
+  size: number;
+  radius: number;
+}) {
+  const style = {
+    width: size,
+    height: size,
+    borderRadius: radius,
+  } as const;
+  if (item.imageUrl) {
+    return (
+      <img
+        src={item.imageUrl}
+        alt=""
+        loading="lazy"
+        className="shrink-0 object-cover"
+        style={style}
+      />
+    );
+  }
+  return (
+    <div
+      className="grid shrink-0 place-items-center bg-[#F0F9F0]"
+      style={style}
+    >
+      <Newspaper className="h-6 w-6 text-[#3A8A3A]" strokeWidth={1.8} />
+    </div>
   );
 }
