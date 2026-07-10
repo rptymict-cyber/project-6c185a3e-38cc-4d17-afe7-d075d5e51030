@@ -44,6 +44,20 @@ function WatchlistPage() {
 
   const sorted = useMemo(() => sortFavorites(items), [items]);
 
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return sorted;
+    return sorted.filter((it) =>
+      [it.cropName, it.varietyName, it.marketName, it.corporationName, it.originName, it.unit]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(q),
+    );
+  }, [sorted, query]);
+
+  const isSearching = query.trim().length > 0;
+
   const rows: SRItem[] = filtered.map((it) => ({
     id: it.id,
     render: () => <FavoriteCardBody item={it} />,
