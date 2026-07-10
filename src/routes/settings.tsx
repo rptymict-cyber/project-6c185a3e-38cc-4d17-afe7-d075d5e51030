@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Star, MessageSquare, ChevronRight } from "lucide-react";
+import { Star, MessageSquare, ChevronRight, Bell, Info } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
@@ -9,13 +9,6 @@ import {
   DrawerContent,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -24,13 +17,31 @@ export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "설정 — AGDICT" },
-      { name: "description", content: "피드백, 앱 평가." },
+      { name: "description", content: "알림 설정, 피드백, 앱 평가." },
     ],
   }),
 });
 
-const APP_STORE_URL =
-  "https://apps.apple.com/kr/app/id0000000000"; // placeholder
+// 스토어 등록 후 값만 채우면 자동 연결됩니다.
+const STORE_URLS = { ios: "", android: "" };
+
+function openStoreReview() {
+  try {
+    const ua =
+      typeof navigator !== "undefined" ? navigator.userAgent || "" : "";
+    const isIOS = /iPad|iPhone|iPod/.test(ua);
+    const url = isIOS ? STORE_URLS.ios : STORE_URLS.android;
+    if (url) {
+      window.location.href = url;
+      return true;
+    }
+    toast("스토어 등록 후 이용하실 수 있어요");
+    return false;
+  } catch {
+    toast("스토어로 이동할 수 없어요");
+    return false;
+  }
+}
 
 function SettingsPage() {
   const [thanksOpen, setThanksOpen] = useState(false);
