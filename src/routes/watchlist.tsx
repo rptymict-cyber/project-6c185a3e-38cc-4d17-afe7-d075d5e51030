@@ -309,6 +309,3 @@ function EmptyState() {
     </div>
   );
 }
-
-// Ensure hook import isn't tree-shaken warning; the effect is intentional no-op below.
-useEffect;
