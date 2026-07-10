@@ -36,9 +36,9 @@ export function PredictableCropCards() {
       {/* Section header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-[18px] font-bold text-[#111827]">AI 가격 예측</h3>
+          <h3 className="text-[18px] font-bold text-[#111827]">AI 시세 예측</h3>
           <p className="mt-0.5 text-[13px] text-[#6B7280]">
-            5개 품목의 예상 가격과 유리한 시점을 확인해보세요
+            5개 품목의 예상 시세와 유리한 시점을 확인해보세요
           </p>
         </div>
         <Link
