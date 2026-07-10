@@ -5,6 +5,7 @@ import { AppHeader } from "@/components/app-header";
 import {
   AGRI_NEWS_TYPE_COLOR,
   mockAgriNews,
+  type AgriNewsItem,
 } from "@/lib/mock/agri-news";
 
 export const Route = createFileRoute("/news")({
@@ -49,7 +50,8 @@ function NewsPage() {
         <ul className="space-y-3">
           {mockAgriNews.map((n) => {
             const inner = (
-              <div className="flex items-start gap-3 rounded-2xl border border-[#E9ECEF] bg-white px-4 py-4 active:bg-[#F8F9FA]">
+              <div className="flex items-start gap-3.5 rounded-2xl border border-[#E9ECEF] bg-white p-3 active:bg-[#F8F9FA]">
+                <NewsThumb item={n} size={96} radius={14} />
                 <div className="min-w-0 flex-1">
                   <div
                     className="text-[12px] font-bold"
@@ -57,17 +59,17 @@ function NewsPage() {
                   >
                     {n.typeLabel}
                   </div>
-                  <div className="mt-1 text-[15px] font-bold leading-snug text-foreground">
+                  <div className="mt-1 line-clamp-2 text-[15px] font-bold leading-snug text-foreground">
                     {n.title}
                   </div>
-                  <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-[1.55] text-[#495057]">
+                  <p className="mt-1 line-clamp-2 text-[12.5px] leading-[1.55] text-[#495057]">
                     {n.description}
                   </p>
-                  <div className="mt-2 text-[11.5px] text-[#868E96]">
+                  <div className="mt-1.5 text-[11.5px] text-[#868E96]">
                     {n.source} · {n.publishedAt}
                   </div>
                 </div>
-                <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-[#ADB5BD]" />
+                <ChevronRight className="mt-1 h-4 w-4 shrink-0 self-center text-[#ADB5BD]" />
               </div>
             );
             // TODO: 추후 인앱 웹뷰 또는 상세 페이지 연결 예정
@@ -86,5 +88,36 @@ function NewsPage() {
         </ul>
       </div>
     </AppShell>
+  );
+}
+
+function NewsThumb({
+  item,
+  size,
+  radius,
+}: {
+  item: AgriNewsItem;
+  size: number;
+  radius: number;
+}) {
+  const style = { width: size, height: size, borderRadius: radius } as const;
+  if (item.imageUrl) {
+    return (
+      <img
+        src={item.imageUrl}
+        alt=""
+        loading="lazy"
+        className="shrink-0 object-cover"
+        style={style}
+      />
+    );
+  }
+  return (
+    <div
+      className="grid shrink-0 place-items-center bg-[#F0F9F0]"
+      style={style}
+    >
+      <Newspaper className="h-7 w-7 text-[#3A8A3A]" strokeWidth={1.8} />
+    </div>
   );
 }
