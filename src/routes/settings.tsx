@@ -44,20 +44,35 @@ function openStoreReview() {
 }
 
 function SettingsPage() {
-  const [thanksOpen, setThanksOpen] = useState(false);
-
   return (
     <AppShell header={<AppHeader title="설정" />}>
       <div className="px-4 pt-4 pb-8">
-        <SectionLabel>피드백</SectionLabel>
+        <SectionLabel>알림</SectionLabel>
         <div className="overflow-hidden rounded-[10px] bg-surface">
-          <RatingRow onSubmitted={() => setThanksOpen(true)} />
+          <LinkRow
+            to="/notifications/settings"
+            icon={<Bell className="h-5 w-5" />}
+            title="알림 설정"
+            subtitle="시세·경매 알림 수신 관리"
+          />
+        </div>
+
+        <SectionLabel className="mt-8">피드백</SectionLabel>
+        <div className="overflow-hidden rounded-[10px] bg-surface">
+          <RatingRow />
           <div className="mx-4 h-px bg-border" />
           <MessageRow />
         </div>
 
         <SectionLabel className="mt-8">정보</SectionLabel>
         <div className="overflow-hidden rounded-[10px] bg-surface">
+          <LinkRow
+            to="/data-guide"
+            icon={<Info className="h-5 w-5" />}
+            title="데이터 기준 안내"
+            subtitle="가격 단위·출처·기준일 안내"
+          />
+          <div className="mx-4 h-px bg-border" />
           <div className="flex items-center justify-between px-4 py-4">
             <div>
               <div className="text-[14px] font-semibold text-foreground">
@@ -77,11 +92,40 @@ function SettingsPage() {
           AGDICT · 농산물 시세 조회
         </div>
       </div>
-
-      <ThanksDialog open={thanksOpen} onOpenChange={setThanksOpen} />
     </AppShell>
   );
 }
+
+function LinkRow({
+  to,
+  icon,
+  title,
+  subtitle,
+}: {
+  to: string;
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+}) {
+  return (
+    <Link
+      to={to}
+      className="flex w-full items-center gap-3 px-4 py-4 text-left"
+    >
+      <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#F0F9F0] text-[#3A8A3A]">
+        {icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-[14px] font-semibold text-foreground">{title}</div>
+        {subtitle && (
+          <div className="text-[11px] text-muted-foreground">{subtitle}</div>
+        )}
+      </div>
+      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+    </Link>
+  );
+}
+
 
 function SectionLabel({
   children,
