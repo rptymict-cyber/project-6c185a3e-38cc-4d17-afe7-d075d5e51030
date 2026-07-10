@@ -1,24 +1,37 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { Bell, RefreshCw } from "lucide-react";
+import { Bell, RefreshCw, Search } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { AppDrawerTrigger } from "./app-drawer";
 import { cn } from "@/lib/utils";
 
 /**
- * Standard app header used on GNB pages:
- * - Left: hamburger drawer trigger
- * - Center: AGDICT β + today's date (small, below)
- * - Right: realtime indicator (red pulsing dot) + refresh + search
+ * 1차 메뉴/GNB 화면용 공통 상단바.
+ *
+ * - 좌측: 햄버거(더보기 드로어)
+ * - 중앙: 현재 화면의 기능명 (title). 미지정 시 "AGDICT β + 오늘 날짜".
+ * - 우측: 해당 화면에서 실제로 필요한 액션만 노출
+ *     · showRefresh (기본 true)
+ *     · showBell    (기본 true)
+ *     · showSearch  (기본 false) — 검색 아이콘은 /search 로 이동
+ *     · right       — 상기 세 아이콘 자리에 임의 노드를 그대로 대체할 때 사용
+ *
+ * 규칙: 의미 없는 빨간 점/임시 상태 표시는 이 컴포넌트에서 절대 렌더링하지 않는다.
  */
 export function AppHeader({
   title,
   showDate = true,
+  showRefresh = true,
+  showBell = true,
+  showSearch = false,
   right,
 }: {
   title?: ReactNode;
   showDate?: boolean;
+  showRefresh?: boolean;
+  showBell?: boolean;
+  showSearch?: boolean;
   right?: ReactNode;
 }) {
   const [now, setNow] = useState<Date>(() => new Date());
@@ -31,6 +44,45 @@ export function AppHeader({
 
   const pad = (n: number) => String(n).padStart(2, "0");
   const dateLabel = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())}`;
+
+  const defaultRight = (
+    <>
+      {showSearch && (
+        <Link
+          to="/search"
+          aria-label="검색"
+          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+        >
+          <Search className="h-5 w-5" />
+        </Link>
+      )}
+      {showRefresh && (
+        <button
+          aria-label="새로고침"
+          onClick={() => {
+            setSpinning(true);
+            setNow(new Date());
+            setTimeout(() => setSpinning(false), 700);
+            toast("최신 시세로 업데이트했어요");
+          }}
+          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+        >
+          <RefreshCw
+            className={cn("h-5 w-5 transition-transform", spinning && "animate-spin")}
+          />
+        </button>
+      )}
+      {showBell && (
+        <Link
+          to="/notifications"
+          aria-label="알림"
+          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+        >
+          <Bell className="h-5 w-5" />
+        </Link>
+      )}
+    </>
+  );
 
   return (
     <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-[#E9ECEF] bg-background px-2">
@@ -58,34 +110,7 @@ export function AppHeader({
         )}
       </div>
 
-      <div className="flex items-center gap-0.5">
-        {right ?? (
-          <>
-            {/* 실시간 표시(빨간 점)는 제거됨 */}
-            <button
-              aria-label="새로고침"
-              onClick={() => {
-                setSpinning(true);
-                setNow(new Date());
-                setTimeout(() => setSpinning(false), 700);
-                toast("최신 시세로 업데이트했어요");
-              }}
-              className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-            >
-              <RefreshCw
-                className={cn("h-5 w-5 transition-transform", spinning && "animate-spin")}
-              />
-            </button>
-            <Link
-              to="/notifications"
-              aria-label="알림"
-              className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-            >
-              <Bell className="h-5 w-5" />
-            </Link>
-          </>
-        )}
-      </div>
+      <div className="flex items-center gap-0.5">{right ?? defaultRight}</div>
     </header>
   );
 }
