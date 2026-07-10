@@ -42,7 +42,7 @@ export function RealtimeSection({
       </div>
       <p className="mt-1.5 text-[10.5px] text-muted-foreground">{hint}</p>
 
-      <div className="mt-2 overflow-hidden rounded-[10px] bg-surface">
+      <div className="mt-2 overflow-hidden rounded-[10px] bg-[#FAFBFA]">
         {showHeaderRow && <LivePriceHeader />}
         <ul>
           {rows.map((row, i) => (
