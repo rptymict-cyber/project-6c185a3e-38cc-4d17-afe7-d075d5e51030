@@ -21,7 +21,7 @@ function ChangeBadge({ changePct }: { changePct: number }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center text-[13px] font-bold tabular-nums",
+        "text-[12px] font-bold tabular-nums",
         up ? "text-[#E03131]" : "text-[#1971C2]",
       )}
     >
@@ -32,28 +32,26 @@ function ChangeBadge({ changePct }: { changePct: number }) {
 
 export function PredictableCropCards() {
   return (
-    <section className="mx-4 mt-6 rounded-2xl border border-[#EEF0F2] bg-white p-4">
+    <section className="mx-4 mt-4 rounded-2xl border border-[#E8EEE8] bg-white p-4 shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
       {/* Section header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-[16px] font-bold text-foreground">
-            AI 가격 예측
-          </h3>
-          <p className="mt-0.5 text-[12px] text-[#6C757D]">
+          <h3 className="text-[16px] font-bold text-[#111827]">AI 가격 예측</h3>
+          <p className="mt-0.5 text-[13px] text-[#6B7280]">
             5개 품목의 예상 가격과 유리한 시점을 확인해보세요
           </p>
         </div>
         <Link
           to="/prediction"
-          className="flex shrink-0 items-center gap-0.5 text-[12px] font-semibold text-[#6C757D]"
+          className="flex shrink-0 items-center gap-0.5 text-[13px] font-medium text-[#4B5563]"
         >
           더보기
           <ChevronRight className="h-3.5 w-3.5" />
         </Link>
       </div>
 
-      {/* Horizontal scroll cards */}
-      <div className="no-scrollbar -mx-4 mt-3 flex gap-[11px] overflow-x-auto px-4 pb-1">
+      {/* Horizontal scroll cards - compact */}
+      <div className="no-scrollbar -mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-1">
         {PREDICTABLE_CROPS.map((crop) => {
           const h = HOME_PRICE[crop.id] ?? {
             price: 0,
@@ -65,30 +63,24 @@ export function PredictableCropCards() {
               key={crop.id}
               to="/prediction"
               search={{ cropId: crop.id, entrySource: "home" }}
-              className="flex w-[150px] min-w-[150px] flex-col rounded-[14px] border border-[#EEF0F2] bg-white p-3.5 transition-colors active:bg-[#F8F9FA]"
+              className="flex w-[136px] min-w-[136px] items-center gap-2 rounded-2xl bg-[#F3F8F3] p-3 transition-colors active:bg-[#E8F1E8]"
             >
-              <div className="mb-2.5 h-10 w-10">
-                <CropIcon name={crop.name} size={40} />
+              <div className="shrink-0">
+                <CropIcon name={crop.name} size={32} />
               </div>
-
-              <div className="flex items-center gap-1.5">
-                <span className="text-[15px] font-bold text-foreground">
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-[13px] font-bold text-[#111827]">
                   {crop.name}
-                </span>
-                <span className="rounded bg-[#F1F3F5] px-1.5 py-0.5 text-[10px] font-medium text-[#868E96]">
-                  {crop.categoryName}
-                </span>
-              </div>
-
-              <div className="mt-2 whitespace-nowrap text-[16px] font-bold tabular-nums text-foreground">
-                {h.price.toLocaleString()}원/{h.unitLabel}
-              </div>
-
-              <div className="mt-auto flex w-full items-center justify-between pt-2">
-                <ChangeBadge changePct={h.changePct} />
-                <span className="rounded-md bg-[#E6F5E9] px-1.5 py-0.5 text-[10px] font-semibold text-[#2F9E44]">
-                  AI 가격 예측
-                </span>
+                </div>
+                <div className="mt-0.5 whitespace-nowrap text-[12px] font-semibold tabular-nums text-[#374151]">
+                  {h.price.toLocaleString()}
+                  <span className="text-[10px] font-medium text-[#6B7280]">
+                    원/{h.unitLabel}
+                  </span>
+                </div>
+                <div className="mt-0.5">
+                  <ChangeBadge changePct={h.changePct} />
+                </div>
               </div>
             </Link>
           );

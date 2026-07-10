@@ -9,6 +9,7 @@ import {
   HomeFeatureCard,
   WholesaleMarketIllustration,
   ItemBasketIllustration,
+  AIPredictionIllustration,
 } from "@/components/home/HomeFeatureCard";
 import type { LiveSort } from "@/lib/services/live-prices";
 
@@ -23,12 +24,12 @@ export function MarketListHome({
   const [sort, setSort] = useState<LiveSort>("up");
 
   return (
-    <div className="pb-6">
+    <div className="min-h-full bg-[#F6F8F6] pb-6">
       {/* 검색바 */}
       <div className="px-4 pt-3">
         <Link
           to="/search"
-          className="flex w-full items-center gap-2 rounded-[12px] bg-[#F1F3F5] px-4 py-3 text-left text-[13px] text-muted-foreground"
+          className="flex w-full items-center gap-2 rounded-[12px] border border-[#E8EEE8] bg-white px-4 py-3 text-left text-[13px] text-muted-foreground"
         >
           <Search className="h-4 w-4" />
           품목, 시장, 산지, 등급을 검색하세요
@@ -36,12 +37,12 @@ export function MarketListHome({
       </div>
 
       {/* 실시간 시세 */}
-      <section className="mt-6 px-4">
-        <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-[14px] font-bold text-foreground">실시간 시세</h3>
+      <section className="mx-4 mt-4 rounded-2xl border border-[#E8EEE8] bg-white p-4 shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className="text-[16px] font-bold text-[#111827]">실시간 시세</h3>
           <button
             onClick={() => navigate({ to: "/live", search: { sort } })}
-            className="text-[12px] font-medium text-muted-foreground"
+            className="text-[13px] font-medium text-[#4B5563]"
           >
             더보기 ›
           </button>
@@ -54,13 +55,14 @@ export function MarketListHome({
         />
       </section>
 
-      <HomeAgriNewsSection />
-
       {/* AI 가격 예측 (compact) */}
       <PredictableCropCards />
 
+      {/* 오늘의 농산물 소식 */}
+      <HomeAgriNewsSection />
+
       {/* 주요 진입 카드 */}
-      <section className="mt-6 flex flex-col gap-3 px-4">
+      <section className="mt-4 flex flex-col gap-3 px-4">
         <HomeFeatureCard
           eyebrow="전국 도매시장 시세를 확인하세요"
           title="도매시장별 조회"
@@ -72,6 +74,12 @@ export function MarketListHome({
           title="품목별 조회"
           to="/market/item"
           image={<ItemBasketIllustration />}
+        />
+        <HomeFeatureCard
+          eyebrow="AI가 예측한 미래 시세를 확인하세요"
+          title="AI 시세 예측"
+          to="/prediction"
+          image={<AIPredictionIllustration />}
         />
       </section>
 
