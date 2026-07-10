@@ -15,24 +15,8 @@ import { UnitSheet } from "./UnitSheet";
 import { countAuctions } from "@/lib/mock/auctions";
 
 
-const EMOJI: Record<string, string> = {
-  eggplant: "🍆",
-  cucumber: "🥒",
-  tomato: "🍅",
-  watermelon: "🍉",
-  apple: "🍎",
-  pear: "🍐",
-  grape: "🍇",
-  cabbage: "🥬",
-  lettuce: "🥗",
-  garlic: "🧄",
-  onion: "🧅",
-  chili: "🌶️",
-  radish: "🥕",
-  carrot: "🥕",
-};
-
 export function ProPriceHeadlineCard({
+
   itemId,
   itemLabel,
   varietyId,
