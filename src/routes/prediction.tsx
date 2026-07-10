@@ -93,7 +93,7 @@ function PredictionPage() {
 
   if (!prediction || !cropMeta) {
     return (
-      <AppShell header={<DetailHeader title="AI 가격 예측" onBack={() => router.history.back()} />}>
+      <AppShell header={<AppHeader title="AI 시세 예측" />}>
         <div className="grid min-h-[60vh] place-items-center px-6 text-center text-[13px] text-[#6C757D]">
           예측 정보를 불러올 수 없어요.
         </div>
