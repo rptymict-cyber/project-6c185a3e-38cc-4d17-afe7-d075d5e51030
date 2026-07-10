@@ -1,25 +1,25 @@
-import { useState, type ReactNode } from "react";
-import { ChevronLeft, Bell, RefreshCw } from "lucide-react";
-import { Link } from "@tanstack/react-router";
-import { toast } from "sonner";
+import { type ReactNode } from "react";
+import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * 상세/선택 화면 공통 상단바.
+ * 하위/선택/상세/설정/안내 화면 공통 상단바.
  *
  * - 좌측: 뒤로가기(ChevronLeft) 버튼
- * - 중앙: 타이틀 (title) 또는 커스텀 center 노드 — 항상 화면 정중앙 정렬
- * - 우측: 액션 버튼(right). 명시하지 않으면 홈(AppHeader)과 동일하게
- *   실시간 표시 · 새로고침 · 알림 아이콘을 기본으로 노출한다.
- *   완전히 비우고 싶으면 `right={null}`을 명시적으로 넘긴다.
+ * - 중앙: 타이틀 (title) — 항상 화면 정중앙 정렬
+ * - 우측: 액션 버튼(right). **기본값 없음**.
+ *   즐겨찾기/알림/새로고침이 실제로 필요한 상세 화면에서만 명시적으로 전달한다.
+ *   선택/설정/안내 화면(작물 선택, 날짜 선택, 도매시장 선택, 알림 설정,
+ *   데이터 기준 안내 등)에서는 우측 액션을 넣지 않는다.
  *
- * GNB/메인 화면용 AppHeader와 시각적으로 동일한 톤을 유지한다.
+ * 공통 상단바 정책상, 이 컴포넌트는 임시 빨간 점/실시간 표시 같은
+ * 의미 없는 아이콘을 절대 렌더링하지 않는다.
  */
 export function DetailHeader({
   title,
   center,
   onBack,
-  right,
+  right = null,
   className,
 }: {
   title?: ReactNode;
@@ -28,40 +28,6 @@ export function DetailHeader({
   right?: ReactNode;
   className?: string;
 }) {
-  const [spinning, setSpinning] = useState(false);
-  const rightContent =
-    right === undefined ? (
-      <>
-        {/* 실시간 표시(빨간 점)는 제거됨 */}
-        <button
-          type="button"
-          aria-label="새로고침"
-          onClick={() => {
-            setSpinning(true);
-            setTimeout(() => setSpinning(false), 700);
-            toast("최신 시세로 업데이트했어요");
-          }}
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-        >
-          <RefreshCw
-            className={cn(
-              "h-5 w-5 transition-transform",
-              spinning && "animate-spin",
-            )}
-          />
-        </button>
-        <Link
-          to="/notifications"
-          aria-label="알림"
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-        >
-          <Bell className="h-5 w-5" />
-        </Link>
-      </>
-    ) : (
-      right
-    );
-
   return (
     <header
       className={cn(
@@ -87,8 +53,8 @@ export function DetailHeader({
           ) : null)}
       </div>
 
-      {rightContent ? (
-        <div className="flex items-center gap-0.5">{rightContent}</div>
+      {right ? (
+        <div className="flex items-center gap-0.5">{right}</div>
       ) : (
         <div className="h-10 w-10" aria-hidden />
       )}
