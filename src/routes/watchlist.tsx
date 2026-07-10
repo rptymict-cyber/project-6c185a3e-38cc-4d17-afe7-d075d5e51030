@@ -145,13 +145,20 @@ function WatchlistPage() {
               </p>
             </div>
           ) : (
-            <SwipeReorderList
-              items={rows}
-              onDelete={handleDelete}
-              onReorder={handleReorder}
-            />
+            <>
+              <SwipeReorderList
+                items={rows}
+                onDelete={handleDelete}
+                onReorder={handleReorder}
+              />
+              {!isSearching && filtered.length > 1 && (
+                <p className="pb-6 text-center text-[12px] text-muted-foreground">
+                  <span className="mr-1 tracking-tighter">⋮⋮</span>
+                  를 드래그해 순서를 바꿀 수 있어요
+                </p>
+              )}
+            </>
           )}
-
         </>
       )}
 
