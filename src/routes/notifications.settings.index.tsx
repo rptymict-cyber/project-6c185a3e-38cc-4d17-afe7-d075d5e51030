@@ -74,8 +74,13 @@ function NotificationSettingsPage() {
         </header>
       }
     >
+      <GeneralNotiSettings />
+
+      <h3 className="mb-2 mt-6 px-5 text-[12px] font-bold text-muted-foreground">
+        개별 알림 규칙
+      </h3>
       {sorted.length === 0 ? (
-        <div className="flex flex-col items-center justify-center px-6 py-24 text-center">
+        <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
           <div className="grid h-16 w-16 place-items-center rounded-full bg-[#F1F3F5]">
             <Bell className="h-7 w-7 text-[#ADB5BD]" />
           </div>
