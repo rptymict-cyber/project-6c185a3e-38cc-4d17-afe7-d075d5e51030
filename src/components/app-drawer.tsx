@@ -13,7 +13,7 @@ import {
   BarChart3,
   Scale,
   Settings,
-  Bell,
+  
   Info,
 } from "lucide-react";
 import {
