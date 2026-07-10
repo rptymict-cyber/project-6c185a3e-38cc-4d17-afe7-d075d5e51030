@@ -229,9 +229,19 @@ function SwipeRow({
             e.stopPropagation();
             onGripDown(e);
           }}
-          className="flex w-10 shrink-0 touch-none items-center justify-center text-muted-foreground"
+          className={cn(
+            "touch-none text-muted-foreground",
+            dragHandlePosition === "top-right"
+              ? "absolute right-3 top-4 z-10 grid h-8 w-8 place-items-center"
+              : "flex w-10 shrink-0 items-center justify-center",
+          )}
         >
-          <GripVertical className="h-5 w-5" />
+          <GripVertical
+            className={cn(
+              "shrink-0",
+              dragHandlePosition === "top-right" ? "h-4 w-4" : "h-5 w-5",
+            )}
+          />
         </button>
       </div>
     </li>
