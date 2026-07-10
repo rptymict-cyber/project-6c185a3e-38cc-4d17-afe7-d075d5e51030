@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Bell, Info, Settings, TrendingDown, TrendingUp } from "lucide-react";
+import { Bell, Info, Settings, TrendingDown, TrendingUp } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import {
   useNotificationEvents,
   type NotificationEvent,
