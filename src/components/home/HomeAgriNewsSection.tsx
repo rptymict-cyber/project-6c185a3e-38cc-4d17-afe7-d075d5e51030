@@ -16,7 +16,7 @@ export function HomeAgriNewsSection() {
           to="/news"
           className="text-[12px] font-medium text-muted-foreground"
         >
-          전체보기 ›
+          더보기 ›
         </Link>
       </div>
 
