@@ -78,12 +78,28 @@ function VarietyStatsPage() {
       }
     >
 
-      {/* Body section title */}
+      {/* Big crop selector — 상단 큰 카드 */}
       <div className="px-4 pt-4">
-        <h2 className="text-[16px] font-black text-foreground">시장별 가격 비교</h2>
+        <Link
+          to="/crop-select"
+          search={{
+            from: "statistics-detail",
+            return: `/statistics/${variety}`,
+          }}
+          className="flex w-full items-center gap-3 rounded-[14px] border border-[#E9ECEF] bg-white px-4 py-3.5 text-left active:bg-[#F8F9FA]"
+        >
+          <span className="min-w-0 flex-1">
+            <span className="block text-[11px] font-semibold text-[#868E96]">조회 작물</span>
+            <span className="mt-0.5 block truncate text-[20px] font-black leading-tight text-foreground">
+              {data.breadcrumb.itemLabel} · {data.breadcrumb.varietyLabel}
+            </span>
+          </span>
+          <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
+        </Link>
+        <p className="mt-2 text-[11.5px] text-[#868E96]">kg당 평균가 · 경매일 기준</p>
       </div>
 
-      {/* Breadcrumb chip */}
+      {/* Breadcrumb chip — 부류 › 품목 › 품종 */}
       <div className="mt-2 px-4">
         <Link
           to="/crop-select"
@@ -98,10 +114,7 @@ function VarietyStatsPage() {
           <span>{data.breadcrumb.itemLabel}</span>
           <ChevronRight className="h-3 w-3 text-[#ADB5BD]" />
           <span className="text-foreground">{data.breadcrumb.varietyLabel}</span>
-          <ChevronDown className="ml-0.5 h-3.5 w-3.5 text-[#6C757D]" />
         </Link>
-        {/* Sub-info: 통계 화면은 시장 비교이므로 특정 시장을 고정하지 않음 */}
-        <p className="mt-2 text-[11.5px] text-[#868E96]">kg당 평균가 · 경매일 기준</p>
       </div>
 
 
