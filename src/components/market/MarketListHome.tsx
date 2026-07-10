@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
 import { PredictableCropCards } from "@/components/home/PredictableCropCards";
+import { HomeAgriNewsSection } from "@/components/home/HomeAgriNewsSection";
 import { RealtimeSection } from "./RealtimeSection";
 import { HomeMarketQuickSection } from "./HomeMarketQuickSection";
 import { HomeItemQuickSection } from "./HomeItemQuickSection";
