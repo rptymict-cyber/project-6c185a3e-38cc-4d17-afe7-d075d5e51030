@@ -75,12 +75,6 @@ export function MarketListHome({
           to="/market/item"
           image={<ItemBasketIllustration />}
         />
-        <HomeFeatureCard
-          eyebrow="AI가 예측한 미래 시세를 확인하세요"
-          title="AI 시세 예측"
-          to="/prediction"
-          image={<AIPredictionIllustration />}
-        />
       </section>
 
       <DataSourceNotice />
