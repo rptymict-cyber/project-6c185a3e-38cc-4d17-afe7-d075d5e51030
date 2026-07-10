@@ -33,7 +33,7 @@ function Home() {
       header={
         <>
           <AppHeader title="농산물 시세 조회" />
-          <div className="border-b border-[#E8EEE8] bg-[#F6F8F6] px-4 py-1.5 text-[11px] text-[#6B7280]">
+          <div className="border-b border-[#E8EEE8] bg-white px-4 py-1.5 text-[11px] text-[#6B7280]">
             기준일 2026.07.03 14:30 업데이트
           </div>
         </>

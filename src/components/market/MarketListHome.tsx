@@ -24,7 +24,7 @@ export function MarketListHome({
   const [sort, setSort] = useState<LiveSort>("up");
 
   return (
-    <div className="min-h-full bg-[#F6F8F6] pb-6">
+    <div className="min-h-full bg-white pb-6">
       {/* 검색바 */}
       <div className="px-4 pt-3">
         <Link
