@@ -75,9 +75,11 @@ function WholesaleBrowsePage() {
   return (
     <AppShell
       header={
-        <DetailHeader
+        <AppHeader
           title="도매시장별 조회"
-          onBack={() => history.back()}
+          showRefresh={false}
+          showBell={false}
+          showSearch
         />
       }
     >
