@@ -70,7 +70,7 @@ function MarketComparePage() {
 
   return (
     <AppShell
-      header={<DetailHeader title="시장별 가격 비교" onBack={() => router.history.back()} />}
+      header={<AppHeader title="시장별 가격 비교" showBell={false} />}
     >
       <div className="px-4 pb-24 pt-4">
         {/* Big crop selector */}
