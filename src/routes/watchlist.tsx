@@ -1,24 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Check, ChevronDown, Search, Star, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Plus, RefreshCw, Search, Star, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
+import { SwipeReorderList, type SRItem } from "@/components/swipe-reorder-list";
 import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
 import type { FavoritePriceItem } from "@/features/favorites/types";
 import { useMarketFilter } from "@/store/market";
-
-type Filter = "all" | "ai";
-type Sort = "updated" | "createdDesc" | "priceDesc" | "priceAsc";
-
-const SORT_LABEL: Record<Sort, string> = {
-  updated: "최근 업데이트순",
-  createdDesc: "최근 저장순",
-  priceDesc: "가격 높은순",
-  priceAsc: "가격 낮은순",
-};
 
 export const Route = createFileRoute("/watchlist")({
   component: WatchlistPage,
@@ -33,44 +24,91 @@ export const Route = createFileRoute("/watchlist")({
   }),
 });
 
+function sortFavorites(items: FavoritePriceItem[]): FavoritePriceItem[] {
+  return items.slice().sort((a, b) => {
+    const ao = a.order;
+    const bo = b.order;
+    if (ao != null && bo != null) return ao - bo;
+    if (ao != null) return -1;
+    if (bo != null) return 1;
+    // 등록순 fallback: 최근 등록이 위
+    return a.createdAt > b.createdAt ? -1 : 1;
+  });
+}
+
 function WatchlistPage() {
   const items = useFavoritePriceStore((s) => s.items);
   const removeFavorite = useFavoritePriceStore((s) => s.removeFavorite);
-
+  const setOrder = useFavoritePriceStore((s) => s.setOrder);
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<Filter>("all");
-  const [sort, setSort] = useState<Sort>("updated");
-  const [sortOpen, setSortOpen] = useState(false);
+  const [spinning, setSpinning] = useState(false);
+
+  const sorted = useMemo(() => sortFavorites(items), [items]);
 
   const filtered = useMemo(() => {
-    let arr = items.slice();
-    if (filter === "ai") arr = arr.filter((it) => it.isPredictable);
-    if (query.trim()) {
-      const q = query.trim().toLowerCase();
-      arr = arr.filter((it) =>
-        [it.cropName, it.varietyName, it.marketName, it.corporationName, it.originName, it.unit]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase()
-          .includes(q),
-      );
-    }
-    if (sort === "priceDesc") arr.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
-    else if (sort === "priceAsc") arr.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
-    else if (sort === "createdDesc")
-      arr.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
-    else
-      arr.sort((a, b) => ((b.updatedAt ?? "") > (a.updatedAt ?? "") ? 1 : -1));
-    return arr;
-  }, [items, filter, sort, query]);
+    const q = query.trim().toLowerCase();
+    if (!q) return sorted;
+    return sorted.filter((it) =>
+      [
+        it.cropName,
+        it.varietyName,
+        it.marketName,
+        it.corporationName,
+        it.originName,
+        it.unit,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(q),
+    );
+  }, [sorted, query]);
+
+  const isSearching = query.trim().length > 0;
+
+  const rightSlot = (
+    <button
+      type="button"
+      aria-label="새로고침"
+      onClick={() => {
+        setSpinning(true);
+        setTimeout(() => setSpinning(false), 700);
+        toast("최신 시세로 업데이트했어요");
+      }}
+      className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+    >
+      <RefreshCw
+        className={cn("h-5 w-5 transition-transform", spinning && "animate-spin")}
+      />
+    </button>
+  );
+
+  const rows: SRItem[] = filtered.map((it) => ({
+    id: it.id,
+    render: () => <FavoriteCardBody item={it} />,
+  }));
+
+  const handleReorder = (ids: string[]) => {
+    // 검색 중이면 재정렬 대상이 부분집합이 되므로 무시.
+    if (isSearching) return;
+    setOrder(ids);
+  };
+
+  const handleDelete = (id: string) => {
+    removeFavorite(id);
+    toast("즐겨찾기에서 제거되었습니다");
+  };
 
   return (
-    <AppShell header={<AppHeader title="즐겨찾기" />}>
+    <AppShell header={<AppHeader title="즐겨찾기" right={rightSlot} />}>
       <div className="px-4 pt-4">
-        <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
+        <h1 className="text-[22px] font-black tracking-tight text-foreground">
+          즐겨찾기
+        </h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          총 <span className="font-semibold text-foreground">{items.length}</span>개의
-          저장한 시세 조건
+          총{" "}
+          <span className="font-semibold text-foreground">{items.length}</span>
+          개의 저장한 시세 조건
         </p>
       </div>
 
@@ -100,74 +138,6 @@ function WatchlistPage() {
             </label>
           </div>
 
-          <div className="mt-3 flex items-center gap-2 px-4">
-            <div className="flex flex-1 items-center gap-2">
-              {(
-                [
-                  ["all", "전체"],
-                  ["ai", "AI 가격 예측"],
-                ] as const
-              ).map(([id, label]) => {
-                const active = filter === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => setFilter(id)}
-                    className={cn(
-                      "h-8 rounded-full border px-3 text-[12.5px] font-semibold",
-                      active
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-input bg-background text-foreground",
-                    )}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setSortOpen(!sortOpen)}
-                className="inline-flex h-8 items-center gap-1 rounded-full border border-input bg-background px-3 text-[12px] font-semibold text-foreground"
-              >
-                {SORT_LABEL[sort]}
-                <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-              {sortOpen && (
-                <>
-                  <button
-                    type="button"
-                    aria-label="닫기"
-                    onClick={() => setSortOpen(false)}
-                    className="fixed inset-0 z-40"
-                  />
-                  <ul className="absolute right-0 top-9 z-50 w-[160px] overflow-hidden rounded-lg border border-border bg-background shadow-md">
-                    {(Object.keys(SORT_LABEL) as Sort[]).map((s) => (
-                      <li key={s}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSort(s);
-                            setSortOpen(false);
-                          }}
-                          className={cn(
-                            "flex w-full items-center justify-between px-3 py-2.5 text-[12.5px]",
-                            sort === s ? "font-bold text-primary" : "text-foreground",
-                          )}
-                        >
-                          {SORT_LABEL[s]}
-                          {sort === s && <Check className="h-3.5 w-3.5" />}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </div>
-          </div>
-
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center px-6 pb-16 pt-16 text-center">
               <p className="text-[13px] text-muted-foreground">
@@ -175,32 +145,37 @@ function WatchlistPage() {
               </p>
             </div>
           ) : (
-            <ul className="space-y-2 px-4 py-4">
-              {filtered.map((it) => (
-                <FavoriteCard
-                  key={it.id}
-                  item={it}
-                  onRemove={() => {
-                    removeFavorite(it.id);
-                    toast("즐겨찾기에서 제거되었습니다");
-                  }}
-                />
-              ))}
-            </ul>
+            <SwipeReorderList
+              items={rows}
+              onDelete={handleDelete}
+              onReorder={handleReorder}
+            />
           )}
+
+          <p className="px-4 pb-6 text-center text-[11.5px] text-muted-foreground">
+            시세는 약 1분 주기로 일괄 갱신돼요
+          </p>
         </>
       )}
+
+      <FabAdd />
     </AppShell>
   );
 }
 
-function FavoriteCard({
-  item,
-  onRemove,
-}: {
-  item: FavoritePriceItem;
-  onRemove: () => void;
-}) {
+function FabAdd() {
+  return (
+    <Link
+      to="/watchlist/add"
+      aria-label="즐겨찾기 추가"
+      className="fixed bottom-24 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg active:scale-95"
+    >
+      <Plus className="h-6 w-6" />
+    </Link>
+  );
+}
+
+function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
   const navigate = useNavigate();
   const setItem = useMarketFilter((s) => s.setItem);
   const setMarket = useMarketFilter((s) => s.setMarket);
@@ -209,8 +184,10 @@ function FavoriteCard({
   const rising = (item.changeRate ?? 0) >= 0;
   const flat = Math.abs(item.changeRate ?? 0) < 0.05;
 
+  // "8kg 기준 기준" 중복 버그 방지: 저장된 unit 문자열에 이미 "기준"이 붙어있어도 한 번만 표기.
+  const unitLabel = item.unit.replace(/\s*기준\s*$/, "");
+
   const handleOpen = () => {
-    // Sync market filter so the detail page reads the saved condition.
     setItem({
       categoryId: "all",
       categoryLabel: "",
@@ -229,7 +206,7 @@ function FavoriteCard({
   };
 
   return (
-    <li className="rounded-2xl border border-border bg-background p-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+    <div className="rounded-2xl border border-border bg-background p-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
       <button
         type="button"
         onClick={handleOpen}
@@ -258,21 +235,10 @@ function FavoriteCard({
               {item.marketName} · {item.corporationName ?? "전체 법인"}
             </div>
             <div className="truncate text-[12px] text-muted-foreground">
-              {item.originName ?? "전체 산지"} · {item.unit} 기준
+              {item.originName ?? "전체 산지"} · {unitLabel} 기준
               {item.grade ? ` · ${item.grade}` : ""}
             </div>
           </div>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onRemove();
-            }}
-            aria-label="즐겨찾기에서 제거"
-            className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-amber-500"
-          >
-            <Star className="h-5 w-5 fill-amber-400" />
-          </button>
         </div>
 
         <div className="mt-3 flex items-end justify-between gap-3 border-t border-border/60 pt-3">
@@ -280,7 +246,7 @@ function FavoriteCard({
             <div className="font-data text-[20px] font-bold leading-none tabular-nums text-foreground">
               {(item.price ?? 0).toLocaleString()}
               <span className="ml-1 text-[12px] font-medium text-muted-foreground">
-                원 / {item.unit}
+                원 / {unitLabel}
               </span>
             </div>
             {item.kgPrice != null && item.kgPrice !== item.price && (
@@ -288,17 +254,11 @@ function FavoriteCard({
                 kg당 {item.kgPrice.toLocaleString()}원
               </div>
             )}
-            {item.updatedAt && (
+            {item.totalVolume != null && (
               <div className="mt-1 text-[11px] text-muted-foreground">
-                {item.updatedAt} 업데이트
-              </div>
-            )}
-            {(item.auctionCount != null || item.totalVolume != null) && (
-              <div className="mt-0.5 text-[11px] text-muted-foreground">
-                {item.auctionCount != null ? `경매 ${item.auctionCount}건` : ""}
-                {item.auctionCount != null && item.totalVolume != null ? " · " : ""}
-                {item.totalVolume != null
-                  ? `거래량 ${item.totalVolume.toLocaleString()}t`
+                거래량 {item.totalVolume.toLocaleString()}t
+                {item.auctionCount != null
+                  ? ` · 경매 ${item.auctionCount}건`
                   : ""}
               </div>
             )}
@@ -318,35 +278,37 @@ function FavoriteCard({
                 ? "— 0.0%"
                 : `${rising ? "▲ +" : "▼ "}${(item.changeRate ?? 0).toFixed(1)}%`}
             </span>
-            <span className="text-[10.5px] text-muted-foreground">전일 대비</span>
+            <span className="text-[10.5px] text-muted-foreground">
+              전일 대비
+            </span>
           </div>
         </div>
       </button>
-    </li>
+    </div>
   );
 }
 
 function EmptyState() {
   return (
     <div className="flex flex-col items-center px-6 pb-16 pt-20 text-center">
-      <Star
-        className="mb-5 text-[#B2DFB2]"
-        size={48}
-        strokeWidth={1.5}
-      />
+      <Star className="mb-5 text-[#B2DFB2]" size={48} strokeWidth={1.5} />
       <h3 className="text-[16px] font-bold text-foreground">
         저장한 시세 조건이 아직 없어요
       </h3>
       <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-        시세 화면에서 별표를 누르면 자주 보는 작물과<br />
-        시장 조건을 여기에 모아볼 수 있어요.
+        아래 + 버튼으로 관심 있는 품목과 시장을
+        <br />
+        직접 추가해 보세요.
       </p>
       <Link
-        to="/market"
+        to="/watchlist/add"
         className="mt-6 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-[14px] font-bold text-primary-foreground"
       >
-        시세 보러가기
+        즐겨찾기 추가
       </Link>
     </div>
   );
 }
+
+// Ensure hook import isn't tree-shaken warning; the effect is intentional no-op below.
+useEffect;
