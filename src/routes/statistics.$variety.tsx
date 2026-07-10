@@ -122,22 +122,13 @@ function VarietyStatsPage() {
         <div className="pb-6">
           {/* Date selector card (matches 시세 탭 조회 날짜 카드) */}
           <div className="px-4 pt-4">
-            <button
-              type="button"
+            <CompactSelectCard
+              icon={<Calendar className="h-3.5 w-3.5" />}
+              label="조회 날짜"
+              value={date.replaceAll("-", ".")}
               onClick={() => setDateOpen(true)}
-              className="flex min-h-16 w-full flex-col items-start gap-1 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
-            >
-              <span className="flex items-center gap-1 text-[11px] font-medium text-[#868E96]">
-                <Calendar className="h-3.5 w-3.5" />
-                조회 날짜
-              </span>
-              <span className="flex w-full items-center justify-between">
-                <span className="truncate text-[14px] font-bold text-foreground">
-                  {date.replaceAll("-", ".")}
-                </span>
-                <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#ADB5BD]" />
-              </span>
-            </button>
+            />
+
 
             {data.differentFromRequest && (
               <div className="mt-2 rounded-[8px] bg-[#F0F9F0] px-3 py-2 text-[11.5px] font-semibold text-[#1F5C1F]">
