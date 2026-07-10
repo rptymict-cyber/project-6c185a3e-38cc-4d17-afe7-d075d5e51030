@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
-import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { HomeAgriNewsSection } from "@/components/home/HomeAgriNewsSection";
 import { RealtimeSection } from "./RealtimeSection";
-import { HomeMarketQuickSection } from "./HomeMarketQuickSection";
-import { HomeItemQuickSection } from "./HomeItemQuickSection";
+import {
+  HomeFeatureCard,
+  WholesaleMarketIllustration,
+  ItemBasketIllustration,
+  AIPredictionIllustration,
+} from "@/components/home/HomeFeatureCard";
 import type { LiveSort } from "@/lib/services/live-prices";
 
 const HOME_LIMIT = 5;
@@ -32,8 +35,6 @@ export function MarketListHome({
         </Link>
       </div>
 
-      <PredictableCropCards />
-
       {/* 실시간 시세 */}
       <section className="mt-6 px-4">
         <div className="mb-2 flex items-center justify-between">
@@ -55,8 +56,27 @@ export function MarketListHome({
 
       <HomeAgriNewsSection />
 
-      <HomeMarketQuickSection />
-      <HomeItemQuickSection />
+      {/* 주요 진입 카드 */}
+      <section className="mt-6 flex flex-col gap-3 px-4">
+        <HomeFeatureCard
+          eyebrow="전국 도매시장 시세를 확인하세요"
+          title="도매시장별 조회"
+          to="/market/wholesale"
+          image={<WholesaleMarketIllustration />}
+        />
+        <HomeFeatureCard
+          eyebrow="원하는 품목의 가격을 확인하세요"
+          title="품목별 조회"
+          to="/market/item"
+          image={<ItemBasketIllustration />}
+        />
+        <HomeFeatureCard
+          eyebrow="AI가 예측한 미래 시세를 확인하세요"
+          title="AI 시세 예측"
+          to="/prediction"
+          image={<AIPredictionIllustration />}
+        />
+      </section>
 
       <DataSourceNotice />
     </div>
