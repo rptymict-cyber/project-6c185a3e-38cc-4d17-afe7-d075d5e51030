@@ -75,7 +75,7 @@ function ItemBrowsePage() {
 
   return (
     <AppShell
-      header={<DetailHeader title="품목별 조회" onBack={() => history.back()} />}
+      header={<AppHeader title="품목별 조회" showRefresh={false} showBell={false} showSearch />}
     >
       <div className="px-4 pb-8 pt-3">
         {/* 선택 품목 드롭다운 */}
