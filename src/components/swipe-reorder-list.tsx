@@ -11,10 +11,16 @@ export function SwipeReorderList({
   items,
   onDelete,
   onReorder,
+  className,
+  wrapperClassName,
+  dragHandlePosition = "center",
 }: {
   items: SRItem[];
   onDelete: (id: string) => void;
   onReorder: (ids: string[]) => void;
+  className?: string;
+  wrapperClassName?: string;
+  dragHandlePosition?: "center" | "top-right";
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
@@ -41,10 +47,7 @@ export function SwipeReorderList({
       const dy = e.clientY - st.startY;
       setDragOffset(dy);
       const delta = Math.round(dy / st.height);
-      const targetIndex = Math.max(
-        0,
-        Math.min(st.order.length - 1, st.startIndex + delta),
-      );
+      const targetIndex = Math.max(0, Math.min(st.order.length - 1, st.startIndex + delta));
       if (targetIndex !== order.indexOf(dragId)) {
         const next = st.order.filter((id) => id !== dragId);
         next.splice(targetIndex, 0, dragId);
@@ -102,6 +105,9 @@ export function SwipeReorderList({
               };
               setDragId(id);
             }}
+            className={className}
+            wrapperClassName={wrapperClassName}
+            dragHandlePosition={dragHandlePosition}
           >
             {item.render()}
           </SwipeRow>
@@ -121,6 +127,9 @@ function SwipeRow({
   onDelete,
   onGripDown,
   children,
+  className,
+  wrapperClassName,
+  dragHandlePosition = "center",
 }: {
   id: string;
   open: boolean;
@@ -131,6 +140,9 @@ function SwipeRow({
   onDelete: () => void;
   onGripDown: (e: React.PointerEvent) => void;
   children: ReactNode;
+  className?: string;
+  wrapperClassName?: string;
+  dragHandlePosition?: "center" | "top-right";
 }) {
   const [tx, setTx] = useState(open ? -SWIPE_MAX : 0);
   const startX = useRef<number | null>(null);
@@ -147,6 +159,7 @@ function SwipeRow({
       className={cn(
         "relative overflow-hidden rounded-[10px]",
         dragging && "z-10 shadow-lg",
+        wrapperClassName,
       )}
       style={{
         transform: dragging ? `translateY(${dragOffset}px)` : undefined,
@@ -164,7 +177,7 @@ function SwipeRow({
       </button>
       {/* foreground content */}
       <div
-        className="relative flex items-stretch bg-surface"
+        className={cn("relative flex items-stretch bg-surface", className)}
         style={{
           transform: `translateX(${tx}px)`,
           transition: startX.current === null ? "transform 180ms ease" : "none",
@@ -210,9 +223,16 @@ function SwipeRow({
             e.stopPropagation();
             onGripDown(e);
           }}
-          className="flex w-10 shrink-0 touch-none items-center justify-center text-muted-foreground"
+          className={cn(
+            "touch-none text-muted-foreground",
+            dragHandlePosition === "top-right"
+              ? "absolute right-3 top-4 z-10 grid h-8 w-8 place-items-center"
+              : "flex w-10 shrink-0 items-center justify-center",
+          )}
         >
-          <GripVertical className="h-5 w-5" />
+          <GripVertical
+            className={cn("shrink-0", dragHandlePosition === "top-right" ? "h-4 w-4" : "h-5 w-5")}
+          />
         </button>
       </div>
     </li>

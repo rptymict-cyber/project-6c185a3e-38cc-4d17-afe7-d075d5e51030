@@ -49,14 +49,7 @@ function WatchlistPage() {
     const q = query.trim().toLowerCase();
     if (!q) return sorted;
     return sorted.filter((it) =>
-      [
-        it.cropName,
-        it.varietyName,
-        it.marketName,
-        it.corporationName,
-        it.originName,
-        it.unit,
-      ]
+      [it.cropName, it.varietyName, it.marketName, it.corporationName, it.originName, it.unit]
         .filter(Boolean)
         .join(" ")
         .toLowerCase()
@@ -77,9 +70,7 @@ function WatchlistPage() {
       }}
       className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
     >
-      <RefreshCw
-        className={cn("h-5 w-5 transition-transform", spinning && "animate-spin")}
-      />
+      <RefreshCw className={cn("h-5 w-5 transition-transform", spinning && "animate-spin")} />
     </button>
   );
 
@@ -102,12 +93,9 @@ function WatchlistPage() {
   return (
     <AppShell header={<AppHeader title="즐겨찾기" right={rightSlot} />}>
       <div className="px-4 pt-4">
-        <h1 className="text-[22px] font-black tracking-tight text-foreground">
-          즐겨찾기
-        </h1>
+        <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          총{" "}
-          <span className="font-semibold text-foreground">{items.length}</span>
+          총 <span className="font-semibold text-foreground">{items.length}</span>
           개의 저장한 시세 조건
         </p>
       </div>
@@ -140,9 +128,7 @@ function WatchlistPage() {
 
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center px-6 pb-16 pt-16 text-center">
-              <p className="text-[13px] text-muted-foreground">
-                조건에 맞는 저장된 시세가 없어요
-              </p>
+              <p className="text-[13px] text-muted-foreground">조건에 맞는 저장된 시세가 없어요</p>
             </div>
           ) : (
             <>
@@ -150,11 +136,13 @@ function WatchlistPage() {
                 items={rows}
                 onDelete={handleDelete}
                 onReorder={handleReorder}
+                className="rounded-2xl border border-border bg-background"
+                wrapperClassName="rounded-2xl"
+                dragHandlePosition="top-right"
               />
               {!isSearching && filtered.length > 1 && (
                 <p className="pb-6 text-center text-[12px] text-muted-foreground">
-                  <span className="mr-1 tracking-tighter">⋮⋮</span>
-                  를 드래그해 순서를 바꿀 수 있어요
+                  <span className="mr-1 tracking-tighter">⋮⋮</span>를 드래그해 순서를 바꿀 수 있어요
                 </p>
               )}
             </>
@@ -213,12 +201,8 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
   const unitPrice = item.price ?? 0;
 
   return (
-    <div className="rounded-2xl border border-border bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
-      <button
-        type="button"
-        onClick={handleOpen}
-        className="block w-full text-left"
-      >
+    <div className="bg-background p-4">
+      <button type="button" onClick={handleOpen} className="block w-full text-left">
         <div className="flex items-start gap-3">
           <div
             className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-muted"
@@ -229,70 +213,53 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
-                {item.isPredictable && (
-                  <div className="mb-1">
-                    <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
-                      AI 가격 예측
-                    </span>
-                  </div>
-                )}
                 <div className="truncate text-[15px] font-bold text-foreground">
                   {item.cropName}
                   {item.varietyName ? ` · ${item.varietyName}` : ""}
                 </div>
-                <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
-                  {item.marketName} · {item.corporationName ?? "전체 법인"}
-                </div>
-                <div className="truncate text-[12px] text-muted-foreground">
-                  {item.originName ?? "전체 산지"} · {unitLabel} 기준
-                  {item.grade ? ` · ${item.grade}` : ""}
-                </div>
               </div>
               <Star
-                className="mt-0.5 h-5 w-5 shrink-0 text-[#F5B301]"
+                className="mr-8 h-5 w-5 shrink-0 text-[#F5B301]"
                 fill="#F5B301"
                 strokeWidth={1.5}
                 aria-hidden
               />
             </div>
+            <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
+              {item.marketName} · {item.corporationName ?? "전체 법인"}
+            </div>
+            <div className="truncate text-[12px] text-muted-foreground">
+              {item.originName ?? "전체 산지"} · {unitLabel} 기준
+              {item.grade ? ` · ${item.grade}` : ""}
+            </div>
           </div>
         </div>
 
-        <div className="mt-3 flex items-end justify-between gap-3">
+        <div className="my-3 border-t border-[#F1F3F5]" />
+
+        <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-baseline gap-1">
               <span className="font-data text-[26px] font-black leading-none tabular-nums text-foreground">
                 {kgPrice.toLocaleString()}
               </span>
-              <span className="text-[12px] font-medium text-muted-foreground">
-                원/kg
-              </span>
+              <span className="text-[12px] font-medium text-muted-foreground">원/kg</span>
             </div>
             <div className="mt-1.5 text-[11.5px] text-muted-foreground">
               {unitLabel} 기준 {unitPrice.toLocaleString()}원
-              {item.totalVolume != null
-                ? ` · 거래량 ${item.totalVolume.toLocaleString()}t`
-                : ""}
+              {item.totalVolume != null ? ` · 거래량 ${item.totalVolume.toLocaleString()}t` : ""}
             </div>
           </div>
           <div className="flex shrink-0 flex-col items-end gap-1">
             <span
               className={cn(
-                "inline-flex items-center whitespace-nowrap text-[13px] font-bold tabular-nums",
-                flat
-                  ? "text-muted-foreground"
-                  : rising
-                    ? "text-[#E03131]"
-                    : "text-[#1971C2]",
+                "inline-flex items-center whitespace-nowrap text-[15px] font-bold tabular-nums",
+                flat ? "text-muted-foreground" : rising ? "text-[#E03131]" : "text-[#1971C2]",
               )}
             >
-              {flat
-                ? "— 0.0%"
-                : `${rising ? "▲ +" : "▼ "}${(item.changeRate ?? 0).toFixed(1)}%`}
+              {flat ? "— 0.0%" : `${rising ? "▲ +" : "▼ "}${(item.changeRate ?? 0).toFixed(1)}%`}
             </span>
-            <span className="text-[10.5px] text-muted-foreground">
-              전일 대비
-            </span>
+            <span className="text-[11px] text-muted-foreground">전일 대비</span>
           </div>
         </div>
       </button>
@@ -304,9 +271,7 @@ function EmptyState() {
   return (
     <div className="flex flex-col items-center px-6 pb-16 pt-20 text-center">
       <Star className="mb-5 text-[#B2DFB2]" size={48} strokeWidth={1.5} />
-      <h3 className="text-[16px] font-bold text-foreground">
-        저장한 시세 조건이 아직 없어요
-      </h3>
+      <h3 className="text-[16px] font-bold text-foreground">저장한 시세 조건이 아직 없어요</h3>
       <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
         아래 + 버튼으로 관심 있는 품목과 시장을
         <br />
