@@ -12,11 +12,11 @@ export function HomeFeatureCard({ eyebrow, title, image, to }: HomeFeatureCardPr
   return (
     <Link
       to={to}
-      className="flex items-center gap-3 rounded-2xl border border-[#E9ECEF] bg-white px-4 py-4 shadow-[0_1px_2px_rgba(16,24,40,0.03)] active:bg-[#F8F9FA]"
+      className="flex h-[120px] items-center gap-3 rounded-[20px] border border-[#E8EEE8] bg-white px-5 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:bg-[#F8F9FA]"
     >
       <div className="min-w-0 flex-1">
-        <div className="text-[11.5px] text-[#6C757D]">{eyebrow}</div>
-        <div className="mt-1 truncate text-[18px] font-extrabold text-foreground">
+        <div className="text-[12px] text-[#6B7280]">{eyebrow}</div>
+        <div className="mt-1 truncate text-[18px] font-extrabold text-[#111827]">
           {title}
         </div>
       </div>
