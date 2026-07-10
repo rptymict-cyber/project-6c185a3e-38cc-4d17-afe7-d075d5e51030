@@ -50,8 +50,8 @@ export function PredictableCropCards() {
         </Link>
       </div>
 
-      {/* Horizontal scroll cards - compact */}
-      <div className="no-scrollbar -mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-1">
+      {/* Horizontal scroll cards - mini (4 visible + peek) */}
+      <div className="no-scrollbar -mx-4 mt-3 flex gap-1.5 overflow-x-auto px-4 pb-1">
         {PREDICTABLE_CROPS.map((crop) => {
           const h = HOME_PRICE[crop.id] ?? {
             price: 0,
@@ -63,25 +63,16 @@ export function PredictableCropCards() {
               key={crop.id}
               to="/prediction"
               search={{ cropId: crop.id, entrySource: "home" }}
-              className="flex w-[136px] min-w-[136px] items-center gap-2 rounded-2xl bg-[#F3F8F3] p-3 transition-colors active:bg-[#E8F1E8]"
+              className="flex w-[84px] min-w-[84px] flex-col items-start gap-1 rounded-[10px] bg-[#F5FAF6] px-2 py-2.5 transition-colors active:bg-[#E8F1E8]"
             >
-              <div className="shrink-0">
-                <CropIcon name={crop.name} size={32} />
+              <CropIcon name={crop.name} size={24} />
+              <div className="text-[12px] font-bold leading-tight text-[#111827]">
+                {crop.name}
               </div>
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-[13px] font-bold text-[#111827]">
-                  {crop.name}
-                </div>
-                <div className="mt-0.5 whitespace-nowrap text-[12px] font-semibold tabular-nums text-[#374151]">
-                  {h.price.toLocaleString()}
-                  <span className="text-[10px] font-medium text-[#6B7280]">
-                    원/{h.unitLabel}
-                  </span>
-                </div>
-                <div className="mt-0.5">
-                  <ChangeBadge changePct={h.changePct} />
-                </div>
+              <div className="whitespace-nowrap text-[10px] font-semibold tabular-nums leading-tight text-[#6B7280]">
+                {h.price.toLocaleString()}원/{h.unitLabel}
               </div>
+              <ChangeBadge changePct={h.changePct} />
             </Link>
           );
         })}
