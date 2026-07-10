@@ -61,16 +61,17 @@ export function MarketSheet({
           })}
           <li className="border-b border-[#F1F3F5]">
             <button
-              onClick={() => pick("all", "전체 시장 비교")}
+              onClick={() => pick("all", "전체")}
               className={cn(
                 "flex w-full items-center justify-between px-5 py-3.5 text-left text-[14px] font-semibold",
                 marketId === "all" ? "text-[#1F5C1F]" : "text-foreground",
               )}
             >
-              전체 시장 비교
+              전체
               {marketId === "all" && <Check className="h-4 w-4 text-[#3A8A3A]" />}
             </button>
           </li>
+
         </ul>
         <div className="h-4" />
       </SheetContent>
