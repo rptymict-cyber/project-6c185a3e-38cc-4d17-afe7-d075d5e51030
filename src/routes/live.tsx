@@ -44,9 +44,10 @@ function LivePage() {
   return (
     <AppShell
       header={
-        <DetailHeader
+        <AppHeader
           title="실시간 시세"
-          onBack={() => history.back()}
+          showBell={false}
+          showSearch
         />
       }
     >
