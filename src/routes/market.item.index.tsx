@@ -94,7 +94,7 @@ function ItemBrowsePage() {
                     작물
                   </div>
                   <div className="mt-0.5 truncate text-[16px] font-bold text-foreground">
-                    {`${item.category} · ${item.name} · 전체 품종`}
+                    {`${ITEM_CATEGORIES.find((c) => c.id === item.category)?.label ?? ""} · ${item.name} · 전체 품종`}
                   </div>
                 </div>
               </div>
