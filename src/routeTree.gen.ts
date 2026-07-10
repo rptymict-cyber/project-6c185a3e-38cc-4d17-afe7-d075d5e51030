@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WatchlistRouteImport } from './routes/watchlist'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as PredictionRouteImport } from './routes/prediction'
@@ -23,6 +22,7 @@ import { Route as DataGuideRouteImport } from './routes/data-guide'
 import { Route as CropSelectRouteImport } from './routes/crop-select'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WatchlistIndexRouteImport } from './routes/watchlist.index'
 import { Route as StatisticsIndexRouteImport } from './routes/statistics.index'
 import { Route as NotificationsIndexRouteImport } from './routes/notifications.index'
 import { Route as MarketIndexRouteImport } from './routes/market.index'
@@ -42,11 +42,6 @@ import { Route as MarketWholesaleMarketRouteImport } from './routes/market.whole
 import { Route as MarketItemItemRouteImport } from './routes/market.item.$item'
 import { Route as MarketAuctionIdRouteImport } from './routes/market.auction.$id'
 
-const WatchlistRoute = WatchlistRouteImport.update({
-  id: '/watchlist',
-  path: '/watchlist',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -112,6 +107,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WatchlistIndexRoute = WatchlistIndexRouteImport.update({
+  id: '/watchlist/',
+  path: '/watchlist/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StatisticsIndexRoute = StatisticsIndexRouteImport.update({
   id: '/statistics/',
   path: '/statistics/',
@@ -128,9 +128,9 @@ const MarketIndexRoute = MarketIndexRouteImport.update({
   getParentRoute: () => MarketRoute,
 } as any)
 const WatchlistAddRoute = WatchlistAddRouteImport.update({
-  id: '/add',
-  path: '/add',
-  getParentRoute: () => WatchlistRoute,
+  id: '/watchlist/add',
+  path: '/watchlist/add',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const StatisticsSelectRoute = StatisticsSelectRouteImport.update({
   id: '/statistics/select',
@@ -220,7 +220,6 @@ export interface FileRoutesByFullPath {
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
-  '/watchlist': typeof WatchlistRouteWithChildren
   '/market/$crop': typeof MarketCropRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
@@ -230,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/market/': typeof MarketIndexRoute
   '/notifications/': typeof NotificationsIndexRoute
   '/statistics/': typeof StatisticsIndexRoute
+  '/watchlist/': typeof WatchlistIndexRoute
   '/market/auction/$id': typeof MarketAuctionIdRoute
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
@@ -252,7 +252,6 @@ export interface FileRoutesByTo {
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
-  '/watchlist': typeof WatchlistRouteWithChildren
   '/market/$crop': typeof MarketCropRoute
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
@@ -261,6 +260,7 @@ export interface FileRoutesByTo {
   '/market': typeof MarketIndexRoute
   '/notifications': typeof NotificationsIndexRoute
   '/statistics': typeof StatisticsIndexRoute
+  '/watchlist': typeof WatchlistIndexRoute
   '/market/auction/$id': typeof MarketAuctionIdRoute
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
@@ -286,7 +286,6 @@ export interface FileRoutesById {
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
-  '/watchlist': typeof WatchlistRouteWithChildren
   '/market/$crop': typeof MarketCropRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
@@ -296,6 +295,7 @@ export interface FileRoutesById {
   '/market/': typeof MarketIndexRoute
   '/notifications/': typeof NotificationsIndexRoute
   '/statistics/': typeof StatisticsIndexRoute
+  '/watchlist/': typeof WatchlistIndexRoute
   '/market/auction/$id': typeof MarketAuctionIdRoute
   '/market/item/$item': typeof MarketItemItemRoute
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
@@ -322,7 +322,6 @@ export interface FileRouteTypes {
     | '/prediction'
     | '/search'
     | '/settings'
-    | '/watchlist'
     | '/market/$crop'
     | '/notifications/settings'
     | '/price/$variety'
@@ -332,6 +331,7 @@ export interface FileRouteTypes {
     | '/market/'
     | '/notifications/'
     | '/statistics/'
+    | '/watchlist/'
     | '/market/auction/$id'
     | '/market/item/$item'
     | '/market/wholesale/$market'
@@ -354,7 +354,6 @@ export interface FileRouteTypes {
     | '/prediction'
     | '/search'
     | '/settings'
-    | '/watchlist'
     | '/market/$crop'
     | '/price/$variety'
     | '/statistics/$variety'
@@ -363,6 +362,7 @@ export interface FileRouteTypes {
     | '/market'
     | '/notifications'
     | '/statistics'
+    | '/watchlist'
     | '/market/auction/$id'
     | '/market/item/$item'
     | '/market/wholesale/$market'
@@ -387,7 +387,6 @@ export interface FileRouteTypes {
     | '/prediction'
     | '/search'
     | '/settings'
-    | '/watchlist'
     | '/market/$crop'
     | '/notifications/settings'
     | '/price/$variety'
@@ -397,6 +396,7 @@ export interface FileRouteTypes {
     | '/market/'
     | '/notifications/'
     | '/statistics/'
+    | '/watchlist/'
     | '/market/auction/$id'
     | '/market/item/$item'
     | '/market/wholesale/$market'
@@ -422,22 +422,16 @@ export interface RootRouteChildren {
   PredictionRoute: typeof PredictionRoute
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
-  WatchlistRoute: typeof WatchlistRouteWithChildren
   PriceVarietyRoute: typeof PriceVarietyRouteWithChildren
   StatisticsVarietyRoute: typeof StatisticsVarietyRoute
   StatisticsSelectRoute: typeof StatisticsSelectRoute
+  WatchlistAddRoute: typeof WatchlistAddRoute
   StatisticsIndexRoute: typeof StatisticsIndexRoute
+  WatchlistIndexRoute: typeof WatchlistIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/watchlist': {
-      id: '/watchlist'
-      path: '/watchlist'
-      fullPath: '/watchlist'
-      preLoaderRoute: typeof WatchlistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -529,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/watchlist/': {
+      id: '/watchlist/'
+      path: '/watchlist'
+      fullPath: '/watchlist/'
+      preLoaderRoute: typeof WatchlistIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/statistics/': {
       id: '/statistics/'
       path: '/statistics'
@@ -552,10 +553,10 @@ declare module '@tanstack/react-router' {
     }
     '/watchlist/add': {
       id: '/watchlist/add'
-      path: '/add'
+      path: '/watchlist/add'
       fullPath: '/watchlist/add'
       preLoaderRoute: typeof WatchlistAddRouteImport
-      parentRoute: typeof WatchlistRoute
+      parentRoute: typeof rootRouteImport
     }
     '/statistics/select': {
       id: '/statistics/select'
@@ -712,18 +713,6 @@ const NotificationsRouteWithChildren = NotificationsRoute._addFileChildren(
   NotificationsRouteChildren,
 )
 
-interface WatchlistRouteChildren {
-  WatchlistAddRoute: typeof WatchlistAddRoute
-}
-
-const WatchlistRouteChildren: WatchlistRouteChildren = {
-  WatchlistAddRoute: WatchlistAddRoute,
-}
-
-const WatchlistRouteWithChildren = WatchlistRoute._addFileChildren(
-  WatchlistRouteChildren,
-)
-
 interface PriceVarietyRouteChildren {
   PriceVarietyAlertRoute: typeof PriceVarietyAlertRoute
 }
@@ -750,11 +739,12 @@ const rootRouteChildren: RootRouteChildren = {
   PredictionRoute: PredictionRoute,
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
-  WatchlistRoute: WatchlistRouteWithChildren,
   PriceVarietyRoute: PriceVarietyRouteWithChildren,
   StatisticsVarietyRoute: StatisticsVarietyRoute,
   StatisticsSelectRoute: StatisticsSelectRoute,
+  WatchlistAddRoute: WatchlistAddRoute,
   StatisticsIndexRoute: StatisticsIndexRoute,
+  WatchlistIndexRoute: WatchlistIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
