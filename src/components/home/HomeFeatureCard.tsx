@@ -2,26 +2,25 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 
 export type HomeFeatureCardProps = {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   image: ReactNode;
   to: string;
 };
 
-export function HomeFeatureCard({ eyebrow, title, image, to }: HomeFeatureCardProps) {
+export function HomeFeatureCard({ title, image, to }: HomeFeatureCardProps) {
   return (
     <Link
       to={to}
-      className="flex h-[120px] items-center gap-3 rounded-[20px] border border-[#E8EEE8] bg-white px-5 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:bg-[#F8F9FA]"
+      className="flex h-[96px] flex-col items-center justify-center gap-2 rounded-[18px] border border-[#E8EEE8] bg-white px-3 py-3 active:bg-[#F8F9FA]"
     >
-      <div className="min-w-0 flex-1">
-        <div className="text-[12px] text-[#6B7280]">{eyebrow}</div>
-        <div className="mt-1 truncate text-[18px] font-extrabold text-[#111827]">
+      <div className="grid h-[44px] w-[56px] shrink-0 place-items-center">
+        {image}
+      </div>
+      <div className="min-w-0 text-center">
+        <div className="truncate text-[13px] font-bold text-[#111827]">
           {title}
         </div>
-      </div>
-      <div className="grid h-[92px] w-[112px] shrink-0 place-items-center">
-        {image}
       </div>
     </Link>
   );
