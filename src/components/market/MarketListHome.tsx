@@ -61,7 +61,7 @@ export function MarketListHome({
       <HomeAgriNewsSection />
 
       {/* 주요 진입 카드 */}
-      <section className="mt-4 grid grid-cols-2 gap-3 px-4">
+      <section className="mt-4 grid grid-cols-2 gap-2 px-4">
         <HomeFeatureCard
           title="도매시장별 조회"
           to="/market/wholesale"
