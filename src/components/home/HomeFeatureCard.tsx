@@ -13,17 +13,17 @@ export function HomeFeatureCard({ title, image, to }: HomeFeatureCardProps) {
   return (
     <Link
       to={to}
-      className="flex h-[60px] items-center gap-1.5 rounded-[16px] bg-[#F4F6F8] px-2 active:bg-[#E8EBEE]"
+      className="flex h-[56px] items-center gap-1.5 rounded-[16px] bg-[#F4F6F8] px-2 active:bg-[#E8EBEE]"
     >
-      <div className="grid h-[32px] w-[32px] shrink-0 place-items-center">
+      <div className="grid h-[28px] w-[28px] shrink-0 place-items-center">
         {image}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="truncate text-[13px] font-bold text-[#111827]">
+        <div className="truncate text-[12px] font-bold text-[#111827]">
           {title}
         </div>
       </div>
-      <ChevronRight className="h-4 w-4 shrink-0 text-[#9CA3AF]" />
+      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-[#9CA3AF]" />
     </Link>
   );
 }
