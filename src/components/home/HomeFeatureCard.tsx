@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
+import { ChevronRight } from "lucide-react";
 
 export type HomeFeatureCardProps = {
   eyebrow?: string;
@@ -12,16 +13,17 @@ export function HomeFeatureCard({ title, image, to }: HomeFeatureCardProps) {
   return (
     <Link
       to={to}
-      className="flex h-[96px] flex-col items-center justify-center gap-2 rounded-[18px] border border-[#E8EEE8] bg-white px-3 py-3 active:bg-[#F8F9FA]"
+      className="flex h-[64px] items-center gap-2 rounded-[16px] bg-[#F4F6F8] px-3 active:bg-[#E8EBEE]"
     >
-      <div className="grid h-[44px] w-[56px] shrink-0 place-items-center">
+      <div className="grid h-[40px] w-[40px] shrink-0 place-items-center">
         {image}
       </div>
-      <div className="min-w-0 text-center">
-        <div className="truncate text-[13px] font-bold text-[#111827]">
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-[14px] font-bold text-[#111827]">
           {title}
         </div>
       </div>
+      <ChevronRight className="h-5 w-5 shrink-0 text-[#9CA3AF]" />
     </Link>
   );
 }
