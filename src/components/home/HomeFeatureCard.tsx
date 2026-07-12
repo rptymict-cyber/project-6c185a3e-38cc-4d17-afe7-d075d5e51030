@@ -13,9 +13,9 @@ export function HomeFeatureCard({ title, image, to }: HomeFeatureCardProps) {
   return (
     <Link
       to={to}
-      className="flex h-[60px] items-center gap-2 rounded-[16px] bg-[#F4F6F8] px-2.5 active:bg-[#E8EBEE]"
+      className="flex h-[60px] items-center gap-1.5 rounded-[16px] bg-[#F4F6F8] px-2 active:bg-[#E8EBEE]"
     >
-      <div className="grid h-[36px] w-[36px] shrink-0 place-items-center">
+      <div className="grid h-[32px] w-[32px] shrink-0 place-items-center">
         {image}
       </div>
       <div className="min-w-0 flex-1">
