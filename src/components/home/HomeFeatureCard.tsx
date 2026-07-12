@@ -49,27 +49,19 @@ export function WholesaleMarketIllustration() {
 
 export function ItemBasketIllustration() {
   return (
-    <svg viewBox="0 0 112 92" className="h-full w-full" aria-hidden="true">
-      <rect x="0" y="78" width="112" height="4" rx="2" fill="#E9ECEF" />
+    <svg viewBox="0 0 40 40" className="h-full w-full" aria-hidden="true">
       {/* Cabbage */}
-      <circle cx="42" cy="48" r="16" fill="#8CC98C" />
-      <circle cx="42" cy="48" r="10" fill="#B7E4B7" />
-      {/* Radish */}
-      <ellipse cx="66" cy="52" rx="10" ry="14" fill="#fff" stroke="#CED4DA" strokeWidth="1.2" />
-      <path d="M62 40 Q66 32 70 40" stroke="#3A8A3A" strokeWidth="2" fill="none" />
+      <circle cx="16" cy="18" r="6" fill="#8CC98C" />
+      <circle cx="16" cy="18" r="3.5" fill="#B7E4B7" />
       {/* Apple */}
-      <circle cx="86" cy="54" r="10" fill="#E03131" />
-      <path d="M86 46 Q88 42 92 42" stroke="#3A8A3A" strokeWidth="2" fill="none" />
-      {/* Onion */}
-      <ellipse cx="26" cy="58" rx="9" ry="10" fill="#F5C36B" />
-      <path d="M22 50 L26 44 L30 50" stroke="#3A8A3A" strokeWidth="1.8" fill="none" />
+      <circle cx="28" cy="20" r="5" fill="#E03131" />
+      <path d="M28 15 Q29 13 31 13" stroke="#3A8A3A" strokeWidth="1.2" fill="none" />
       {/* Basket */}
-      <path d="M10 62 L102 62 L94 78 L18 78 Z" fill="#D9A066" stroke="#8A5A2B" strokeWidth="1.5" />
-      <line x1="24" y1="62" x2="28" y2="78" stroke="#8A5A2B" strokeWidth="1" />
-      <line x1="40" y1="62" x2="42" y2="78" stroke="#8A5A2B" strokeWidth="1" />
-      <line x1="56" y1="62" x2="56" y2="78" stroke="#8A5A2B" strokeWidth="1" />
-      <line x1="72" y1="62" x2="70" y2="78" stroke="#8A5A2B" strokeWidth="1" />
-      <line x1="88" y1="62" x2="84" y2="78" stroke="#8A5A2B" strokeWidth="1" />
+      <path d="M6 24 L34 24 L30 34 L10 34 Z" fill="#D9A066" stroke="#8A5A2B" strokeWidth="1.2" />
+      <line x1="12" y1="24" x2="14" y2="34" stroke="#8A5A2B" strokeWidth="0.8" />
+      <line x1="18" y1="24" x2="18" y2="34" stroke="#8A5A2B" strokeWidth="0.8" />
+      <line x1="24" y1="24" x2="23" y2="34" stroke="#8A5A2B" strokeWidth="0.8" />
+      <line x1="30" y1="24" x2="27" y2="34" stroke="#8A5A2B" strokeWidth="0.8" />
     </svg>
   );
 }
