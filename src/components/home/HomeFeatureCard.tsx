@@ -32,23 +32,17 @@ export function HomeFeatureCard({ title, image, to }: HomeFeatureCardProps) {
 
 export function WholesaleMarketIllustration() {
   return (
-    <svg viewBox="0 0 112 92" className="h-full w-full" aria-hidden="true">
-      {/* Ground */}
-      <rect x="0" y="78" width="112" height="4" rx="2" fill="#E9ECEF" />
+    <svg viewBox="0 0 40 40" className="h-full w-full" aria-hidden="true">
       {/* Warehouse */}
-      <rect x="42" y="30" width="58" height="48" rx="4" fill="#F1F3F5" stroke="#CED4DA" strokeWidth="1.5" />
-      <path d="M42 30 L71 16 L100 30 Z" fill="#3A8A3A" />
-      <rect x="56" y="46" width="30" height="32" fill="#fff" stroke="#CED4DA" strokeWidth="1.2" />
-      <text x="71" y="42" textAnchor="middle" fontSize="8" fontWeight="700" fill="#fff" fontFamily="sans-serif">도매시장</text>
-      <line x1="71" y1="46" x2="71" y2="78" stroke="#CED4DA" strokeWidth="1" />
+      <rect x="12" y="14" width="20" height="18" rx="2" fill="#F1F3F5" stroke="#CED4DA" strokeWidth="1.2" />
+      <path d="M12 14 L22 8 L32 14 Z" fill="#3A8A3A" />
+      <rect x="17" y="20" width="10" height="12" fill="#fff" stroke="#CED4DA" strokeWidth="1" />
+      <line x1="22" y1="20" x2="22" y2="32" stroke="#CED4DA" strokeWidth="1" />
       {/* Truck */}
-      <rect x="6" y="52" width="26" height="18" rx="2" fill="#fff" stroke="#3A8A3A" strokeWidth="1.5" />
-      <rect x="30" y="58" width="12" height="12" rx="2" fill="#3A8A3A" />
-      <circle cx="14" cy="74" r="4" fill="#343A40" />
-      <circle cx="34" cy="74" r="4" fill="#343A40" />
-      {/* Leaves */}
-      <circle cx="98" cy="26" r="6" fill="#8CC98C" />
-      <circle cx="106" cy="34" r="5" fill="#B7E4B7" />
+      <rect x="4" y="22" width="10" height="7" rx="1.5" fill="#fff" stroke="#3A8A3A" strokeWidth="1.2" />
+      <rect x="13" y="25" width="5" height="4" rx="1" fill="#3A8A3A" />
+      <circle cx="7" cy="31" r="2" fill="#343A40" />
+      <circle cx="16" cy="31" r="2" fill="#343A40" />
     </svg>
   );
 }
