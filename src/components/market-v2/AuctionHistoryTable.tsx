@@ -96,22 +96,18 @@ export function AuctionHistoryTable() {
 function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
   const navigate = useNavigate();
   return (
-    <div className="mt-3 overflow-x-auto rounded-[12px] border border-[#E9ECEF] bg-white">
-      <table className="w-full min-w-[640px] border-collapse text-[11.5px]">
+    <div className="mt-3 overflow-hidden rounded-[12px] border border-[#E9ECEF] bg-white">
+      <table className="w-full border-collapse text-[12px]">
         <thead>
           <tr className="bg-[#F8F9FA] text-[#495057]">
-            <Th>번호</Th>
             <Th>시간</Th>
             <Th>품종</Th>
             <Th>출하지</Th>
             <Th className="text-right">가격</Th>
-            <Th className="text-right">수량</Th>
-            <Th>규격</Th>
-            <Th>법인</Th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((r, i) => (
+          {rows.map((r) => (
             <tr
               key={r.id}
               onClick={() =>
@@ -119,23 +115,20 @@ function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
               }
               className="cursor-pointer border-t border-[#F1F3F5] hover:bg-[#F8F9FA] active:bg-[#F1F3F5]"
             >
-              <Td>{i + 1}</Td>
               <Td className="whitespace-nowrap">
                 {r.auctionDate.slice(5).replace("-", "/")} {r.auctionClock}
               </Td>
               <Td className="font-semibold text-[#1F5C1F]">{r.varietyName}</Td>
-              <Td>{r.origin}</Td>
+              <Td className="truncate">{r.origin}</Td>
               <Td className="whitespace-nowrap text-right font-bold text-[#E03131]">
-                {r.price.toLocaleString()}
+                {r.price.toLocaleString()}원
               </Td>
-              <Td className="text-right">{r.count}</Td>
-              <Td>{r.packageLabel}</Td>
-              <Td className="whitespace-nowrap">{r.corporationName}</Td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
+
   );
 }
 
