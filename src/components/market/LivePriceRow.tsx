@@ -19,7 +19,7 @@ export function LivePriceRowItem({
     <li className="border-t border-[#F1F3F5] first:border-t-0">
       <button
         onClick={onClick}
-        className="grid w-full grid-cols-[20px_28px_1fr_auto_auto_auto] items-center gap-2 px-3 py-2.5 text-left active:bg-secondary"
+        className="grid w-full grid-cols-[16px_28px_1fr_84px_64px_52px] items-center gap-2 px-3 py-2.5 text-left active:bg-secondary"
       >
         <span className="text-center text-[12px] font-bold tabular-nums text-[#3A8A3A]">
           {rank}
@@ -38,7 +38,7 @@ export function LivePriceRowItem({
         <div className="text-right">
           <PriceBadge changePct={row.changePct} />
         </div>
-        <div className="w-[54px] text-right text-[11px] tabular-nums text-muted-foreground">
+        <div className="text-right text-[11px] tabular-nums text-muted-foreground">
           {row.volumeTon.toFixed(1)}t
         </div>
       </button>
@@ -48,13 +48,12 @@ export function LivePriceRowItem({
 
 export function LivePriceHeader() {
   return (
-    <div className="grid grid-cols-[20px_28px_1fr_auto_auto_auto] items-center gap-2 border-b border-[#F1F3F5] bg-[#FAFBFC] px-3 py-1.5 text-[10.5px] font-semibold text-muted-foreground">
+    <div className="grid grid-cols-[16px_28px_1fr_84px_64px_52px] items-center gap-2 border-b border-[#F1F3F5] bg-[#FAFBFC] px-3 py-1.5 text-[10.5px] font-semibold text-muted-foreground">
       <span></span>
-      <span></span>
-      <span>품목</span>
+      <span className="col-span-2">품목</span>
       <span className="text-right">현재가</span>
-      <span className="w-[56px] text-right">등락률</span>
-      <span className="w-[54px] text-right">거래량</span>
+      <span className="text-right">등락률</span>
+      <span className="text-right">거래량</span>
     </div>
   );
 }

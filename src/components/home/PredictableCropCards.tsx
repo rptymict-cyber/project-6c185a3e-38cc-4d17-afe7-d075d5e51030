@@ -17,15 +17,15 @@ const HOME_PRICE: Record<
 };
 
 function ChangeBadge({ changePct }: { changePct: number }) {
-  const up = changePct > 0;
+  const up = changePct >= 0;
   return (
     <span
       className={cn(
-        "text-[12px] font-bold tabular-nums",
-        up ? "text-[#E03131]" : "text-[#1971C2]",
+        "rounded-[6px] px-[7px] py-[2px] text-[11.5px] font-extrabold tabular-nums",
+        up ? "bg-[#FDECEC] text-[#E03B3B]" : "bg-[#EAF0FE] text-[#2563EB]",
       )}
     >
-      {up ? "▲" : "▼"} {Math.abs(changePct).toFixed(1)}%
+      {up ? "↑ 예측 상승" : "↓ 예측 하락"} {Math.abs(changePct).toFixed(1)}%
     </span>
   );
 }
