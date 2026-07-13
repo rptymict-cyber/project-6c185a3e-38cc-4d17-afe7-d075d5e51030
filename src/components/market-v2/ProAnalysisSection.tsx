@@ -158,7 +158,7 @@ export function ProAnalysisSection() {
     <section className="mt-3 bg-white pt-1">
       {/* Tab bar */}
       <div className="flex items-center border-b border-[#E9ECEF]">
-        <div className="no-scrollbar flex flex-1 overflow-x-auto px-2">
+        <div className="flex w-full flex-1">
           {TABS.map((t) => {
             const active = t.id === tab;
             return (
@@ -166,13 +166,13 @@ export function ProAnalysisSection() {
                 key={t.id}
                 onClick={() => setTab(t.id)}
                 className={cn(
-                  "relative shrink-0 px-3 py-3 text-[13.5px] font-semibold",
+                  "relative flex-1 py-3 text-center text-[13.5px] font-semibold",
                   active ? "text-foreground" : "text-[#868E96]",
                 )}
               >
                 {t.label}
                 {active && (
-                  <span className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-[#3A8A3A]" />
+                  <span className="absolute inset-x-3 -bottom-px h-[2px] rounded-full bg-[#3A8A3A]" />
                 )}
               </button>
             );
