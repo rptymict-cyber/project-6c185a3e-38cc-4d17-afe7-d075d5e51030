@@ -82,7 +82,7 @@ export function PredictionInsightCard({
             {badge}
           </span>
           <span className="text-[10.5px] font-semibold uppercase tracking-wider text-white/70">
-            AI Insight
+            {"\n"}
           </span>
         </div>
 
