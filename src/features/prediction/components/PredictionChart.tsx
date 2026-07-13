@@ -468,16 +468,6 @@ function PredictionChartBase({
             <span className="text-[13px] font-bold text-[#495057]">
               원{baseUnitLabel ? ` / ${baseUnitLabel}` : ""}
             </span>
-            <span
-              className={`ml-auto rounded-full px-2.5 py-1 text-[12px] font-extrabold tabular-nums ${
-                gain >= 0
-                  ? "bg-[#E7F6EE] text-[#1F7A50]"
-                  : "bg-[#FFF5F5] text-[#E03131]"
-              }`}
-            >
-              {gainLabel} {gain >= 0 ? "+" : "-"}
-              {Math.abs(gain).toLocaleString()}원
-            </span>
           </div>
         </div>
       )}
