@@ -31,7 +31,7 @@ export function HomeAgriNewsSection() {
       {/* section title */}
       <div className="flex items-center justify-between">
         <h3 className="text-[18px] font-bold text-[#111827]">
-          오늘의 농산물 소식
+          농산물 소식
         </h3>
         <Link
           to="/news"
