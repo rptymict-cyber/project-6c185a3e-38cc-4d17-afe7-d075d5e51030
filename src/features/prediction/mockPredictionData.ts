@@ -189,9 +189,10 @@ function buildPoints(
 }
 
 function toDateLabel(iso: string) {
-  const d = new Date(iso);
+  const [year, month, date] = iso.split("-").map(Number);
+  const d = new Date(year, month - 1, date);
   const w = ["일", "월", "화", "수", "목", "금", "토"][d.getDay()];
-  return `${d.getMonth() + 1}월 ${d.getDate()}일 (${w})`;
+  return `${month}월 ${date}일 (${w})`;
 }
 
 export function buildMockPrediction(
