@@ -158,12 +158,12 @@ function PredictionPage() {
           onViewpointClick={() => setViewpointSheetOpen(true)}
         />
 
-        {/* 2. AI 추천 카드 */}
+        {/* 2. AI 추천 카드 (선택 날짜 반영) */}
         <div className="mt-3">
           <PredictionInsightCard
             viewpoint={selectedViewpoint}
-            recommendationDate={insight.recommendationDate}
-            expectedPrice={insight.expectedPrice}
+            recommendationDate={selectedDate}
+            expectedPrice={selectedPrice}
             currentPrice={prediction.currentPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
@@ -203,21 +203,30 @@ function PredictionPage() {
           </div>
 
           <div className="mt-3 rounded-2xl border border-[#E9ECEF] bg-white p-3">
-            <PredictionChart points={prediction.predictedPoints} />
+            <PredictionChart
+              points={prediction.predictedPoints}
+              selectedIndex={effectiveIdx}
+              onSelectIndex={setSelectedDayIndex}
+              viewpoint={selectedViewpoint}
+              currentPrice={prediction.currentPrice}
+              quantityBoxes={quantityBoxes}
+              baseUnitLabel={baseUnitLabel}
+            />
           </div>
         </section>
 
-        {/* 4. 출하/매입 시점 비교 */}
+        {/* 4. 출하/매입 시점 비교 (선택 날짜 반영) */}
         <div className="mt-4">
           <PredictionCompareCards
             viewpoint={selectedViewpoint}
             currentPrice={prediction.currentPrice}
-            expectedPrice={insight.expectedPrice}
+            expectedPrice={selectedPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
-            recommendationDate={insight.recommendationDate}
+            recommendationDate={selectedDate}
           />
         </div>
+
 
         {/* 5. 예측 근거 */}
         <section className="mt-4">
