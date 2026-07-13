@@ -61,19 +61,22 @@ export function MarketListHome({
       <HomeAgriNewsSection />
 
       {/* 주요 진입 카드 */}
-      <section className="mt-4 flex flex-col gap-3 px-4">
-        <HomeFeatureCard
-          eyebrow="원하는 품목의 가격을 확인하세요"
-          title="품목별 조회"
-          to="/market/item"
-          image={<ItemBasketIllustration />}
-        />
-        <HomeFeatureCard
-          eyebrow="전국 도매시장 시세를 확인하세요"
-          title="도매시장별 조회"
-          to="/market/wholesale"
-          image={<WholesaleMarketIllustration />}
-        />
+      <section className="mt-5 px-4">
+        <h3 className="mb-3 text-[18px] font-bold text-[#111827]">빠른 조회</h3>
+        <div className="flex flex-col gap-3">
+          <HomeFeatureCard
+            eyebrow="원하는 품목의 가격을 확인하세요"
+            title="품목별 조회"
+            to="/market/item"
+            image={<ItemBasketIllustration />}
+          />
+          <HomeFeatureCard
+            eyebrow="전국 도매시장 시세를 확인하세요"
+            title="도매시장별 조회"
+            to="/market/wholesale"
+            image={<WholesaleMarketIllustration />}
+          />
+        </div>
       </section>
 
       <DataSourceNotice />
