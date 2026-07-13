@@ -45,6 +45,34 @@ export function ProAnalysisSection() {
 
   const unitLabel = f.unit.replace(" 기준", "");
 
+  // Task 3: prediction extension — only for predictable items in the catalog
+  const isPredictable = !!getItemById(f.itemId)?.prediction.supported;
+  const prediction: PredictionInput | undefined = useMemo(() => {
+    if (!isPredictable || series.points.length === 0) return undefined;
+    const last = series.points[series.points.length - 1];
+    const days = period === "today" ? 6 : period === "1w" ? 5 : period === "1m" ? 7 : 7;
+    // seeded-ish forecast: gentle drift + small noise around last price
+    const drift = last.price * 0.01;
+    const points: { label: string; price: number }[] = [];
+    for (let k = 1; k <= days; k++) {
+      const wave = Math.sin(k * 0.9) * (last.price * 0.015);
+      const p = Math.round(last.price + drift * k + wave);
+      points.push({ label: `+${k}일`, price: p });
+    }
+    // pick recommended = highest predicted point
+    let recIdx = 0;
+    points.forEach((p, i) => {
+      if (p.price > points[recIdx].price) recIdx = i;
+    });
+    return { points, recommendedIdx: recIdx };
+  }, [isPredictable, series, period]);
+
+  const recommended = prediction?.points[prediction.recommendedIdx ?? 0];
+  const recommendedDelta = recommended
+    ? recommended.price - series.points[series.points.length - 1].price
+    : 0;
+
+
   return (
     <section className="mt-3 bg-white pt-1">
       {/* Tab bar with right-side view segment */}
