@@ -2,6 +2,9 @@
 // Deterministically generates a list of auction lots for a given filter
 // combination (item/variety/market/date) so re-selection is stable.
 
+import { getItemById } from "@/lib/catalog-service";
+
+
 export type AuctionRecord = {
   id: string;
   auctionTime: string; // ISO-like "2026-07-05 23:15:14"
