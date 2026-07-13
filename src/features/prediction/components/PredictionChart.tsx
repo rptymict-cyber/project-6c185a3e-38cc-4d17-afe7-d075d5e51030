@@ -5,7 +5,6 @@ import {
   ComposedChart,
   Customized,
   Line,
-  ReferenceDot,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -92,7 +91,7 @@ function ForecastOverlay({
         width={Math.max(0, right - left)}
         height={Math.max(0, bottom - top)}
         fill={TEAL}
-        fillOpacity={0.15}
+        fillOpacity={0.07}
       />
       <line
         x1={xToday}
@@ -116,6 +115,148 @@ function ForecastOverlay({
     </g>
   );
 }
+
+// 추천/최고/최저 라벨을 흰 배경 pill로 그리고, 추천 칩과 위치 충돌을 피한다.
+interface LabelsOverlayProps {
+  xAxisMap?: Record<string, any>;
+  yAxisMap?: Record<string, any>;
+  offset?: { top: number; left: number; width: number; height: number };
+  recommendedLabel?: string;
+  recommendedPrice?: number;
+  maxLabel?: string;
+  maxPrice?: number;
+  minLabel?: string;
+  minPrice?: number;
+}
+
+function LabelsOverlay({
+  xAxisMap,
+  yAxisMap,
+  offset,
+  recommendedLabel,
+  recommendedPrice,
+  maxLabel,
+  maxPrice,
+  minLabel,
+  minPrice,
+}: LabelsOverlayProps) {
+  if (!xAxisMap || !yAxisMap || !offset) return null;
+  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
+  const yAxis = yAxisMap["price"] ?? Object.values(yAxisMap)[0];
+  if (!xAxis?.scale || !yAxis?.scale) return null;
+  const xScale = xAxis.scale;
+  const yScale = yAxis.scale;
+  const bw = typeof xScale.bandwidth === "function" ? xScale.bandwidth() : 0;
+  const centerX = (label: string): number | null => {
+    const v = xScale(label);
+    if (typeof v !== "number" || Number.isNaN(v)) return null;
+    return v + bw / 2;
+  };
+
+  const pill = (
+    key: string,
+    cx: number,
+    cy: number,
+    text: string,
+    color: string,
+    placement: "top" | "bottom",
+    filled: boolean,
+  ) => {
+    const padX = 8;
+    const padY = 4;
+    const fontSize = 10.5;
+    const w = Math.round(text.length * 6.6 + padX * 2);
+    const h = fontSize + padY * 2;
+    const gap = 10;
+    const y = placement === "top" ? cy - gap - h : cy + gap;
+    const textY = y + h / 2 + fontSize / 2 - 2;
+    return (
+      <g key={key}>
+        <rect
+          x={cx - w / 2}
+          y={y}
+          width={w}
+          height={h}
+          rx={h / 2}
+          ry={h / 2}
+          fill={filled ? color : "#FFFFFF"}
+          stroke={color}
+          strokeWidth={1.2}
+        />
+        <text
+          x={cx}
+          y={textY}
+          textAnchor="middle"
+          fontSize={fontSize}
+          fontWeight={800}
+          fill={filled ? "#FFFFFF" : color}
+        >
+          {text}
+        </text>
+      </g>
+    );
+  };
+
+  const nodes: React.ReactNode[] = [];
+
+  // 추천 칩 (항상 top)
+  let recCx: number | null = null;
+  let recCy: number | null = null;
+  if (recommendedLabel && typeof recommendedPrice === "number") {
+    recCx = centerX(recommendedLabel);
+    const yv = yScale(recommendedPrice);
+    recCy = typeof yv === "number" && !Number.isNaN(yv) ? yv : null;
+    if (recCx != null && recCy != null) {
+      const md = recommendedLabel.replace(/-/g, "/");
+      nodes.push(pill("rec", recCx, recCy, `추천 ${md}`, TEAL, "top", true));
+    }
+  }
+
+  // 최고 pill — 추천일과 겹치면 아래로
+  if (maxLabel && typeof maxPrice === "number") {
+    const cx = centerX(maxLabel);
+    const yv = yScale(maxPrice);
+    const cy = typeof yv === "number" && !Number.isNaN(yv) ? yv : null;
+    if (cx != null && cy != null) {
+      const collide = maxLabel === recommendedLabel;
+      nodes.push(
+        pill(
+          "max",
+          cx,
+          cy,
+          `최고 ${maxPrice.toLocaleString()}`,
+          RED,
+          collide ? "bottom" : "top",
+          false,
+        ),
+      );
+    }
+  }
+
+  // 최저 pill — 추천일과 겹치면 위로
+  if (minLabel && typeof minPrice === "number" && minLabel !== maxLabel) {
+    const cx = centerX(minLabel);
+    const yv = yScale(minPrice);
+    const cy = typeof yv === "number" && !Number.isNaN(yv) ? yv : null;
+    if (cx != null && cy != null) {
+      const collide = minLabel === recommendedLabel;
+      nodes.push(
+        pill(
+          "min",
+          cx,
+          cy,
+          `최저 ${minPrice.toLocaleString()}`,
+          BLUE,
+          collide ? "top" : "bottom",
+          false,
+        ),
+      );
+    }
+  }
+
+  return <g style={{ pointerEvents: "none" }}>{nodes}</g>;
+}
+
 
 interface SelectedMarkerProps {
   xAxisMap?: Record<string, any>;
@@ -296,34 +437,33 @@ function PredictionChartBase({
 
   return (
     <div className="w-full">
-      {/* 좌측 상단 정보 (헤이딜러식) */}
+      {/* 헤이딜러식 상단 제목 — 선택 날짜에 반응 */}
       {showTopInfo && selectedPrice != null && (
-        <div className="mb-2 flex items-baseline justify-between">
-          <div>
-            <div className="text-[11px] font-semibold text-[#495057]">
-              {selectedLabel} {isFarmer ? "출하 시" : "매입 시"}
-            </div>
-            <div className="mt-0.5 flex items-baseline gap-1">
-              <span className="text-[18px] font-black tabular-nums text-[#2E9E6B]">
-                {selectedPrice.toLocaleString()}
-              </span>
-              <span className="text-[11px] font-semibold text-[#495057]">
-                원{baseUnitLabel ? ` / ${baseUnitLabel}` : ""}
-              </span>
-            </div>
+        <div className="mb-3">
+          <div className="text-[12px] font-bold text-[#6C757D]">
+            {selectedLabel} 예상 시세
           </div>
-          <div
-            className={`rounded-full px-2 py-1 text-[11px] font-bold tabular-nums ${
-              gain >= 0
-                ? "bg-[#E7F5EC] text-[#1F5C1F]"
-                : "bg-[#FFF5F5] text-[#E03131]"
-            }`}
-          >
-            {gainLabel} {gain >= 0 ? "+" : "-"}
-            {Math.abs(gain).toLocaleString()}원
+          <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span className="text-[28px] font-black leading-none tabular-nums text-[#2E9E6B]">
+              {selectedPrice.toLocaleString()}
+            </span>
+            <span className="text-[13px] font-bold text-[#495057]">
+              원{baseUnitLabel ? ` / ${baseUnitLabel}` : ""}
+            </span>
+            <span
+              className={`ml-auto rounded-full px-2.5 py-1 text-[12px] font-extrabold tabular-nums ${
+                gain >= 0
+                  ? "bg-[#E7F6EE] text-[#1F7A50]"
+                  : "bg-[#FFF5F5] text-[#E03131]"
+              }`}
+            >
+              {gainLabel} {gain >= 0 ? "+" : "-"}
+              {Math.abs(gain).toLocaleString()}원
+            </span>
           </div>
         </div>
       )}
+
 
       <div className="h-[260px] w-full">
         <ResponsiveContainer width="100%" height="100%">
@@ -455,40 +595,22 @@ function PredictionChartBase({
               connectNulls={false}
             />
 
-            {maxPoint && (
-              <ReferenceDot
-                xAxisId="main"
-                yAxisId="price"
-                x={maxPoint.label}
-                y={maxP}
-                r={0}
-                label={{
-                  value: `최고 ${maxP.toLocaleString()}`,
-                  position: "top",
-                  fill: RED,
-                  fontSize: 10,
-                  fontWeight: 800,
-                }}
-              />
-            )}
-            {minPoint && minPoint.label !== maxPoint?.label && (
-              <ReferenceDot
-                xAxisId="main"
-                yAxisId="price"
-                x={minPoint.label}
-                y={minP}
-                r={0}
-                label={{
-                  value: `최저 ${minP.toLocaleString()}`,
-                  position: "bottom",
-                  fill: BLUE,
-                  fontSize: 10,
-                  fontWeight: 800,
-                }}
-              />
-            )}
+            {/* 추천 칩 · 최고/최저 pill (충돌 회피) */}
+            <Customized
+              component={(props: any) => (
+                <LabelsOverlay
+                  {...props}
+                  recommendedLabel={recommended?.label}
+                  recommendedPrice={recommended?.predictedPrice}
+                  maxLabel={maxPoint?.label}
+                  maxPrice={hasFuture ? maxP : undefined}
+                  minLabel={minPoint?.label}
+                  minPrice={hasFuture ? minP : undefined}
+                />
+              )}
+            />
 
-            {canRenderSelected && (
+            {canRenderSelected && selectedLabel !== recommended?.label && (
               <Customized
                 component={(props: any) => (
                   <SelectedMarker
@@ -510,8 +632,8 @@ function PredictionChartBase({
             AI 예측
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block h-2 w-3 rounded-sm bg-[rgba(224,59,59,0.35)]" />{" "}
-            거래량
+            <span className="inline-block h-2 w-3 rounded-sm bg-[rgba(46,158,107,0.15)]" />{" "}
+            예측 구간
           </span>
         </div>
       </div>
