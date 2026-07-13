@@ -77,7 +77,7 @@ export function ProAnalysisSection() {
     return {
       points,
       recommendedIdx: recIdx,
-      recommendedBadge: `추천 ${points[recIdx].label}`,
+      recommendedBadge: "추천",
     };
   }, [showForecast, series, period]);
 
