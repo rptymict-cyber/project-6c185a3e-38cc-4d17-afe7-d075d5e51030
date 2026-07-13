@@ -21,7 +21,7 @@ function ChangeBadge({ changePct }: { changePct: number }) {
   return (
     <span
       className={cn(
-        "rounded-[6px] px-[7px] py-[2px] text-[11.5px] font-extrabold tabular-nums",
+        "inline-flex whitespace-nowrap rounded-[6px] px-[7px] py-[2px] text-[11px] font-extrabold tabular-nums",
         up ? "bg-[#FDECEC] text-[#E03B3B]" : "bg-[#EAF0FE] text-[#2563EB]",
       )}
     >
@@ -63,7 +63,7 @@ export function PredictableCropCards() {
               key={crop.id}
               to="/prediction"
               search={{ cropId: crop.id, entrySource: "home" }}
-              className="flex w-[84px] min-w-[84px] flex-col items-start gap-1 rounded-[10px] bg-[#F5FAF6] px-2 py-2.5 transition-colors active:bg-[#E8F1E8]"
+              className="flex w-[112px] min-w-[112px] flex-col items-start gap-1 rounded-[10px] bg-[#F5FAF6] px-2 py-2.5 transition-colors active:bg-[#E8F1E8]"
             >
               <CropIcon name={crop.name} size={24} />
               <div className="text-[12px] font-bold leading-tight text-[#111827]">
