@@ -148,9 +148,12 @@ export function PredictionInsightCard({
             <div className="text-[10px] font-semibold text-white/75">
               {revenueLabel}
             </div>
-            <div className="mt-1 flex items-baseline gap-0.5">
-              <span className="text-[16px] font-black tabular-nums leading-none">
-                {formatCompactWon(totalRevenue)}
+            <div className="mt-1 flex items-baseline whitespace-nowrap">
+              <span
+                className="font-black tabular-nums leading-none"
+                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+              >
+                {formatFullWon(totalRevenue)}
               </span>
             </div>
             <div className="mt-0.5 text-[9.5px] text-white/60">
