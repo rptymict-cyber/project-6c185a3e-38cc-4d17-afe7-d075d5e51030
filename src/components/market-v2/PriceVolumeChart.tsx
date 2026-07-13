@@ -24,6 +24,8 @@ export type PredictionInput = {
   points: { label: string; price: number }[];
   /** index (in prediction points) of recommended day; renders dot marker */
   recommendedIdx?: number;
+  /** badge text drawn above the recommended dot, e.g. "추천 7/16" */
+  recommendedBadge?: string;
 };
 
 function xTickFilter(period: Period, points: number): (i: number) => boolean {
