@@ -1,11 +1,15 @@
+import { Link } from "@tanstack/react-router";
+import { Sparkles, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PriceVolumeChart } from "./PriceVolumeChart";
+import { PriceVolumeChart, type PredictionInput } from "./PriceVolumeChart";
 import { AuctionHistoryTable } from "./AuctionHistoryTable";
 import { ProMarketRankingTable } from "./ProMarketRankingTable";
 import { GroupRankingTable } from "./GroupRankingTable";
 import { getPriceVolumeSeries, type Period } from "@/lib/mock/market-analysis";
 import { useMarketFilter, type ProTab } from "@/store/market";
-import { useState } from "react";
+import { getItemById } from "@/lib/catalog-service";
+import { useMemo, useState } from "react";
+
 
 const PERIODS: { id: Period; label: string }[] = [
   { id: "today", label: "오늘" },
