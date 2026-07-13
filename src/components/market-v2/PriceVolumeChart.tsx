@@ -34,6 +34,73 @@ export type PredictionInput = {
   recommendedBadge?: string;
 };
 
+function ForecastOverlay({
+  xAxisMap,
+  yAxisMap,
+  offset,
+  todayLabel,
+  lastForecastLabel,
+}: {
+  xAxisMap?: Record<string, any>;
+  yAxisMap?: Record<string, any>;
+  offset?: { top: number; left: number; width: number; height: number };
+  todayLabel: string;
+  lastForecastLabel: string;
+}) {
+  if (!xAxisMap || !offset) return null;
+  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
+  if (!xAxis?.scale) return null;
+  const scale = xAxis.scale;
+
+  const centerOf = (label: string): number | null => {
+    const v = scale(label);
+    if (typeof v !== "number" || Number.isNaN(v)) return null;
+    const bw = typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
+    return v + bw / 2;
+  };
+
+  const xToday = centerOf(todayLabel);
+  const xEnd = centerOf(lastForecastLabel);
+  if (xToday == null || xEnd == null) return null;
+
+  const top = offset.top;
+  const bottom = offset.top + offset.height;
+  const right = Math.max(xToday, xEnd);
+  const left = Math.min(xToday, xEnd);
+
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      <rect
+        x={left}
+        y={top}
+        width={Math.max(0, right - left)}
+        height={Math.max(0, bottom - top)}
+        fill="#2E9E6B"
+        fillOpacity={0.08}
+      />
+      <line
+        x1={xToday}
+        x2={xToday}
+        y1={top}
+        y2={bottom}
+        stroke="#94A3B8"
+        strokeWidth={1}
+        strokeDasharray="3 3"
+      />
+      <text
+        x={xToday}
+        y={top - 4}
+        textAnchor="middle"
+        fontSize={10}
+        fontWeight={700}
+        fill="#64748B"
+      >
+        오늘
+      </text>
+    </g>
+  );
+}
+
 export function PriceVolumeChart({
   series,
   period,
