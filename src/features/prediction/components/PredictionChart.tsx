@@ -207,8 +207,7 @@ function LabelsOverlay({
     const yv = yScale(recommendedPrice);
     recCy = typeof yv === "number" && !Number.isNaN(yv) ? yv : null;
     if (recCx != null && recCy != null) {
-      const md = recommendedLabel.replace(/-/g, "/");
-      nodes.push(pill("rec", recCx, recCy, `추천 ${md}`, TEAL, "top", true));
+      nodes.push(pill("rec", recCx, recCy, "추천", TEAL, "top", true));
     }
   }
 
