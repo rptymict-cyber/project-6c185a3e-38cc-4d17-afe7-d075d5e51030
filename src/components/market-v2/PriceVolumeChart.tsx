@@ -288,6 +288,13 @@ export function PriceVolumeChart({
       ? prediction.points[prediction.recommendedIdx]
       : undefined;
 
+  const pillPoints = [
+    ...series.points.map((p) => ({ label: p.label, value: p.price })),
+    ...(prediction?.points.map((p) => ({ label: p.label, value: p.price })) ?? []),
+  ];
+
+
+
   return (
     <div className="h-[240px] w-full">
       <ResponsiveContainer width="100%" height="100%">
