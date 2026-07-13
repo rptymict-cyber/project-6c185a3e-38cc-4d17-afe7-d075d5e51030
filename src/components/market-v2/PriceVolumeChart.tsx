@@ -162,28 +162,33 @@ export function PriceVolumeChart({
     : [];
 
   const data = [...historyData, ...predictionData];
+  const todayIndex = historyLen - 1;
+  const lastIndex = data.length - 1;
   const todayLabel = lastHistory?.label;
   const lastForecastLabel = prediction?.points[prediction.points.length - 1]?.label;
   const canRenderForecast = !!prediction && !!todayLabel && !!lastForecastLabel;
 
-  // Build the explicit tick list. Prefer caller-supplied ticks; fall back to a
-  // sensible default that never exceeds ~6 labels.
-  const computedTicks: string[] = (() => {
-    if (ticks && ticks.length > 0) return ticks;
-    if (period === "today") {
-      return ["00시", "06시", "12시", "18시", "23시"].filter((l) =>
-        data.some((d) => d.label === l),
-      );
+  // Use numeric X coordinates so forecast references always resolve reliably.
+  const tickIndices: number[] = (() => {
+    if (ticks && ticks.length > 0) {
+      return Array.from(
+        new Set(
+          ticks
+            .map((label) => data.findIndex((point) => point.label === label))
+            .filter((index) => index >= 0),
+        ),
+      ).sort((a, b) => a - b);
     }
-    const hist = historyData.map((d) => d.label);
-    const fcst = predictionData.map((d) => d.label);
-    const t: string[] = [];
-    if (hist.length) t.push(hist[0]);
-    if (hist.length > 2) t.push(hist[Math.floor(hist.length / 2)]);
-    if (hist.length > 1) t.push(hist[hist.length - 1]);
-    if (fcst.length > 1) t.push(fcst[Math.floor(fcst.length / 2)]);
-    if (fcst.length) t.push(fcst[fcst.length - 1]);
-    return Array.from(new Set(t));
+
+    const indices = new Set<number>();
+    if (data.length > 0) indices.add(0);
+    if (historyLen > 2) indices.add(Math.floor((historyLen - 1) / 2));
+    if (todayIndex >= 0) indices.add(todayIndex);
+    if (lastIndex > todayIndex) {
+      indices.add(Math.floor((todayIndex + lastIndex) / 2));
+      indices.add(lastIndex);
+    }
+    return Array.from(indices).sort((a, b) => a - b);
   })();
 
   const recommended =
@@ -206,12 +211,16 @@ export function PriceVolumeChart({
 
           <XAxis
             xAxisId="main"
-            dataKey="label"
+            dataKey="i"
+            type="number"
+            domain={[0, Math.max(0, lastIndex)]}
+            ticks={tickIndices}
+            tickFormatter={(index: number) => data[index]?.label ?? ""}
             tick={{ fontSize: 11, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
-            ticks={computedTicks}
             interval={0}
+            allowDecimals={false}
           />
 
           <YAxis
@@ -237,8 +246,8 @@ export function PriceVolumeChart({
             <ReferenceArea
               xAxisId="main"
               yAxisId="price"
-              x1={todayLabel}
-              x2={lastForecastLabel}
+              x1={todayIndex}
+              x2={lastIndex}
               fill={TEAL}
               fillOpacity={0.08}
               stroke="none"
@@ -249,7 +258,7 @@ export function PriceVolumeChart({
             <ReferenceLine
               xAxisId="main"
               yAxisId="price"
-              x={todayLabel}
+              x={todayIndex}
               stroke="#64748B"
               strokeDasharray="4 3"
               strokeWidth={1.25}
@@ -263,7 +272,14 @@ export function PriceVolumeChart({
             />
           )}
 
-          <Tooltip cursor={false} content={<CustomTooltip />} />
+          <Tooltip
+            cursor={false}
+            labelFormatter={(index) => {
+              const point = data[Number(index)];
+              return point?.tooltipLabel ?? point?.label ?? "";
+            }}
+            content={<CustomTooltip />}
+          />
 
 
           <Bar
