@@ -9,10 +9,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-// Recharts 2.x does not inject axis maps into Customized props, so the
-// overlay reads the rendered chart's axis scale and plot offset directly.
-// @ts-expect-error Recharts does not expose these internal hooks from its root entry.
-import { useOffset, useXAxisOrThrow } from "recharts/es6/context/chartLayoutContext";
 import type { PriceVolumeSeries } from "@/lib/mock/market-analysis";
 
 type Period = "today" | "1w" | "1m" | "3m" | "1y";
@@ -45,16 +41,26 @@ function ForecastOverlay({
   todayLabel: string;
   lastForecastLabel: string;
 }) {
-  return function ForecastOverlayLayer() {
-    const axis = useXAxisOrThrow("main") as any;
+  // Recharts 2.x passes chart layout via props (xAxisMap, yAxisMap, offset)
+  // to the component rendered by <Customized>. Use those instead of internal
+  // hooks, which are not part of the public entry.
+  return function ForecastOverlayLayer(props: any) {
+    const xAxisMap = props?.xAxisMap;
+    const offset = props?.offset;
+    if (!xAxisMap || !offset) return null;
+    const axis: any = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
     const scale = axis?.scale;
-    const offset = useOffset();
+    if (!scale) return null;
 
-    if (!scale || !offset) return null;
+    const bandwidth =
+      typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
+    const centerOf = (label: string) => {
+      const v = scale(label);
+      return typeof v === "number" ? v + bandwidth / 2 : NaN;
+    };
 
-    const x1 = scale(todayLabel);
-    const x2 = scale(lastForecastLabel);
-
+    const x1 = centerOf(todayLabel);
+    const x2 = centerOf(lastForecastLabel);
     if (!Number.isFinite(x1) || !Number.isFinite(x2)) return null;
 
     const left = Math.min(x1, x2);
