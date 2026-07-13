@@ -34,15 +34,13 @@ export type PredictionInput = {
   recommendedBadge?: string;
 };
 
-function ForecastOverlay({
+function ForecastBackground({
   xAxisMap,
-  yAxisMap,
   offset,
   todayLabel,
   lastForecastLabel,
 }: {
   xAxisMap?: Record<string, any>;
-  yAxisMap?: Record<string, any>;
   offset?: { top: number; left: number; width: number; height: number };
   todayLabel: string;
   lastForecastLabel: string;
@@ -51,23 +49,19 @@ function ForecastOverlay({
   const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
   if (!xAxis?.scale) return null;
   const scale = xAxis.scale;
-
   const centerOf = (label: string): number | null => {
     const v = scale(label);
     if (typeof v !== "number" || Number.isNaN(v)) return null;
     const bw = typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
     return v + bw / 2;
   };
-
   const xToday = centerOf(todayLabel);
   const xEnd = centerOf(lastForecastLabel);
   if (xToday == null || xEnd == null) return null;
-
   const top = offset.top;
   const bottom = offset.top + offset.height;
   const right = Math.max(xToday, xEnd);
   const left = Math.min(xToday, xEnd);
-
   return (
     <g style={{ pointerEvents: "none" }}>
       <rect
@@ -78,28 +72,63 @@ function ForecastOverlay({
         fill="#2E9E6B"
         fillOpacity={0.15}
       />
+    </g>
+  );
+}
+
+function TodayAxis({
+  xAxisMap,
+  offset,
+  todayLabel,
+}: {
+  xAxisMap?: Record<string, any>;
+  offset?: { top: number; left: number; width: number; height: number };
+  todayLabel: string;
+}) {
+  if (!xAxisMap || !offset) return null;
+  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
+  if (!xAxis?.scale) return null;
+  const scale = xAxis.scale;
+  const v = scale(todayLabel);
+  if (typeof v !== "number" || Number.isNaN(v)) return null;
+  const bw = typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
+  const xToday = v + bw / 2;
+  const top = offset.top;
+  const bottom = offset.top + offset.height;
+  return (
+    <g style={{ pointerEvents: "none" }}>
       <line
         x1={xToday}
         x2={xToday}
         y1={top}
         y2={bottom}
-        stroke="#94A3B8"
-        strokeWidth={1}
-        strokeDasharray="3 3"
+        stroke="#64748B"
+        strokeWidth={1.25}
+        strokeDasharray="4 3"
+      />
+      <rect
+        x={xToday - 16}
+        y={top - 16}
+        width={32}
+        height={14}
+        rx={7}
+        ry={7}
+        fill="#64748B"
       />
       <text
         x={xToday}
-        y={top - 4}
+        y={top - 6}
         textAnchor="middle"
         fontSize={10}
-        fontWeight={700}
-        fill="#64748B"
+        fontWeight={800}
+        fill="#fff"
       >
         오늘
       </text>
     </g>
   );
 }
+
 
 export function PriceVolumeChart({
   series,
@@ -176,7 +205,7 @@ export function PriceVolumeChart({
           {canRenderForecast && (
             <Customized
               component={(props: any) => (
-                <ForecastOverlay
+                <ForecastBackground
                   {...props}
                   todayLabel={todayLabel!}
                   lastForecastLabel={lastForecastLabel!}
@@ -294,6 +323,14 @@ export function PriceVolumeChart({
               activeDot={{ r: 4, fill: TEAL, stroke: "#fff", strokeWidth: 2 }}
               isAnimationActive={false}
               connectNulls={false}
+            />
+          )}
+
+          {canRenderForecast && (
+            <Customized
+              component={(props: any) => (
+                <TodayAxis {...props} todayLabel={todayLabel!} />
+              )}
             />
           )}
         </ComposedChart>
