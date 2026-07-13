@@ -124,14 +124,14 @@ export function PriceVolumeChart({
             content={<CustomTooltip />}
           />
 
-          {/* Forecast background band */}
-          {prediction && forecastStartLabel && forecastEndLabel && (
+          {/* Forecast background band — from today to last forecast day */}
+          {prediction && todayLabel && forecastEndLabel && (
             <ReferenceArea
               yAxisId="price"
-              x1={forecastStartLabel}
+              x1={todayLabel}
               x2={forecastEndLabel}
               fill={TEAL}
-              fillOpacity={0.05}
+              fillOpacity={0.08}
               stroke="none"
             />
           )}
