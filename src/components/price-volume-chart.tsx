@@ -28,8 +28,6 @@ export type ChartRow = {
 };
 
 interface Props {
-  /** New spec API. */
-  data?: ChartRow[];
   showForecast?: boolean;
   todayLabel?: string;
   lastLabel?: string;
