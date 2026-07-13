@@ -40,15 +40,16 @@ export type PredictionInput = {
 
 function MinMaxPills({
   formattedGraphicalItems,
+  offset,
   points,
   recommendedLabel,
 }: {
   formattedGraphicalItems?: any[];
+  offset?: { top: number; left: number; width: number; height: number };
   points: { label: string; value: number }[];
   recommendedLabel?: string;
 }) {
-  if (!formattedGraphicalItems || points.length === 0) return null;
-  // Build a label → {x,y} map by merging both price + forecast Line items.
+  if (!formattedGraphicalItems || points.length === 0 || !offset) return null;
   const coord = new Map<string, { x: number; y: number }>();
   for (const item of formattedGraphicalItems) {
     const pts = item?.props?.points as
@@ -70,22 +71,40 @@ function MinMaxPills({
     if (p.value < minP.value) minP = p;
   }
 
+  const plotTop = offset.top;
+  const plotBottom = offset.top + offset.height;
+  const plotLeft = offset.left;
+  const plotRight = offset.left + offset.width;
+
   const pill = (
     key: string,
     x: number,
     y: number,
     text: string,
     color: string,
-    below: boolean,
+    preferBelow: boolean,
   ) => {
     const w = Math.round(text.length * 6.5 + 14);
     const h = 16;
-    const yy = below ? y + 14 : y - 22;
+    const GAP = 8;
+
+    let cy = preferBelow ? y + GAP + h / 2 : y - GAP - h / 2;
+    if (!preferBelow && cy - h / 2 < plotTop) cy = y + GAP + h / 2;
+    if (preferBelow && cy + h / 2 > plotBottom - 4) cy = y - GAP - h / 2;
+
+    const safeTop = plotTop + h / 2;
+    const safeBottom = plotBottom - h / 2 - 4;
+    cy = Math.max(safeTop, Math.min(safeBottom, cy));
+
+    const cx = Math.max(plotLeft + w / 2, Math.min(plotRight - w / 2, x));
+
     return (
       <g key={key}>
+        <line x1={x} y1={y} x2={cx} y2={cy} stroke={color} strokeWidth={0.8} opacity={0.4} />
+        <circle cx={x} cy={y} r={3} fill={color} />
         <rect
-          x={x - w / 2}
-          y={yy}
+          x={cx - w / 2}
+          y={cy - h / 2}
           width={w}
           height={h}
           rx={8}
@@ -95,8 +114,8 @@ function MinMaxPills({
           strokeWidth={1}
         />
         <text
-          x={x}
-          y={yy + h / 2 + 3.5}
+          x={cx}
+          y={cy + 3.5}
           textAnchor="middle"
           fontSize={9.5}
           fontWeight={800}
@@ -115,9 +134,8 @@ function MinMaxPills({
   return (
     <g style={{ pointerEvents: "none" }}>
       {maxC && pill("max", maxC.x, maxC.y, `최고 ${maxP.value.toLocaleString()}`, "#E03131", maxNearRec)}
-      {minC && pill("min", minC.x, minC.y, `최저 ${minP.value.toLocaleString()}`, "#1971C2", true)}
+      {minC && pill("min", minC.x, minC.y, `최저 ${minP.value.toLocaleString()}`, "#1971C2", false)}
     </g>
-
   );
 }
 
