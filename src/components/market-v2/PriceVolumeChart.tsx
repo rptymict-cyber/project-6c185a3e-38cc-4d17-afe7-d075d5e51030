@@ -70,7 +70,8 @@ function ForecastBackground({
         width={Math.max(0, right - left)}
         height={Math.max(0, bottom - top)}
         fill="#2E9E6B"
-        fillOpacity={0.15}
+        fillOpacity={0.07}
+
       />
     </g>
   );
