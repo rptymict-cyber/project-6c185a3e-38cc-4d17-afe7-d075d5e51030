@@ -347,30 +347,6 @@ export function PriceVolumeChart({
             />
           )}
 
-          {canRenderForecast && (
-            <ReferenceLine
-              xAxisId="main"
-              yAxisId="price"
-              x={todayLabel}
-              stroke="#94A3B8"
-              strokeDasharray="4 3"
-              strokeWidth={1.25}
-              label={{
-                value: "오늘",
-                position: "top",
-                fill: "#fff",
-                fontSize: 10,
-                fontWeight: 800,
-                offset: 8,
-                style: {
-                  paintOrder: "stroke",
-                  stroke: "#64748B",
-                  strokeWidth: 10,
-                  strokeLinejoin: "round",
-                },
-              }}
-            />
-          )}
 
 
           <Customized
