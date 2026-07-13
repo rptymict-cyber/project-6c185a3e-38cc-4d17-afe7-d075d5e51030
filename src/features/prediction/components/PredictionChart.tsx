@@ -438,34 +438,33 @@ function PredictionChartBase({
 
   return (
     <div className="w-full">
-      {/* 좌측 상단 정보 (헤이딜러식) */}
+      {/* 헤이딜러식 상단 제목 — 선택 날짜에 반응 */}
       {showTopInfo && selectedPrice != null && (
-        <div className="mb-2 flex items-baseline justify-between">
-          <div>
-            <div className="text-[11px] font-semibold text-[#495057]">
-              {selectedLabel} {isFarmer ? "출하 시" : "매입 시"}
-            </div>
-            <div className="mt-0.5 flex items-baseline gap-1">
-              <span className="text-[18px] font-black tabular-nums text-[#2E9E6B]">
-                {selectedPrice.toLocaleString()}
-              </span>
-              <span className="text-[11px] font-semibold text-[#495057]">
-                원{baseUnitLabel ? ` / ${baseUnitLabel}` : ""}
-              </span>
-            </div>
+        <div className="mb-3">
+          <div className="text-[12px] font-bold text-[#6C757D]">
+            {selectedLabel} 예상 시세
           </div>
-          <div
-            className={`rounded-full px-2 py-1 text-[11px] font-bold tabular-nums ${
-              gain >= 0
-                ? "bg-[#E7F5EC] text-[#1F5C1F]"
-                : "bg-[#FFF5F5] text-[#E03131]"
-            }`}
-          >
-            {gainLabel} {gain >= 0 ? "+" : "-"}
-            {Math.abs(gain).toLocaleString()}원
+          <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span className="text-[28px] font-black leading-none tabular-nums text-[#2E9E6B]">
+              {selectedPrice.toLocaleString()}
+            </span>
+            <span className="text-[13px] font-bold text-[#495057]">
+              원{baseUnitLabel ? ` / ${baseUnitLabel}` : ""}
+            </span>
+            <span
+              className={`ml-auto rounded-full px-2.5 py-1 text-[12px] font-extrabold tabular-nums ${
+                gain >= 0
+                  ? "bg-[#E7F6EE] text-[#1F7A50]"
+                  : "bg-[#FFF5F5] text-[#E03131]"
+              }`}
+            >
+              {gainLabel} {gain >= 0 ? "+" : "-"}
+              {Math.abs(gain).toLocaleString()}원
+            </span>
           </div>
         </div>
       )}
+
 
       <div className="h-[260px] w-full">
         <ResponsiveContainer width="100%" height="100%">
