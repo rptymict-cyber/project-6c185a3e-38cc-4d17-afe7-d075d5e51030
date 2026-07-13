@@ -34,7 +34,7 @@ export function ProAnalysisSection() {
     { id: "variety", label: "품종" },
   ];
 
-  const series = getPriceVolumeSeries({
+  const rawSeries = getPriceVolumeSeries({
     itemId: f.itemId,
     varietyId: f.varietyId,
     marketId: f.marketId,
@@ -42,6 +42,26 @@ export function ProAnalysisSection() {
     date: f.date,
     period,
   });
+
+  // Downsample dense periods (1m/3m) to ~12 evenly-spaced display points.
+  // Aggregate stats (min/max/avg) stay based on the full raw series.
+  const series = useMemo(() => {
+    const pts = rawSeries.points;
+    if (period !== "1m" && period !== "3m") return rawSeries;
+    const max = 12;
+    if (pts.length <= max) return rawSeries;
+    const step = (pts.length - 1) / (max - 1);
+    const seen = new Set<number>();
+    const sampled = [] as typeof pts;
+    for (let i = 0; i < max; i++) {
+      const idx = i === max - 1 ? pts.length - 1 : Math.round(i * step);
+      if (!seen.has(idx)) {
+        seen.add(idx);
+        sampled.push(pts[idx]);
+      }
+    }
+    return { ...rawSeries, points: sampled };
+  }, [rawSeries, period]);
 
   const unitLabel = f.unit.replace(" 기준", "");
 
@@ -54,22 +74,21 @@ export function ProAnalysisSection() {
     const days = period === "1w" ? 5 : 7;
     const drift = last.price * 0.01;
     const baseDate = new Date(last.date + "T00:00:00");
-    const points: { label: string; price: number; dateText: string }[] = [];
+    const points: { label: string; tooltipLabel: string; price: number }[] = [];
     for (let k = 1; k <= days; k++) {
       const wave = Math.sin(k * 0.9) * (last.price * 0.015);
       const p = Math.round(last.price + drift * k + wave);
       const d = new Date(baseDate);
       d.setDate(d.getDate() + k);
       const label = `${d.getMonth() + 1}/${d.getDate()}`;
-      const dateText = `${d.getMonth() + 1}월 ${d.getDate()}일`;
-      points.push({ label, price: p, dateText });
+      points.push({ label, tooltipLabel: label, price: p });
     }
     let recIdx = 0;
     points.forEach((p, i) => {
       if (p.price > points[recIdx].price) recIdx = i;
     });
     return {
-      points: points.map(({ label, price }) => ({ label, price })),
+      points,
       recommendedIdx: recIdx,
       recommendedBadge: `추천 ${points[recIdx].label}`,
     };
@@ -88,6 +107,25 @@ export function ProAnalysisSection() {
   const recommendedDelta = recommended
     ? recommended.price - series.points[series.points.length - 1].price
     : 0;
+
+  // Explicit X-axis tick labels (max ~5-6, no overlap).
+  const ticks = useMemo(() => {
+    if (period === "today") {
+      return ["00시", "06시", "12시", "18시", "23시"].filter((l) =>
+        series.points.some((p) => p.label === l),
+      );
+    }
+    const hist = series.points.map((p) => p.label);
+    const fcst = prediction?.points.map((p) => p.label) ?? [];
+    const t: string[] = [];
+    if (hist.length) t.push(hist[0]);
+    if (hist.length > 2) t.push(hist[Math.floor(hist.length / 2)]);
+    if (hist.length > 1) t.push(hist[hist.length - 1]);
+    if (fcst.length > 1) t.push(fcst[Math.floor(fcst.length / 2)]);
+    if (fcst.length) t.push(fcst[fcst.length - 1]);
+    return Array.from(new Set(t));
+  }, [series, prediction, period]);
+
 
 
   return (
