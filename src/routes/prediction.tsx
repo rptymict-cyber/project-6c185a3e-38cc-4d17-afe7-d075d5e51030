@@ -8,7 +8,7 @@ import { PredictionConditionGrid } from "@/features/prediction/components/Predic
 import { PredictionCropSheet } from "@/features/prediction/components/PredictionCropSheet";
 import { PredictionFactorList } from "@/features/prediction/components/PredictionFactorList";
 import { PredictionInsightCard } from "@/features/prediction/components/PredictionInsightCard";
-import { PredictionSummaryCard } from "@/features/prediction/components/PredictionSummaryCard";
+
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
 import { ViewpointPickerSheet } from "@/features/prediction/components/ViewpointPickerSheet";
@@ -142,19 +142,7 @@ function PredictionPage() {
           />
         </div>
 
-        {/* 3. 출하/매입 시점 비교 */}
-        <div className="mt-4">
-          <PredictionCompareCards
-            viewpoint={selectedViewpoint}
-            currentPrice={prediction.currentPrice}
-            expectedPrice={insight.expectedPrice}
-            baseUnitLabel={baseUnitLabel}
-            quantityBoxes={quantityBoxes}
-            recommendationDate={insight.recommendationDate}
-          />
-        </div>
-
-        {/* 4. 가격 예측 차트 */}
+        {/* 3. 가격 예측 차트 */}
         <section className="mt-4">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-[13px] font-bold text-foreground">
@@ -190,15 +178,19 @@ function PredictionPage() {
           </div>
         </section>
 
-        {/* 5. 예측 요약 */}
-        <section className="mt-4">
-          <h2 className="mb-2 text-[13px] font-bold text-foreground">
-            예측 요약
-          </h2>
-          <PredictionSummaryCard prediction={prediction} />
-        </section>
+        {/* 4. 출하/매입 시점 비교 */}
+        <div className="mt-4">
+          <PredictionCompareCards
+            viewpoint={selectedViewpoint}
+            currentPrice={prediction.currentPrice}
+            expectedPrice={insight.expectedPrice}
+            baseUnitLabel={baseUnitLabel}
+            quantityBoxes={quantityBoxes}
+            recommendationDate={insight.recommendationDate}
+          />
+        </div>
 
-        {/* 6. 예측 근거 */}
+        {/* 5. 예측 근거 */}
         <section className="mt-4">
           <h2 className="mb-2 text-[13px] font-bold text-foreground">
             예측 근거
