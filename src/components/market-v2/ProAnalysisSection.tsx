@@ -246,15 +246,13 @@ export function ProAnalysisSection() {
                   </div>
                 </div>
               </div>
-              <div className="mt-3 flex justify-end">
-                <Link
-                  to="/prediction"
-                  className="inline-flex items-center gap-0.5 whitespace-nowrap rounded-[10px] bg-white px-[13px] py-[9px] text-[12.5px] font-extrabold text-[#1F7A50]"
-                >
-                  AI 예측 보기
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
+              <Link
+                to="/prediction"
+                className="mt-3 flex w-full items-center justify-center gap-0.5 whitespace-nowrap rounded-[10px] bg-white px-[13px] py-[9px] text-[12.5px] font-extrabold text-[#1F7A50]"
+              >
+                AI 예측 보기
+                <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
           )}
 
