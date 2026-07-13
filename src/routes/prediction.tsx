@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
@@ -57,7 +57,7 @@ function parseBaseUnitKg(unit: string): number {
 
 function PredictionPage() {
   const navigate = useNavigate();
-  const router = useRouter();
+  
   const search = Route.useSearch();
 
   const selectedCropId = usePredictionView((s) => s.selectedCropId);
@@ -168,8 +168,16 @@ function PredictionPage() {
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             isPositiveForUser={isPositiveForUser}
+            cropName={prediction.cropName}
+            onDetailClick={() =>
+              navigate({
+                to: "/price/$variety",
+                params: { variety: prediction.cropId },
+              })
+            }
           />
         </div>
+
 
         {/* 3. 가격 예측 차트 */}
         <section className="mt-4">
@@ -224,8 +232,10 @@ function PredictionPage() {
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             recommendationDate={selectedDate}
+            isRecommendedSelection={!!selectedPoint?.isRecommendedDate}
           />
         </div>
+
 
 
         {/* 5. 예측 근거 */}
@@ -236,19 +246,6 @@ function PredictionPage() {
           <PredictionFactorList factors={prediction.factors} />
         </section>
 
-        {/* 시세 상세 이동 */}
-        <button
-          type="button"
-          onClick={() =>
-            navigate({
-              to: "/price/$variety",
-              params: { variety: prediction.cropId },
-            })
-          }
-          className="mt-5 grid h-11 w-full place-items-center rounded-xl border border-[#E9ECEF] bg-white text-[13px] font-semibold text-[#495057] active:bg-[#F8F9FA]"
-        >
-          {prediction.cropName} 시세 상세 보기
-        </button>
       </div>
 
       <PredictionCropSheet

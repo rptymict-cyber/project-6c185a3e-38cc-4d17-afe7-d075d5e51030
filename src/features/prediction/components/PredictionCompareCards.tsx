@@ -8,6 +8,7 @@ interface Props {
   baseUnitLabel: string; // "10kg"
   quantityBoxes: number;
   recommendationDate: string;
+  isRecommendedSelection: boolean;
 }
 
 export function PredictionCompareCards({
@@ -17,6 +18,7 @@ export function PredictionCompareCards({
   baseUnitLabel,
   quantityBoxes,
   recommendationDate,
+  isRecommendedSelection,
 }: Props) {
   const isFarmer = viewpoint === "farmer";
   const title = isFarmer ? "출하 시점 비교" : "매입 시점 비교";
@@ -27,11 +29,18 @@ export function PredictionCompareCards({
   const recTotal = expectedPrice * quantityBoxes;
   const diff = recTotal - currentTotal;
 
-  // 농민에겐 매출 증가가, 도매상에겐 금액 감소가 이득
+  // 농민=매출↑, 도매상=비용↓
   const gain = isFarmer ? diff : -diff;
+  const isPositive = gain >= 0;
   const gainLabel = isFarmer ? "추가 수익" : "예상 절감";
-  const gainSign = gain >= 0 ? "+" : "-";
-  const gainColor = gain >= 0 ? "text-[#3A8A3A]" : "text-[#E03131]";
+  const tagText = isRecommendedSelection ? "추천" : "선택";
+  const rightTitle = isRecommendedSelection
+    ? `${recommendationDate} ${isFarmer ? "출하 추천" : "매입 추천"}`
+    : `${recommendationDate} ${isFarmer ? "출하 시" : "매입 시"}`;
+
+  const bannerGrad = isPositive
+    ? "linear-gradient(135deg,#2E9E6B 0%,#1F7A50 100%)"
+    : "linear-gradient(135deg,#E03131 0%,#B02525 100%)";
 
   return (
     <section>
@@ -43,7 +52,7 @@ export function PredictionCompareCards({
             현재 시점 {isFarmer ? "출하" : "매입"}
           </div>
           <div className="mt-1.5 flex items-baseline gap-1">
-            <span className="text-[16px] font-black tabular-nums text-foreground">
+            <span className="text-[18px] font-black tabular-nums text-foreground">
               {currentPrice.toLocaleString()}
             </span>
             <span className="text-[11px] text-[#6C757D]">원/{baseUnitLabel}</span>
@@ -59,35 +68,61 @@ export function PredictionCompareCards({
           </div>
         </div>
 
-        {/* 추천 시점 */}
-        <div className="relative rounded-2xl border-2 border-[#3A8A3A] bg-[#F0F9F0] p-3">
-          <span className="absolute right-2 top-2 rounded-full bg-[#3A8A3A] px-1.5 py-0.5 text-[9px] font-bold text-white">
-            추천
+        {/* 선택/추천 시점 */}
+        <div className="relative rounded-2xl border-2 border-[#2E9E6B] bg-[#EAF7F0] p-3">
+          <span
+            className={cn(
+              "absolute right-2 top-2 rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white",
+              isRecommendedSelection ? "bg-[#2E9E6B]" : "bg-[#1F7A50]",
+            )}
+          >
+            {tagText}
           </span>
-          <div className="text-[11px] font-semibold text-[#1F5C1F]">
-            {recommendationDate} {isFarmer ? "출하 추천" : "매입 추천"}
+          <div className="text-[11px] font-semibold text-[#145A3A]">
+            {rightTitle}
           </div>
           <div className="mt-1.5 flex items-baseline gap-1">
-            <span className="text-[16px] font-black tabular-nums text-[#1F5C1F]">
+            <span className="text-[18px] font-black tabular-nums text-[#145A3A]">
               {expectedPrice.toLocaleString()}
             </span>
-            <span className="text-[11px] text-[#1F5C1F]/80">
+            <span className="text-[11px] text-[#145A3A]/80">
               원/{baseUnitLabel}
             </span>
           </div>
-          <div className="mt-2 text-[11.5px] text-[#1F5C1F]">
+          <div className="mt-2 text-[11.5px] text-[#145A3A]">
             {qtyLabel} {quantityBoxes}상자
           </div>
-          <div className="mt-0.5 text-[11.5px] text-[#1F5C1F]">
+          <div className="mt-0.5 text-[11.5px] text-[#145A3A]">
             {totalLabel}{" "}
             <span className="font-bold tabular-nums">
               {recTotal.toLocaleString()}원
             </span>
           </div>
-          <div className={cn("mt-1.5 text-[12px] font-bold tabular-nums", gainColor)}>
-            {gainLabel} {gainSign}
-            {Math.abs(gain).toLocaleString()}원
+        </div>
+      </div>
+
+      {/* 강조 배너 — 추가 수익 / 예상 절감 */}
+      <div
+        className="mt-2 flex items-center justify-between rounded-2xl px-4 py-3 text-white shadow-[0_10px_28px_-14px_rgba(46,158,107,0.6)]"
+        style={{ background: bannerGrad }}
+      >
+        <div>
+          <div className="text-[11px] font-semibold opacity-90">
+            {recommendationDate} {isFarmer ? "출하 시" : "매입 시"}
           </div>
+          <div className="mt-0.5 text-[12px] font-bold opacity-95">
+            {gainLabel}
+          </div>
+        </div>
+        <div className="flex items-baseline gap-0.5">
+          <span
+            className="tabular-nums leading-none"
+            style={{ fontSize: "22px", fontWeight: 900, letterSpacing: "-0.01em" }}
+          >
+            {isPositive ? "+" : "-"}
+            {Math.abs(gain).toLocaleString()}
+          </span>
+          <span className="text-[13px] font-extrabold">원</span>
         </div>
       </div>
     </section>

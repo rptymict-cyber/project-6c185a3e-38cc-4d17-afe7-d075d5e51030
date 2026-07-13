@@ -1,15 +1,17 @@
-import { CalendarCheck, TrendingDown, TrendingUp } from "lucide-react";
+import { ChevronRight, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import type { PredictionViewpoint } from "../types";
 import { cn } from "@/lib/utils";
 
 interface Props {
   viewpoint: PredictionViewpoint;
-  recommendationDate: string;
+  recommendationDate: string; // 표시용 짧은 라벨 (예: "7/19")
   expectedPrice: number;
   currentPrice: number;
-  baseUnitLabel: string; // e.g. "10kg"
+  baseUnitLabel: string; // "10kg"
   quantityBoxes: number;
-  isPositiveForUser: boolean; // 농민=상승/도매상=하락 시 true
+  isPositiveForUser: boolean;
+  cropName: string;
+  onDetailClick: () => void;
 }
 
 export function PredictionInsightCard({
@@ -20,130 +22,178 @@ export function PredictionInsightCard({
   baseUnitLabel,
   quantityBoxes,
   isPositiveForUser,
+  cropName,
+  onDetailClick,
 }: Props) {
   const isFarmer = viewpoint === "farmer";
-  const diffPrice = expectedPrice - currentPrice; // 음수 가능
+  const diffPrice = expectedPrice - currentPrice;
   const diffAbs = Math.abs(diffPrice);
   const priceHigher = diffPrice > 0;
   const priceLower = diffPrice < 0;
 
+  const totalRevenue = expectedPrice * quantityBoxes;
   const totalDiff = diffPrice * quantityBoxes;
-  const totalDiffAbs = Math.abs(totalDiff);
+  // 관점별 이득: 농민=매출↑, 도매상=비용↓
+  const gain = isFarmer ? totalDiff : -totalDiff;
+  const gainAbs = Math.abs(gain);
 
-  // 배지 및 문구 분기
-  let badge: string;
-  let headline: string;
-  let compareLine: string;
-  let totalLine: string | null;
-  let summary: string;
+  const badge = isFarmer
+    ? isPositiveForUser
+      ? "AI 출하 추천"
+      : "AI 출하 안내"
+    : isPositiveForUser
+      ? "AI 매입 추천"
+      : "AI 매입 안내";
 
-  if (isFarmer) {
-    // 농민: 추천일 가격이 오늘보다 높으면 순수 추천, 낮으면 안내로 톤 조정
-    if (isPositiveForUser && priceHigher) {
-      badge = "AI 출하 추천";
-      headline = `${recommendationDate} 출하가 유리해요`;
-      compareLine = `오늘보다 ${diffAbs.toLocaleString()}원 높음`;
-      totalLine = `${quantityBoxes}상자 기준 예상 추가 수익 +${totalDiffAbs.toLocaleString()}원`;
-      summary =
-        "가격 상승 흐름이 있어 추천일 출하 시 매출이 개선될 수 있어요.";
-    } else if (priceLower) {
-      badge = "AI 출하 안내";
-      headline = `${recommendationDate} 이전 출하 검토`;
-      compareLine = `오늘보다 ${diffAbs.toLocaleString()}원 낮을 수 있음`;
-      totalLine = `${quantityBoxes}상자 기준 예상 매출 감소 -${totalDiffAbs.toLocaleString()}원`;
-      summary =
-        "예측 구간 내 상승 여지가 크지 않아 조기 출하를 검토해보세요.";
-    } else {
-      badge = "AI 출하 안내";
-      headline = `${recommendationDate} 출하 참고`;
-      compareLine = "오늘과 비슷한 수준";
-      totalLine = null;
-      summary = "예측 구간 내 큰 가격 변동이 감지되지 않았어요.";
-    }
-  } else {
-    // 도매상: 추천일 가격이 오늘보다 낮으면 순수 추천
-    if (isPositiveForUser && priceLower) {
-      badge = "AI 매입 추천";
-      headline = `${recommendationDate} 매입이 유리해요`;
-      compareLine = `오늘보다 ${diffAbs.toLocaleString()}원 낮음`;
-      totalLine = `${quantityBoxes}상자 기준 예상 절감액 ${totalDiffAbs.toLocaleString()}원`;
-      summary =
-        "단기 가격 하락 구간으로 필요한 물량 확보에 유리할 수 있어요.";
-    } else if (priceHigher) {
-      badge = "AI 매입 안내";
-      headline = "가격 상승 가능성이 있어 조기 매입을 검토하세요";
-      compareLine = `오늘보다 ${diffAbs.toLocaleString()}원 높을 수 있음`;
-      totalLine = `${quantityBoxes}상자 기준 예상 추가 비용 +${totalDiffAbs.toLocaleString()}원`;
-      summary = "추가 상승 전 필요한 물량을 먼저 확보하는 전략입니다.";
-    } else {
-      badge = "AI 매입 안내";
-      headline = `${recommendationDate} 매입 참고`;
-      compareLine = "오늘과 비슷한 수준";
-      totalLine = null;
-      summary = "예측 구간 내 큰 가격 변동이 감지되지 않았어요.";
-    }
-  }
+  const action = isFarmer ? "출하" : "매입";
+  const headline = isPositiveForUser
+    ? `${action}이 유리해요`
+    : priceHigher || priceLower
+      ? `${action} 시점을 검토하세요`
+      : `${action} 참고`;
 
-  const diffColor = priceHigher
-    ? "text-[#E03131]"
-    : priceLower
-      ? "text-[#1971C2]"
-      : "text-[#495057]";
+  const gainLabel = isFarmer ? "예상 추가 수익" : "예상 절감액";
+  const revenueLabel = isFarmer ? "예상 매출" : "예상 매입액";
 
   return (
     <section
-      className={cn(
-        "rounded-2xl px-4 py-4 text-white",
-        isFarmer
-          ? "bg-gradient-to-br from-[#3A8A3A] to-[#2F6F2F]"
-          : "bg-gradient-to-br from-[#1971C2] to-[#155A9A]",
-      )}
+      className="relative overflow-hidden rounded-3xl px-5 pb-4 pt-5 text-white shadow-[0_16px_40px_-16px_rgba(46,158,107,0.55)]"
+      style={{
+        background:
+          "linear-gradient(145deg, #2E9E6B 0%, #1F7A50 55%, #145A3A 100%)",
+      }}
     >
-      <div className="flex items-center gap-2 text-[12px] font-semibold">
-        <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5">
-          {badge}
-        </span>
-      </div>
-
-      <div className="mt-2 flex items-start gap-1.5 text-[16px] font-bold leading-snug">
-        <CalendarCheck className="mt-0.5 h-4 w-4 shrink-0" />
-        <span>{headline}</span>
-      </div>
-
-      <div className="mt-3 text-[11px] opacity-90">
-        예상 {isFarmer ? "판매가" : "매입가"}
-      </div>
-      <div className="flex items-end gap-1.5">
-        <span className="text-[26px] font-black leading-none tabular-nums">
-          {expectedPrice.toLocaleString()}
-        </span>
-        <span className="pb-0.5 text-[13px] font-semibold">원</span>
-        <span className="pb-0.5 text-[11.5px] opacity-80">
-          / {baseUnitLabel}
-        </span>
-      </div>
-
+      {/* Decorative glow */}
       <div
-        className={cn(
-          "mt-2 inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[12px] font-bold tabular-nums",
-          diffColor,
-        )}
-      >
-        {priceHigher ? (
-          <TrendingUp className="h-3.5 w-3.5" />
-        ) : priceLower ? (
-          <TrendingDown className="h-3.5 w-3.5" />
-        ) : null}
-        {compareLine}
-      </div>
+        aria-hidden
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-30 blur-2xl"
+        style={{ background: "radial-gradient(circle,#7EE2B2,transparent 70%)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full opacity-20 blur-3xl"
+        style={{ background: "radial-gradient(circle,#A6F0CB,transparent 70%)" }}
+      />
 
-      {totalLine && (
-        <div className="mt-2 rounded-lg bg-white/15 px-2.5 py-1.5 text-[12px] font-semibold">
-          {totalLine}
+      <div className="relative">
+        <div className="flex items-center justify-between">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold backdrop-blur">
+            <Sparkles className="h-3 w-3" />
+            {badge}
+          </span>
+          <span className="text-[10.5px] font-semibold uppercase tracking-wider text-white/70">
+            AI Insight
+          </span>
         </div>
-      )}
 
-      <p className="mt-3 text-[12px] leading-relaxed opacity-95">{summary}</p>
+        {/* 큰 날짜 헤드라인 */}
+        <div className="mt-3 flex items-end gap-2">
+          <span
+            className="tabular-nums leading-none text-white"
+            style={{
+              fontSize: "38px",
+              fontWeight: 900,
+              letterSpacing: "-0.02em",
+              textShadow: "0 2px 12px rgba(0,0,0,0.15)",
+            }}
+          >
+            {recommendationDate}
+          </span>
+          <span className="pb-1 text-[15px] font-extrabold leading-tight text-white">
+            {headline}
+          </span>
+        </div>
+
+        <div className="mt-1 flex items-center gap-1.5">
+          <span
+            className={cn(
+              "inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11.5px] font-bold tabular-nums",
+              priceHigher
+                ? "text-[#E03131]"
+                : priceLower
+                  ? "text-[#1971C2]"
+                  : "text-[#495057]",
+            )}
+          >
+            {priceHigher ? (
+              <TrendingUp className="h-3 w-3" />
+            ) : priceLower ? (
+              <TrendingDown className="h-3 w-3" />
+            ) : null}
+            오늘 대비 {priceHigher ? "+" : priceLower ? "-" : ""}
+            {diffAbs.toLocaleString()}원
+          </span>
+        </div>
+
+        {/* KPI 3개 */}
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="rounded-xl bg-white/12 px-2.5 py-2 backdrop-blur-sm">
+            <div className="text-[10px] font-semibold text-white/75">
+              예상 평균가
+            </div>
+            <div className="mt-1 flex items-baseline gap-0.5">
+              <span className="text-[16px] font-black tabular-nums leading-none">
+                {expectedPrice.toLocaleString()}
+              </span>
+              <span className="text-[10px] font-semibold text-white/80">원</span>
+            </div>
+            <div className="mt-0.5 text-[9.5px] text-white/60">
+              / {baseUnitLabel}
+            </div>
+          </div>
+
+          <div className="rounded-xl bg-white/12 px-2.5 py-2 backdrop-blur-sm">
+            <div className="text-[10px] font-semibold text-white/75">
+              {revenueLabel}
+            </div>
+            <div className="mt-1 flex items-baseline gap-0.5">
+              <span className="text-[16px] font-black tabular-nums leading-none">
+                {formatCompactWon(totalRevenue)}
+              </span>
+            </div>
+            <div className="mt-0.5 text-[9.5px] text-white/60">
+              {quantityBoxes}상자
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              "rounded-xl px-2.5 py-2",
+              gain >= 0
+                ? "bg-white text-[#1F5C1F]"
+                : "bg-white text-[#B02525]",
+            )}
+          >
+            <div className="text-[10px] font-bold opacity-80">{gainLabel}</div>
+            <div className="mt-1 flex items-baseline gap-0.5">
+              <span className="text-[16px] font-black tabular-nums leading-none">
+                {gain >= 0 ? "+" : "-"}
+                {formatCompactWon(gainAbs)}
+              </span>
+            </div>
+            <div className="mt-0.5 text-[9.5px] opacity-70">
+              오늘 대비
+            </div>
+          </div>
+        </div>
+
+        {/* 결합 CTA */}
+        <button
+          type="button"
+          onClick={onDetailClick}
+          className="mt-4 flex w-full items-center justify-between rounded-2xl bg-white/15 px-3.5 py-2.5 text-[12.5px] font-bold text-white backdrop-blur-sm transition-colors active:bg-white/25"
+        >
+          <span>{cropName} 시세 상세 보기</span>
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
     </section>
   );
+}
+
+function formatCompactWon(v: number): string {
+  const n = Math.abs(v);
+  if (n >= 100_000_000) return `${(v / 100_000_000).toFixed(1)}억`;
+  if (n >= 10_000) return `${(v / 10_000).toFixed(v % 10_000 === 0 ? 0 : 1)}만`;
+  return `${v.toLocaleString()}`;
 }
