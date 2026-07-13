@@ -246,19 +246,6 @@ function PredictionPage() {
           <PredictionFactorList factors={prediction.factors} />
         </section>
 
-        {/* 시세 상세 이동 */}
-        <button
-          type="button"
-          onClick={() =>
-            navigate({
-              to: "/price/$variety",
-              params: { variety: prediction.cropId },
-            })
-          }
-          className="mt-5 grid h-11 w-full place-items-center rounded-xl border border-[#E9ECEF] bg-white text-[13px] font-semibold text-[#495057] active:bg-[#F8F9FA]"
-        >
-          {prediction.cropName} 시세 상세 보기
-        </button>
       </div>
 
       <PredictionCropSheet
