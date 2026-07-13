@@ -113,7 +113,15 @@ export const useMarketFilter = create<MarketFilterState>()(
     {
       // Bumped name to reset persisted filter after default overhaul (task 4).
       name: "agdict:marketFilter:v2",
+      // Do not persist date so every session opens on today.
+      partialize: (s) => {
+        const { date: _d, dateLabel: _dl, ...rest } = s;
+        void _d;
+        void _dl;
+        return rest;
+      },
     },
+
   ),
 );
 
