@@ -170,10 +170,14 @@ export function PredictionInsightCard({
             )}
           >
             <div className="text-[10px] font-bold opacity-80">{gainLabel}</div>
-            <div className="mt-1 flex items-baseline gap-0.5">
-              <span className="text-[16px] font-black tabular-nums leading-none">
-                {gain >= 0 ? "+" : "-"}
-                {formatCompactWon(gainAbs)}
+            <div className="mt-1 flex items-baseline whitespace-nowrap">
+              <span
+                className="font-black tabular-nums leading-none"
+                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+              >
+                {gain === 0
+                  ? "0원"
+                  : `${gain > 0 ? "+" : "-"}${formatFullWon(gainAbs)}`}
               </span>
             </div>
             <div className="mt-0.5 text-[9.5px] opacity-70">
