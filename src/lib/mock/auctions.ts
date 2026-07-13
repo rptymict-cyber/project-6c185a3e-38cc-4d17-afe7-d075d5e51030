@@ -95,15 +95,14 @@ export function countAuctions(f: AuctionFilter): number {
   return listAuctions(f).length;
 }
 
-// Lazily import catalog to avoid a circular dep at module init.
+// Resolve the list of variety names to sample from when "전체 품종" is selected.
 function resolveVarietyPool(itemId: string | undefined, itemLabel: string): string[] {
   if (!itemId) return [`${itemLabel}(일반)`];
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { getItemById } = require("@/lib/catalog-service") as typeof import("@/lib/catalog-service");
   const item = getItemById(itemId);
   const names = item?.varieties.map((v) => v.name).filter((n) => n && n !== "전체 품종") ?? [];
   return names.length > 0 ? names : [`${itemLabel}(일반)`];
 }
+
 
 export function listAuctions(f: AuctionFilter): AuctionRecord[] {
   const key = `${f.itemLabel}|${f.varietyLabel}|${f.marketId}|${f.date}`;
