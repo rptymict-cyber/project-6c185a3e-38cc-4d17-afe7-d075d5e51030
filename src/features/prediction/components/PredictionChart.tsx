@@ -642,19 +642,25 @@ function PredictionChartBase({
             )}
           </ComposedChart>
         </ResponsiveContainer>
-        <div className="mt-2 flex items-center justify-center gap-4 text-[11px] text-[#6C757D]">
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[11px] text-[#495057]">
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block h-0.5 w-4 bg-[#E03B3B]" /> 실제 평균가
+            <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03131]" /> 평균가(원/kg)
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block h-0.5 w-4 border-t-2 border-dashed border-[#2E9E6B]" />{" "}
-            AI 예측
+            <span className="inline-block h-2 w-3 rounded-sm bg-[#E03131]/20" /> 거래량
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block h-2 w-3 rounded-sm bg-[rgba(46,158,107,0.15)]" />{" "}
-            예측 구간
+            <span
+              className="inline-block h-[2px] w-4"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right, #2E9E6B 0 4px, transparent 4px 8px, #2E9E6B 8px 12px, transparent 12px 16px)",
+              }}
+            />{" "}
+            예측
           </span>
         </div>
+
       </div>
     </div>
   );
