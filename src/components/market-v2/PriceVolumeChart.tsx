@@ -325,6 +325,14 @@ export function PriceVolumeChart({
               connectNulls={false}
             />
           )}
+
+          {canRenderForecast && (
+            <Customized
+              component={(props: any) => (
+                <TodayAxis {...props} todayLabel={todayLabel!} />
+              )}
+            />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
     </div>
