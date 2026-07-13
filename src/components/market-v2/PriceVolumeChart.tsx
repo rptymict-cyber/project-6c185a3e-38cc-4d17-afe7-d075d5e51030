@@ -21,31 +21,24 @@ const TEAL_BG = "rgba(46,158,107,0.05)";
 
 export type PredictionInput = {
   /** future points appended after `todayLabel`; label used as X axis tick */
-  points: { label: string; price: number }[];
+  points: { label: string; tooltipLabel?: string; price: number }[];
   /** index (in prediction points) of recommended day; renders dot marker */
   recommendedIdx?: number;
   /** badge text drawn above the recommended dot, e.g. "추천 7/16" */
   recommendedBadge?: string;
 };
 
-function xTickFilter(period: Period, points: number): (i: number) => boolean {
-  if (period === "today") {
-    const keep = new Set([0, 4, 8, 12, 16, 23]);
-    return (i) => keep.has(i);
-  }
-  if (period === "3m") return (i) => i % 7 === 0 || i === points - 1;
-  if (period === "1m") return (i) => i % 5 === 0 || i === points - 1;
-  return () => true;
-}
-
 export function PriceVolumeChart({
   series,
   period,
   prediction,
+  ticks,
 }: {
   series: PriceVolumeSeries;
   period: Period;
   prediction?: PredictionInput;
+  /** explicit list of X-axis labels to render (max 5-6). */
+  ticks?: string[];
 }) {
   const historyLen = series.points.length;
   const lastHistory = series.points[historyLen - 1];
@@ -63,7 +56,7 @@ export function PriceVolumeChart({
   const predictionData = prediction
     ? prediction.points.map((p, k) => ({
         label: p.label,
-        tooltipLabel: p.label,
+        tooltipLabel: p.tooltipLabel ?? p.label,
         price: undefined as number | undefined,
         volume: undefined as number | undefined,
         forecast: p.price,
@@ -73,10 +66,28 @@ export function PriceVolumeChart({
     : [];
 
   const data = [...historyData, ...predictionData];
-  const keep = xTickFilter(period, historyLen);
   const todayLabel = lastHistory?.label;
-  const forecastStartLabel = prediction?.points[0]?.label;
   const forecastEndLabel = prediction?.points[prediction.points.length - 1]?.label;
+
+  // Build the explicit tick list. Prefer caller-supplied ticks; fall back to a
+  // sensible default that never exceeds ~6 labels.
+  const computedTicks: string[] = (() => {
+    if (ticks && ticks.length > 0) return ticks;
+    if (period === "today") {
+      return ["00시", "06시", "12시", "18시", "23시"].filter((l) =>
+        data.some((d) => d.label === l),
+      );
+    }
+    const hist = historyData.map((d) => d.label);
+    const fcst = predictionData.map((d) => d.label);
+    const t: string[] = [];
+    if (hist.length) t.push(hist[0]);
+    if (hist.length > 2) t.push(hist[Math.floor(hist.length / 2)]);
+    if (hist.length > 1) t.push(hist[hist.length - 1]);
+    if (fcst.length > 1) t.push(fcst[Math.floor(fcst.length / 2)]);
+    if (fcst.length) t.push(fcst[fcst.length - 1]);
+    return Array.from(new Set(t));
+  })();
 
   const recommended =
     prediction && prediction.recommendedIdx != null
@@ -93,14 +104,10 @@ export function PriceVolumeChart({
             tick={{ fontSize: 11, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
+            ticks={computedTicks}
             interval={0}
-            tickFormatter={(v, i) => {
-              if (i < historyLen) return keep(i) ? String(v) : "";
-              // forecast ticks: show first + last only
-              if (v === forecastStartLabel || v === forecastEndLabel) return String(v);
-              return "";
-            }}
           />
+
           <YAxis
             yAxisId="price"
             orientation="left"
