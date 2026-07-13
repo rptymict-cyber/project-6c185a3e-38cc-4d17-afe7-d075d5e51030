@@ -57,7 +57,7 @@ function parseBaseUnitKg(unit: string): number {
 
 function PredictionPage() {
   const navigate = useNavigate();
-  const router = useRouter();
+  
   const search = Route.useSearch();
 
   const selectedCropId = usePredictionView((s) => s.selectedCropId);
