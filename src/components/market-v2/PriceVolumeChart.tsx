@@ -50,11 +50,13 @@ export function PriceVolumeChart({
   const historyLen = series.points.length;
   const lastHistory = series.points[historyLen - 1];
 
-  // Combined data: history has price+volume; prediction has forecast only.
+  // Merge forecast into the last history point so the dashed line begins where
+  // the solid line ends without introducing a duplicate X-axis label.
   const historyData = series.points.map((p, i) => ({
     ...p,
     i,
-    forecast: undefined as number | undefined,
+    forecast:
+      prediction && i === historyLen - 1 ? p.price : (undefined as number | undefined),
     isForecast: false,
   }));
 
@@ -70,24 +72,7 @@ export function PriceVolumeChart({
       }))
     : [];
 
-  // Bridge point: duplicate the last history point into the forecast series so
-  // the dashed line starts exactly where the solid line ends (no gap).
-  const bridge =
-    prediction && lastHistory
-      ? [
-          {
-            label: lastHistory.label,
-            tooltipLabel: (lastHistory as any).tooltipLabel ?? lastHistory.label,
-            price: undefined,
-            volume: undefined,
-            forecast: lastHistory.price,
-            i: historyLen - 1,
-            isForecast: true,
-          } as (typeof predictionData)[number],
-        ]
-      : [];
-
-  const data = [...historyData, ...bridge, ...predictionData];
+  const data = [...historyData, ...predictionData];
   const keep = xTickFilter(period, historyLen);
   const todayLabel = lastHistory?.label;
   const forecastStartLabel = prediction?.points[0]?.label;
@@ -101,7 +86,7 @@ export function PriceVolumeChart({
   return (
     <div className="h-[240px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 12, right: 8, left: 0, bottom: 4 }}>
+        <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
           <XAxis
             dataKey="label"
@@ -139,14 +124,14 @@ export function PriceVolumeChart({
             content={<CustomTooltip />}
           />
 
-          {/* Forecast background band */}
-          {prediction && forecastStartLabel && forecastEndLabel && (
+          {/* Forecast background band — from today to last forecast day */}
+          {prediction && todayLabel && forecastEndLabel && (
             <ReferenceArea
               yAxisId="price"
-              x1={forecastStartLabel}
+              x1={todayLabel}
               x2={forecastEndLabel}
               fill={TEAL}
-              fillOpacity={0.05}
+              fillOpacity={0.08}
               stroke="none"
             />
           )}
