@@ -92,7 +92,7 @@ function ForecastOverlay({
         width={Math.max(0, right - left)}
         height={Math.max(0, bottom - top)}
         fill={TEAL}
-        fillOpacity={0.15}
+        fillOpacity={0.07}
       />
       <line
         x1={xToday}
@@ -116,6 +116,148 @@ function ForecastOverlay({
     </g>
   );
 }
+
+// 추천/최고/최저 라벨을 흰 배경 pill로 그리고, 추천 칩과 위치 충돌을 피한다.
+interface LabelsOverlayProps {
+  xAxisMap?: Record<string, any>;
+  yAxisMap?: Record<string, any>;
+  offset?: { top: number; left: number; width: number; height: number };
+  recommendedLabel?: string;
+  recommendedPrice?: number;
+  maxLabel?: string;
+  maxPrice?: number;
+  minLabel?: string;
+  minPrice?: number;
+}
+
+function LabelsOverlay({
+  xAxisMap,
+  yAxisMap,
+  offset,
+  recommendedLabel,
+  recommendedPrice,
+  maxLabel,
+  maxPrice,
+  minLabel,
+  minPrice,
+}: LabelsOverlayProps) {
+  if (!xAxisMap || !yAxisMap || !offset) return null;
+  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
+  const yAxis = yAxisMap["price"] ?? Object.values(yAxisMap)[0];
+  if (!xAxis?.scale || !yAxis?.scale) return null;
+  const xScale = xAxis.scale;
+  const yScale = yAxis.scale;
+  const bw = typeof xScale.bandwidth === "function" ? xScale.bandwidth() : 0;
+  const centerX = (label: string): number | null => {
+    const v = xScale(label);
+    if (typeof v !== "number" || Number.isNaN(v)) return null;
+    return v + bw / 2;
+  };
+
+  const pill = (
+    key: string,
+    cx: number,
+    cy: number,
+    text: string,
+    color: string,
+    placement: "top" | "bottom",
+    filled: boolean,
+  ) => {
+    const padX = 8;
+    const padY = 4;
+    const fontSize = 10.5;
+    const w = Math.round(text.length * 6.6 + padX * 2);
+    const h = fontSize + padY * 2;
+    const gap = 10;
+    const y = placement === "top" ? cy - gap - h : cy + gap;
+    const textY = y + h / 2 + fontSize / 2 - 2;
+    return (
+      <g key={key}>
+        <rect
+          x={cx - w / 2}
+          y={y}
+          width={w}
+          height={h}
+          rx={h / 2}
+          ry={h / 2}
+          fill={filled ? color : "#FFFFFF"}
+          stroke={color}
+          strokeWidth={1.2}
+        />
+        <text
+          x={cx}
+          y={textY}
+          textAnchor="middle"
+          fontSize={fontSize}
+          fontWeight={800}
+          fill={filled ? "#FFFFFF" : color}
+        >
+          {text}
+        </text>
+      </g>
+    );
+  };
+
+  const nodes: React.ReactNode[] = [];
+
+  // 추천 칩 (항상 top)
+  let recCx: number | null = null;
+  let recCy: number | null = null;
+  if (recommendedLabel && typeof recommendedPrice === "number") {
+    recCx = centerX(recommendedLabel);
+    const yv = yScale(recommendedPrice);
+    recCy = typeof yv === "number" && !Number.isNaN(yv) ? yv : null;
+    if (recCx != null && recCy != null) {
+      const md = recommendedLabel.replace(/-/g, "/");
+      nodes.push(pill("rec", recCx, recCy, `추천 ${md}`, TEAL, "top", true));
+    }
+  }
+
+  // 최고 pill — 추천일과 겹치면 아래로
+  if (maxLabel && typeof maxPrice === "number") {
+    const cx = centerX(maxLabel);
+    const yv = yScale(maxPrice);
+    const cy = typeof yv === "number" && !Number.isNaN(yv) ? yv : null;
+    if (cx != null && cy != null) {
+      const collide = maxLabel === recommendedLabel;
+      nodes.push(
+        pill(
+          "max",
+          cx,
+          cy,
+          `최고 ${maxPrice.toLocaleString()}`,
+          RED,
+          collide ? "bottom" : "top",
+          false,
+        ),
+      );
+    }
+  }
+
+  // 최저 pill — 추천일과 겹치면 위로
+  if (minLabel && typeof minPrice === "number" && minLabel !== maxLabel) {
+    const cx = centerX(minLabel);
+    const yv = yScale(minPrice);
+    const cy = typeof yv === "number" && !Number.isNaN(yv) ? yv : null;
+    if (cx != null && cy != null) {
+      const collide = minLabel === recommendedLabel;
+      nodes.push(
+        pill(
+          "min",
+          cx,
+          cy,
+          `최저 ${minPrice.toLocaleString()}`,
+          BLUE,
+          collide ? "top" : "bottom",
+          false,
+        ),
+      );
+    }
+  }
+
+  return <g style={{ pointerEvents: "none" }}>{nodes}</g>;
+}
+
 
 interface SelectedMarkerProps {
   xAxisMap?: Record<string, any>;
