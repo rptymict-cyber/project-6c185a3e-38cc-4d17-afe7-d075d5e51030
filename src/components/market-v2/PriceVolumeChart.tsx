@@ -24,6 +24,8 @@ export type PredictionInput = {
   points: { label: string; price: number }[];
   /** index (in prediction points) of recommended day; renders dot marker */
   recommendedIdx?: number;
+  /** badge text drawn above the recommended dot, e.g. "추천 7/16" */
+  recommendedBadge?: string;
 };
 
 function xTickFilter(period: Period, points: number): (i: number) => boolean {
@@ -196,16 +198,43 @@ export function PriceVolumeChart({
               dot={(props: any) => {
                 if (!recommended) return <g key={props.index} />;
                 if (props.payload?.label === recommended.label) {
+                  const badge = prediction?.recommendedBadge ?? `추천 ${recommended.label}`;
+                  const charW = 7.2;
+                  const padX = 8;
+                  const w = Math.round(badge.length * charW + padX * 2);
+                  const h = 20;
+                  const bx = props.cx - w / 2;
+                  const by = props.cy - h - 12;
                   return (
-                    <circle
-                      key={props.index}
-                      cx={props.cx}
-                      cy={props.cy}
-                      r={4.5}
-                      fill={TEAL}
-                      stroke="#fff"
-                      strokeWidth={2}
-                    />
+                    <g key={props.index}>
+                      <rect
+                        x={bx}
+                        y={by}
+                        width={w}
+                        height={h}
+                        rx={10}
+                        ry={10}
+                        fill={TEAL}
+                      />
+                      <text
+                        x={props.cx}
+                        y={by + h / 2 + 3.5}
+                        textAnchor="middle"
+                        fontSize={10.5}
+                        fontWeight={800}
+                        fill="#fff"
+                      >
+                        {badge}
+                      </text>
+                      <circle
+                        cx={props.cx}
+                        cy={props.cy}
+                        r={5}
+                        fill={TEAL}
+                        stroke="#fff"
+                        strokeWidth={2}
+                      />
+                    </g>
                   );
                 }
                 return <g key={props.index} />;

@@ -49,25 +49,42 @@ export function ProAnalysisSection() {
   const isPredictable = !!getItemById(f.itemId)?.prediction.supported;
   const prediction: PredictionInput | undefined = useMemo(() => {
     if (!isPredictable || series.points.length === 0) return undefined;
+    if (period === "today") return undefined; // 예측은 일 단위 이상에서만
     const last = series.points[series.points.length - 1];
-    const days = period === "today" ? 6 : period === "1w" ? 5 : period === "1m" ? 7 : 7;
-    // seeded-ish forecast: gentle drift + small noise around last price
+    const days = period === "1w" ? 5 : 7;
     const drift = last.price * 0.01;
-    const points: { label: string; price: number }[] = [];
+    const baseDate = new Date(last.date + "T00:00:00");
+    const points: { label: string; price: number; dateText: string }[] = [];
     for (let k = 1; k <= days; k++) {
       const wave = Math.sin(k * 0.9) * (last.price * 0.015);
       const p = Math.round(last.price + drift * k + wave);
-      points.push({ label: `+${k}일`, price: p });
+      const d = new Date(baseDate);
+      d.setDate(d.getDate() + k);
+      const label = `${d.getMonth() + 1}/${d.getDate()}`;
+      const dateText = `${d.getMonth() + 1}월 ${d.getDate()}일`;
+      points.push({ label, price: p, dateText });
     }
-    // pick recommended = highest predicted point
     let recIdx = 0;
     points.forEach((p, i) => {
       if (p.price > points[recIdx].price) recIdx = i;
     });
-    return { points, recommendedIdx: recIdx };
+    return {
+      points: points.map(({ label, price }) => ({ label, price })),
+      recommendedIdx: recIdx,
+      recommendedBadge: `추천 ${points[recIdx].label}`,
+    };
   }, [isPredictable, series, period]);
 
   const recommended = prediction?.points[prediction.recommendedIdx ?? 0];
+  const recommendedDateText = useMemo(() => {
+    if (!prediction || !recommended) return "";
+    const last = series.points[series.points.length - 1];
+    const baseDate = new Date(last.date + "T00:00:00");
+    const k = (prediction.recommendedIdx ?? 0) + 1;
+    const d = new Date(baseDate);
+    d.setDate(d.getDate() + k);
+    return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+  }, [prediction, recommended, series]);
   const recommendedDelta = recommended
     ? recommended.price - series.points[series.points.length - 1].price
     : 0;
@@ -179,15 +196,15 @@ export function ProAnalysisSection() {
                 <Sparkles className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-[13px] font-bold leading-tight">
-                  {recommended.label} 출하가 유리해요
+                <div className="text-[13.5px] font-extrabold leading-tight">
+                  {recommendedDateText} 출하가 유리해요
                 </div>
-                <div className="mt-0.5 text-[11.5px] text-white/85">
+                <div className="mt-0.5 text-[11.5px] text-white/90">
                   오늘보다 {recommendedDelta >= 0 ? "+" : ""}
                   {recommendedDelta.toLocaleString()}원 · 자세한 예측은 리포트에서
                 </div>
               </div>
-              <span className="flex shrink-0 items-center gap-0.5 rounded-full bg-white/20 px-2.5 py-1 text-[11.5px] font-bold">
+              <span className="flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-[10px] bg-white px-3 py-2 text-[12.5px] font-extrabold text-[#2E9E6B]">
                 리포트 보기
                 <ChevronRight className="h-3.5 w-3.5" />
               </span>
