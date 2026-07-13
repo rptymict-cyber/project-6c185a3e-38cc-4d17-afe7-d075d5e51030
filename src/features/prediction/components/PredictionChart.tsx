@@ -153,6 +153,11 @@ function LabelsOverlay({
     return v + bw / 2;
   };
 
+  const plotTop = offset.top;
+  const plotBottom = offset.top + offset.height;
+  const plotLeft = offset.left;
+  const plotRight = offset.left + offset.width;
+
   const pill = (
     key: string,
     cx: number,
@@ -167,24 +172,38 @@ function LabelsOverlay({
     const fontSize = 10.5;
     const w = Math.round(text.length * 6.6 + padX * 2);
     const h = fontSize + padY * 2;
-    const gap = 10;
-    const y = placement === "top" ? cy - gap - h : cy + gap;
+    const GAP = 10;
+
+    const preferBelow = placement === "bottom";
+    let ry = preferBelow ? cy + GAP + h / 2 : cy - GAP - h / 2;
+    if (!preferBelow && ry - h / 2 < plotTop) ry = cy + GAP + h / 2;
+    if (preferBelow && ry + h / 2 > plotBottom - 4) ry = cy - GAP - h / 2;
+
+    const safeTop = plotTop + h / 2;
+    const safeBottom = plotBottom - h / 2 - 4;
+    ry = Math.max(safeTop, Math.min(safeBottom, ry));
+
+    const rx = Math.max(plotLeft + w / 2, Math.min(plotRight - w / 2, cx));
+
+    const y = ry - h / 2;
     const textY = y + h / 2 + fontSize / 2 - 2;
+    const strokeColor = filled ? color : color;
     return (
       <g key={key}>
+        <line x1={cx} y1={cy} x2={rx} y2={ry} stroke={color} strokeWidth={0.8} opacity={0.4} />
         <rect
-          x={cx - w / 2}
+          x={rx - w / 2}
           y={y}
           width={w}
           height={h}
           rx={h / 2}
           ry={h / 2}
           fill={filled ? color : "#FFFFFF"}
-          stroke={color}
+          stroke={strokeColor}
           strokeWidth={1.2}
         />
         <text
-          x={cx}
+          x={rx}
           y={textY}
           textAnchor="middle"
           fontSize={fontSize}
@@ -196,6 +215,7 @@ function LabelsOverlay({
       </g>
     );
   };
+
 
   const nodes: React.ReactNode[] = [];
 
