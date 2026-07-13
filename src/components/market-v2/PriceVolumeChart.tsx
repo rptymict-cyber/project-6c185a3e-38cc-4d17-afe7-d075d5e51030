@@ -21,31 +21,24 @@ const TEAL_BG = "rgba(46,158,107,0.05)";
 
 export type PredictionInput = {
   /** future points appended after `todayLabel`; label used as X axis tick */
-  points: { label: string; price: number }[];
+  points: { label: string; tooltipLabel?: string; price: number }[];
   /** index (in prediction points) of recommended day; renders dot marker */
   recommendedIdx?: number;
   /** badge text drawn above the recommended dot, e.g. "추천 7/16" */
   recommendedBadge?: string;
 };
 
-function xTickFilter(period: Period, points: number): (i: number) => boolean {
-  if (period === "today") {
-    const keep = new Set([0, 4, 8, 12, 16, 23]);
-    return (i) => keep.has(i);
-  }
-  if (period === "3m") return (i) => i % 7 === 0 || i === points - 1;
-  if (period === "1m") return (i) => i % 5 === 0 || i === points - 1;
-  return () => true;
-}
-
 export function PriceVolumeChart({
   series,
   period,
   prediction,
+  ticks,
 }: {
   series: PriceVolumeSeries;
   period: Period;
   prediction?: PredictionInput;
+  /** explicit list of X-axis labels to render (max 5-6). */
+  ticks?: string[];
 }) {
   const historyLen = series.points.length;
   const lastHistory = series.points[historyLen - 1];
