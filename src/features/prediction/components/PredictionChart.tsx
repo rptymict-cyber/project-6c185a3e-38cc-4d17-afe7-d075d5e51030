@@ -596,40 +596,22 @@ function PredictionChartBase({
               connectNulls={false}
             />
 
-            {maxPoint && (
-              <ReferenceDot
-                xAxisId="main"
-                yAxisId="price"
-                x={maxPoint.label}
-                y={maxP}
-                r={0}
-                label={{
-                  value: `최고 ${maxP.toLocaleString()}`,
-                  position: "top",
-                  fill: RED,
-                  fontSize: 10,
-                  fontWeight: 800,
-                }}
-              />
-            )}
-            {minPoint && minPoint.label !== maxPoint?.label && (
-              <ReferenceDot
-                xAxisId="main"
-                yAxisId="price"
-                x={minPoint.label}
-                y={minP}
-                r={0}
-                label={{
-                  value: `최저 ${minP.toLocaleString()}`,
-                  position: "bottom",
-                  fill: BLUE,
-                  fontSize: 10,
-                  fontWeight: 800,
-                }}
-              />
-            )}
+            {/* 추천 칩 · 최고/최저 pill (충돌 회피) */}
+            <Customized
+              component={(props: any) => (
+                <LabelsOverlay
+                  {...props}
+                  recommendedLabel={recommended?.label}
+                  recommendedPrice={recommended?.predictedPrice}
+                  maxLabel={maxPoint?.label}
+                  maxPrice={hasFuture ? maxP : undefined}
+                  minLabel={minPoint?.label}
+                  minPrice={hasFuture ? minP : undefined}
+                />
+              )}
+            />
 
-            {canRenderSelected && (
+            {canRenderSelected && selectedLabel !== recommended?.label && (
               <Customized
                 component={(props: any) => (
                   <SelectedMarker
@@ -651,8 +633,8 @@ function PredictionChartBase({
             AI 예측
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block h-2 w-3 rounded-sm bg-[rgba(224,59,59,0.35)]" />{" "}
-            거래량
+            <span className="inline-block h-2 w-3 rounded-sm bg-[rgba(46,158,107,0.15)]" />{" "}
+            예측 구간
           </span>
         </div>
       </div>
