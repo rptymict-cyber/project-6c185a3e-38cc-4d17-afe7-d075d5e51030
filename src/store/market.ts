@@ -74,14 +74,8 @@ export type MarketFilterState = {
 };
 
 const WEEKDAY = ["일", "월", "화", "수", "목", "금", "토"];
-function todayIso(): string {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
 function todayLabel(): string {
+
   const d = new Date();
   return `${d.getMonth() + 1}/${d.getDate()} (${WEEKDAY[d.getDay()]}) · 오늘`;
 }
