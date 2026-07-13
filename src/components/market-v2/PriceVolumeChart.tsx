@@ -145,8 +145,9 @@ export function PriceVolumeChart({
               x1={todayLabel}
               x2={forecastEndLabel}
               fill={TEAL}
-              fillOpacity={0.08}
+              fillOpacity={0.1}
               stroke="none"
+              ifOverflow="extendDomain"
             />
           )}
 
@@ -155,13 +156,15 @@ export function PriceVolumeChart({
             <ReferenceLine
               yAxisId="price"
               x={todayLabel}
-              stroke="#ADB5BD"
+              stroke="#94A3B8"
               strokeDasharray="3 3"
+              ifOverflow="extendDomain"
               label={{
                 value: "오늘",
                 position: "top",
                 fontSize: 10,
-                fill: "#6C757D",
+                fill: "#64748B",
+                offset: 8,
               }}
             />
           )}
