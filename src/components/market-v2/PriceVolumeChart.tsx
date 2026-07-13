@@ -171,7 +171,7 @@ export function PriceVolumeChart({
             dataKey="volume"
             fill={PINK}
             radius={[2, 2, 0, 0]}
-            barSize={period === "today" ? 6 : 8}
+            barSize={BAR_SIZE_BY_PERIOD[period]}
             isAnimationActive={false}
           />
           <Line
