@@ -107,6 +107,7 @@ export function PriceVolumeChart({
         <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
           <XAxis
+            xAxisId="main"
             dataKey="label"
             tick={{ fontSize: 11, fill: "#868E96" }}
             axisLine={false}
@@ -133,32 +134,29 @@ export function PriceVolumeChart({
             tickLine={false}
             width={30}
           />
-          <Tooltip
-            cursor={{ stroke: "#ADB5BD", strokeDasharray: "3 3" }}
-            content={<CustomTooltip />}
-          />
+          <Tooltip cursor={false} content={<CustomTooltip />} />
 
           {/* Forecast background band — from today to last forecast day */}
           {prediction && todayLabel && forecastEndLabel && (
             <ReferenceArea
+              xAxisId="main"
               yAxisId="price"
               x1={todayLabel}
               x2={forecastEndLabel}
               fill={TEAL}
-              fillOpacity={0.1}
+              fillOpacity={0.08}
               stroke="none"
-              ifOverflow="extendDomain"
             />
           )}
 
           {/* Today vertical reference */}
           {prediction && todayLabel && (
             <ReferenceLine
+              xAxisId="main"
               yAxisId="price"
               x={todayLabel}
               stroke="#94A3B8"
               strokeDasharray="3 3"
-              ifOverflow="extendDomain"
               label={{
                 value: "오늘",
                 position: "top",
@@ -169,7 +167,9 @@ export function PriceVolumeChart({
             />
           )}
 
+
           <Bar
+            xAxisId="main"
             yAxisId="vol"
             dataKey="volume"
             fill={PINK}
@@ -178,6 +178,7 @@ export function PriceVolumeChart({
             isAnimationActive={false}
           />
           <Line
+            xAxisId="main"
             yAxisId="price"
             type="monotone"
             dataKey="price"
@@ -191,6 +192,7 @@ export function PriceVolumeChart({
 
           {prediction && (
             <Line
+              xAxisId="main"
               yAxisId="price"
               type="monotone"
               dataKey="forecast"
