@@ -17,7 +17,14 @@ type Period = "today" | "1w" | "1m" | "3m" | "1y";
 const RED = "#E03131";
 const PINK = "rgba(224,49,49,0.18)";
 const TEAL = "#2E9E6B";
-const TEAL_BG = "rgba(46,158,107,0.05)";
+
+const BAR_SIZE_BY_PERIOD: Record<Period, number> = {
+  today: 6,
+  "1w": 12,
+  "1m": 4,
+  "3m": 7,
+  "1y": 8,
+};
 
 export type PredictionInput = {
   /** future points appended after `todayLabel`; label used as X axis tick */
