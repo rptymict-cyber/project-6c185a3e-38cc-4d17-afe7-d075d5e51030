@@ -21,15 +21,8 @@ const PERIODS: { id: Period; label: string }[] = [
   { id: "1y", label: "1년" },
 ];
 
-function getLocalTodayISO() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
 export function ProAnalysisSection() {
+
   const f = useMarketFilter();
   const tab = f.proTab;
   const setTab = f.setProTab;
