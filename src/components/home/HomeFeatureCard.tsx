@@ -12,7 +12,7 @@ export function HomeFeatureCard({ eyebrow, title, image, to }: HomeFeatureCardPr
   return (
     <Link
       to={to}
-      className="flex h-[120px] items-center gap-3 rounded-[20px] border border-[#E8EEE8] bg-white px-5 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:bg-[#F8F9FA]"
+      className="flex h-[104px] items-center gap-3 rounded-[20px] border border-[#E8EEE8] bg-white px-5 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:bg-[#F8F9FA]"
     >
       <div className="min-w-0 flex-1">
         <div className="text-[12px] text-[#6B7280]">{eyebrow}</div>
@@ -20,7 +20,7 @@ export function HomeFeatureCard({ eyebrow, title, image, to }: HomeFeatureCardPr
           {title}
         </div>
       </div>
-      <div className="grid h-[92px] w-[112px] shrink-0 place-items-center">
+      <div className="grid h-[80px] w-[112px] shrink-0 place-items-center">
         {image}
       </div>
     </Link>
