@@ -4,11 +4,14 @@ import {
   ComposedChart,
   Customized,
   Line,
+  ReferenceArea,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
+
 import type { PriceVolumeSeries } from "@/lib/mock/market-analysis";
 
 type Period = "today" | "1w" | "1m" | "3m" | "1y";
