@@ -43,27 +43,34 @@ export function ProAnalysisSection() {
 
   return (
     <section className="mt-3 bg-white pt-1">
-      {/* Underline tabs */}
-      <div className="no-scrollbar flex overflow-x-auto border-b border-[#E9ECEF] px-2">
-        {TABS.map((t) => {
-          const active = t.id === tab;
-          return (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={cn(
-                "relative shrink-0 px-3 py-3 text-[13.5px] font-semibold",
-                active ? "text-foreground" : "text-[#868E96]",
-              )}
-            >
-              {t.label}
-              {active && (
-                <span className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-[#3A8A3A]" />
-              )}
-            </button>
-          );
-        })}
+      {/* Tab bar with right-side view segment */}
+      <div className="flex items-center border-b border-[#E9ECEF] pr-3">
+        <div className="no-scrollbar flex flex-1 overflow-x-auto px-2">
+          {TABS.map((t) => {
+            const active = t.id === tab;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={cn(
+                  "relative shrink-0 px-3 py-3 text-[13.5px] font-semibold",
+                  active ? "text-foreground" : "text-[#868E96]",
+                )}
+              >
+                {t.label}
+                {active && (
+                  <span className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-[#3A8A3A]" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+        <ViewSegment
+          value={tab === "auctions" ? "list" : "chart"}
+          onChange={(v) => setTab(v === "list" ? "auctions" : "chart")}
+        />
       </div>
+
 
       {tab === "chart" && (
         <div className="px-3 pb-3 pt-3">
