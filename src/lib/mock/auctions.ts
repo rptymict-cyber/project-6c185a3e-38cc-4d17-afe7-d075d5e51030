@@ -2,6 +2,9 @@
 // Deterministically generates a list of auction lots for a given filter
 // combination (item/variety/market/date) so re-selection is stable.
 
+import { getItemById } from "@/lib/catalog-service";
+
+
 export type AuctionRecord = {
   id: string;
   auctionTime: string; // ISO-like "2026-07-05 23:15:14"
@@ -77,6 +80,7 @@ function pad(n: number) { return String(n).padStart(2, "0"); }
 export type AuctionFilter = {
   categoryLabel: string;
   itemLabel: string;
+  itemId?: string;
   varietyLabel: string;
   marketLabel: string;
   marketId: string;
@@ -91,6 +95,15 @@ export function countAuctions(f: AuctionFilter): number {
   return listAuctions(f).length;
 }
 
+// Resolve the list of variety names to sample from when "전체 품종" is selected.
+function resolveVarietyPool(itemId: string | undefined, itemLabel: string): string[] {
+  if (!itemId) return [`${itemLabel}(일반)`];
+  const item = getItemById(itemId);
+  const names = item?.varieties.map((v) => v.name).filter((n) => n && n !== "전체 품종") ?? [];
+  return names.length > 0 ? names : [`${itemLabel}(일반)`];
+}
+
+
 export function listAuctions(f: AuctionFilter): AuctionRecord[] {
   const key = `${f.itemLabel}|${f.varietyLabel}|${f.marketId}|${f.date}`;
   const rand = seeded(hash(key));
@@ -99,6 +112,12 @@ export function listAuctions(f: AuctionFilter): AuctionRecord[] {
 
   const corps = CORPORATIONS[f.marketId] ?? CORPORATIONS.all;
 
+  const isAllVarieties =
+    !f.varietyLabel || f.varietyLabel === "전체 품종" || f.varietyLabel === "전체";
+  const varietyPool = isAllVarieties
+    ? resolveVarietyPool(f.itemId, f.itemLabel)
+    : [f.varietyLabel];
+
   const out: AuctionRecord[] = [];
   const baseDate = new Date(f.date + "T23:59:00");
   for (let i = 0; i < total; i++) {
@@ -106,6 +125,7 @@ export function listAuctions(f: AuctionFilter): AuctionRecord[] {
     const pkg = pickWeighted(PACKAGES, r());
     const origin = pickWeighted(ORIGINS, r()).region;
     const corp = corps[Math.floor(r() * corps.length)];
+    const varietyName = varietyPool[Math.floor(r() * varietyPool.length)];
 
     const perKg = 700 + Math.round(r() * 400); // 700 ~ 1100 원/kg
     const price = Math.round((perKg * pkg.kg) / 10) * 10;
@@ -125,7 +145,7 @@ export function listAuctions(f: AuctionFilter): AuctionRecord[] {
       auctionClock,
       category: f.categoryLabel,
       cropName: f.itemLabel,
-      varietyName: f.varietyLabel,
+      varietyName,
       packageKg: pkg.kg,
       packageLabel: pkg.label,
       price,
@@ -141,6 +161,7 @@ export function listAuctions(f: AuctionFilter): AuctionRecord[] {
   out.sort((a, b) => b.auctionTime.localeCompare(a.auctionTime));
   return out;
 }
+
 
 export function applySecondaryFilters(
   records: AuctionRecord[],
