@@ -150,3 +150,36 @@ function PeriodStat({
     </div>
   );
 }
+
+function ViewSegment({
+  value,
+  onChange,
+}: {
+  value: "chart" | "list";
+  onChange: (v: "chart" | "list") => void;
+}) {
+  const opts: { id: "chart" | "list"; label: string }[] = [
+    { id: "chart", label: "차트보기" },
+    { id: "list", label: "목록보기" },
+  ];
+  return (
+    <div className="ml-2 inline-flex shrink-0 rounded-[8px] bg-[#EDEFF2] p-0.5">
+      {opts.map((o) => {
+        const active = o.id === value;
+        return (
+          <button
+            key={o.id}
+            type="button"
+            onClick={() => onChange(o.id)}
+            className={cn(
+              "rounded-[6px] px-2.5 py-1 text-[12px] font-bold transition-colors",
+              active ? "bg-white text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-[#6C757D]",
+            )}
+          >
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
