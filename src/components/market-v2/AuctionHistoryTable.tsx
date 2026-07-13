@@ -18,13 +18,15 @@ export function AuctionHistoryTable() {
       listAuctions({
         categoryLabel: f.categoryLabel,
         itemLabel: f.itemLabel,
+        itemId: f.itemId,
         varietyLabel: f.varietyLabel,
         marketLabel: f.marketLabel,
         marketId: f.marketId,
         date: f.date,
       }),
-    [f.categoryLabel, f.itemLabel, f.varietyLabel, f.marketLabel, f.marketId, f.date],
+    [f.categoryLabel, f.itemLabel, f.itemId, f.varietyLabel, f.marketLabel, f.marketId, f.date],
   );
+
 
   const [page, setPage] = useState(1);
 
