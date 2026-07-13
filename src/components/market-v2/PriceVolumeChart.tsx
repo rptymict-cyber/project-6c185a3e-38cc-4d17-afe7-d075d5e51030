@@ -76,7 +76,7 @@ function ForecastOverlay({
         width={Math.max(0, right - left)}
         height={Math.max(0, bottom - top)}
         fill="#2E9E6B"
-        fillOpacity={0.08}
+        fillOpacity={0.15}
       />
       <line
         x1={xToday}
