@@ -96,13 +96,12 @@ export function AuctionHistoryTable() {
 
 
 function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
-  const navigate = useNavigate();
   return (
     <div className="mt-3 overflow-x-auto rounded-[12px] border border-[#E9ECEF] bg-white">
-      <table className="w-full min-w-[720px] border-collapse text-[12px]">
+      <table className="w-full min-w-[600px] border-collapse text-[11.5px]">
         <thead>
           <tr className="bg-[#F8F9FA] text-[#495057]">
-            <Th className="text-right">번호</Th>
+            <Th>번호</Th>
             <Th>시간</Th>
             <Th>도매시장</Th>
             <Th>품종</Th>
@@ -114,33 +113,35 @@ function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr
-              key={r.id}
-              onClick={() =>
-                navigate({ to: "/market/auction/$id", params: { id: r.id } })
-              }
-              className="cursor-pointer border-t border-[#F1F3F5] hover:bg-[#F8F9FA] active:bg-[#F1F3F5]"
-            >
-              <Td className="whitespace-nowrap text-right text-[#868E96]">{i + 1}</Td>
+            <tr key={r.id} className="border-t border-[#F1F3F5]">
+              <Td>{i + 1}</Td>
               <Td className="whitespace-nowrap">
                 {r.auctionDate.slice(5).replace("-", "/")} {r.auctionClock}
               </Td>
               <Td className="whitespace-nowrap">{r.marketName}</Td>
-              <Td className="whitespace-nowrap font-semibold text-[#1F5C1F]">{r.varietyName}</Td>
-              <Td className="truncate">{r.origin}</Td>
+              <Td className="whitespace-nowrap">
+                <Link
+                  to="/market/auction/$id"
+                  params={{ id: r.id }}
+                  className="text-[#1F5C1F] underline-offset-2 hover:underline"
+                >
+                  {r.varietyName}
+                </Link>
+              </Td>
+              <Td className="whitespace-nowrap">{r.origin}</Td>
               <Td className="whitespace-nowrap">{r.packageLabel}</Td>
-              <Td className="whitespace-nowrap text-right">{r.count.toLocaleString()}</Td>
+              <Td className="text-right">{r.count}</Td>
               <Td className="whitespace-nowrap text-right font-bold text-[#E03131]">
-                {r.price.toLocaleString()}원
+                {r.price.toLocaleString()}
               </Td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-
   );
 }
+
 
 
 
