@@ -2,8 +2,9 @@ import {
   Bar,
   CartesianGrid,
   ComposedChart,
-  Customized,
   Line,
+  ReferenceArea,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -33,71 +34,6 @@ export type PredictionInput = {
   /** badge text drawn above the recommended dot, e.g. "추천 7/16" */
   recommendedBadge?: string;
 };
-
-function ForecastOverlay({
-  todayLabel,
-  lastForecastLabel,
-}: {
-  todayLabel: string;
-  lastForecastLabel: string;
-}) {
-  // Recharts 2.x passes chart layout via props (xAxisMap, yAxisMap, offset)
-  // to the component rendered by <Customized>. Use those instead of internal
-  // hooks, which are not part of the public entry.
-  return function ForecastOverlayLayer(props: any) {
-    const xAxisMap = props?.xAxisMap;
-    const offset = props?.offset;
-    if (!xAxisMap || !offset) return null;
-    const axis: any = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
-    const scale = axis?.scale;
-    if (!scale) return null;
-
-    const bandwidth =
-      typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
-    const centerOf = (label: string) => {
-      const v = scale(label);
-      return typeof v === "number" ? v + bandwidth / 2 : NaN;
-    };
-
-    const x1 = centerOf(todayLabel);
-    const x2 = centerOf(lastForecastLabel);
-    if (!Number.isFinite(x1) || !Number.isFinite(x2)) return null;
-
-    const left = Math.min(x1, x2);
-    const width = Math.abs(x2 - x1);
-
-    return (
-      <g pointerEvents="none">
-        <rect
-          x={left}
-          y={offset.top}
-          width={width}
-          height={offset.height}
-          fill="#2E9E6B"
-          fillOpacity={0.08}
-        />
-        <line
-          x1={x1}
-          x2={x1}
-          y1={offset.top}
-          y2={offset.top + offset.height}
-          stroke="#94A3B8"
-          strokeWidth={1}
-          strokeDasharray="3 3"
-        />
-        <text
-          x={x1}
-          y={offset.top - 8}
-          textAnchor="middle"
-          fontSize={10}
-          fill="#64748B"
-        >
-          오늘
-        </text>
-      </g>
-    );
-  };
-}
 
 export function PriceVolumeChart({
   series,
@@ -172,11 +108,29 @@ export function PriceVolumeChart({
         <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
           {canRenderForecast && (
-            <Customized
-              component={ForecastOverlay({
-                todayLabel: todayLabel!,
-                lastForecastLabel: lastForecastLabel!,
-              })}
+            <ReferenceArea
+              xAxisId="main"
+              yAxisId="price"
+              x1={todayLabel}
+              x2={lastForecastLabel}
+              fill={TEAL}
+              fillOpacity={0.08}
+              stroke="none"
+            />
+          )}
+          {canRenderForecast && (
+            <ReferenceLine
+              xAxisId="main"
+              yAxisId="price"
+              x={todayLabel}
+              stroke="#94A3B8"
+              strokeDasharray="3 3"
+              label={{
+                value: "오늘",
+                position: "top",
+                fontSize: 10,
+                fill: "#64748B",
+              }}
             />
           )}
           <XAxis
