@@ -20,7 +20,7 @@ export function HomeFeatureCard({ eyebrow, title, image, to }: HomeFeatureCardPr
           {title}
         </div>
       </div>
-      <div className="grid h-[80px] w-[112px] shrink-0 place-items-center">
+      <div className="grid h-[72px] w-[100px] shrink-0 place-items-center">
         {image}
       </div>
     </Link>
