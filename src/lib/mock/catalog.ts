@@ -62,7 +62,7 @@ export const CATEGORIES: Category[] = [
 ];
 
 
-const ACTIVE_ITEM_NAMES = new Set<string>(["양파","배추","무","고추","사과"]);
+const ACTIVE_ITEM_NAMES = new Set<string>(["양파","배추","무","마늘","사과"]);
 function predictionFor(name: string): Prediction {
   if (ACTIVE_ITEM_NAMES.has(name)) return { supported: true, status: "active" };
   return { supported: false, status: "none" };

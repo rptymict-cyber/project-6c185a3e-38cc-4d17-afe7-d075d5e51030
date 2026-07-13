@@ -6,7 +6,7 @@ import type {
 } from "./types";
 
 /**
- * AI 가격 예측 지원 작물 (사과, 배추, 무, 양파, 고추).
+ * AI 가격 예측 지원 작물 (사과, 배추, 무, 양파, 마늘).
  * 카탈로그와 별개로, 예측 화면 내부에서 사용하는 슬림 데이터.
  */
 export const PREDICTABLE_CROPS: PredictableCrop[] = [
@@ -59,11 +59,11 @@ export const PREDICTABLE_CROPS: PredictableCrop[] = [
     predictionStatus: "available",
   },
   {
-    id: "chili",
-    name: "고추",
+    id: "garlic",
+    name: "마늘",
     categoryName: "양념채소",
-    varietyName: "청양고추",
-    emoji: "🌶️",
+    varietyName: "깐마늘",
+    emoji: "🧄",
     marketId: "seoul-garak",
     marketName: "서울가락",
     unit: "1kg 기준",
@@ -91,7 +91,7 @@ const BASE_PRICE: Record<string, number> = {
   cabbage: 5640,
   radish: 7220,
   onion: 8480,
-  chili: 9840,
+  garlic: 7850,
 };
 
 const PREV_DELTA_PCT: Record<string, number> = {
@@ -99,7 +99,7 @@ const PREV_DELTA_PCT: Record<string, number> = {
   cabbage: 8.2,
   radish: 6.1,
   onion: -4.1,
-  chili: -1.4,
+  garlic: 3.0,
 };
 
 function seed(n: number) {
@@ -160,7 +160,7 @@ function buildPoints(
   });
 
   // 예측 곡선: 매개 트렌드 방향 결정 (도매상은 저점, 농민은 고점)
-  const trendUp = ["apple", "chili", "radish"].includes(cropId);
+  const trendUp = ["apple", "garlic", "radish"].includes(cropId);
   let predicted = todayPrice;
   const targetChangePct = trendUp ? 0.05 : -0.04;
   for (let i = 1; i <= rangeDays; i++) {
