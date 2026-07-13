@@ -232,8 +232,10 @@ function PredictionPage() {
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             recommendationDate={selectedDate}
+            isRecommendedSelection={!!selectedPoint?.isRecommendedDate}
           />
         </div>
+
 
 
         {/* 5. 예측 근거 */}
