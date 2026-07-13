@@ -304,16 +304,18 @@ export function PriceVolumeChart({
         <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
           {canRenderForecast && (
-            <Customized
-              component={(props: any) => (
-                <ForecastBackground
-                  {...props}
-                  todayLabel={todayLabel!}
-                  lastForecastLabel={lastForecastLabel!}
-                />
-              )}
+            <ReferenceArea
+              xAxisId="main"
+              yAxisId="price"
+              x1={todayLabel}
+              x2={lastForecastLabel}
+              fill={TEAL}
+              fillOpacity={0.07}
+              stroke="none"
+              ifOverflow="extendDomain"
             />
           )}
+
 
 
           <XAxis
