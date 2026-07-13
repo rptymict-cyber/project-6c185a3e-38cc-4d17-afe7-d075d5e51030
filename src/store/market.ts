@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { todayIso } from "@/lib/date";
+
 
 export type MarketSegment = "items" | "markets";
 export type MarketSortKey = "volume" | "change" | "name";
@@ -72,14 +74,8 @@ export type MarketFilterState = {
 };
 
 const WEEKDAY = ["일", "월", "화", "수", "목", "금", "토"];
-function todayIso(): string {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
 function todayLabel(): string {
+
   const d = new Date();
   return `${d.getMonth() + 1}/${d.getDate()} (${WEEKDAY[d.getDay()]}) · 오늘`;
 }
@@ -117,7 +113,15 @@ export const useMarketFilter = create<MarketFilterState>()(
     {
       // Bumped name to reset persisted filter after default overhaul (task 4).
       name: "agdict:marketFilter:v2",
+      // Do not persist date so every session opens on today.
+      partialize: (s) => {
+        const { date: _d, dateLabel: _dl, ...rest } = s;
+        void _d;
+        void _dl;
+        return rest;
+      },
     },
+
   ),
 );
 

@@ -8,7 +8,9 @@ import { GroupRankingTable } from "./GroupRankingTable";
 import { getPriceVolumeSeries, type Period } from "@/lib/mock/market-analysis";
 import { useMarketFilter, type ProTab } from "@/store/market";
 import { getItemById } from "@/lib/catalog-service";
+import { todayIso } from "@/lib/date";
 import { useMemo, useState } from "react";
+
 
 
 const PERIODS: { id: Period; label: string }[] = [
@@ -19,15 +21,8 @@ const PERIODS: { id: Period; label: string }[] = [
   { id: "1y", label: "1년" },
 ];
 
-function getLocalTodayISO() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
 export function ProAnalysisSection() {
+
   const f = useMarketFilter();
   const tab = f.proTab;
   const setTab = f.setProTab;
@@ -53,7 +48,7 @@ export function ProAnalysisSection() {
 
   const unitLabel = f.unit.replace(" 기준", "");
   const isPredictable = !!getItemById(f.itemId)?.prediction.supported;
-  const isTodayQuery = f.date === getLocalTodayISO();
+  const isTodayQuery = f.date === todayIso();
   const showForecast =
     isTodayQuery &&
     (period === "1w" || period === "1m") &&
