@@ -50,11 +50,13 @@ export function PriceVolumeChart({
   const historyLen = series.points.length;
   const lastHistory = series.points[historyLen - 1];
 
-  // Combined data: history has price+volume; prediction has forecast only.
+  // Merge forecast into the last history point so the dashed line begins where
+  // the solid line ends without introducing a duplicate X-axis label.
   const historyData = series.points.map((p, i) => ({
     ...p,
     i,
-    forecast: undefined as number | undefined,
+    forecast:
+      prediction && i === historyLen - 1 ? p.price : (undefined as number | undefined),
     isForecast: false,
   }));
 
@@ -70,24 +72,7 @@ export function PriceVolumeChart({
       }))
     : [];
 
-  // Bridge point: duplicate the last history point into the forecast series so
-  // the dashed line starts exactly where the solid line ends (no gap).
-  const bridge =
-    prediction && lastHistory
-      ? [
-          {
-            label: lastHistory.label,
-            tooltipLabel: (lastHistory as any).tooltipLabel ?? lastHistory.label,
-            price: undefined,
-            volume: undefined,
-            forecast: lastHistory.price,
-            i: historyLen - 1,
-            isForecast: true,
-          } as (typeof predictionData)[number],
-        ]
-      : [];
-
-  const data = [...historyData, ...bridge, ...predictionData];
+  const data = [...historyData, ...predictionData];
   const keep = xTickFilter(period, historyLen);
   const todayLabel = lastHistory?.label;
   const forecastStartLabel = prediction?.points[0]?.label;
