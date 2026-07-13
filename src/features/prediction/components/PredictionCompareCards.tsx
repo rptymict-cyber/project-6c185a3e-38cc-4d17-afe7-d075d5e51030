@@ -32,7 +32,7 @@ export function PredictionCompareCards({
   // 농민=매출↑, 도매상=비용↓
   const gain = isFarmer ? diff : -diff;
   const isPositive = gain >= 0;
-  const gainLabel = isFarmer ? "추가 수익" : "예상 절감";
+  const gainLabel = isFarmer ? "예상 추가 수익" : "예상 절감";
   const tagText = isRecommendedSelection ? "추천" : "선택";
   const rightTitle = isRecommendedSelection
     ? `${recommendationDate} ${isFarmer ? "출하 추천" : "매입 추천"}`
