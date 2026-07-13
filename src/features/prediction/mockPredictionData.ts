@@ -119,7 +119,7 @@ function formatDate(d: Date) {
 }
 
 function labelOf(d: Date) {
-  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+  return `${d.getMonth() + 1}${d.getDate()}`;
 }
 
 function buildPoints(
@@ -190,7 +190,7 @@ function buildPoints(
 
 function toDateLabel(iso: string) {
   const [year, month, date] = iso.split("-").map(Number);
-  return `${month}월 ${date}일`;
+  return `${month}${date}`;
 }
 
 export function buildMockPrediction(
