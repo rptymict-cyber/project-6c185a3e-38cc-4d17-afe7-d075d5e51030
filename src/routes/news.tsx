@@ -29,7 +29,7 @@ function NewsPage() {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <h2 className="text-[26px] font-black leading-[1.2] text-foreground">
-              오늘의 농산물 소식
+              농산물 소식
             </h2>
             <p className="mt-2 text-[13px] leading-[1.55] text-[#495057]">
               매일 업데이트되는 농산물 관련
