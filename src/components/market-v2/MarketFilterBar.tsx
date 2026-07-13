@@ -3,8 +3,6 @@ import { Building2, Calendar, ChevronDown, Sprout, Store } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { useMarketFilter } from "@/store/market";
-import { useCropSelection } from "@/store/cropSelection";
-import { getCategoryById, getItemById } from "@/lib/catalog-service";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { MarketSheet } from "./MarketSheet";
 import { CorporationSheet } from "./CorporationSheet";
@@ -16,33 +14,14 @@ function formatDate(iso: string): string {
   return iso.replaceAll("-", ".");
 }
 
-/**
- * 작물(부류/품목/품종) 선택은 반드시 /crop-select 페이지로 이동한다.
- * 여기서는 committed 값을 읽어 라벨만 표시한다.
- * 커밋 값이 없으면 legacy `useMarketFilter.varietyLabel`로 폴백.
- */
-function useCropLabel(fallback: string): string {
-  const committed = useCropSelection((s) => s.committed);
-  if (!committed.itemId) return fallback;
-  const item = getItemById(committed.itemId);
-  if (!item) return fallback;
-  const category = committed.categoryId
-    ? getCategoryById(committed.categoryId)
-    : undefined;
-  const varietyName =
-    !committed.varietyId || committed.varietyId === "ALL"
-      ? "전체 품종"
-      : (item.varieties.find((v) => v.id === committed.varietyId)?.name ??
-        "전체 품종");
-  return `${category?.name ? category.name + " · " : ""}${item.name} · ${varietyName}`;
-}
-
 export function MarketFilterBar() {
   const f = useMarketFilter();
   const [dateOpen, setDateOpen] = useState(false);
   const [marketOpen, setMarketOpen] = useState(false);
   const [corpOpen, setCorpOpen] = useState(false);
-  const cropLabel = useCropLabel(f.varietyLabel);
+  // 시세 화면의 작물 라벨은 useMarketFilter를 단일 소스로 사용한다.
+  // (/crop-select에서 확정되면 useMarketFilter.setItem 으로 동기화됨)
+  const cropLabel = `${f.categoryLabel ? f.categoryLabel + " · " : ""}${f.itemLabel} · ${f.varietyLabel}`;
 
   return (
     <div className="px-4 pt-3">
