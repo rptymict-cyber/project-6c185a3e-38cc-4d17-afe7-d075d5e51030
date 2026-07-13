@@ -61,7 +61,7 @@ export function LivePriceHeader() {
     >
       <span></span>
       <span className="col-span-2">품목</span>
-      <span className="text-right">현재가</span>
+      <span className="text-left">현재가</span>
       <span className="text-right">등락률</span>
       <span className="text-right">거래량</span>
     </div>
