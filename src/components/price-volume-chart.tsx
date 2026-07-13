@@ -184,7 +184,7 @@ export function PriceVolumeChart({
                       {...props}
                       label={recommendLabel}
                       price={recommendPrice}
-                      text={`추천 ${recommendDate ?? recommendLabel}`}
+                      text="추천"
                     />
                   )}
                 />

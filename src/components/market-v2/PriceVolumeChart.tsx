@@ -316,7 +316,7 @@ export function PriceVolumeChart({
               dot={(props: any) => {
                 if (!recommended) return <g key={props.index} />;
                 if (props.payload?.label === recommended.label) {
-                  const badge = prediction?.recommendedBadge ?? `추천 ${recommended.label}`;
+                  const badge = prediction?.recommendedBadge ?? "추천";
                   const charW = 7.2;
                   const padX = 8;
                   const w = Math.round(badge.length * charW + padX * 2);
