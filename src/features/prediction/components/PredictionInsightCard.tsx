@@ -183,7 +183,7 @@ export function PredictionInsightCard({
           onClick={onDetailClick}
           className="mt-4 flex w-full items-center justify-between rounded-2xl bg-white/15 px-3.5 py-2.5 text-[12.5px] font-bold text-white backdrop-blur-sm transition-colors active:bg-white/25"
         >
-          <span>{cropName} 시세 상세 보기</span>
+          <span>시세 상세 보기</span>
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
