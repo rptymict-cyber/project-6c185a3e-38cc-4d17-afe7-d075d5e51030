@@ -205,7 +205,7 @@ export function PriceVolumeChart({
           {canRenderForecast && (
             <Customized
               component={(props: any) => (
-                <ForecastOverlay
+                <ForecastBackground
                   {...props}
                   todayLabel={todayLabel!}
                   lastForecastLabel={lastForecastLabel!}
