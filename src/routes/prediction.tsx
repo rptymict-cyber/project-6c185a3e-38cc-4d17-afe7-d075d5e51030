@@ -168,8 +168,16 @@ function PredictionPage() {
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             isPositiveForUser={isPositiveForUser}
+            cropName={prediction.cropName}
+            onDetailClick={() =>
+              navigate({
+                to: "/price/$variety",
+                params: { variety: prediction.cropId },
+              })
+            }
           />
         </div>
+
 
         {/* 3. 가격 예측 차트 */}
         <section className="mt-4">
