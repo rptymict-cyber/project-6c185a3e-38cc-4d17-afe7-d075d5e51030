@@ -37,7 +37,7 @@ export function MarketChartView({
           <h3 className="text-[14px] font-bold">가격 추이</h3>
           <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-[#3A8A3A]" /> 가격(원/kg)
+              <span className="h-2 w-2 rounded-full bg-[#3A8A3A]" /> 평균가(원/kg)
             </span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-[#ADB5BD]" /> 거래량(톤)
