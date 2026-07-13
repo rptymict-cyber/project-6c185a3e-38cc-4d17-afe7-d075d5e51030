@@ -431,6 +431,17 @@ export function PriceVolumeChart({
               )}
             />
           )}
+
+          <Customized
+            component={(props: any) => (
+              <MinMaxPills
+                {...props}
+                points={pillPoints}
+                recommendedLabel={recommended?.label}
+              />
+            )}
+          />
+
         </ComposedChart>
       </ResponsiveContainer>
     </div>
