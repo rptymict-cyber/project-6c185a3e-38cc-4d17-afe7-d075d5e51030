@@ -5,7 +5,7 @@ import {
   ComposedChart,
   Customized,
   Line,
-  ReferenceDot,
+  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
