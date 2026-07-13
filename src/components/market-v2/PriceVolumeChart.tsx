@@ -130,6 +130,96 @@ function TodayAxis({
   );
 }
 
+function MinMaxPills({
+  xAxisMap,
+  yAxisMap,
+  points,
+  recommendedLabel,
+}: {
+  xAxisMap?: Record<string, any>;
+  yAxisMap?: Record<string, any>;
+  points: { label: string; value: number }[];
+  recommendedLabel?: string;
+}) {
+  if (!xAxisMap || !yAxisMap || points.length === 0) return null;
+  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
+  const yAxis = yAxisMap["price"] ?? Object.values(yAxisMap)[0];
+  if (!xAxis?.scale || !yAxis?.scale) return null;
+  const xScale = xAxis.scale;
+  const yScale = yAxis.scale;
+  const bw = typeof xScale.bandwidth === "function" ? xScale.bandwidth() : 0;
+
+  let maxP = points[0];
+  let minP = points[0];
+  for (const p of points) {
+    if (p.value > maxP.value) maxP = p;
+    if (p.value < minP.value) minP = p;
+  }
+  const cx = (label: string) => {
+    const v = xScale(label);
+    return typeof v === "number" ? v + bw / 2 : null;
+  };
+  const cy = (v: number) => {
+    const y = yScale(v);
+    return typeof y === "number" ? y : null;
+  };
+
+  const pill = (
+    key: string,
+    x: number,
+    y: number,
+    text: string,
+    color: string,
+    below: boolean,
+  ) => {
+    const w = Math.round(text.length * 6.5 + 14);
+    const h = 16;
+    const yy = below ? y + 14 : y - 22;
+    return (
+      <g key={key}>
+        <rect
+          x={x - w / 2}
+          y={yy}
+          width={w}
+          height={h}
+          rx={8}
+          ry={8}
+          fill="#fff"
+          stroke={color}
+          strokeWidth={1}
+        />
+        <text
+          x={x}
+          y={yy + h / 2 + 3.5}
+          textAnchor="middle"
+          fontSize={9.5}
+          fontWeight={800}
+          fill={color}
+        >
+          {text}
+        </text>
+      </g>
+    );
+  };
+
+  const maxX = cx(maxP.label);
+  const maxY = cy(maxP.value);
+  const minX = cx(minP.label);
+  const minY = cy(minP.value);
+  const maxNearRec = recommendedLabel != null && maxP.label === recommendedLabel;
+
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      {maxX != null && maxY != null &&
+        pill("max", maxX, maxY, `최고 ${maxP.value.toLocaleString()}`, "#E03131", maxNearRec)}
+      {minX != null && minY != null &&
+        pill("min", minX, minY, `최저 ${minP.value.toLocaleString()}`, "#1971C2", true)}
+    </g>
+  );
+}
+
+
+
 
 export function PriceVolumeChart({
   series,
