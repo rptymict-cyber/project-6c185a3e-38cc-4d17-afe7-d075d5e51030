@@ -169,6 +169,7 @@ export function PriceVolumeChart({
 
 
           <Bar
+            xAxisId="main"
             yAxisId="vol"
             dataKey="volume"
             fill={PINK}
@@ -177,6 +178,7 @@ export function PriceVolumeChart({
             isAnimationActive={false}
           />
           <Line
+            xAxisId="main"
             yAxisId="price"
             type="monotone"
             dataKey="price"
@@ -190,6 +192,7 @@ export function PriceVolumeChart({
 
           {prediction && (
             <Line
+              xAxisId="main"
               yAxisId="price"
               type="monotone"
               dataKey="forecast"
