@@ -12,12 +12,20 @@ import { useMemo, useState } from "react";
 
 
 const PERIODS: { id: Period; label: string }[] = [
-  { id: "today", label: "오늘" },
+  { id: "today", label: "당일" },
   { id: "1w", label: "1주" },
   { id: "1m", label: "1개월" },
   { id: "3m", label: "3개월" },
   { id: "1y", label: "1년" },
 ];
+
+function getLocalTodayISO() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
 export function ProAnalysisSection() {
   const f = useMarketFilter();
@@ -34,7 +42,7 @@ export function ProAnalysisSection() {
     { id: "variety", label: "품종" },
   ];
 
-  const rawSeries = getPriceVolumeSeries({
+  const series = getPriceVolumeSeries({
     itemId: f.itemId,
     varietyId: f.varietyId,
     marketId: f.marketId,
@@ -43,35 +51,19 @@ export function ProAnalysisSection() {
     period,
   });
 
-  // Downsample dense periods (1m/3m) to ~12 evenly-spaced display points.
-  // Aggregate stats (min/max/avg) stay based on the full raw series.
-  const series = useMemo(() => {
-    const pts = rawSeries.points;
-    if (period !== "1m" && period !== "3m") return rawSeries;
-    const max = 12;
-    if (pts.length <= max) return rawSeries;
-    const step = (pts.length - 1) / (max - 1);
-    const seen = new Set<number>();
-    const sampled = [] as typeof pts;
-    for (let i = 0; i < max; i++) {
-      const idx = i === max - 1 ? pts.length - 1 : Math.round(i * step);
-      if (!seen.has(idx)) {
-        seen.add(idx);
-        sampled.push(pts[idx]);
-      }
-    }
-    return { ...rawSeries, points: sampled };
-  }, [rawSeries, period]);
-
   const unitLabel = f.unit.replace(" 기준", "");
-
-  // Task 3: prediction extension — only for predictable items in the catalog
   const isPredictable = !!getItemById(f.itemId)?.prediction.supported;
+  const isTodayQuery = f.date === getLocalTodayISO();
+  const showForecast =
+    isTodayQuery &&
+    (period === "1w" || period === "1m") &&
+    isPredictable &&
+    series.points.length > 0;
+
   const prediction: PredictionInput | undefined = useMemo(() => {
-    if (!isPredictable || series.points.length === 0) return undefined;
-    if (period === "today") return undefined; // 예측은 일 단위 이상에서만
+    if (!showForecast) return undefined;
     const last = series.points[series.points.length - 1];
-    const days = period === "1w" ? 5 : 7;
+    const days = period === "1w" ? 7 : 30;
     const drift = last.price * 0.01;
     const baseDate = new Date(last.date + "T00:00:00");
     const points: { label: string; tooltipLabel: string; price: number }[] = [];
@@ -92,7 +84,7 @@ export function ProAnalysisSection() {
       recommendedIdx: recIdx,
       recommendedBadge: `추천 ${points[recIdx].label}`,
     };
-  }, [isPredictable, series, period]);
+  }, [showForecast, series, period]);
 
   const recommended = prediction?.points[prediction.recommendedIdx ?? 0];
   const recommendedDateText = useMemo(() => {
@@ -108,25 +100,49 @@ export function ProAnalysisSection() {
     ? recommended.price - series.points[series.points.length - 1].price
     : 0;
 
-  // Explicit X-axis tick labels (max ~5-6, no overlap).
+  // Explicit X-axis tick labels per period.
   const ticks = useMemo(() => {
+    const hist = series.points.map((p) => p.label);
     if (period === "today") {
-      return ["00시", "06시", "12시", "18시", "23시"].filter((l) =>
-        series.points.some((p) => p.label === l),
+      return ["00시", "04시", "08시", "12시", "16시", "20시"].filter((l) =>
+        hist.includes(l),
       );
     }
-    const hist = series.points.map((p) => p.label);
-    const fcst = prediction?.points.map((p) => p.label) ?? [];
-    const t: string[] = [];
-    if (hist.length) t.push(hist[0]);
-    if (hist.length > 2) t.push(hist[Math.floor(hist.length / 2)]);
-    if (hist.length > 1) t.push(hist[hist.length - 1]);
-    if (fcst.length > 1) t.push(fcst[Math.floor(fcst.length / 2)]);
-    if (fcst.length) t.push(fcst[fcst.length - 1]);
-    return Array.from(new Set(t));
-  }, [series, prediction, period]);
+    if (period === "1w") {
+      return hist; // all 7 history dates
+    }
+    if (period === "1y") {
+      return hist; // all 12 months
+    }
+    // 1m / 3m: sample up to 6 evenly spaced history labels
+    const max = 6;
+    if (hist.length <= max) return hist;
+    const step = (hist.length - 1) / (max - 1);
+    const seen = new Set<number>();
+    const out: string[] = [];
+    for (let i = 0; i < max; i++) {
+      const idx = i === max - 1 ? hist.length - 1 : Math.round(i * step);
+      if (!seen.has(idx)) {
+        seen.add(idx);
+        out.push(hist[idx]);
+      }
+    }
+    return out;
+  }, [series, period]);
 
-
+  // Bottom notice text
+  const noticeText = (() => {
+    if (period === "today") {
+      if (isTodayQuery) return "오늘 시간대별 경매 데이터를 제공합니다.";
+      const d = new Date(f.date + "T00:00:00");
+      return `${d.getMonth() + 1}월 ${d.getDate()}일 시간대별 경매 데이터를 제공합니다.`;
+    }
+    if (showForecast && period === "1w")
+      return "차트는 경매일 기준 · 오늘 이후 7일은 AI 예측입니다.";
+    if (showForecast && period === "1m")
+      return "차트는 경매일 기준 · 오늘 이후 30일은 AI 예측입니다.";
+    return "차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.";
+  })();
 
   return (
     <section className="mt-3 bg-white pt-1">
@@ -194,7 +210,7 @@ export function ProAnalysisSection() {
               <span className="inline-block h-2 w-3 rounded-sm bg-[#E03131]/20" />
               거래량
             </span>
-            {prediction && (
+            {showForecast && (
               <span className="flex items-center gap-1">
                 <span
                   className="inline-block h-[2px] w-4"
@@ -212,17 +228,23 @@ export function ProAnalysisSection() {
             <PriceVolumeChart series={series} period={period} prediction={prediction} ticks={ticks} />
           </div>
 
-          {prediction && (
-            <p className="mt-3 px-1 text-[11px] text-[#868E96]">
-              차트는 경매일 기준 ·{" "}
-              <span className="font-bold text-[#2E9E6B]">
-                오늘 이후는 AI 예측입니다.
-              </span>
-            </p>
-          )}
+          <p className="mt-3 px-1 text-[11px] text-[#868E96]">
+            {showForecast ? (
+              <>
+                차트는 경매일 기준 ·{" "}
+                <span className="font-bold text-[#2E9E6B]">
+                  {period === "1w"
+                    ? "오늘 이후 7일은 AI 예측입니다."
+                    : "오늘 이후 30일은 AI 예측입니다."}
+                </span>
+              </>
+            ) : (
+              noticeText
+            )}
+          </p>
 
           {/* AI prediction recommendation card */}
-          {prediction && recommended && (
+          {showForecast && prediction && recommended && (
             <div
               className="mt-3 rounded-[14px] px-[15px] py-[14px] text-white shadow-[0_2px_10px_rgba(46,158,107,0.28)]"
               style={{
@@ -254,12 +276,6 @@ export function ProAnalysisSection() {
                 <ChevronRight className="h-3.5 w-3.5" />
               </Link>
             </div>
-          )}
-
-          {!prediction && (
-            <p className="mt-3 px-1 text-[11px] text-[#868E96]">
-              차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
-            </p>
           )}
         </div>
       )}
