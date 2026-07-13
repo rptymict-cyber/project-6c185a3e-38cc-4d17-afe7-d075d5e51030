@@ -134,23 +134,29 @@ function TodayAxis({
 }
 
 function MinMaxPills({
-  xAxisMap,
-  yAxisMap,
+  formattedGraphicalItems,
   points,
   recommendedLabel,
 }: {
-  xAxisMap?: Record<string, any>;
-  yAxisMap?: Record<string, any>;
+  formattedGraphicalItems?: any[];
   points: { label: string; value: number }[];
   recommendedLabel?: string;
 }) {
-  if (!xAxisMap || !yAxisMap || points.length === 0) return null;
-  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
-  const yAxis = yAxisMap["price"] ?? Object.values(yAxisMap)[0];
-  if (!xAxis?.scale || !yAxis?.scale) return null;
-  const xScale = xAxis.scale;
-  const yScale = yAxis.scale;
-  const bw = typeof xScale.bandwidth === "function" ? xScale.bandwidth() : 0;
+  if (!formattedGraphicalItems || points.length === 0) return null;
+  // Build a label → {x,y} map by merging both price + forecast Line items.
+  const coord = new Map<string, { x: number; y: number }>();
+  for (const item of formattedGraphicalItems) {
+    const pts = item?.props?.points as
+      | { x: number; y: number; payload?: { label?: string } }[]
+      | undefined;
+    if (!pts) continue;
+    for (const p of pts) {
+      const label = p?.payload?.label;
+      if (!label || typeof p.x !== "number" || typeof p.y !== "number") continue;
+      if (!coord.has(label)) coord.set(label, { x: p.x, y: p.y });
+    }
+  }
+  if (coord.size === 0) return null;
 
   let maxP = points[0];
   let minP = points[0];
@@ -158,14 +164,6 @@ function MinMaxPills({
     if (p.value > maxP.value) maxP = p;
     if (p.value < minP.value) minP = p;
   }
-  const cx = (label: string) => {
-    const v = xScale(label);
-    return typeof v === "number" ? v + bw / 2 : null;
-  };
-  const cy = (v: number) => {
-    const y = yScale(v);
-    return typeof y === "number" ? y : null;
-  };
 
   const pill = (
     key: string,
@@ -205,19 +203,16 @@ function MinMaxPills({
     );
   };
 
-  const maxX = cx(maxP.label);
-  const maxY = cy(maxP.value);
-  const minX = cx(minP.label);
-  const minY = cy(minP.value);
+  const maxC = coord.get(maxP.label);
+  const minC = coord.get(minP.label);
   const maxNearRec = recommendedLabel != null && maxP.label === recommendedLabel;
 
   return (
     <g style={{ pointerEvents: "none" }}>
-      {maxX != null && maxY != null &&
-        pill("max", maxX, maxY, `최고 ${maxP.value.toLocaleString()}`, "#E03131", maxNearRec)}
-      {minX != null && minY != null &&
-        pill("min", minX, minY, `최저 ${minP.value.toLocaleString()}`, "#1971C2", true)}
+      {maxC && pill("max", maxC.x, maxC.y, `최고 ${maxP.value.toLocaleString()}`, "#E03131", maxNearRec)}
+      {minC && pill("min", minC.x, minC.y, `최저 ${minP.value.toLocaleString()}`, "#1971C2", true)}
     </g>
+
   );
 }
 
