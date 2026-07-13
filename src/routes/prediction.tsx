@@ -120,12 +120,14 @@ function PredictionPage() {
   const recommendedIdx = prediction.predictedPoints.findIndex(
     (p) => p.isRecommendedDate,
   );
-  const defaultIdx =
-    recommendedIdx >= 0
-      ? recommendedIdx
-      : prediction.predictedPoints.findLastIndex(
-          (p) => p.predictedPrice !== undefined && !p.isToday,
-        );
+  const lastForecastIdx = (() => {
+    for (let i = prediction.predictedPoints.length - 1; i >= 0; i--) {
+      const p = prediction.predictedPoints[i];
+      if (p.predictedPrice !== undefined && !p.isToday) return i;
+    }
+    return -1;
+  })();
+  const defaultIdx = recommendedIdx >= 0 ? recommendedIdx : lastForecastIdx;
   const effectiveIdx =
     selectedDayIndex != null &&
     prediction.predictedPoints[selectedDayIndex]?.predictedPrice !== undefined
