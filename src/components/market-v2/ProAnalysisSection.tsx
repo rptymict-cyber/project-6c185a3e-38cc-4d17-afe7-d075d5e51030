@@ -48,7 +48,7 @@ export function ProAnalysisSection() {
 
   const unitLabel = f.unit.replace(" 기준", "");
   const isPredictable = !!getItemById(f.itemId)?.prediction.supported;
-  const isTodayQuery = f.date === getLocalTodayISO();
+  const isTodayQuery = f.date === todayIso();
   const showForecast =
     isTodayQuery &&
     (period === "1w" || period === "1m") &&
