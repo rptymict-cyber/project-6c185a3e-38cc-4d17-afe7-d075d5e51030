@@ -131,11 +131,13 @@ export function PredictionInsightCard({
             <div className="text-[10px] font-semibold text-white/75">
               예상 평균가
             </div>
-            <div className="mt-1 flex items-baseline gap-0.5">
-              <span className="text-[16px] font-black tabular-nums leading-none">
-                {expectedPrice.toLocaleString()}
+            <div className="mt-1 flex items-baseline whitespace-nowrap">
+              <span
+                className="font-black tabular-nums leading-none"
+                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+              >
+                {formatFullWon(expectedPrice)}
               </span>
-              <span className="text-[10px] font-semibold text-white/80">원</span>
             </div>
             <div className="mt-0.5 text-[9.5px] text-white/60">
               / {baseUnitLabel}
@@ -146,9 +148,12 @@ export function PredictionInsightCard({
             <div className="text-[10px] font-semibold text-white/75">
               {revenueLabel}
             </div>
-            <div className="mt-1 flex items-baseline gap-0.5">
-              <span className="text-[16px] font-black tabular-nums leading-none">
-                {formatCompactWon(totalRevenue)}
+            <div className="mt-1 flex items-baseline whitespace-nowrap">
+              <span
+                className="font-black tabular-nums leading-none"
+                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+              >
+                {formatFullWon(totalRevenue)}
               </span>
             </div>
             <div className="mt-0.5 text-[9.5px] text-white/60">
@@ -165,10 +170,14 @@ export function PredictionInsightCard({
             )}
           >
             <div className="text-[10px] font-bold opacity-80">{gainLabel}</div>
-            <div className="mt-1 flex items-baseline gap-0.5">
-              <span className="text-[16px] font-black tabular-nums leading-none">
-                {gain >= 0 ? "+" : "-"}
-                {formatCompactWon(gainAbs)}
+            <div className="mt-1 flex items-baseline whitespace-nowrap">
+              <span
+                className="font-black tabular-nums leading-none"
+                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+              >
+                {gain === 0
+                  ? "0원"
+                  : `${gain > 0 ? "+" : "-"}${formatFullWon(gainAbs)}`}
               </span>
             </div>
             <div className="mt-0.5 text-[9.5px] opacity-70">
@@ -191,9 +200,6 @@ export function PredictionInsightCard({
   );
 }
 
-function formatCompactWon(v: number): string {
-  const n = Math.abs(v);
-  if (n >= 100_000_000) return `${(v / 100_000_000).toFixed(1)}억`;
-  if (n >= 10_000) return `${(v / 10_000).toFixed(v % 10_000 === 0 ? 0 : 1)}만`;
-  return `${v.toLocaleString()}`;
+function formatFullWon(v: number): string {
+  return `${Math.round(v).toLocaleString("ko-KR")}원`;
 }
