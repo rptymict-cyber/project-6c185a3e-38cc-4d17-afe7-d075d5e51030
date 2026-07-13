@@ -86,7 +86,7 @@ export function PriceVolumeChart({
   return (
     <div className="h-[240px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 12, right: 8, left: 0, bottom: 4 }}>
+        <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
           <XAxis
             dataKey="label"
