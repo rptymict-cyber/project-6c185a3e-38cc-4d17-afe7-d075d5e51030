@@ -106,9 +106,9 @@
   --price-flat: #6c757d;
 
   /* Chart */
-  --chart-price: #3a8a3a;
-  --chart-volume: #adb5bd;
-  --chart-predict: #74c0fc;
+  --chart-price: #e03b3b;
+  --chart-volume: #f3c6c6;
+  --chart-predict: #2e9e6b;
   --chart-grid: #e9ecef;
 
   --surface: #f8f9fa;
