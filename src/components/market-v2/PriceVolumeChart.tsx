@@ -9,6 +9,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+// Recharts 2.x does not inject axis maps into Customized props, so the
+// overlay reads the rendered chart's axis scale and plot offset directly.
+// @ts-expect-error Recharts does not expose these internal hooks from its root entry.
+import { useOffset, useXAxisOrThrow } from "recharts/es6/context/chartLayoutContext";
 import type { PriceVolumeSeries } from "@/lib/mock/market-analysis";
 
 type Period = "today" | "1w" | "1m" | "3m" | "1y";
@@ -41,10 +45,10 @@ function ForecastOverlay({
   todayLabel: string;
   lastForecastLabel: string;
 }) {
-  return (props: any) => {
-    const axis = Object.values(props.xAxisMap ?? {})[0] as any;
+  return function ForecastOverlayLayer() {
+    const axis = useXAxisOrThrow("main") as any;
     const scale = axis?.scale;
-    const offset = props.offset;
+    const offset = useOffset();
 
     if (!scale || !offset) return null;
 
@@ -161,6 +165,14 @@ export function PriceVolumeChart({
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
+          {canRenderForecast && (
+            <Customized
+              component={ForecastOverlay({
+                todayLabel: todayLabel!,
+                lastForecastLabel: lastForecastLabel!,
+              })}
+            />
+          )}
           <XAxis
             xAxisId="main"
             dataKey="label"
@@ -190,15 +202,6 @@ export function PriceVolumeChart({
             width={30}
           />
           <Tooltip cursor={false} content={<CustomTooltip />} />
-
-          {canRenderForecast && (
-            <Customized
-              component={ForecastOverlay({
-                todayLabel,
-                lastForecastLabel,
-              })}
-            />
-          )}
 
           <Bar
             xAxisId="main"
