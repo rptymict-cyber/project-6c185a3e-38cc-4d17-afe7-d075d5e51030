@@ -106,6 +106,18 @@ export function PriceVolumeChart({
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
+          {canRenderForecast && (
+            <Customized
+              component={(props: any) => (
+                <ForecastOverlay
+                  {...props}
+                  todayLabel={todayLabel!}
+                  lastForecastLabel={lastForecastLabel!}
+                />
+              )}
+            />
+          )}
+
 
           <XAxis
             xAxisId="main"
