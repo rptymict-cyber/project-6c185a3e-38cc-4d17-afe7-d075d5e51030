@@ -27,8 +27,8 @@ export function HomeAgriNewsSection() {
   }, [items.length]);
 
   return (
-    <section className="mx-4 mt-5 rounded-2xl border border-[#E8EEE8] bg-white p-4 shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
-      {/* header */}
+    <div className="mx-4 mt-5">
+      {/* section title */}
       <div className="flex items-center justify-between">
         <h3 className="text-[18px] font-bold text-[#111827]">
           오늘의 농산물 소식
@@ -42,31 +42,33 @@ export function HomeAgriNewsSection() {
         </Link>
       </div>
 
-      {/* carousel */}
-      <div
-        ref={scrollerRef}
-        className="no-scrollbar mt-3 flex snap-x snap-mandatory overflow-x-auto"
-      >
-        {items.map((n) => (
-          <div key={n.id} className="w-full shrink-0 snap-center">
-            <NewsCard item={n} />
-          </div>
-        ))}
-      </div>
+      <section className="mt-3 rounded-2xl border border-[#E8EEE8] bg-white p-4 shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
+        {/* carousel */}
+        <div
+          ref={scrollerRef}
+          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto"
+        >
+          {items.map((n) => (
+            <div key={n.id} className="w-full shrink-0 snap-center">
+              <NewsCard item={n} />
+            </div>
+          ))}
+        </div>
 
-      {/* dots */}
-      <div className="mt-3 flex justify-end gap-1.5">
-        {items.map((_, i) => (
-          <span
-            key={i}
-            className={cn(
-              "h-1.5 rounded-full transition-all",
-              i === active ? "w-4 bg-[#3A8A3A]" : "w-1.5 bg-[#E5E7EB]",
-            )}
-          />
-        ))}
-      </div>
-    </section>
+        {/* dots */}
+        <div className="mt-3 flex justify-end gap-1.5">
+          {items.map((_, i) => (
+            <span
+              key={i}
+              className={cn(
+                "h-1.5 rounded-full transition-all",
+                i === active ? "w-4 bg-[#3A8A3A]" : "w-1.5 bg-[#E5E7EB]",
+              )}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
 
