@@ -71,24 +71,37 @@ export type MarketFilterState = {
   setProTab: (t: ProTab) => void;
 };
 
+const WEEKDAY = ["일", "월", "화", "수", "목", "금", "토"];
+function todayIso(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+function todayLabel(): string {
+  const d = new Date();
+  return `${d.getMonth() + 1}/${d.getDate()} (${WEEKDAY[d.getDay()]}) · 오늘`;
+}
+
 export const useMarketFilter = create<MarketFilterState>()(
   persist(
     (set) => ({
-      date: "2025-07-05",
-      dateLabel: "7/5 (토) · 최근 거래일",
-      categoryId: "fruit-veg",
-      categoryLabel: "과채류",
-      itemId: "tomato",
-      itemLabel: "토마토",
-      varietyId: "tomato-cherry",
-      varietyLabel: "방울토마토",
-      marketId: "seoul-garak",
-      marketLabel: "서울가락",
+      date: todayIso(),
+      dateLabel: todayLabel(),
+      categoryId: "06",
+      categoryLabel: "과실류",
+      itemId: "0601",
+      itemLabel: "사과",
+      varietyId: "0601:ALL",
+      varietyLabel: "전체 품종",
+      marketId: "all",
+      marketLabel: "전체",
       corpId: "all",
       corpLabel: "전체",
-      unit: "8kg 기준",
-      simpleMode: true,
-      simpleViewMode: "list",
+      unit: "10kg 기준",
+      simpleMode: false,
+      simpleViewMode: "table",
       proTab: "chart",
       setDate: (date, dateLabel) => set({ date, dateLabel }),
       setItem: (p) => set(p),
@@ -102,8 +115,9 @@ export const useMarketFilter = create<MarketFilterState>()(
       setProTab: (proTab) => set({ proTab }),
     }),
     {
-      name: "agdict:viewMode",
-      // Persist only what needs to survive reloads; ok to persist all.
+      // Bumped name to reset persisted filter after default overhaul (task 4).
+      name: "agdict:marketFilter:v2",
     },
   ),
 );
+

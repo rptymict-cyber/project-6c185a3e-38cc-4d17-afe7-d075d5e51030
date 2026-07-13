@@ -49,12 +49,14 @@ export function PriceVolumeChart({ data }: { data: Row[] }) {
               border: "1px solid var(--color-border)",
               fontSize: 12,
             }}
+            itemSorter={(item: any) => (item.dataKey === "price" ? 0 : 1)}
             formatter={(value: number, name) => {
-              if (name === "price") return [`${value.toLocaleString()}원`, "가격"];
+              if (name === "price") return [`${value.toLocaleString()}원`, "평균가"];
               return [`${value.toLocaleString()}t`, "거래량"];
             }}
-            labelFormatter={(l) => `날짜 ${l}`}
+            labelFormatter={(l) => `${l}`}
           />
+
           <Bar
             yAxisId="vol"
             dataKey="volume"
