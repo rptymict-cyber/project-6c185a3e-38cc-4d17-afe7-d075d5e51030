@@ -75,16 +75,8 @@ export function MarketFilterBar() {
         />
       </div>
 
-      {/* Simple-mode toggle row (below filters, above headline card) */}
-      <div className="mt-3 flex items-center justify-end gap-2 px-1">
-        <span className="text-[13.5px] font-semibold text-foreground">간편 모드</span>
-        <Switch
-          checked={f.simpleMode}
-          onCheckedChange={(v) => f.setSimpleMode(v)}
-          className="data-[state=checked]:bg-[#3A8A3A]"
-          aria-label="간편 모드"
-        />
-      </div>
+
+
 
       <DatePickerSheet
         open={dateOpen}
