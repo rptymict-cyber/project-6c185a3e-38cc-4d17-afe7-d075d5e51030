@@ -435,13 +435,8 @@ function PredictionChartBase({
     return Array.from(new Set(t));
   })();
 
-  const isFarmer = viewpoint === "farmer";
   const showTopInfo =
     canRenderSelected && currentPrice != null && quantityBoxes != null;
-  const priceDiff =
-    showTopInfo && selectedPrice != null ? selectedPrice - currentPrice! : 0;
-  const gain = showTopInfo ? (isFarmer ? priceDiff : -priceDiff) * quantityBoxes! : 0;
-  const gainLabel = isFarmer ? "예상 추가수익" : "예상 절감";
 
   const handleChartClick = (e: any) => {
     if (!onSelectIndex) return;
