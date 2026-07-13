@@ -2,14 +2,17 @@ import {
   Bar,
   CartesianGrid,
   ComposedChart,
+  Customized,
   Line,
-  ReferenceArea,
-  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
+// Recharts 2.x does not inject axis maps into Customized props, so the
+// overlay reads the rendered chart's axis scale and plot offset directly.
+// @ts-expect-error Recharts does not expose these internal hooks from its root entry.
+import { useOffset, useXAxisOrThrow } from "recharts/es6/context/chartLayoutContext";
 import type { PriceVolumeSeries } from "@/lib/mock/market-analysis";
 
 type Period = "today" | "1w" | "1m" | "3m" | "1y";
@@ -34,6 +37,61 @@ export type PredictionInput = {
   /** badge text drawn above the recommended dot, e.g. "추천 7/16" */
   recommendedBadge?: string;
 };
+
+function ForecastOverlay({
+  todayLabel,
+  lastForecastLabel,
+}: {
+  todayLabel: string;
+  lastForecastLabel: string;
+}) {
+  return function ForecastOverlayLayer() {
+    const axis = useXAxisOrThrow("main") as any;
+    const scale = axis?.scale;
+    const offset = useOffset();
+
+    if (!scale || !offset) return null;
+
+    const x1 = scale(todayLabel);
+    const x2 = scale(lastForecastLabel);
+
+    if (!Number.isFinite(x1) || !Number.isFinite(x2)) return null;
+
+    const left = Math.min(x1, x2);
+    const width = Math.abs(x2 - x1);
+
+    return (
+      <g pointerEvents="none">
+        <rect
+          x={left}
+          y={offset.top}
+          width={width}
+          height={offset.height}
+          fill="#2E9E6B"
+          fillOpacity={0.08}
+        />
+        <line
+          x1={x1}
+          x2={x1}
+          y1={offset.top}
+          y2={offset.top + offset.height}
+          stroke="#94A3B8"
+          strokeWidth={1}
+          strokeDasharray="3 3"
+        />
+        <text
+          x={x1}
+          y={offset.top - 8}
+          textAnchor="middle"
+          fontSize={10}
+          fill="#64748B"
+        >
+          오늘
+        </text>
+      </g>
+    );
+  };
+}
 
 export function PriceVolumeChart({
   series,
@@ -74,7 +132,8 @@ export function PriceVolumeChart({
 
   const data = [...historyData, ...predictionData];
   const todayLabel = lastHistory?.label;
-  const forecastEndLabel = prediction?.points[prediction.points.length - 1]?.label;
+  const lastForecastLabel = prediction?.points[prediction.points.length - 1]?.label;
+  const canRenderForecast = !!prediction && !!todayLabel && !!lastForecastLabel;
 
   // Build the explicit tick list. Prefer caller-supplied ticks; fall back to a
   // sensible default that never exceeds ~6 labels.
@@ -106,6 +165,14 @@ export function PriceVolumeChart({
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
+          {canRenderForecast && (
+            <Customized
+              component={ForecastOverlay({
+                todayLabel: todayLabel!,
+                lastForecastLabel: lastForecastLabel!,
+              })}
+            />
+          )}
           <XAxis
             xAxisId="main"
             dataKey="label"
@@ -135,38 +202,6 @@ export function PriceVolumeChart({
             width={30}
           />
           <Tooltip cursor={false} content={<CustomTooltip />} />
-
-          {/* Forecast background band — from today to last forecast day */}
-          {prediction && todayLabel && forecastEndLabel && (
-            <ReferenceArea
-              xAxisId="main"
-              yAxisId="price"
-              x1={todayLabel}
-              x2={forecastEndLabel}
-              fill={TEAL}
-              fillOpacity={0.08}
-              stroke="none"
-            />
-          )}
-
-          {/* Today vertical reference */}
-          {prediction && todayLabel && (
-            <ReferenceLine
-              xAxisId="main"
-              yAxisId="price"
-              x={todayLabel}
-              stroke="#94A3B8"
-              strokeDasharray="3 3"
-              label={{
-                value: "오늘",
-                position: "top",
-                fontSize: 10,
-                fill: "#64748B",
-                offset: 8,
-              }}
-            />
-          )}
-
 
           <Bar
             xAxisId="main"
