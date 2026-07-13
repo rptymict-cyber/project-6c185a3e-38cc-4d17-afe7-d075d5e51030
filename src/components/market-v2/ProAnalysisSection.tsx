@@ -134,7 +134,7 @@ export function ProAnalysisSection() {
           </div>
 
           {/* Legend */}
-          <div className="mb-2 flex items-center gap-3 px-1 text-[11px] text-[#495057]">
+          <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[11px] text-[#495057]">
             <span className="flex items-center gap-1">
               <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03131]" />
               평균가(원/{unitLabel})
@@ -143,17 +143,59 @@ export function ProAnalysisSection() {
               <span className="inline-block h-2 w-3 rounded-sm bg-[#E03131]/20" />
               거래량
             </span>
+            {prediction && (
+              <span className="flex items-center gap-1">
+                <span
+                  className="inline-block h-[2px] w-4"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right, #2E9E6B 0 4px, transparent 4px 8px, #2E9E6B 8px 12px, transparent 12px 16px)",
+                  }}
+                />
+                예측
+              </span>
+            )}
           </div>
 
           <div className="rounded-[12px] border border-[#F1F3F5] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-            <PriceVolumeChart series={series} period={period} />
+            <PriceVolumeChart series={series} period={period} prediction={prediction} />
           </div>
+
+          {/* Prediction report banner */}
+          {prediction && recommended && (
+            <Link
+              to="/prediction"
+              className="mt-3 flex items-center gap-3 rounded-[12px] px-3.5 py-3 text-white shadow-[0_2px_8px_rgba(46,158,107,0.25)]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(135deg, #2E9E6B 0%, #1F7A50 100%)",
+              }}
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-[13px] font-bold leading-tight">
+                  {recommended.label} 출하가 유리해요
+                </div>
+                <div className="mt-0.5 text-[11.5px] text-white/85">
+                  오늘보다 {recommendedDelta >= 0 ? "+" : ""}
+                  {recommendedDelta.toLocaleString()}원 · 자세한 예측은 리포트에서
+                </div>
+              </div>
+              <span className="flex shrink-0 items-center gap-0.5 rounded-full bg-white/20 px-2.5 py-1 text-[11.5px] font-bold">
+                리포트 보기
+                <ChevronRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+          )}
 
           <p className="mt-3 px-1 text-[11px] text-[#868E96]">
             차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
           </p>
         </div>
       )}
+
 
       {tab === "auctions" && <AuctionHistoryTable />}
       {tab === "compare" && <ProMarketRankingTable />}
