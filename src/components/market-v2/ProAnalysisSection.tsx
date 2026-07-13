@@ -75,8 +75,16 @@ export function ProAnalysisSection() {
 
   return (
     <section className="mt-3 bg-white pt-1">
-      {/* Tab bar with right-side view segment */}
-      <div className="flex items-center border-b border-[#E9ECEF] pr-3">
+      {/* View segment row */}
+      <div className="flex items-center justify-end px-3 py-1.5">
+        <ViewSegment
+          value={tab === "auctions" ? "list" : "chart"}
+          onChange={(v) => setTab(v === "list" ? "auctions" : "chart")}
+        />
+      </div>
+
+      {/* Tab bar */}
+      <div className="flex items-center border-b border-[#E9ECEF]">
         <div className="no-scrollbar flex flex-1 overflow-x-auto px-2">
           {TABS.map((t) => {
             const active = t.id === tab;
@@ -97,10 +105,6 @@ export function ProAnalysisSection() {
             );
           })}
         </div>
-        <ViewSegment
-          value={tab === "auctions" ? "list" : "chart"}
-          onChange={(v) => setTab(v === "list" ? "auctions" : "chart")}
-        />
       </div>
 
 
