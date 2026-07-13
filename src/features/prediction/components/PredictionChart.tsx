@@ -468,7 +468,7 @@ function PredictionChartBase({
       )}
 
 
-      <div className="h-[260px] w-full">
+      <div className="h-[260px] w-full pb-2">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             data={data}
