@@ -203,20 +203,6 @@ export function PriceVolumeChart({
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={data} margin={{ top: 36, right: 12, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
-          {canRenderForecast && (
-            <ReferenceArea
-              xAxisId="main"
-              yAxisId="price"
-              x1={todayLabel}
-              x2={lastForecastLabel}
-              fill={TEAL}
-              fillOpacity={0.07}
-              stroke="none"
-              ifOverflow="extendDomain"
-            />
-          )}
-
-
 
           <XAxis
             xAxisId="main"
@@ -246,7 +232,39 @@ export function PriceVolumeChart({
             tickLine={false}
             width={30}
           />
+
+          {canRenderForecast && (
+            <ReferenceArea
+              xAxisId="main"
+              yAxisId="price"
+              x1={todayLabel}
+              x2={lastForecastLabel}
+              fill={TEAL}
+              fillOpacity={0.08}
+              stroke="none"
+              ifOverflow="extendDomain"
+            />
+          )}
+          {canRenderForecast && (
+            <ReferenceLine
+              xAxisId="main"
+              yAxisId="price"
+              x={todayLabel}
+              stroke="#64748B"
+              strokeDasharray="4 3"
+              strokeWidth={1.25}
+              label={{
+                value: "오늘",
+                position: "top",
+                fill: "#64748B",
+                fontSize: 10,
+                fontWeight: 800,
+              }}
+            />
+          )}
+
           <Tooltip cursor={false} content={<CustomTooltip />} />
+
 
           <Bar
             xAxisId="main"
