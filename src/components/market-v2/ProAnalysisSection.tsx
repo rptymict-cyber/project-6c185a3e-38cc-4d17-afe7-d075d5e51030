@@ -23,7 +23,7 @@ export function ProAnalysisSection() {
   const f = useMarketFilter();
   const tab = f.proTab;
   const setTab = f.setProTab;
-  const [period, setPeriod] = useState<Period>("1w");
+  const [period, setPeriod] = useState<Period>("today");
 
   const TABS: { id: ProTab; label: string }[] = [
     { id: "chart", label: "차트" },
