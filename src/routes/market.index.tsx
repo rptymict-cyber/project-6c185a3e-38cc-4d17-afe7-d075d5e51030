@@ -6,8 +6,6 @@ import { MarketSearchBar } from "@/components/market-v2/MarketSearchBar";
 import { MarketFilterBar } from "@/components/market-v2/MarketFilterBar";
 import { ProPriceHeadlineCard } from "@/components/market-v2/ProPriceHeadlineCard";
 import { ProAnalysisSection } from "@/components/market-v2/ProAnalysisSection";
-import { AuctionHistoryTable } from "@/components/market-v2/AuctionHistoryTable";
-import { SimpleModeView } from "@/components/market-v2/SimpleModeView";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useMarketFilter } from "@/store/market";
 
@@ -42,7 +40,7 @@ function MarketPage() {
       <MarketSearchBar />
       <MarketFilterBar />
 
-      {/* Common headline card — identical in both modes */}
+      {/* Common headline card */}
       <div className="px-4">
         <ProPriceHeadlineCard
           itemId={f.itemId}
@@ -54,11 +52,7 @@ function MarketPage() {
         />
       </div>
 
-      {f.simpleMode ? (
-        f.simpleViewMode === "table" ? <AuctionHistoryTable /> : <SimpleModeView />
-      ) : (
-        <ProAnalysisSection />
-      )}
+      <ProAnalysisSection />
     </AppShell>
   );
 }
