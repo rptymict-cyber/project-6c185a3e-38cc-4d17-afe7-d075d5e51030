@@ -91,6 +91,13 @@ function PredictionPage() {
     cropMeta?.marketName ??
     "서울가락";
 
+  // 예측 지점 선택 상태 (헤이딜러식). null = 추천일 기본 선택.
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
+  // 기간 칩/작물 변경 시 추천일로 초기화
+  useEffect(() => {
+    setSelectedDayIndex(null);
+  }, [selectedRangeDays, selectedCropId]);
+
   if (!prediction || !cropMeta) {
     return (
       <AppShell header={<AppHeader title="AI 시세 예측" />}>
@@ -109,9 +116,31 @@ function PredictionPage() {
   const baseUnitKg = parseBaseUnitKg(prediction.unit);
   const baseUnitLabel = `${baseUnitKg}kg`;
 
+  // 추천일 인덱스 → 기본 선택
+  const recommendedIdx = prediction.predictedPoints.findIndex(
+    (p) => p.isRecommendedDate,
+  );
+  const lastForecastIdx = (() => {
+    for (let i = prediction.predictedPoints.length - 1; i >= 0; i--) {
+      const p = prediction.predictedPoints[i];
+      if (p.predictedPrice !== undefined && !p.isToday) return i;
+    }
+    return -1;
+  })();
+  const defaultIdx = recommendedIdx >= 0 ? recommendedIdx : lastForecastIdx;
+  const effectiveIdx =
+    selectedDayIndex != null &&
+    prediction.predictedPoints[selectedDayIndex]?.predictedPrice !== undefined
+      ? selectedDayIndex
+      : defaultIdx;
+  const selectedPoint = prediction.predictedPoints[effectiveIdx];
+  const selectedDate = selectedPoint?.label ?? insight.recommendationDate;
+  const selectedPrice = selectedPoint?.predictedPrice ?? insight.expectedPrice;
+
   // 관점별 유리 방향: 농민 = 상승, 도매상 = 하락
-  const priceDiff = insight.expectedPrice - prediction.currentPrice;
+  const priceDiff = selectedPrice - prediction.currentPrice;
   const isPositiveForUser = isFarmer ? priceDiff > 0 : priceDiff < 0;
+
 
   return (
     <AppShell header={<AppHeader title="AI 시세 예측" />}>
@@ -129,12 +158,12 @@ function PredictionPage() {
           onViewpointClick={() => setViewpointSheetOpen(true)}
         />
 
-        {/* 2. AI 추천 카드 */}
+        {/* 2. AI 추천 카드 (선택 날짜 반영) */}
         <div className="mt-3">
           <PredictionInsightCard
             viewpoint={selectedViewpoint}
-            recommendationDate={insight.recommendationDate}
-            expectedPrice={insight.expectedPrice}
+            recommendationDate={selectedDate}
+            expectedPrice={selectedPrice}
             currentPrice={prediction.currentPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
@@ -174,21 +203,30 @@ function PredictionPage() {
           </div>
 
           <div className="mt-3 rounded-2xl border border-[#E9ECEF] bg-white p-3">
-            <PredictionChart points={prediction.predictedPoints} />
+            <PredictionChart
+              points={prediction.predictedPoints}
+              selectedIndex={effectiveIdx}
+              onSelectIndex={setSelectedDayIndex}
+              viewpoint={selectedViewpoint}
+              currentPrice={prediction.currentPrice}
+              quantityBoxes={quantityBoxes}
+              baseUnitLabel={baseUnitLabel}
+            />
           </div>
         </section>
 
-        {/* 4. 출하/매입 시점 비교 */}
+        {/* 4. 출하/매입 시점 비교 (선택 날짜 반영) */}
         <div className="mt-4">
           <PredictionCompareCards
             viewpoint={selectedViewpoint}
             currentPrice={prediction.currentPrice}
-            expectedPrice={insight.expectedPrice}
+            expectedPrice={selectedPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
-            recommendationDate={insight.recommendationDate}
+            recommendationDate={selectedDate}
           />
         </div>
+
 
         {/* 5. 예측 근거 */}
         <section className="mt-4">

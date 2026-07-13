@@ -117,7 +117,107 @@ function ForecastOverlay({
   );
 }
 
-function PredictionChartBase({ points }: { points: PredictionPoint[] }) {
+interface SelectedMarkerProps {
+  xAxisMap?: Record<string, any>;
+  yAxisMap?: Record<string, any>;
+  offset?: { top: number; left: number; width: number; height: number };
+  label: string;
+  price: number;
+}
+
+function SelectedMarker({
+  xAxisMap,
+  yAxisMap,
+  offset,
+  label,
+  price,
+}: SelectedMarkerProps) {
+  if (!xAxisMap || !yAxisMap || !offset) return null;
+  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
+  const yAxis = yAxisMap["price"] ?? Object.values(yAxisMap)[0];
+  if (!xAxis?.scale || !yAxis?.scale) return null;
+  const xScale = xAxis.scale;
+  const yScale = yAxis.scale;
+  const xv = xScale(label);
+  if (typeof xv !== "number" || Number.isNaN(xv)) return null;
+  const bw = typeof xScale.bandwidth === "function" ? xScale.bandwidth() : 0;
+  const cx = xv + bw / 2;
+  const cy = yScale(price);
+  if (typeof cy !== "number" || Number.isNaN(cy)) return null;
+
+  const text = `${label} · ${price.toLocaleString()}원`;
+  const w = Math.round(text.length * 6.6 + 16);
+  const h = 22;
+  const pinY = cy - 18;
+
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      <line
+        x1={cx}
+        x2={cx}
+        y1={offset.top}
+        y2={cy}
+        stroke={TEAL}
+        strokeWidth={1.25}
+        strokeDasharray="4 3"
+      />
+      {/* 물방울 핀 */}
+      <g transform={`translate(${cx}, ${pinY})`}>
+        <rect
+          x={-w / 2}
+          y={-h}
+          width={w}
+          height={h}
+          rx={11}
+          ry={11}
+          fill={TEAL}
+        />
+        <polygon
+          points={`-6,0 6,0 0,7`}
+          fill={TEAL}
+        />
+        <text
+          x={0}
+          y={-h / 2 + 4}
+          textAnchor="middle"
+          fontSize={11}
+          fontWeight={800}
+          fill="#fff"
+        >
+          {text}
+        </text>
+      </g>
+      <circle
+        cx={cx}
+        cy={cy}
+        r={6}
+        fill={TEAL}
+        stroke="#fff"
+        strokeWidth={2}
+      />
+    </g>
+  );
+}
+
+interface PredictionChartProps {
+  points: PredictionPoint[];
+  selectedIndex?: number;
+  onSelectIndex?: (index: number) => void;
+  viewpoint?: "farmer" | "wholesaler";
+  currentPrice?: number;
+  quantityBoxes?: number;
+  baseUnitLabel?: string;
+}
+
+function PredictionChartBase({
+  points,
+  selectedIndex,
+  onSelectIndex,
+  viewpoint = "farmer",
+  currentPrice,
+  quantityBoxes,
+  baseUnitLabel,
+}: PredictionChartProps) {
   const todayIdx = points.findIndex((p) => p.isToday);
   const todayPoint = todayIdx >= 0 ? points[todayIdx] : undefined;
   const recommended = points.find((p) => p.isRecommendedDate);
@@ -126,9 +226,10 @@ function PredictionChartBase({ points }: { points: PredictionPoint[] }) {
   const data = points.map((p, i) => {
     const isPast = todayIdx < 0 || i <= todayIdx;
     const seed = (i * 9301 + 49297) % 233280;
-    const pastVolume = isPast && p.actualPrice !== undefined
-      ? Math.round(120 + (seed / 233280) * 220)
-      : undefined;
+    const pastVolume =
+      isPast && p.actualPrice !== undefined
+        ? Math.round(120 + (seed / 233280) * 220)
+        : undefined;
     return { ...p, pastVolume };
   });
 
@@ -149,8 +250,14 @@ function PredictionChartBase({ points }: { points: PredictionPoint[] }) {
   const lastForecastLabel = points[points.length - 1]?.label;
   const canRenderForecast = !!todayLabel && !!lastForecastLabel && hasFuture;
 
-  // Build explicit sparse tick list — past start, past mid, today, forecast
-  // mid, recommended, last forecast — deduped.
+  const selectedPoint =
+    selectedIndex != null ? points[selectedIndex] : undefined;
+  const selectedLabel = selectedPoint?.label;
+  const selectedPrice = selectedPoint?.predictedPrice;
+  const canRenderSelected =
+    !!selectedLabel && typeof selectedPrice === "number";
+
+  // Ticks: past start · past mid · today · forecast mid · recommended · selected · last forecast
   const ticks: string[] = (() => {
     const t: string[] = [];
     if (points.length) t.push(points[0].label);
@@ -164,182 +271,253 @@ function PredictionChartBase({ points }: { points: PredictionPoint[] }) {
       t.push(points[mid].label);
     }
     if (recommended) t.push(recommended.label);
+    if (selectedLabel) t.push(selectedLabel);
     if (futureEnd >= 0 && points[futureEnd]) t.push(points[futureEnd].label);
     return Array.from(new Set(t));
   })();
 
-  const recommendedLabel = recommended?.label;
+  const isFarmer = viewpoint === "farmer";
+  const showTopInfo =
+    canRenderSelected && currentPrice != null && quantityBoxes != null;
+  const priceDiff =
+    showTopInfo && selectedPrice != null ? selectedPrice - currentPrice! : 0;
+  const gain = showTopInfo ? (isFarmer ? priceDiff : -priceDiff) * quantityBoxes! : 0;
+  const gainLabel = isFarmer ? "예상 추가수익" : "예상 절감";
+
+  const handleChartClick = (e: any) => {
+    if (!onSelectIndex) return;
+    const idx = e?.activeTooltipIndex;
+    if (typeof idx !== "number") return;
+    const p = points[idx];
+    if (!p) return;
+    if (p.predictedPrice === undefined || p.isToday) return;
+    onSelectIndex(idx);
+  };
 
   return (
-    <div className="h-[260px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 28, right: 12, left: 0, bottom: 4 }}>
-          <CartesianGrid stroke="#F1F3F5" vertical={false} />
-          {canRenderForecast && (
-            <Customized
-              component={(props: any) => (
-                <ForecastOverlay
-                  {...props}
-                  todayLabel={todayLabel!}
-                  lastForecastLabel={lastForecastLabel!}
-                />
-              )}
+    <div className="w-full">
+      {/* 좌측 상단 정보 (헤이딜러식) */}
+      {showTopInfo && selectedPrice != null && (
+        <div className="mb-2 flex items-baseline justify-between">
+          <div>
+            <div className="text-[11px] font-semibold text-[#495057]">
+              {selectedLabel} {isFarmer ? "출하 시" : "매입 시"}
+            </div>
+            <div className="mt-0.5 flex items-baseline gap-1">
+              <span className="text-[18px] font-black tabular-nums text-[#2E9E6B]">
+                {selectedPrice.toLocaleString()}
+              </span>
+              <span className="text-[11px] font-semibold text-[#495057]">
+                원{baseUnitLabel ? ` / ${baseUnitLabel}` : ""}
+              </span>
+            </div>
+          </div>
+          <div
+            className={`rounded-full px-2 py-1 text-[11px] font-bold tabular-nums ${
+              gain >= 0
+                ? "bg-[#E7F5EC] text-[#1F5C1F]"
+                : "bg-[#FFF5F5] text-[#E03131]"
+            }`}
+          >
+            {gainLabel} {gain >= 0 ? "+" : "-"}
+            {Math.abs(gain).toLocaleString()}원
+          </div>
+        </div>
+      )}
+
+      <div className="h-[260px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart
+            data={data}
+            margin={{ top: 28, right: 12, left: 0, bottom: 4 }}
+            onClick={handleChartClick}
+          >
+            <CartesianGrid stroke="#F1F3F5" vertical={false} />
+            {canRenderForecast && (
+              <Customized
+                component={(props: any) => (
+                  <ForecastOverlay
+                    {...props}
+                    todayLabel={todayLabel!}
+                    lastForecastLabel={lastForecastLabel!}
+                  />
+                )}
+              />
+            )}
+            <XAxis
+              xAxisId="main"
+              dataKey="label"
+              tick={(props: any) => {
+                const { x, y, payload } = props;
+                const isSelected = payload.value === selectedLabel;
+                return (
+                  <text
+                    x={x}
+                    y={y + 10}
+                    textAnchor="middle"
+                    fontSize={10.5}
+                    fontWeight={isSelected ? 800 : 400}
+                    fill={isSelected ? TEAL : "#868E96"}
+                  >
+                    {payload.value}
+                  </text>
+                );
+              }}
+              axisLine={false}
+              tickLine={false}
+              ticks={ticks}
+              interval={0}
             />
-          )}
-          <XAxis
-            xAxisId="main"
-            dataKey="label"
-            tick={(props: any) => {
-              const { x, y, payload } = props;
-              const isRecommended = payload.value === recommendedLabel;
-              return (
-                <text
-                  x={x}
-                  y={y + 10}
-                  textAnchor="middle"
-                  fontSize={10.5}
-                  fontWeight={isRecommended ? 800 : 400}
-                  fill={isRecommended ? TEAL : "#868E96"}
-                >
-                  {payload.value}
-                </text>
-              );
-            }}
-            axisLine={false}
-            tickLine={false}
-            ticks={ticks}
-            interval={0}
-          />
-          <YAxis
-            yAxisId="price"
-            tick={{ fontSize: 10, fill: "#868E96" }}
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(v) => v.toLocaleString()}
-            domain={["auto", "auto"]}
-            width={44}
-          />
-          <YAxis
-            yAxisId="vol"
-            orientation="right"
-            tick={{ fontSize: 10, fill: "#868E96" }}
-            axisLine={false}
-            tickLine={false}
-            width={28}
-          />
-          <Tooltip cursor={false} content={<CustomTooltip />} />
+            <YAxis
+              yAxisId="price"
+              tick={{ fontSize: 10, fill: "#868E96" }}
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(v) => v.toLocaleString()}
+              domain={["auto", "auto"]}
+              width={44}
+            />
+            <YAxis
+              yAxisId="vol"
+              orientation="right"
+              tick={{ fontSize: 10, fill: "#868E96" }}
+              axisLine={false}
+              tickLine={false}
+              width={28}
+            />
+            <Tooltip cursor={false} content={<CustomTooltip />} />
 
-          <Bar
-            xAxisId="main"
-            yAxisId="vol"
-            dataKey="pastVolume"
-            fill={PINK}
-            radius={[2, 2, 0, 0]}
-            barSize={8}
-            isAnimationActive={false}
-          />
-          <Line
-            xAxisId="main"
-            yAxisId="price"
-            type="monotone"
-            dataKey="actualPrice"
-            stroke={RED}
-            strokeWidth={2.4}
-            dot={false}
-            activeDot={{ r: 4, fill: RED, stroke: "#fff", strokeWidth: 2 }}
-            isAnimationActive={false}
-            connectNulls={false}
-          />
-          <Line
-            xAxisId="main"
-            yAxisId="price"
-            type="monotone"
-            dataKey="predictedPrice"
-            stroke={TEAL}
-            strokeWidth={2.4}
-            strokeDasharray="5 4"
-            dot={false}
-            activeDot={{ r: 4, fill: TEAL, stroke: "#fff", strokeWidth: 2 }}
-            isAnimationActive={false}
-            connectNulls={false}
-          />
-
-          {maxPoint && (
-            <ReferenceDot
+            <Bar
+              xAxisId="main"
+              yAxisId="vol"
+              dataKey="pastVolume"
+              fill={PINK}
+              radius={[2, 2, 0, 0]}
+              barSize={8}
+              isAnimationActive={false}
+            />
+            <Line
               xAxisId="main"
               yAxisId="price"
-              x={maxPoint.label}
-              y={maxP}
-              r={3}
-              fill={RED}
-              stroke="#fff"
-              strokeWidth={1.5}
-              label={{
-                value: `최고 ${maxP.toLocaleString()}`,
-                position: "top",
-                fill: RED,
-                fontSize: 10,
-                fontWeight: 800,
-              }}
+              type="monotone"
+              dataKey="actualPrice"
+              stroke={RED}
+              strokeWidth={2.4}
+              dot={false}
+              activeDot={{ r: 4, fill: RED, stroke: "#fff", strokeWidth: 2 }}
+              isAnimationActive={false}
+              connectNulls={false}
             />
-          )}
-          {minPoint && minPoint.label !== maxPoint?.label && (
-            <ReferenceDot
+            <Line
               xAxisId="main"
               yAxisId="price"
-              x={minPoint.label}
-              y={minP}
-              r={3}
-              fill={BLUE}
-              stroke="#fff"
-              strokeWidth={1.5}
-              label={{
-                value: `최저 ${minP.toLocaleString()}`,
-                position: "bottom",
-                fill: BLUE,
-                fontSize: 10,
-                fontWeight: 800,
+              type="monotone"
+              dataKey="predictedPrice"
+              stroke={TEAL}
+              strokeWidth={2.4}
+              strokeDasharray="5 4"
+              dot={(dotProps: any) => {
+                const { cx, cy, index, payload } = dotProps;
+                if (
+                  payload.predictedPrice === undefined ||
+                  payload.isToday ||
+                  typeof cx !== "number" ||
+                  typeof cy !== "number"
+                ) {
+                  return <g key={`d-${index}`} />;
+                }
+                const isSelected = index === selectedIndex;
+                return (
+                  <circle
+                    key={`d-${index}`}
+                    cx={cx}
+                    cy={cy}
+                    r={isSelected ? 5 : 3.5}
+                    fill={TEAL}
+                    stroke="#fff"
+                    strokeWidth={1.5}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => onSelectIndex?.(index)}
+                  />
+                );
               }}
+              activeDot={{
+                r: 6,
+                fill: TEAL,
+                stroke: "#fff",
+                strokeWidth: 2,
+                onClick: (_: any, e: any) => {
+                  const idx = e?.index;
+                  if (typeof idx === "number") onSelectIndex?.(idx);
+                },
+              }}
+              isAnimationActive={false}
+              connectNulls={false}
             />
-          )}
 
-          {recommended && recommended.predictedPrice !== undefined && (
-            <ReferenceDot
-              xAxisId="main"
-              yAxisId="price"
-              x={recommended.label}
-              y={recommended.predictedPrice}
-              r={5}
-              fill={TEAL}
-              stroke="#fff"
-              strokeWidth={2}
-              label={{
-                value: `추천 ${recommended.label}`,
-                position: "top",
-                fill: "#fff",
-                fontSize: 10,
-                fontWeight: 800,
-                offset: 12,
-              }}
-            />
-          )}
-        </ComposedChart>
-      </ResponsiveContainer>
-      <div className="mt-2 flex items-center justify-center gap-4 text-[11px] text-[#6C757D]">
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-0.5 w-4 bg-[#E03B3B]" /> 실제 평균가
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-0.5 w-4 border-t-2 border-dashed border-[#2E9E6B]" />{" "}
-          AI 예측
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-2 w-3 rounded-sm bg-[rgba(224,59,59,0.35)]" />{" "}
-          거래량
-        </span>
+            {maxPoint && (
+              <ReferenceDot
+                xAxisId="main"
+                yAxisId="price"
+                x={maxPoint.label}
+                y={maxP}
+                r={0}
+                label={{
+                  value: `최고 ${maxP.toLocaleString()}`,
+                  position: "top",
+                  fill: RED,
+                  fontSize: 10,
+                  fontWeight: 800,
+                }}
+              />
+            )}
+            {minPoint && minPoint.label !== maxPoint?.label && (
+              <ReferenceDot
+                xAxisId="main"
+                yAxisId="price"
+                x={minPoint.label}
+                y={minP}
+                r={0}
+                label={{
+                  value: `최저 ${minP.toLocaleString()}`,
+                  position: "bottom",
+                  fill: BLUE,
+                  fontSize: 10,
+                  fontWeight: 800,
+                }}
+              />
+            )}
+
+            {canRenderSelected && (
+              <Customized
+                component={(props: any) => (
+                  <SelectedMarker
+                    {...props}
+                    label={selectedLabel!}
+                    price={selectedPrice!}
+                  />
+                )}
+              />
+            )}
+          </ComposedChart>
+        </ResponsiveContainer>
+        <div className="mt-2 flex items-center justify-center gap-4 text-[11px] text-[#6C757D]">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block h-0.5 w-4 bg-[#E03B3B]" /> 실제 평균가
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block h-0.5 w-4 border-t-2 border-dashed border-[#2E9E6B]" />{" "}
+            AI 예측
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block h-2 w-3 rounded-sm bg-[rgba(224,59,59,0.35)]" />{" "}
+            거래량
+          </span>
+        </div>
       </div>
     </div>
   );
 }
 
 export const PredictionChart = memo(PredictionChartBase);
+
