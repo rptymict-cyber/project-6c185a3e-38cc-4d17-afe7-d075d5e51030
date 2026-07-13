@@ -217,7 +217,7 @@ export function ProAnalysisSection() {
           </div>
 
           <div className="rounded-[12px] border border-[#F1F3F5] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-            <PriceVolumeChart series={series} period={period} prediction={prediction} />
+            <PriceVolumeChart series={series} period={period} prediction={prediction} ticks={ticks} />
           </div>
 
           {prediction && (
