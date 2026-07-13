@@ -182,38 +182,57 @@ export function ProAnalysisSection() {
             <PriceVolumeChart series={series} period={period} prediction={prediction} />
           </div>
 
-          {/* Prediction report banner */}
-          {prediction && recommended && (
-            <Link
-              to="/prediction"
-              className="mt-3 flex items-center gap-3 rounded-[12px] px-3.5 py-3 text-white shadow-[0_2px_8px_rgba(46,158,107,0.25)]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, #2E9E6B 0%, #1F7A50 100%)",
-              }}
-            >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="text-[13.5px] font-extrabold leading-tight">
-                  {recommendedDateText} 출하가 유리해요
-                </div>
-                <div className="mt-0.5 text-[11.5px] text-white/90">
-                  오늘보다 {recommendedDelta >= 0 ? "+" : ""}
-                  {recommendedDelta.toLocaleString()}원 · 자세한 예측은 리포트에서
-                </div>
-              </div>
-              <span className="flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-[10px] bg-white px-3 py-2 text-[12.5px] font-extrabold text-[#2E9E6B]">
-                리포트 보기
-                <ChevronRight className="h-3.5 w-3.5" />
+          {prediction && (
+            <p className="mt-3 px-1 text-[11px] text-[#868E96]">
+              차트는 경매일 기준 ·{" "}
+              <span className="font-bold text-[#2E9E6B]">
+                오늘 이후는 AI 예측입니다.
               </span>
-            </Link>
+            </p>
           )}
 
-          <p className="mt-3 px-1 text-[11px] text-[#868E96]">
-            차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
-          </p>
+          {/* AI prediction recommendation card */}
+          {prediction && recommended && (
+            <div
+              className="mt-3 rounded-[14px] px-[15px] py-[14px] text-white shadow-[0_2px_10px_rgba(46,158,107,0.28)]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(160deg, #2E9E6B 0%, #1F7A50 100%)",
+              }}
+            >
+              <div className="flex items-start gap-3">
+                <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-[#FFE9A3]" />
+                <div className="min-w-0 flex-1">
+                  <div className="text-[14px] font-extrabold leading-tight">
+                    {recommendedDateText} 출하를 추천해요
+                  </div>
+                  <div className="mt-1 text-[11.5px] leading-snug text-white/90">
+                    예상가 {recommended.price.toLocaleString()}원/{unitLabel} ·{" "}
+                    {recommendedDelta > 0
+                      ? `오늘보다 ${recommendedDelta.toLocaleString()}원 높아요`
+                      : recommendedDelta < 0
+                        ? `오늘보다 ${Math.abs(recommendedDelta).toLocaleString()}원 낮아요`
+                        : "오늘과 같아요"}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 flex justify-end">
+                <Link
+                  to="/prediction"
+                  className="inline-flex items-center gap-0.5 whitespace-nowrap rounded-[10px] bg-white px-[13px] py-[9px] text-[12.5px] font-extrabold text-[#1F7A50]"
+                >
+                  AI 예측 보기
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {!prediction && (
+            <p className="mt-3 px-1 text-[11px] text-[#868E96]">
+              차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다.
+            </p>
+          )}
         </div>
       )}
 
