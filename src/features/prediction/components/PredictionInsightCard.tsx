@@ -47,7 +47,7 @@ export function PredictionInsightCard({
 
   const action = isFarmer ? "출하" : "매입";
   const headline = isPositiveForUser
-    ? `${action}이 유리해요`
+    ? `${action}에 유리해요`
     : priceHigher || priceLower
       ? `${action} 시점을 검토하세요`
       : `${action} 참고`;
