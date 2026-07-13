@@ -119,7 +119,7 @@ function formatDate(d: Date) {
 }
 
 function labelOf(d: Date) {
-  return `${d.getMonth() + 1}/${d.getDate()}`;
+  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
 }
 
 function buildPoints(
