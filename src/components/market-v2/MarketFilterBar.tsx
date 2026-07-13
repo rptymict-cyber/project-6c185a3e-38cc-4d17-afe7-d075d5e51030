@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Building2, Calendar, ChevronDown, Sprout, Store } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { Switch } from "@/components/ui/switch";
+
 import { useMarketFilter } from "@/store/market";
 import { useCropSelection } from "@/store/cropSelection";
 import { getCategoryById, getItemById } from "@/lib/catalog-service";
