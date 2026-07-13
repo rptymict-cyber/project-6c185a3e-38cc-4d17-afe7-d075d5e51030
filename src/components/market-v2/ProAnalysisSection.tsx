@@ -49,25 +49,42 @@ export function ProAnalysisSection() {
   const isPredictable = !!getItemById(f.itemId)?.prediction.supported;
   const prediction: PredictionInput | undefined = useMemo(() => {
     if (!isPredictable || series.points.length === 0) return undefined;
+    if (period === "today") return undefined; // 예측은 일 단위 이상에서만
     const last = series.points[series.points.length - 1];
-    const days = period === "today" ? 6 : period === "1w" ? 5 : period === "1m" ? 7 : 7;
-    // seeded-ish forecast: gentle drift + small noise around last price
+    const days = period === "1w" ? 5 : 7;
     const drift = last.price * 0.01;
-    const points: { label: string; price: number }[] = [];
+    const baseDate = new Date(last.date + "T00:00:00");
+    const points: { label: string; price: number; dateText: string }[] = [];
     for (let k = 1; k <= days; k++) {
       const wave = Math.sin(k * 0.9) * (last.price * 0.015);
       const p = Math.round(last.price + drift * k + wave);
-      points.push({ label: `+${k}일`, price: p });
+      const d = new Date(baseDate);
+      d.setDate(d.getDate() + k);
+      const label = `${d.getMonth() + 1}/${d.getDate()}`;
+      const dateText = `${d.getMonth() + 1}월 ${d.getDate()}일`;
+      points.push({ label, price: p, dateText });
     }
-    // pick recommended = highest predicted point
     let recIdx = 0;
     points.forEach((p, i) => {
       if (p.price > points[recIdx].price) recIdx = i;
     });
-    return { points, recommendedIdx: recIdx };
+    return {
+      points: points.map(({ label, price }) => ({ label, price })),
+      recommendedIdx: recIdx,
+      recommendedBadge: `추천 ${points[recIdx].label}`,
+    };
   }, [isPredictable, series, period]);
 
   const recommended = prediction?.points[prediction.recommendedIdx ?? 0];
+  const recommendedDateText = useMemo(() => {
+    if (!prediction || !recommended) return "";
+    const last = series.points[series.points.length - 1];
+    const baseDate = new Date(last.date + "T00:00:00");
+    const k = (prediction.recommendedIdx ?? 0) + 1;
+    const d = new Date(baseDate);
+    d.setDate(d.getDate() + k);
+    return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+  }, [prediction, recommended, series]);
   const recommendedDelta = recommended
     ? recommended.price - series.points[series.points.length - 1].price
     : 0;
