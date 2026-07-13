@@ -8,7 +8,7 @@ import { PredictionConditionGrid } from "@/features/prediction/components/Predic
 import { PredictionCropSheet } from "@/features/prediction/components/PredictionCropSheet";
 import { PredictionFactorList } from "@/features/prediction/components/PredictionFactorList";
 import { PredictionInsightCard } from "@/features/prediction/components/PredictionInsightCard";
-import { PredictionSummaryCard } from "@/features/prediction/components/PredictionSummaryCard";
+
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
 import { ViewpointPickerSheet } from "@/features/prediction/components/ViewpointPickerSheet";
