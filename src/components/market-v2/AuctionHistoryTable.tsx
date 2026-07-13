@@ -3,10 +3,10 @@ import { useNavigate } from "@tanstack/react-router";
 import { useMarketFilter } from "@/store/market";
 import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
 import { cn } from "@/lib/utils";
-import { SimpleViewToggle } from "./SimpleViewToggle";
 import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButton";
 
 const PAGE_SIZE = LIST_PAGE_SIZE;
+
 
 
 
