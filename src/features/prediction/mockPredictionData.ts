@@ -160,7 +160,7 @@ function buildPoints(
   });
 
   // 예측 곡선: 매개 트렌드 방향 결정 (도매상은 저점, 농민은 고점)
-  const trendUp = ["apple", "chili", "radish"].includes(cropId);
+  const trendUp = ["apple", "garlic", "radish"].includes(cropId);
   let predicted = todayPrice;
   const targetChangePct = trendUp ? 0.05 : -0.04;
   for (let i = 1; i <= rangeDays; i++) {

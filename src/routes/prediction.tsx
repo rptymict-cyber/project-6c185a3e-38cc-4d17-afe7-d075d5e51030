@@ -42,7 +42,7 @@ export const Route = createFileRoute("/prediction")({
       {
         name: "description",
         content:
-          "AI 가격 예측: 사과·배추·무·양파·고추의 예상 가격과 유리한 출하·매입 시점을 확인하세요.",
+          "AI 가격 예측: 사과·배추·무·양파·마늘의 예상 가격과 유리한 출하·매입 시점을 확인하세요.",
       },
     ],
   }),

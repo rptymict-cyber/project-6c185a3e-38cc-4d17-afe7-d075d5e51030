@@ -26,7 +26,7 @@ const now = Date.now();
 const SEED: SavedQuery[] = [
   {
     id: "q-eggplant",
-    cropId: "chili",
+    cropId: "garlic",
     emoji: "🍆",
     category: "가지",
     varietyName: "가지(일반)",

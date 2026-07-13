@@ -13,7 +13,7 @@ const HOME_PRICE: Record<
   cabbage: { price: 5640, changePct: 8.2, unitLabel: "10kg" },
   radish: { price: 7220, changePct: 6.1, unitLabel: "20kg" },
   onion: { price: 8480, changePct: -4.1, unitLabel: "15kg" },
-  chili: { price: 9840, changePct: -1.4, unitLabel: "1kg" },
+  garlic: { price: 7850, changePct: 3.0, unitLabel: "1kg" },
 };
 
 function ChangeBadge({ changePct }: { changePct: number }) {
