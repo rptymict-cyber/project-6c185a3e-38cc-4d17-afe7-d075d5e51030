@@ -33,8 +33,7 @@ function CustomTooltip({
   return (
     <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-2 shadow-md">
       <div className={`text-[12px] font-bold ${isForecast ? "text-[#2E9E6B]" : "text-foreground"}`}>
-        {label}
-        {isForecast ? " · AI 예측" : ""}
+        {label} · AI 예측
       </div>
       {p.actualPrice !== undefined && (
         <div className="mt-0.5 text-[12px] font-bold text-[#E03B3B]">
