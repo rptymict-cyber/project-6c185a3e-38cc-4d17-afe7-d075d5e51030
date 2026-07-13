@@ -210,8 +210,12 @@ export function ProAnalysisSection() {
             <PeriodStat label="평균가" value={`${series.avg.toLocaleString()}원`} tone="neutral" />
           </div>
 
+          <div className="rounded-[12px] border border-[#F1F3F5] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+            <PriceVolumeChart series={series} period={period} prediction={prediction} ticks={ticks} />
+          </div>
+
           {/* Legend */}
-          <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[11px] text-[#495057]">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[11px] text-[#495057]">
             <span className="flex items-center gap-1">
               <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03131]" />
               평균가(원/{unitLabel})
@@ -234,9 +238,6 @@ export function ProAnalysisSection() {
             )}
           </div>
 
-          <div className="rounded-[12px] border border-[#F1F3F5] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-            <PriceVolumeChart series={series} period={period} prediction={prediction} ticks={ticks} />
-          </div>
 
           <p className="mt-3 px-1 text-[11px] text-[#868E96]">
             {showForecast ? (
