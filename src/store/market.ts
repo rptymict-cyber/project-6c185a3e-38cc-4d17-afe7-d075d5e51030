@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { todayIso } from "@/lib/date";
+
 
 export type MarketSegment = "items" | "markets";
 export type MarketSortKey = "volume" | "change" | "name";
