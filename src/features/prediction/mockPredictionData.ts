@@ -229,14 +229,13 @@ export function buildMockPrediction(
     p.isRecommendedDate = i === recommendedIdx;
   });
 
-  const now = new Date();
-  const updatedAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
-    2,
-    "0",
-  )}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(
-    2,
-    "0",
-  )}:${String(now.getMinutes()).padStart(2, "0")}`;
+  const updatedAt = (() => {
+    const d = new Date();
+    const h = 8 + (hashId(cropId) % 12);
+    const m = (hashId(cropId) * 7) % 60;
+    d.setHours(h, m, 0, 0);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  })();
 
   return {
     cropId: crop.id,
