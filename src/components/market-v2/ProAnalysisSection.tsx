@@ -196,15 +196,15 @@ export function ProAnalysisSection() {
                 <Sparkles className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-[13px] font-bold leading-tight">
-                  {recommended.label} 출하가 유리해요
+                <div className="text-[13.5px] font-extrabold leading-tight">
+                  {recommendedDateText} 출하가 유리해요
                 </div>
-                <div className="mt-0.5 text-[11.5px] text-white/85">
+                <div className="mt-0.5 text-[11.5px] text-white/90">
                   오늘보다 {recommendedDelta >= 0 ? "+" : ""}
                   {recommendedDelta.toLocaleString()}원 · 자세한 예측은 리포트에서
                 </div>
               </div>
-              <span className="flex shrink-0 items-center gap-0.5 rounded-full bg-white/20 px-2.5 py-1 text-[11.5px] font-bold">
+              <span className="flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-[10px] bg-white px-3 py-2 text-[12.5px] font-extrabold text-[#2E9E6B]">
                 리포트 보기
                 <ChevronRight className="h-3.5 w-3.5" />
               </span>
