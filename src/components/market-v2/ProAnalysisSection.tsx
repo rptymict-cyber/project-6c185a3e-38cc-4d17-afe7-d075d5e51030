@@ -108,14 +108,11 @@ export function ProAnalysisSection() {
         hist.includes(l),
       );
     }
-    if (period === "1w") {
-      return hist; // all 7 history dates
-    }
     if (period === "1y") {
       return hist; // all 12 months
     }
-    // 1m / 3m: sample up to 6 evenly spaced history labels
-    const max = 6;
+    // 1w / 1m / 3m: sample up to N evenly spaced history labels
+    const max = period === "1w" ? 4 : 6;
     if (hist.length <= max) return hist;
     const step = (hist.length - 1) / (max - 1);
     const seen = new Set<number>();
