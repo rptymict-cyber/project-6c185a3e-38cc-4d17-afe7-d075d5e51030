@@ -131,11 +131,13 @@ export function PredictionInsightCard({
             <div className="text-[10px] font-semibold text-white/75">
               예상 평균가
             </div>
-            <div className="mt-1 flex items-baseline gap-0.5">
-              <span className="text-[16px] font-black tabular-nums leading-none">
-                {expectedPrice.toLocaleString()}
+            <div className="mt-1 flex items-baseline whitespace-nowrap">
+              <span
+                className="font-black tabular-nums leading-none"
+                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+              >
+                {formatFullWon(expectedPrice)}
               </span>
-              <span className="text-[10px] font-semibold text-white/80">원</span>
             </div>
             <div className="mt-0.5 text-[9.5px] text-white/60">
               / {baseUnitLabel}
