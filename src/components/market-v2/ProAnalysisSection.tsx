@@ -43,27 +43,34 @@ export function ProAnalysisSection() {
 
   return (
     <section className="mt-3 bg-white pt-1">
-      {/* Underline tabs */}
-      <div className="no-scrollbar flex overflow-x-auto border-b border-[#E9ECEF] px-2">
-        {TABS.map((t) => {
-          const active = t.id === tab;
-          return (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={cn(
-                "relative shrink-0 px-3 py-3 text-[13.5px] font-semibold",
-                active ? "text-foreground" : "text-[#868E96]",
-              )}
-            >
-              {t.label}
-              {active && (
-                <span className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-[#3A8A3A]" />
-              )}
-            </button>
-          );
-        })}
+      {/* Tab bar with right-side view segment */}
+      <div className="flex items-center border-b border-[#E9ECEF] pr-3">
+        <div className="no-scrollbar flex flex-1 overflow-x-auto px-2">
+          {TABS.map((t) => {
+            const active = t.id === tab;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={cn(
+                  "relative shrink-0 px-3 py-3 text-[13.5px] font-semibold",
+                  active ? "text-foreground" : "text-[#868E96]",
+                )}
+              >
+                {t.label}
+                {active && (
+                  <span className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-[#3A8A3A]" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+        <ViewSegment
+          value={tab === "auctions" ? "list" : "chart"}
+          onChange={(v) => setTab(v === "list" ? "auctions" : "chart")}
+        />
       </div>
+
 
       {tab === "chart" && (
         <div className="px-3 pb-3 pt-3">
@@ -140,6 +147,39 @@ function PeriodStat({
     <div className="flex flex-col items-center gap-0.5 rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2.5">
       <span className="text-[10.5px] text-[#868E96]">{label}</span>
       <span className={cn("text-[13px] font-bold", color)}>{value}</span>
+    </div>
+  );
+}
+
+function ViewSegment({
+  value,
+  onChange,
+}: {
+  value: "chart" | "list";
+  onChange: (v: "chart" | "list") => void;
+}) {
+  const opts: { id: "chart" | "list"; label: string }[] = [
+    { id: "chart", label: "차트보기" },
+    { id: "list", label: "목록보기" },
+  ];
+  return (
+    <div className="ml-2 inline-flex shrink-0 rounded-[8px] bg-[#EDEFF2] p-0.5">
+      {opts.map((o) => {
+        const active = o.id === value;
+        return (
+          <button
+            key={o.id}
+            type="button"
+            onClick={() => onChange(o.id)}
+            className={cn(
+              "rounded-[6px] px-2.5 py-1 text-[12px] font-bold transition-colors",
+              active ? "bg-white text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-[#6C757D]",
+            )}
+          >
+            {o.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
