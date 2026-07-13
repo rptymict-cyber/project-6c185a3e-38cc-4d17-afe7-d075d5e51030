@@ -200,9 +200,6 @@ export function PredictionInsightCard({
   );
 }
 
-function formatCompactWon(v: number): string {
-  const n = Math.abs(v);
-  if (n >= 100_000_000) return `${(v / 100_000_000).toFixed(1)}억`;
-  if (n >= 10_000) return `${(v / 10_000).toFixed(v % 10_000 === 0 ? 0 : 1)}만`;
-  return `${v.toLocaleString()}`;
+function formatFullWon(v: number): string {
+  return `${Math.round(v).toLocaleString("ko-KR")}원`;
 }
