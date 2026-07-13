@@ -111,8 +111,25 @@ export function ProAnalysisSection() {
     if (period === "1y") {
       return hist; // all 12 months
     }
-    // 1w / 1m / 3m: sample up to N evenly spaced history labels
-    const max = period === "1w" ? 4 : 6;
+    // When forecast is on, mix history + forecast labels around today/recommended.
+    if (prediction && (period === "1w" || period === "1m")) {
+      const fcst = prediction.points.map((p) => p.label);
+      const todayLabel = hist[hist.length - 1];
+      const recLabel =
+        prediction.recommendedIdx != null
+          ? prediction.points[prediction.recommendedIdx]?.label
+          : undefined;
+      const lastFcst = fcst[fcst.length - 1];
+      const midFcst = fcst[Math.floor(fcst.length / 2)];
+      const firstHist = hist[0];
+      const midHist = hist[Math.floor(hist.length / 2)];
+      const raw = [firstHist, midHist, todayLabel, midFcst, recLabel, lastFcst].filter(
+        (v): v is string => !!v,
+      );
+      return Array.from(new Set(raw)).slice(0, 7);
+    }
+    // 1m / 3m without forecast: sample up to 6 evenly spaced history labels
+    const max = 6;
     if (hist.length <= max) return hist;
     const step = (hist.length - 1) / (max - 1);
     const seen = new Set<number>();
@@ -125,7 +142,8 @@ export function ProAnalysisSection() {
       }
     }
     return out;
-  }, [series, period]);
+  }, [series, period, prediction]);
+
 
   // Bottom notice text
   const noticeText = (() => {
