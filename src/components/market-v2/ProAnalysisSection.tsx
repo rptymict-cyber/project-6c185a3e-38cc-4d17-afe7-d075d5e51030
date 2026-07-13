@@ -241,7 +241,7 @@ function ViewSegment({
     { id: "list", label: "목록보기" },
   ];
   return (
-    <div className="ml-2 inline-flex shrink-0 rounded-[8px] bg-[#EDEFF2] p-0.5">
+    <div className="inline-flex shrink-0 rounded-[8px] bg-[#EDEFF2] p-0.5">
       {opts.map((o) => {
         const active = o.id === value;
         return (
