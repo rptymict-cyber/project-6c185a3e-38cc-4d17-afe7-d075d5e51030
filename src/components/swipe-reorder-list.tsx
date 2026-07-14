@@ -133,6 +133,7 @@ function SwipeRow({
   className,
   wrapperClassName,
   dragHandlePosition = "center",
+  swipeToDelete = true,
 }: {
   id: string;
   open: boolean;
@@ -146,6 +147,7 @@ function SwipeRow({
   className?: string;
   wrapperClassName?: string;
   dragHandlePosition?: "center" | "top-right";
+  swipeToDelete?: boolean;
 }) {
   const [tx, setTx] = useState(open ? -SWIPE_MAX : 0);
   const startX = useRef<number | null>(null);
