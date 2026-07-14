@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { ChevronRight, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { MarketComparisonSheet } from "./MarketComparisonSheet";
 import {
   TrendDualChart,
@@ -16,7 +15,6 @@ import {
   type TrendPeriod,
 } from "@/lib/mock/variety-trend";
 import { useTrendCompare } from "@/store/trend-compare";
-import { useMarketFilter } from "@/store/market";
 import { getCrop } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 
