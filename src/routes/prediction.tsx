@@ -160,6 +160,21 @@ function PredictionPage() {
           onViewpointClick={() => setViewpointSheetOpen(true)}
         />
 
+        {/* 날씨·작황 카드 (조건 아래, 추천 위) */}
+        <div className="mt-3">
+          {(() => {
+            const w = getCropWeather(selectedCropId);
+            return (
+              <PredictionWeatherCard
+                regionLabel={`${w.region} (재배 지역)`}
+                current={w.current}
+                forecast={w.forecast}
+                priceImpact={w.priceImpact}
+              />
+            );
+          })()}
+        </div>
+
         {/* 2. AI 추천 카드 (선택 날짜 반영) */}
         <div className="mt-3">
           <PredictionInsightCard
