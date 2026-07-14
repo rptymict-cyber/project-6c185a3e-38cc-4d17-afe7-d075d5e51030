@@ -123,27 +123,75 @@ export function RegionStatsList({
                     <span className="w-3.5" />
                   </li>
 
-                  {r.markets.map((m) => (
-                    <li key={m.id} className="flex items-center gap-2 py-2">
-                      <Store className="h-4 w-4 text-[#3A8A3A]" />
-                      <span className="flex-1 text-[13px] font-semibold">{m.name}</span>
-                      <span className="text-[13px] font-bold tabular-nums">
-                        {m.avgKg.toLocaleString()}<span className="text-[10px] text-[#868E96]">원</span>
-                      </span>
-                      <span
-                        className={cn(
-                          "w-12 text-right text-[11.5px] font-bold tabular-nums",
-                          m.deltaAmount > 0 ? "text-[#E03131]" : m.deltaAmount < 0 ? "text-[#1971C2]" : "text-[#868E96]",
+                  {r.markets.map((m) => {
+                    const mKey = `${r.region}::${m.id}`;
+                    const mOpen = expandedMarket === mKey;
+                    return (
+                      <li key={m.id}>
+                        <button
+                          type="button"
+                          onClick={() => setExpandedMarket(mOpen ? null : mKey)}
+                          className="flex w-full items-center gap-2 py-2 text-left"
+                          aria-expanded={mOpen}
+                        >
+                          <Store className="h-4 w-4 text-[#3A8A3A]" />
+                          <span className="flex-1 text-[13px] font-semibold">{m.name}</span>
+                          <span className="text-[13px] font-bold tabular-nums">
+                            {m.avgKg.toLocaleString()}<span className="text-[10px] text-[#868E96]">원</span>
+                          </span>
+                          <span
+                            className={cn(
+                              "w-12 text-right text-[11.5px] font-bold tabular-nums",
+                              m.deltaAmount > 0 ? "text-[#E03131]" : m.deltaAmount < 0 ? "text-[#1971C2]" : "text-[#868E96]",
+                            )}
+                          >
+                            {m.deltaAmount > 0 ? "▲" : m.deltaAmount < 0 ? "▼" : ""}{Math.abs(m.deltaPct).toFixed(1)}%
+                          </span>
+                          <span className="w-12 text-right text-[11px] text-[#868E96] tabular-nums">
+                            {m.volumeTon.toFixed(1)}t
+                          </span>
+                          {mOpen ? (
+                            <ChevronUp className="h-3.5 w-3.5 text-[#868E96]" />
+                          ) : (
+                            <ChevronDown className="h-3.5 w-3.5 text-[#868E96]" />
+                          )}
+                        </button>
+                        {mOpen && m.companies.length > 0 && (
+                          <div className="mb-1 rounded-[8px] bg-white px-2 py-2">
+                            <div className="flex items-center gap-2 pb-1 text-[10.5px] font-bold text-[#868E96]">
+                              <span className="h-3 w-3" />
+                              <span className="flex-1">법인</span>
+                              <span className="text-right">평균가</span>
+                              <span className="w-12 text-right">전일대비</span>
+                              <span className="w-12 text-right">거래량</span>
+                            </div>
+                            <ul className="divide-y divide-[#F1F3F5]">
+                              {m.companies.map((co) => (
+                                <li key={co.name} className="flex items-center gap-2 py-1.5">
+                                  <span className="h-3 w-3 rounded-full bg-[#DEE7DE]" />
+                                  <span className="flex-1 text-[12.5px] text-[#495057]">{co.name}</span>
+                                  <span className="text-[12.5px] font-bold tabular-nums">
+                                    {co.avgKg.toLocaleString()}<span className="text-[10px] text-[#868E96]">원</span>
+                                  </span>
+                                  <span
+                                    className={cn(
+                                      "w-12 text-right text-[11px] font-bold tabular-nums",
+                                      co.deltaAmount > 0 ? "text-[#E03131]" : co.deltaAmount < 0 ? "text-[#1971C2]" : "text-[#868E96]",
+                                    )}
+                                  >
+                                    {co.deltaAmount > 0 ? "▲" : co.deltaAmount < 0 ? "▼" : ""}{Math.abs(co.deltaPct).toFixed(1)}%
+                                  </span>
+                                  <span className="w-12 text-right text-[11px] text-[#868E96] tabular-nums">
+                                    {co.volumeTon.toFixed(1)}t
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         )}
-                      >
-                        {m.deltaAmount > 0 ? "▲" : m.deltaAmount < 0 ? "▼" : ""}{Math.abs(m.deltaPct).toFixed(1)}%
-                      </span>
-                      <span className="w-12 text-right text-[11px] text-[#868E96] tabular-nums">
-                        {m.volumeTon.toFixed(1)}t
-                      </span>
-                      <ChevronRight className="h-3.5 w-3.5 text-[#CED4DA]" />
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                   <li className="pt-1">
                     <button
                       type="button"
