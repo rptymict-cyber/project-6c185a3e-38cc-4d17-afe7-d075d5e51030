@@ -37,7 +37,7 @@ export function HomeWeatherBar({
           {tip}
         </span>
       ) : null}
-      <span className="text-[14px] text-[#ADB5BD]">›</span>
+      
     </button>
   );
 }
