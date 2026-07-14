@@ -94,12 +94,23 @@ function labelForOffset(period: TrendPeriod, iso: string): string {
 // -----------------------------------------------------------------------------
 
 export function decodeSeriesId(id: CompareSeriesId): {
-  kind: "all" | "market" | "company";
+  kind: "all" | "region" | "market" | "company";
+  region?: string;
   marketId?: string;
   companyName?: string;
   label: string;
 } {
   if (id === "all") return { kind: "all", label: "전국" };
+  if (id.startsWith("region:")) {
+    const region = id.slice("region:".length);
+    const short = region
+      .replace("특별시", "")
+      .replace("광역시", "")
+      .replace("특별자치도", "")
+      .replace("특별자치시", "")
+      .replace(/도$/, "");
+    return { kind: "region", region, label: `${short} 대표` };
+  }
   if (id.includes(":")) {
     const [marketId, companyName] = id.split(":");
     const m = MARKETS.find((x) => x.id === marketId);
@@ -138,12 +149,24 @@ function baseSeriesForSeriesId(
   const kgUnit = unitKgOf(crop.unit);
   const cropPerKg = crop.currentPrice / kgUnit;
   const dec = decodeSeriesId(seriesId);
-  const factor =
-    dec.kind === "all"
-      ? 1
-      : dec.kind === "market"
-        ? marketFactor(dec.marketId!)
-        : marketFactor(dec.marketId!) * companyFactor(dec.marketId!, dec.companyName!);
+  let factor: number;
+  if (dec.kind === "all") {
+    factor = 1;
+  } else if (dec.kind === "region") {
+    // 지역 대표 = 해당 지역 시장들의 volumeTon 가중 marketFactor 평균.
+    // (별도 날짜별 시장 거래량이 없어 market.volumeTon을 가중치로 사용.)
+    const inRegion = MARKETS.filter((m) => m.region === dec.region);
+    const totalVol = inRegion.reduce((s, m) => s + m.volumeTon, 0);
+    factor = totalVol > 0
+      ? inRegion.reduce((s, m) => s + marketFactor(m.id) * m.volumeTon, 0) / totalVol
+      : inRegion.length > 0
+        ? inRegion.reduce((s, m) => s + marketFactor(m.id), 0) / inRegion.length
+        : 1;
+  } else if (dec.kind === "market") {
+    factor = marketFactor(dec.marketId!);
+  } else {
+    factor = marketFactor(dec.marketId!) * companyFactor(dec.marketId!, dec.companyName!);
+  }
   const base = cropPerKg * factor;
   const len = PERIOD_LEN[period];
   const seed = hash(`${crop.id}:${seriesId}:${period}:${extraSeed}`);

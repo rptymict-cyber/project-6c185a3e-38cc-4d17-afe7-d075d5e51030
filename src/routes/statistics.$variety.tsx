@@ -1,100 +1,90 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  createFileRoute,
-  useRouter,
-} from "@tanstack/react-router";
-import { Calendar, Sprout } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { Sprout } from "lucide-react";
 import { DetailHeader } from "@/components/detail-header";
 import { AppShell } from "@/components/app-shell";
-import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
-import { MarketAveragesTable } from "@/components/statistics/MarketAveragesTable";
+import { FullSelectCard } from "@/components/common/ConditionSelectCard";
+import { RegionalStatsTab } from "@/components/statistics/RegionalStatsTab";
 import { TrendTab } from "@/components/statistics/TrendTab";
 import { VolumeByMarketTab } from "@/components/statistics/VolumeByMarketTab";
-import { CompactSelectCard, FullSelectCard } from "@/components/common/ConditionSelectCard";
-// NOTE: 작물(부류/품목/품종) 변경은 /crop-select 페이지가 유일한 진입점.
 import { resolveCropSubject } from "@/lib/mock/crop-resolver";
 import { getVarietyMarketAverages } from "@/lib/mock/variety-market-averages";
+import { computeRegionStats, marketIdsIn } from "@/lib/services/region-stats";
+import { useTrendCompare, MAX_COMPARE } from "@/store/trend-compare";
 import { useRecentStats } from "@/store/recent-stats";
+import { MARKETS } from "@/lib/mock/markets";
 import { cn } from "@/lib/utils";
-
 
 export const Route = createFileRoute("/statistics/$variety")({
   component: VarietyStatsPage,
   head: () => ({
     meta: [
-      { title: "시장별 가격 비교 — AGDICT" },
-      { name: "description", content: "품종별 시장별 가격 비교와 거래량 흐름." },
+      { title: "지역별 통계 — AGDICT" },
+      { name: "description", content: "품종별 지역별 대표 시세와 가격 추이." },
     ],
   }),
 });
 
-type Tab = "table" | "chart" | "volume";
+type Tab = "region" | "trend" | "volume";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "table", label: "표로 보기" },
-  { id: "chart", label: "그래프로 보기" },
+  { id: "region", label: "지역별 통계" },
+  { id: "trend", label: "가격 추이" },
   { id: "volume", label: "시장별 거래량" },
 ];
-
-
 
 function VarietyStatsPage() {
   const { variety } = Route.useParams();
   const router = useRouter();
-  
   const subject = resolveCropSubject(variety);
   const pushRecent = useRecentStats((s) => s.push);
 
-  // Statistics tab manages its own date state — do NOT share with market tab.
   const [date, setDate] = useState("2025-07-05");
-  const [dateOpen, setDateOpen] = useState(false);
-
-  const [tab, setTab] = useState<Tab>("table");
+  const [tab, setTab] = useState<Tab>("region");
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
   useEffect(() => {
     pushRecent(variety);
   }, [variety, pushRecent]);
 
-  const data = useMemo(
-    () => getVarietyMarketAverages({ varietyId: variety, date }),
-    [variety, date],
-  );
+  const data = getVarietyMarketAverages({ varietyId: variety, date });
+  const regions = computeRegionStats(data);
+
+  // Validate selected region against latest results.
+  useEffect(() => {
+    if (selectedRegion && !regions.find((r) => r.region === selectedRegion)) {
+      // keep name for "데이터 없음" state; only clear if not in ALL data at all
+      if (!MARKETS.some((m) => m.region === selectedRegion)) {
+        setSelectedRegion(null);
+      }
+    }
+  }, [selectedRegion, regions]);
 
   void subject;
 
-
-
-
-
-
+  const handleOpenTrend = (region: string) => {
+    setSelectedRegion(region);
+    const marketIds = marketIdsIn(region);
+    // 지역 대표 시리즈 + 시장 시리즈 (최대 MAX_COMPARE).
+    const next = [`region:${region}`, ...marketIds].slice(0, MAX_COMPARE);
+    useTrendCompare.setState({ compareIds: next });
+    setTab("trend");
+  };
 
   return (
     <AppShell
-      header={
-        <DetailHeader
-          title="통계"
-          onBack={() => router.history.back()}
-          right={null}
-        />
-      }
+      header={<DetailHeader title="통계" onBack={() => router.history.back()} right={null} />}
     >
-
-      {/* 작물 선택 — Full 카드 (breadcrumb chip 제거, 카드 하나만 유지) */}
       <div className="px-4 pt-4">
         <FullSelectCard
           icon={<Sprout className="h-3.5 w-3.5" />}
           label="작물"
           value={`${data.breadcrumb.categoryLabel} · ${data.breadcrumb.itemLabel} · ${data.breadcrumb.varietyLabel}`}
           to="/crop-select"
-          search={{
-            from: "statistics-detail",
-            return: `/statistics/${variety}`,
-          }}
+          search={{ from: "statistics-detail", return: `/statistics/${variety}` }}
         />
         <p className="mt-2 text-[11.5px] text-[#868E96]">kg당 평균가 · 경매일 기준</p>
       </div>
 
-
-      {/* Tabs */}
       <div className="mt-4 border-b border-[#E9ECEF]">
         <div className="flex px-2">
           {TABS.map((t) => {
@@ -118,103 +108,18 @@ function VarietyStatsPage() {
         </div>
       </div>
 
-      {tab === "table" && (
-        <div className="pb-6">
-          {/* Date selector card (matches 시세 탭 조회 날짜 카드) */}
-          <div className="px-4 pt-4">
-            <CompactSelectCard
-              icon={<Calendar className="h-3.5 w-3.5" />}
-              label="조회 날짜"
-              value={date.replaceAll("-", ".")}
-              onClick={() => setDateOpen(true)}
-            />
-
-
-            {data.differentFromRequest && (
-              <div className="mt-2 rounded-[8px] bg-[#F0F9F0] px-3 py-2 text-[11.5px] font-semibold text-[#1F5C1F]">
-                {data.requestedDateLabel} 휴장으로 직전 거래일({data.effectiveDateLabel}) 표시
-              </div>
-            )}
-          </div>
-
-
-          {/* Summary cards — 전체 평균 / 전일 대비 / 거래량 */}
-          <div className="mt-3 grid grid-cols-3 gap-2 px-4">
-            <SummaryCard label="전체 평균" value={`${data.overall.avgKg.toLocaleString()}원`} sub="kg당" />
-            <SummaryCard
-              label="전일 대비"
-              value={fmtSigned(data.overall.deltaAmount) + "원"}
-              sub={`${data.overall.deltaAmount > 0 ? "▲" : data.overall.deltaAmount < 0 ? "▼" : ""} ${Math.abs(data.overall.deltaPct).toFixed(1)}%`}
-              tone={toneOf(data.overall.deltaAmount)}
-            />
-            <SummaryCard label="거래량" value={`${data.overall.volumeTon.toFixed(1)}t`} sub="총 반입량" />
-          </div>
-          <p className="mt-2 px-4 text-[11px] text-[#868E96]">* kg당 평균가 기준</p>
-
-          <MarketAveragesTable data={data} />
-
-          <div className="mt-4 mx-4 rounded-[10px] border border-[#E9ECEF] bg-[#F8F9FA] px-3 py-2.5 text-[11.5px] text-[#6C757D]">
-            시장 행을 누르면 법인별 평균가를 볼 수 있어요
-          </div>
-
-        </div>
+      {tab === "region" && (
+        <RegionalStatsTab
+          varietyId={variety}
+          date={date}
+          onDateChange={setDate}
+          selectedRegion={selectedRegion}
+          onSelectRegion={setSelectedRegion}
+          onOpenTrend={handleOpenTrend}
+        />
       )}
-
-      {tab === "chart" && <TrendTab varietyId={variety} />}
-
+      {tab === "trend" && <TrendTab varietyId={variety} />}
       {tab === "volume" && <VolumeByMarketTab varietyId={variety} date={date} />}
-
-
-
-      <DatePickerSheet
-        open={dateOpen}
-        onOpenChange={setDateOpen}
-        selected={date}
-        onConfirm={(iso) => setDate(iso)}
-        hasDataFor={defaultTradingDayFilter}
-      />
-
-
-
     </AppShell>
   );
-}
-
-function MinimalHeader({ label, onBack }: { label: string; onBack: () => void }) {
-  return <DetailHeader title={label} onBack={onBack} />;
-}
-
-function SummaryCard({
-  label,
-  value,
-  sub,
-  tone,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-  tone?: "up" | "down" | "flat";
-}) {
-  const color =
-    tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
-  return (
-    <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2">
-      <div className="text-[10.5px] font-semibold text-[#6C757D]">{label}</div>
-      <div className={cn("mt-1 text-[13px] font-black tabular-nums leading-tight", color)}>
-        {value}
-      </div>
-      {sub && <div className="mt-0.5 text-[10px] text-[#868E96]">{sub}</div>}
-    </div>
-  );
-}
-
-function fmtSigned(v: number): string {
-  if (v === 0) return "0";
-  return `${v > 0 ? "+" : ""}${v.toLocaleString()}`;
-}
-
-function toneOf(v: number): "up" | "down" | "flat" {
-  if (v > 0) return "up";
-  if (v < 0) return "down";
-  return "flat";
 }

@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { ChevronRight, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { MarketComparisonSheet } from "./MarketComparisonSheet";
 import {
   TrendDualChart,
@@ -16,7 +15,6 @@ import {
   type TrendPeriod,
 } from "@/lib/mock/variety-trend";
 import { useTrendCompare } from "@/store/trend-compare";
-import { useMarketFilter } from "@/store/market";
 import { getCrop } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 
@@ -36,13 +34,11 @@ const VIEW_OPTIONS: { id: ChartView; label: string }[] = [
 ];
 
 export function TrendTab({ varietyId }: { varietyId: string }) {
-  const navigate = useNavigate();
   const [period, setPeriod] = useState<TrendPeriod>("1w");
   const [chartView, setChartView] = useState<ChartView>("both");
   const [pickerOpen, setPickerOpen] = useState(false);
   const compareIds = useTrendCompare((s) => s.compareIds);
   const removeCompare = useTrendCompare((s) => s.removeCompare);
-  const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
   const yearMode = period === "5y-w";
 
 
@@ -265,21 +261,6 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
           </p>
         </div>
       )}
-
-      {/* Footer link */}
-      <div className="mt-6 border-t border-[#F1F3F5]">
-        <button
-          type="button"
-          onClick={() => {
-            setSimpleMode(true);
-            navigate({ to: "/market" });
-          }}
-          className="flex w-full items-center justify-center gap-1 py-4 text-[13px] font-semibold text-[#3A8A3A]"
-        >
-          이 품종 경매 내역 보기
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      </div>
 
       <MarketComparisonSheet open={pickerOpen} onOpenChange={setPickerOpen} />
     </div>
