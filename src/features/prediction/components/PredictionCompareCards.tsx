@@ -45,7 +45,33 @@ export function PredictionCompareCards({
   return (
     <section>
       <h2 className="mb-2 text-[13px] font-bold text-foreground">{title}</h2>
-      <div className="grid grid-cols-2 gap-2">
+
+      {/* 강조 배너 — 추가 수익 / 예상 절감 */}
+      <div
+        className="flex items-center justify-between rounded-2xl px-4 py-3 text-white shadow-[0_10px_28px_-14px_rgba(46,158,107,0.6)]"
+        style={{ background: bannerGrad }}
+      >
+        <div>
+          <div className="text-[11px] font-semibold opacity-90">
+            {recommendationDate} {isFarmer ? "출하 시" : "매입 시"}
+          </div>
+          <div className="mt-0.5 text-[12px] font-bold opacity-95">
+            {gainLabel}
+          </div>
+        </div>
+        <div className="flex items-baseline gap-0.5">
+          <span
+            className="tabular-nums leading-none"
+            style={{ fontSize: "22px", fontWeight: 900, letterSpacing: "-0.01em" }}
+          >
+            {isPositive ? "+" : "-"}
+            {Math.abs(gain).toLocaleString()}
+          </span>
+          <span className="text-[13px] font-extrabold">원</span>
+        </div>
+      </div>
+
+      <div className="mt-2 grid grid-cols-2 gap-2">
         {/* 현재 시점 */}
         <div className="rounded-2xl border border-[#E9ECEF] bg-white p-3">
           <div className="text-[11px] font-semibold text-[#868E96]">
@@ -98,31 +124,6 @@ export function PredictionCompareCards({
               {recTotal.toLocaleString()}원
             </span>
           </div>
-        </div>
-      </div>
-
-      {/* 강조 배너 — 추가 수익 / 예상 절감 */}
-      <div
-        className="mt-2 flex items-center justify-between rounded-2xl px-4 py-3 text-white shadow-[0_10px_28px_-14px_rgba(46,158,107,0.6)]"
-        style={{ background: bannerGrad }}
-      >
-        <div>
-          <div className="text-[11px] font-semibold opacity-90">
-            {recommendationDate} {isFarmer ? "출하 시" : "매입 시"}
-          </div>
-          <div className="mt-0.5 text-[12px] font-bold opacity-95">
-            {gainLabel}
-          </div>
-        </div>
-        <div className="flex items-baseline gap-0.5">
-          <span
-            className="tabular-nums leading-none"
-            style={{ fontSize: "22px", fontWeight: 900, letterSpacing: "-0.01em" }}
-          >
-            {isPositive ? "+" : "-"}
-            {Math.abs(gain).toLocaleString()}
-          </span>
-          <span className="text-[13px] font-extrabold">원</span>
         </div>
       </div>
     </section>
