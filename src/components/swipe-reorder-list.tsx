@@ -14,13 +14,15 @@ export function SwipeReorderList({
   className,
   wrapperClassName,
   dragHandlePosition = "center",
+  swipeToDelete = true,
 }: {
   items: SRItem[];
-  onDelete: (id: string) => void;
+  onDelete?: (id: string) => void;
   onReorder: (ids: string[]) => void;
   className?: string;
   wrapperClassName?: string;
   dragHandlePosition?: "center" | "top-right";
+  swipeToDelete?: boolean;
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
