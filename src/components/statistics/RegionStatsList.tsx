@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import type { RegionStats } from "@/lib/services/region-stats";
 import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButton";
 
+
 type Sort = "price-desc" | "price-asc" | "volume-desc";
 
 const SORT_OPTIONS: { id: Sort; label: string }[] = [
