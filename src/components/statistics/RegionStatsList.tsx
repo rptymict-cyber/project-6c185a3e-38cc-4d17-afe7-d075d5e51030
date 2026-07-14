@@ -26,6 +26,7 @@ export function RegionStatsList({
 }) {
   const [sort, setSort] = useState<Sort>("price-desc");
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [expandedMarket, setExpandedMarket] = useState<string | null>(null);
   const [visible, setVisible] = useState(LIST_PAGE_SIZE);
 
   const sorted = [...regions].sort((a, b) => {
