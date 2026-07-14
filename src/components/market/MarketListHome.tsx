@@ -5,6 +5,7 @@ import { DataSourceNotice } from "@/components/home/DataSourceNotice";
 import { HomeAgriNewsSection } from "@/components/home/HomeAgriNewsSection";
 import { PredictableCropCards } from "@/components/home/PredictableCropCards";
 import { RealtimeSection } from "./RealtimeSection";
+import { HomeWeatherBar } from "@/components/home/HomeWeatherBar";
 import {
   HomeFeatureCard,
   WholesaleMarketIllustration,
@@ -24,8 +25,20 @@ export function MarketListHome({
 
   return (
     <div className="min-h-full bg-white pb-6">
-      {/* 검색바 */}
+      {/* 홈 최상단 날씨 바 */}
+      {/* 틸다 날씨 API 교체 대상 */}
       <div className="px-4 pt-3">
+        <HomeWeatherBar
+          regionLabel="청송"
+          icon="⛅"
+          temp={28}
+          desc="구름 조금"
+          tip="☂ 주말 비"
+        />
+      </div>
+
+      {/* 검색바 */}
+      <div className="px-4 pt-2">
         <Link
           to="/search"
           className="flex w-full items-center gap-2 rounded-[12px] border border-[#E8EEE8] bg-white px-4 py-3 text-left text-[13px] text-muted-foreground"
