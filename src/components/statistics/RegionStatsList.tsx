@@ -112,6 +112,15 @@ export function RegionStatsList({
               </button>
               {open && (
                 <ul className="border-t border-[#F1F3F5] bg-[#FBFDFB] px-3 pb-2">
+                  <li className="flex items-center gap-2 pt-2 pb-1 text-[10.5px] font-bold text-[#868E96]">
+                    <span className="h-4 w-4" />
+                    <span className="flex-1">도매시장</span>
+                    <span className="text-right">평균가</span>
+                    <span className="w-12 text-right">전일대비</span>
+                    <span className="w-12 text-right">거래량</span>
+                    <span className="w-3.5" />
+                  </li>
+
                   {r.markets.map((m) => (
                     <li key={m.id} className="flex items-center gap-2 py-2">
                       <Store className="h-4 w-4 text-[#3A8A3A]" />
