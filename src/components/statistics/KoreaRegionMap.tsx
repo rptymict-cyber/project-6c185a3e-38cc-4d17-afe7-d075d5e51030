@@ -33,18 +33,32 @@ type Props = {
   onSelect: (region: string | null) => void;
 };
 
-const NO_DATA_FILL = "#F1F3F5";
+const NO_DATA_FILL = "#EBEEF0";
 const NO_DATA_STROKE = "#DEE2E6";
-const DATA_FILL = "#8CE99A";
 const DATA_STROKE = "#3A8A3A";
-const SELECTED_FILL = "#2F7A2F";
 const SELECTED_STROKE = "#1F5C1F";
+
+/** hex 보간: light → dark (min~max 정규화). */
+function shadeFor(t: number): string {
+  // t in [0,1]. light #E6F5E6 → dark #2F7A2F
+  const clamp = Math.max(0, Math.min(1, t));
+  const light = [230, 245, 230];
+  const dark = [47, 122, 47];
+  const rgb = light.map((c, i) => Math.round(c + (dark[i] - c) * clamp));
+  return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+}
 
 export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
   const byRegion = useMemo(() => {
     const m = new Map<string, RegionStats>();
     for (const r of regions) m.set(toMapKey(r.region), r);
     return m;
+  }, [regions]);
+
+  const { min, max } = useMemo(() => {
+    if (regions.length === 0) return { min: 0, max: 0 };
+    const arr = regions.map((r) => r.avgKg);
+    return { min: Math.min(...arr), max: Math.max(...arr) };
   }, [regions]);
 
   const allKeys = Object.keys(MAP.paths);
@@ -61,8 +75,18 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
     return 0;
   });
 
+  const fillOf = (stats: RegionStats): string => {
+    if (max === min) return shadeFor(0.5);
+    return shadeFor((stats.avgKg - min) / (max - min));
+  };
+
   return (
     <div className="relative">
+      {selectedStats && (
+        <div className="pointer-events-none absolute left-1/2 top-1 z-10 -translate-x-1/2 rounded-full bg-[#1F5C1F] px-3 py-1 text-[11.5px] font-bold text-white shadow-sm">
+          {selectedStats.region} {selectedStats.avgKg.toLocaleString()}원/kg
+        </div>
+      )}
       <svg
         viewBox={MAP.viewBox}
         className="w-full h-auto"
@@ -74,8 +98,13 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
           const stats = byRegion.get(key);
           const isSelected = key === selectedKey;
           const hasData = !!stats;
-          const fill = isSelected ? SELECTED_FILL : hasData ? DATA_FILL : NO_DATA_FILL;
-          const stroke = isSelected ? SELECTED_STROKE : hasData ? DATA_STROKE : NO_DATA_STROKE;
+          const dim = selectedKey && !isSelected;
+          const fill = hasData ? fillOf(stats!) : NO_DATA_FILL;
+          const stroke = isSelected
+            ? SELECTED_STROKE
+            : hasData
+              ? DATA_STROKE
+              : NO_DATA_STROKE;
           const displayName = stats?.region ?? key;
           return (
             <path
@@ -83,8 +112,9 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
               d={MAP.paths[key]}
               fill={fill}
               stroke={stroke}
-              strokeWidth={isSelected ? 1.5 : 0.7}
+              strokeWidth={isSelected ? 2 : 0.7}
               strokeLinejoin="round"
+              opacity={dim ? 0.35 : 1}
               onClick={() => {
                 if (hasData) onSelect(isSelected ? null : displayName);
               }}
@@ -99,26 +129,36 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
           );
         })}
 
-        {/* Labels only for regions with data */}
+        {/* Data labels: pin + leader line + pill (pill placed off-shape for tiny metros) */}
         {allKeys.map((key) => {
           const stats = byRegion.get(key);
           if (!stats) return null;
           const [lx, ly] = MAP.labels[key] ?? [0, 0];
           const [ox, oy] = MAP.labelOffset?.[key] ?? [0, 0];
           const isSelected = key === selectedKey;
+          const dim = selectedKey && !isSelected;
           const label = MAP.shortName?.[key] ?? shortName(stats.region);
           const cx = lx + ox;
           const cy = ly + oy;
+          const hasLeader = ox !== 0 || oy !== 0;
           return (
-            <g key={`lbl-${key}`} pointerEvents="none">
-              {/* Small pin dot at centroid so the pill can sit off-shape for tiny metros */}
+            <g key={`lbl-${key}`} pointerEvents="none" opacity={dim ? 0.4 : 1}>
+              {hasLeader && (
+                <line
+                  x1={lx}
+                  y1={ly}
+                  x2={cx}
+                  y2={cy}
+                  stroke={isSelected ? SELECTED_STROKE : DATA_STROKE}
+                  strokeWidth={0.7}
+                />
+              )}
               <circle
                 cx={lx}
                 cy={ly}
-                r={isSelected ? 3 : 2.2}
+                r={isSelected ? 3 : 2.4}
                 fill={isSelected ? SELECTED_STROKE : DATA_STROKE}
               />
-              {/* Value pill */}
               <g transform={`translate(${cx},${cy})`}>
                 <rect
                   x={-26}
@@ -152,6 +192,26 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
                 </text>
               </g>
             </g>
+          );
+        })}
+
+        {/* No-data region names — very light */}
+        {allKeys.map((key) => {
+          if (byRegion.has(key)) return null;
+          const [lx, ly] = MAP.labels[key] ?? [0, 0];
+          const label = MAP.shortName?.[key] ?? key;
+          return (
+            <text
+              key={`nd-${key}`}
+              x={lx}
+              y={ly}
+              textAnchor="middle"
+              fontSize={8}
+              fill="#ADB5BD"
+              pointerEvents="none"
+            >
+              {label}
+            </text>
           );
         })}
 
