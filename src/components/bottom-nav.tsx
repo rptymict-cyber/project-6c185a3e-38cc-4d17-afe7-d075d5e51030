@@ -8,7 +8,7 @@ const tabs: { to: string; label: string; Icon: ComponentType<{ className?: strin
   { to: "/market", label: "시세", Icon: LineChart },
   { to: "/watchlist", label: "즐겨찾기", Icon: Star },
   { to: "/statistics", label: "통계", Icon: BarChart3 },
-  { to: "/settings", label: "추천", Icon: Settings },
+  { to: "/settings", label: "설정", Icon: Settings },
 ];
 
 function BottomNavBase() {
