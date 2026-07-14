@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WeatherRouteImport } from './routes/weather'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as PredictionRouteImport } from './routes/prediction'
@@ -42,6 +43,11 @@ import { Route as MarketWholesaleMarketRouteImport } from './routes/market.whole
 import { Route as MarketItemItemRouteImport } from './routes/market.item.$item'
 import { Route as MarketAuctionIdRouteImport } from './routes/market.auction.$id'
 
+const WeatherRoute = WeatherRouteImport.update({
+  id: '/weather',
+  path: '/weather',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
+  '/weather': typeof WeatherRoute
   '/market/$crop': typeof MarketCropRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
+  '/weather': typeof WeatherRoute
   '/market/$crop': typeof MarketCropRoute
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
@@ -286,6 +294,7 @@ export interface FileRoutesById {
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
+  '/weather': typeof WeatherRoute
   '/market/$crop': typeof MarketCropRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
@@ -322,6 +331,7 @@ export interface FileRouteTypes {
     | '/prediction'
     | '/search'
     | '/settings'
+    | '/weather'
     | '/market/$crop'
     | '/notifications/settings'
     | '/price/$variety'
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/prediction'
     | '/search'
     | '/settings'
+    | '/weather'
     | '/market/$crop'
     | '/price/$variety'
     | '/statistics/$variety'
@@ -387,6 +398,7 @@ export interface FileRouteTypes {
     | '/prediction'
     | '/search'
     | '/settings'
+    | '/weather'
     | '/market/$crop'
     | '/notifications/settings'
     | '/price/$variety'
@@ -422,6 +434,7 @@ export interface RootRouteChildren {
   PredictionRoute: typeof PredictionRoute
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
+  WeatherRoute: typeof WeatherRoute
   PriceVarietyRoute: typeof PriceVarietyRouteWithChildren
   StatisticsVarietyRoute: typeof StatisticsVarietyRoute
   StatisticsSelectRoute: typeof StatisticsSelectRoute
@@ -432,6 +445,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/weather': {
+      id: '/weather'
+      path: '/weather'
+      fullPath: '/weather'
+      preLoaderRoute: typeof WeatherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -739,6 +759,7 @@ const rootRouteChildren: RootRouteChildren = {
   PredictionRoute: PredictionRoute,
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
+  WeatherRoute: WeatherRoute,
   PriceVarietyRoute: PriceVarietyRouteWithChildren,
   StatisticsVarietyRoute: StatisticsVarietyRoute,
   StatisticsSelectRoute: StatisticsSelectRoute,
