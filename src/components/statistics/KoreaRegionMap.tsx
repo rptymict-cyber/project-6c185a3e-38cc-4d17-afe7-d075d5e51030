@@ -1,33 +1,31 @@
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import type { RegionStats } from "@/lib/services/region-stats";
-import { ALL_REGIONS, shortName } from "@/lib/services/region-stats";
+import { shortName } from "@/lib/services/region-stats";
+import sidoMap from "@/assets/korea-sido.json";
 
 /**
- * 스타일라이즈드 대한민국 시·도 배치 (지리적 SVG 아님).
- * 좌표는 실제 위치에 근사한 UI 메타데이터. 지리 SVG로 언제든 교체 가능하도록
- * ALL_REGIONS ↔ REGION_POS 매핑으로 분리했다.
- * 라이선스: 좌표는 프로젝트 자체 자산(공개 도메인).
+ * 실제 시·도 경계 SVG. paths/labels는 src/assets/korea-sido.json 자산에서
+ * 그대로 사용하고, 이 컴포넌트에서 좌표를 생성하지 않는다.
  */
-const REGION_POS: Record<string, { x: number; y: number }> = {
-  서울특별시: { x: 135, y: 105 },
-  인천광역시: { x: 100, y: 115 },
-  경기도: { x: 140, y: 140 },
-  강원특별자치도: { x: 205, y: 105 },
-  충청북도: { x: 175, y: 185 },
-  충청남도: { x: 115, y: 200 },
-  세종특별자치시: { x: 150, y: 200 },
-  대전광역시: { x: 160, y: 220 },
-  전라북도: { x: 125, y: 250 },
-  전라남도: { x: 105, y: 305 },
-  광주광역시: { x: 135, y: 295 },
-  경상북도: { x: 220, y: 195 },
-  대구광역시: { x: 215, y: 235 },
-  경상남도: { x: 195, y: 285 },
-  울산광역시: { x: 245, y: 270 },
-  부산광역시: { x: 230, y: 305 },
-  제주특별자치도: { x: 130, y: 375 },
+type SidoMap = {
+  viewBox: string;
+  paths: Record<string, string>;
+  labels: Record<string, [number, number]>;
+  labelOffset?: Record<string, [number, number]>;
+  shortName?: Record<string, string>;
 };
+
+const MAP = sidoMap as SidoMap;
+
+/** 데이터 지역명 → JSON 지역 키. 강원특별자치도 등 신 명칭 매핑. */
+const DATA_TO_MAP_KEY: Record<string, string> = {
+  강원특별자치도: "강원도",
+  전북특별자치도: "전라북도",
+};
+function toMapKey(region: string): string {
+  return DATA_TO_MAP_KEY[region] ?? region;
+}
 
 type Props = {
   regions: RegionStats[];
@@ -35,102 +33,148 @@ type Props = {
   onSelect: (region: string | null) => void;
 };
 
+const NO_DATA_FILL = "#F1F3F5";
+const NO_DATA_STROKE = "#DEE2E6";
+const DATA_FILL = "#8CE99A";
+const DATA_STROKE = "#3A8A3A";
+const SELECTED_FILL = "#2F7A2F";
+const SELECTED_STROKE = "#1F5C1F";
+
 export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
   const byRegion = useMemo(() => {
     const m = new Map<string, RegionStats>();
-    for (const r of regions) m.set(r.region, r);
+    for (const r of regions) m.set(toMapKey(r.region), r);
     return m;
   }, [regions]);
 
-  const { min, max } = useMemo(() => {
-    const vals = regions.map((r) => r.avgKg);
-    return { min: Math.min(...vals), max: Math.max(...vals) };
-  }, [regions]);
+  const allKeys = Object.keys(MAP.paths);
+  const selectedKey = selected ? toMapKey(selected) : null;
+  const selectedStats = selected ? regions.find((r) => r.region === selected) ?? null : null;
 
-  const colorFor = (r?: RegionStats): string => {
-    if (!r) return "#F1F3F5";
-    if (min === max) return "#8CE99A";
-    const t = (r.avgKg - min) / (max - min);
-    // gradient from #E6F5E6 → #2F7A2F
-    const pct = Math.round(t * 5);
-    const scale = ["#EAF7EA", "#C7EAC7", "#9FDA9F", "#6FC46F", "#3E9E3E", "#2F7A2F"];
-    return scale[pct];
-  };
+  // Render order: no-data first, data next, selected last (on top).
+  const ordered = [...allKeys].sort((a, b) => {
+    const aHas = byRegion.has(a) ? 1 : 0;
+    const bHas = byRegion.has(b) ? 1 : 0;
+    if (aHas !== bHas) return aHas - bHas;
+    if (a === selectedKey) return 1;
+    if (b === selectedKey) return -1;
+    return 0;
+  });
 
   return (
     <div className="relative">
       <svg
-        viewBox="0 0 340 420"
+        viewBox={MAP.viewBox}
         className="w-full h-auto"
         role="group"
         aria-label="대한민국 시·도 지도"
       >
-        {ALL_REGIONS.map((region) => {
-          const pos = REGION_POS[region];
-          if (!pos) return null;
-          const stats = byRegion.get(region);
-          const active = selected === region;
-          const fill = colorFor(stats);
-          const label = shortName(region);
+        {/* Region shapes */}
+        {ordered.map((key) => {
+          const stats = byRegion.get(key);
+          const isSelected = key === selectedKey;
           const hasData = !!stats;
+          const fill = isSelected ? SELECTED_FILL : hasData ? DATA_FILL : NO_DATA_FILL;
+          const stroke = isSelected ? SELECTED_STROKE : hasData ? DATA_STROKE : NO_DATA_STROKE;
+          const displayName = stats?.region ?? key;
           return (
-            <g key={region}>
+            <path
+              key={key}
+              d={MAP.paths[key]}
+              fill={fill}
+              stroke={stroke}
+              strokeWidth={isSelected ? 1.5 : 0.7}
+              strokeLinejoin="round"
+              onClick={() => {
+                if (hasData) onSelect(isSelected ? null : displayName);
+              }}
+              style={{ cursor: hasData ? "pointer" : "default" }}
+              aria-label={
+                hasData
+                  ? `${displayName} 평균가 ${stats!.avgKg.toLocaleString()}원${isSelected ? " 선택됨" : ""}`
+                  : `${key} 데이터 없음`
+              }
+              role={hasData ? "button" : undefined}
+            />
+          );
+        })}
+
+        {/* Labels only for regions with data */}
+        {allKeys.map((key) => {
+          const stats = byRegion.get(key);
+          if (!stats) return null;
+          const [lx, ly] = MAP.labels[key] ?? [0, 0];
+          const [ox, oy] = MAP.labelOffset?.[key] ?? [0, 0];
+          const isSelected = key === selectedKey;
+          const label = MAP.shortName?.[key] ?? shortName(stats.region);
+          const cx = lx + ox;
+          const cy = ly + oy;
+          return (
+            <g key={`lbl-${key}`} pointerEvents="none">
+              {/* Small pin dot at centroid so the pill can sit off-shape for tiny metros */}
               <circle
-                cx={pos.x}
-                cy={pos.y}
-                r={active ? 26 : 22}
-                fill={fill}
-                stroke={active ? "#1F5C1F" : hasData ? "#3A8A3A33" : "#DEE2E6"}
-                strokeWidth={active ? 3 : 1}
-                onClick={() => onSelect(active ? null : region)}
-                aria-label={
-                  hasData
-                    ? `${region} 평균가 ${stats!.avgKg.toLocaleString()}원${active ? " 선택됨" : ""}`
-                    : `${region} 데이터 없음`
-                }
-                role="button"
-                tabIndex={0}
-                style={{ cursor: "pointer" }}
+                cx={lx}
+                cy={ly}
+                r={isSelected ? 3 : 2.2}
+                fill={isSelected ? SELECTED_STROKE : DATA_STROKE}
               />
-              <text
-                x={pos.x}
-                y={pos.y - 2}
-                textAnchor="middle"
-                fontSize={11}
-                fontWeight={700}
-                fill={hasData ? "#1F3D1F" : "#ADB5BD"}
-                pointerEvents="none"
-              >
-                {label}
-              </text>
-              {hasData && (
+              {/* Value pill */}
+              <g transform={`translate(${cx},${cy})`}>
+                <rect
+                  x={-26}
+                  y={-11}
+                  width={52}
+                  height={22}
+                  rx={6}
+                  fill="white"
+                  stroke={isSelected ? SELECTED_STROKE : DATA_STROKE}
+                  strokeWidth={isSelected ? 1.5 : 0.8}
+                />
                 <text
-                  x={pos.x}
-                  y={pos.y + 11}
+                  x={0}
+                  y={-1}
                   textAnchor="middle"
-                  fontSize={10}
+                  fontSize={9}
                   fontWeight={700}
-                  fill="#1F3D1F"
-                  pointerEvents="none"
+                  fill="#495057"
                 >
-                  {stats!.avgKg.toLocaleString()}원
+                  {label}
                 </text>
-              )}
+                <text
+                  x={0}
+                  y={9}
+                  textAnchor="middle"
+                  fontSize={9}
+                  fontWeight={800}
+                  fill={isSelected ? SELECTED_STROKE : "#1F3D1F"}
+                >
+                  {stats.avgKg.toLocaleString()}원
+                </text>
+              </g>
             </g>
           );
         })}
-      </svg>
 
-      {/* Legend */}
-      <div className="mt-3 flex items-center justify-between px-4 text-[11px] text-[#6C757D]">
-        <span>낮은 평균가</span>
-        <div className="flex h-3 flex-1 mx-2 rounded overflow-hidden">
-          {["#EAF7EA", "#C7EAC7", "#9FDA9F", "#6FC46F", "#3E9E3E", "#2F7A2F"].map((c) => (
-            <div key={c} className="flex-1" style={{ background: c }} />
-          ))}
-        </div>
-        <span>높은 평균가</span>
-      </div>
+        {/* Market pins around selected region centroid (no market coords available) */}
+        {selectedStats &&
+          (() => {
+            const key = toMapKey(selectedStats.region);
+            const [lx, ly] = MAP.labels[key] ?? [0, 0];
+            const markets = selectedStats.markets;
+            return markets.map((m, i) => {
+              const angle = (i / Math.max(markets.length, 1)) * Math.PI * 2 - Math.PI / 2;
+              const r = 22;
+              const mx = lx + Math.cos(angle) * r;
+              const my = ly + Math.sin(angle) * r;
+              return (
+                <g key={m.id} pointerEvents="none">
+                  <circle cx={mx} cy={my} r={3.5} fill="white" stroke={SELECTED_STROKE} strokeWidth={1.2} />
+                  <circle cx={mx} cy={my} r={1.6} fill={SELECTED_STROKE} />
+                </g>
+              );
+            });
+          })()}
+      </svg>
 
       <p
         className={cn(
@@ -140,7 +184,7 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
       >
         {selected
           ? `${selected} 선택됨 · 지역을 다시 눌러 해제`
-          : "지역을 누르면 도매시장별 통계를 확인할 수 있어요"}
+          : "채색된 지역을 눌러 도매시장별 통계를 확인하세요"}
       </p>
     </div>
   );
