@@ -8,6 +8,8 @@ import { PredictionConditionGrid } from "@/features/prediction/components/Predic
 import { PredictionCropSheet } from "@/features/prediction/components/PredictionCropSheet";
 import { PredictionFactorList } from "@/features/prediction/components/PredictionFactorList";
 import { PredictionInsightCard } from "@/features/prediction/components/PredictionInsightCard";
+import { PredictionWeatherCard } from "@/features/prediction/components/PredictionWeatherCard";
+import { getCropWeather } from "@/features/prediction/mockWeatherData";
 
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
@@ -157,6 +159,21 @@ function PredictionPage() {
           onMarketClick={() => setMarketSheetOpen(true)}
           onViewpointClick={() => setViewpointSheetOpen(true)}
         />
+
+        {/* 날씨·작황 카드 (조건 아래, 추천 위) */}
+        <div className="mt-3">
+          {(() => {
+            const w = getCropWeather(selectedCropId);
+            return (
+              <PredictionWeatherCard
+                regionLabel={`${w.region} (재배 지역)`}
+                current={w.current}
+                forecast={w.forecast}
+                priceImpact={w.priceImpact}
+              />
+            );
+          })()}
+        </div>
 
         {/* 2. AI 추천 카드 (선택 날짜 반영) */}
         <div className="mt-3">
