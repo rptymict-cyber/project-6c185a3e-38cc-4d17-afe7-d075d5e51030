@@ -16,7 +16,7 @@ type SidoMap = {
   shortName?: Record<string, string>;
 };
 
-const MAP = sidoMap as SidoMap;
+const MAP = sidoMap as unknown as SidoMap;
 
 /** 데이터 지역명 → JSON 지역 키. 강원특별자치도 등 신 명칭 매핑. */
 const DATA_TO_MAP_KEY: Record<string, string> = {
