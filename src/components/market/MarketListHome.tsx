@@ -26,15 +26,8 @@ export function MarketListHome({
   return (
     <div className="min-h-full bg-white pb-6">
       {/* 홈 최상단 날씨 바 */}
-      {/* 틸다 날씨 API 교체 대상 */}
       <div className="px-4 pt-3">
-        <HomeWeatherBar
-          regionLabel="청송"
-          icon="⛅"
-          temp={28}
-          desc="구름 조금"
-          tip="☂ 주말 비"
-        />
+        <HomeWeatherBar />
       </div>
 
       {/* 검색바 */}

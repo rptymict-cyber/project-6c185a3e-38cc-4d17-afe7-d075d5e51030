@@ -122,6 +122,14 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    // 앱 진입 시 OS 위치 권한 요청 (세션당 1회)
+    import("../store/location").then(({ useLocation }) => {
+      useLocation.getState().request();
+    });
+  }, []);
+
+
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
