@@ -41,10 +41,10 @@ type Weather = {
 
 // 틸다 날씨 API 교체 대상
 export const MOCK_WEATHER: Weather = {
-  region: "청송",
-  regionFull: "경북 청송",
-  current: { icon: "⛅", temp: 28, desc: "구름 조금" },
-  tip: "☂ 주말 비",
+  region: "공주시 우성면",
+  regionFull: "충남 공주시 우성면",
+  current: { icon: "☁️", temp: 28, desc: "대체로 흐림" },
+  tip: "주말 비",
   today: { dateLabel: "2026년 7월 3일 금요일", high: 31, low: 24 },
   metrics: { pop: 60, humidity: 72, windMs: 2.1, uvLabel: "보통" },
   hourly: [
