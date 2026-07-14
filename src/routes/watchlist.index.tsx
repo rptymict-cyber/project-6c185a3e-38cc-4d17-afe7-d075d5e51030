@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Check, Plus, Search, Star, Trash2, X } from "lucide-react";
+import { Check, Plus, Search, Star, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell, TopHeader } from "@/components/app-shell";
