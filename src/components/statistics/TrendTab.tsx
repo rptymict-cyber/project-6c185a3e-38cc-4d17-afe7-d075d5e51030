@@ -266,21 +266,6 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
         </div>
       )}
 
-      {/* Footer link */}
-      <div className="mt-6 border-t border-[#F1F3F5]">
-        <button
-          type="button"
-          onClick={() => {
-            setSimpleMode(true);
-            navigate({ to: "/market" });
-          }}
-          className="flex w-full items-center justify-center gap-1 py-4 text-[13px] font-semibold text-[#3A8A3A]"
-        >
-          이 품종 경매 내역 보기
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      </div>
-
       <MarketComparisonSheet open={pickerOpen} onOpenChange={setPickerOpen} />
     </div>
   );
