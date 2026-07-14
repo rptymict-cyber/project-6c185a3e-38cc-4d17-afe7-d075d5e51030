@@ -94,7 +94,7 @@ export function SwipeReorderList({
             onOpenChange={(open) => setOpenId(open ? id : null)}
             onDelete={() => {
               setOpenId(null);
-              onDelete(id);
+              onDelete?.(id);
             }}
             onGripDown={(e) => {
               const el = rowRefs.current.get(id);
