@@ -110,6 +110,7 @@ export function SwipeReorderList({
             className={className}
             wrapperClassName={wrapperClassName}
             dragHandlePosition={dragHandlePosition}
+            swipeToDelete={swipeToDelete}
           >
             {item.render()}
           </SwipeRow>
