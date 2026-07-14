@@ -172,17 +172,19 @@ function SwipeRow({
       }}
     >
       {/* delete button under */}
-      <button
-        type="button"
-        aria-label="삭제"
-        onClick={onDelete}
-        className={cn(
-          "absolute inset-y-0 right-0 flex w-20 items-center justify-center bg-[#E03131] text-white transition-opacity duration-200",
-          tx <= -OPEN_THRESHOLD ? "opacity-100" : "opacity-0",
-        )}
-      >
-        <Trash2 className="h-5 w-5" />
-      </button>
+      {swipeToDelete && (
+        <button
+          type="button"
+          aria-label="삭제"
+          onClick={onDelete}
+          className={cn(
+            "absolute inset-y-0 right-0 flex w-20 items-center justify-center bg-[#E03131] text-white transition-opacity duration-200",
+            tx <= -OPEN_THRESHOLD ? "opacity-100" : "opacity-0",
+          )}
+        >
+          <Trash2 className="h-5 w-5" />
+        </button>
+      )}
       {/* foreground content */}
       <div
         className={cn("relative z-10 flex w-full items-stretch bg-surface", className)}
@@ -192,12 +194,14 @@ function SwipeRow({
         }}
 
         onPointerDown={(e) => {
+          if (!swipeToDelete) return;
           if ((e.target as HTMLElement).closest("[data-drag-handle]")) return;
           startX.current = e.clientX;
           startTx.current = tx;
           moved.current = false;
         }}
         onPointerMove={(e) => {
+          if (!swipeToDelete) return;
           if (startX.current === null) return;
           const dx = e.clientX - startX.current;
           if (Math.abs(dx) > 4) moved.current = true;
@@ -205,12 +209,14 @@ function SwipeRow({
           setTx(next);
         }}
         onPointerUp={() => {
+          if (!swipeToDelete) return;
           if (startX.current === null) return;
           startX.current = null;
           const shouldOpen = tx < -OPEN_THRESHOLD;
           onOpenChange(shouldOpen);
         }}
         onPointerCancel={() => {
+          if (!swipeToDelete) return;
           startX.current = null;
           setTx(open ? -SWIPE_MAX : 0);
         }}
