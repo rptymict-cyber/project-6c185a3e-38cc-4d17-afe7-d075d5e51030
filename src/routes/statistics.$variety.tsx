@@ -119,9 +119,7 @@ function VarietyStatsPage() {
         />
       )}
       {tab === "trend" && <TrendTab varietyId={variety} />}
-      {tab === "volume" && (
-        <VolumeByMarketTab varietyId={variety} date={date} regionFilter={selectedRegion} />
-      )}
+      {tab === "volume" && <VolumeByMarketTab varietyId={variety} date={date} />}
     </AppShell>
   );
 }
