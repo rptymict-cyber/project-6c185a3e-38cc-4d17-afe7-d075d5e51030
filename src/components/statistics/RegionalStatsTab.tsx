@@ -27,6 +27,7 @@ export function RegionalStatsTab({
 }) {
   const [view, setView] = useState<View>("map");
   const [dateOpen, setDateOpen] = useState(false);
+  const [expandedMarket, setExpandedMarket] = useState<string | null>(null);
 
   const data = useMemo(
     () => getVarietyMarketAverages({ varietyId, date }),
