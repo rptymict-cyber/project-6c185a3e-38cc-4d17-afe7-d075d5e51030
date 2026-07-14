@@ -34,13 +34,11 @@ const VIEW_OPTIONS: { id: ChartView; label: string }[] = [
 ];
 
 export function TrendTab({ varietyId }: { varietyId: string }) {
-  const navigate = useNavigate();
   const [period, setPeriod] = useState<TrendPeriod>("1w");
   const [chartView, setChartView] = useState<ChartView>("both");
   const [pickerOpen, setPickerOpen] = useState(false);
   const compareIds = useTrendCompare((s) => s.compareIds);
   const removeCompare = useTrendCompare((s) => s.removeCompare);
-  const setSimpleMode = useMarketFilter((s) => s.setSimpleMode);
   const yearMode = period === "5y-w";
 
 
