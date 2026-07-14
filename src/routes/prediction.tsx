@@ -158,6 +158,8 @@ function PredictionPage() {
           onMarketClick={() => setMarketSheetOpen(true)}
           onViewpointClick={() => setViewpointSheetOpen(true)}
         />
+        {/* 날씨→가격 인과 카드 */}
+        <PredictionWeatherCause />
 
         {/* 2. AI 추천 카드 (선택 날짜 반영) */}
         <div className="mt-3">
