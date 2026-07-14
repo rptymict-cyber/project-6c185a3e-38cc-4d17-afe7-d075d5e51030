@@ -52,7 +52,16 @@ export function RegionStatsList({
         </select>
       </div>
 
-      <ul className="mt-3 divide-y divide-[#F1F3F5] rounded-[12px] border border-[#E9ECEF] bg-white overflow-hidden">
+      <div className="mt-3 flex items-center gap-2 rounded-t-[12px] border border-b-0 border-[#E9ECEF] bg-[#F8F9FA] px-3 py-2 text-[10.5px] font-bold text-[#6C757D]">
+        <span className="w-5">#</span>
+        <span className="flex-1">지역</span>
+        <span className="text-right">평균가</span>
+        <span className="w-14 text-right">전일대비</span>
+        <span className="w-14 text-right">거래량</span>
+        <span className="w-4" />
+      </div>
+      <ul className="divide-y divide-[#F1F3F5] rounded-b-[12px] border border-[#E9ECEF] bg-white overflow-hidden">
+
         {shown.map((r, idx) => {
           const active = selected === r.region;
           const open = !!expanded[r.region] || active;
