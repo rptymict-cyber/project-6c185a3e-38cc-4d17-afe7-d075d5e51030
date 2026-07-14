@@ -21,6 +21,7 @@ export type Database = {
           kind: string
           message: string
           rating: number | null
+          tags: string[]
         }
         Insert: {
           created_at?: string
@@ -28,6 +29,7 @@ export type Database = {
           kind: string
           message: string
           rating?: number | null
+          tags?: string[]
         }
         Update: {
           created_at?: string
@@ -35,6 +37,7 @@ export type Database = {
           kind?: string
           message?: string
           rating?: number | null
+          tags?: string[]
         }
         Relationships: []
       }
