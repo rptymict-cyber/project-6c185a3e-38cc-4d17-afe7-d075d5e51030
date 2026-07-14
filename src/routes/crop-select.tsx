@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronRight, Search, X } from "lucide-react";
-import { DetailHeader } from "@/components/detail-header";
+import { ArrowLeft, Check, ChevronRight, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
@@ -15,6 +14,7 @@ import {
 import { useCropSelection } from "@/store/cropSelection";
 import { useMarketFilter } from "@/store/market";
 import { CropIcon } from "@/components/crop-icon";
+import { Button } from "@/components/ui/button";
 
 type Step = 1 | 2 | 3;
 
@@ -40,11 +40,6 @@ export const Route = createFileRoute("/crop-select")({
   }),
 });
 
-/**
- * from 컨텍스트별 CTA 라벨 매핑.
- * 매핑에 없는 값이 들어오면 기본 라벨("적용하기")로 동작한다.
- * 새 화면을 추가할 때 여기에 매핑만 추가하면 된다.
- */
 const CTA_LABEL_BY_FROM: Record<string, string> = {
   market: "확인",
   statistics: "확인",
@@ -55,17 +50,20 @@ const CTA_LABEL_BY_FROM: Record<string, string> = {
 const DEFAULT_CTA_LABEL = "적용하기";
 const SILENT_APPLY_FROM = new Set(["statistics", "statistics-detail"]);
 
-const DEFAULT_PAGE_TITLE = "작물 선택";
-
-
-const STEP_TITLE: Record<Step, string> = {
-  1: "부류 선택",
-  2: "품목 선택",
-  3: "품종 선택",
-};
-
 const HISTORY_KEY = "__cropSelectStep";
 const ALL_VARIETY_ID = "ALL" as const;
+
+const SUBTITLE: Record<Step, string> = {
+  1: "먼저 부류를 선택해 주세요",
+  2: "선택한 부류에서 품목을 골라주세요",
+  3: "선택한 품목의 품종을 선택해 주세요",
+};
+
+const PLACEHOLDER: Record<Step, string> = {
+  1: "부류를 검색하세요",
+  2: "품목을 입력하세요",
+  3: "품종을 검색하세요",
+};
 
 function CropSelectPage() {
   const { from, return: returnPath } = Route.useSearch();
@@ -73,9 +71,7 @@ function CropSelectPage() {
 
   const draft = useCropSelection((s) => s.draft);
   const committed = useCropSelection((s) => s.committed);
-  const startDraftFromCommitted = useCropSelection(
-    (s) => s.startDraftFromCommitted,
-  );
+  const startDraftFromCommitted = useCropSelection((s) => s.startDraftFromCommitted);
   const setDraftCategory = useCropSelection((s) => s.setDraftCategory);
   const setDraftItem = useCropSelection((s) => s.setDraftItem);
   const setDraftVariety = useCropSelection((s) => s.setDraftVariety);
@@ -90,22 +86,19 @@ function CropSelectPage() {
     if (committed.itemId) return 3;
     if (committed.categoryId) return 2;
     return 1;
-    // 마운트 시점 초기값만 계산
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [step, setStep] = useState<Step>(initialStep);
 
   const returnTo = returnPath && returnPath.startsWith("/") ? returnPath : "/";
-  const ctaLabel = (from && CTA_LABEL_BY_FROM[from]) ?? DEFAULT_CTA_LABEL;
-  const pageTitle = DEFAULT_PAGE_TITLE;
+  const ctaLabel = step === 3 ? "확인" : "다음";
+  const finalCtaLabel = (from && CTA_LABEL_BY_FROM[from]) ?? DEFAULT_CTA_LABEL;
 
-  // 마운트 시 draft를 committed로부터 초기화
   useEffect(() => {
     startDraftFromCommitted();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // step별 history 관리 (OS/브라우저 뒤로가기로 스텝 후퇴)
   const suppressPopRef = useRef(false);
   const prevStepRef = useRef<Step>(initialStep);
   useEffect(() => {
@@ -123,10 +116,7 @@ function CropSelectPage() {
         return;
       }
       setStep((current) => {
-        if (current > 1) {
-          return (current - 1) as Step;
-        }
-        // 1단계에서 뒤로가기 → draft 폐기 후 return 경로 이동
+        if (current > 1) return (current - 1) as Step;
         discardDraft();
         navigate({ to: returnTo });
         return current;
@@ -136,24 +126,39 @@ function CropSelectPage() {
     return () => window.removeEventListener("popstate", onPop);
   }, [discardDraft, navigate, returnTo]);
 
-  const goStep = (target: Step) => {
-    if (target === step) return;
-    if (target === 2 && !draft.categoryId) return;
-    if (target === 3 && !draft.itemId) return;
-    setStep(target);
-  };
-
-  const handleClose = () => {
+  const handleBack = () => {
+    if (step > 1) {
+      setStep((step - 1) as Step);
+      return;
+    }
     discardDraft();
     navigate({ to: returnTo });
+  };
+
+  const handleNext = () => {
+    if (step === 1) {
+      if (!draft.categoryId) return;
+      setStep(2);
+      return;
+    }
+    if (step === 2) {
+      if (!draft.itemId) return;
+      const item = getItemById(draft.itemId);
+      if (item && (item.hasNoVariety || item.varieties.length === 0)) {
+        setDraftVariety(ALL_VARIETY_ID);
+        handleApply();
+        return;
+      }
+      setStep(3);
+      return;
+    }
+    handleApply();
   };
 
   const handleApply = () => {
     if (!draft.varietyId || !draft.categoryId || !draft.itemId) return;
     commitDraft();
 
-    // /crop-select에서 확정한 작물을 시세 화면(useMarketFilter)과도 동기화한다.
-    // 카탈로그 코드/ID를 기준으로 라벨을 재계산해 라벨-데이터 불일치가 생기지 않게 한다.
     const category = getCategoryById(draft.categoryId);
     const item = getItemById(draft.itemId);
     if (category && item) {
@@ -177,50 +182,14 @@ function CropSelectPage() {
       toast.success("조건을 적용했어요");
     }
 
-    // 통계 흐름에서는 홈으로 돌아가지 않고 선택한 작물의 통계 상세로 바로 이동한다.
-    // 선택한 품종이 있으면 varietyId를 우선 사용하고, "전체 품종"이면 itemId 기준으로 이동한다.
     if ((from === "statistics" || from === "statistics-detail") && item) {
       const isAll = draft.varietyId === ALL_VARIETY_ID;
       const target = isAll ? item.id : (draft.varietyId as string);
-      navigate({
-        to: "/statistics/$variety",
-        params: { variety: target },
-      });
+      navigate({ to: "/statistics/$variety", params: { variety: target } });
       return;
     }
 
     navigate({ to: returnTo });
-  };
-
-  const handlePickCategory = (categoryId: string) => {
-    setDraftCategory(categoryId);
-    setStep(2);
-  };
-
-  const handlePickItem = (itemId: string) => {
-    setDraftItem(itemId);
-    const item = getItemById(itemId);
-    // 소분류가 없는 품목이면 품종 선택 단계를 생략하고 자동 완료 가능한 상태로 만든다.
-    if (item && (item.hasNoVariety || item.varieties.length === 0)) {
-      setDraftVariety(ALL_VARIETY_ID);
-      // step 2에 머무르며 하단 CTA로 바로 적용
-      return;
-    }
-    setStep(3);
-  };
-
-  const handlePickVariety = (varietyId: string) => {
-    setDraftVariety(varietyId);
-  };
-
-  // 검색 결과로 3단계까지 한번에 채우기
-  const handleSearchJump = (r: SearchResult) => {
-    setDraftCategory(r.category.id);
-    setDraftItem(r.item.id);
-    setDraftVariety(r.variety ? r.variety.id : ALL_VARIETY_ID);
-    const targetItem = getItemById(r.item.id);
-    const noVar = targetItem && (targetItem.hasNoVariety || targetItem.varieties.length === 0);
-    setStep(noVar ? 2 : 3);
   };
 
   const handleRemoveCategory = () => {
@@ -231,65 +200,83 @@ function CropSelectPage() {
     clearDraftItem();
     setStep(2);
   };
-  const handleRemoveVariety = () => {
-    clearDraftVariety();
-    setStep(3);
+
+  const handleSearchJump = (r: SearchResult) => {
+    setDraftCategory(r.category.id);
+    setDraftItem(r.item.id);
+    setDraftVariety(r.variety ? r.variety.id : ALL_VARIETY_ID);
+    const targetItem = getItemById(r.item.id);
+    const noVar = targetItem && (targetItem.hasNoVariety || targetItem.varieties.length === 0);
+    setStep(noVar ? 2 : 3);
   };
 
-  const selectionCards = (
-    <SelectionCards
-      draft={draft}
-      onRemoveCategory={handleRemoveCategory}
-      onRemoveItem={handleRemoveItem}
-      onRemoveVariety={handleRemoveVariety}
-    />
-  );
+  const canProceed =
+    (step === 1 && Boolean(draft.categoryId)) ||
+    (step === 2 && Boolean(draft.itemId)) ||
+    (step === 3 && Boolean(draft.varietyId));
+
+  const buttonLabel = step === 3 ? finalCtaLabel : ctaLabel;
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-white">
-      <Header title={pageTitle} onClose={handleClose} />
-      <Stepper step={step} draft={draft} onStepClick={goStep} />
+    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#F7F8FA]">
+      {/* Header */}
+      <header className="sticky top-0 z-30 bg-[#F7F8FA] px-4 pt-3 pb-1">
+        <button
+          type="button"
+          onClick={handleBack}
+          aria-label="뒤로가기"
+          className="flex h-10 w-10 items-center justify-center -ml-2 text-gray-900"
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </button>
+      </header>
 
-      <main className="flex-1 overflow-y-auto pb-40">
+      <Stepper step={step} draft={draft} />
+
+      {/* Title */}
+      <div className="px-5 pt-2 pb-4">
+        <h1 className="text-[26px] font-extrabold leading-tight text-gray-900">
+          <span className="text-[#2E9E6B]">작물</span>을 선택해 주세요
+        </h1>
+        <p className="mt-2 text-[14px] text-gray-500">{SUBTITLE[step]}</p>
+      </div>
+
+      <main className="flex-1 overflow-y-auto px-5 pb-40">
         {step === 1 && (
           <Step1Category
-            onPickCategory={handlePickCategory}
+            selectedCategoryId={draft.categoryId}
+            onPickCategory={setDraftCategory}
             onSearchJump={handleSearchJump}
-            selectionCards={selectionCards}
           />
         )}
         {step === 2 && (
           <Step2Item
             categoryId={draft.categoryId!}
             selectedItemId={draft.itemId}
-            onPickItem={handlePickItem}
-            selectionCards={selectionCards}
+            onPickItem={setDraftItem}
+            onRemoveCategory={handleRemoveCategory}
           />
         )}
         {step === 3 && (
           <Step3Variety
-            categoryId={draft.categoryId!}
             itemId={draft.itemId!}
             selectedVarietyId={draft.varietyId}
-            onPickVariety={handlePickVariety}
-            selectionCards={selectionCards}
+            onPickVariety={setDraftVariety}
+            onRemoveCategory={handleRemoveCategory}
+            onRemoveItem={handleRemoveItem}
           />
         )}
       </main>
 
       <BottomBar
         draft={draft}
-        ctaLabel={ctaLabel}
-        onApply={handleApply}
+        step={step}
+        label={buttonLabel}
+        canProceed={canProceed}
+        onClick={handleNext}
       />
     </div>
   );
-}
-
-/* ---------- Header ---------- */
-
-function Header({ title, onClose }: { title: string; onClose: () => void }) {
-  return <DetailHeader title={title} onBack={onClose} right={null} className="bg-white" />;
 }
 
 /* ---------- Stepper ---------- */
@@ -297,87 +284,77 @@ function Header({ title, onClose }: { title: string; onClose: () => void }) {
 function Stepper({
   step,
   draft,
-  onStepClick,
 }: {
   step: Step;
   draft: ReturnType<typeof useCropSelection.getState>["draft"];
-  onStepClick: (s: Step) => void;
 }) {
   const doneMap: Record<Step, boolean> = {
     1: Boolean(draft.categoryId) && step > 1,
     2: Boolean(draft.itemId) && step > 2,
     3: false,
   };
-  const lockedMap: Record<Step, boolean> = {
-    1: false,
-    2: !draft.categoryId,
-    3: !draft.itemId,
+  const labels: Record<Step, string> = {
+    1: "부류 선택",
+    2: "품목 선택",
+    3: "품종 선택",
   };
-  const labels: Record<Step, string> = { 1: "부류 선택", 2: "품목 선택", 3: "품종 선택" };
-  const stepList: Step[] = [1, 2, 3];
+  const list: Step[] = [1, 2, 3];
 
   return (
-    <div className="bg-white px-6 pb-5 pt-2">
-      {/* row 1: circles + connecting lines */}
+    <div className="px-6 pt-3 pb-2">
       <div className="grid grid-cols-[auto_1fr_auto_1fr_auto] items-center">
-        {stepList.map((s, idx) => {
-          const isActive = step === s;
-          const isDone = doneMap[s];
-          const isLocked = lockedMap[s] && !isActive && !isDone;
-          const circle = (
-            <button
+        {list.map((s, idx) => {
+          const active = step === s;
+          const done = doneMap[s];
+          const nodes: React.ReactNode[] = [
+            <div
               key={`c-${s}`}
-              type="button"
-              onClick={() => onStepClick(s)}
-              disabled={isLocked}
-              aria-current={isActive ? "step" : undefined}
               className={cn(
-                "flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors",
-                isDone && "bg-green-600 text-white",
-                isActive && "bg-green-600 text-white",
-                isLocked && "bg-gray-200 text-gray-400",
-                !isDone && !isActive && !isLocked && "bg-gray-200 text-gray-500",
+                "flex h-8 w-8 items-center justify-center rounded-full text-[13px] font-bold",
+                active && "bg-[#2E9E6B] text-white",
+                done && !active && "border-2 border-[#2E9E6B] bg-white text-[#2E9E6B]",
+                !active && !done && "bg-gray-200 text-gray-400",
               )}
             >
-              {isDone ? <Check className="h-4 w-4" /> : s}
-            </button>
-          );
-          if (idx === stepList.length - 1) return circle;
-          const nextDone = doneMap[s];
-          return [
-            circle,
-            <div
-              key={`l-${s}`}
-              className={cn(
-                "mx-2 h-0.5 rounded",
-                nextDone ? "bg-green-600" : "bg-gray-200",
-              )}
-            />,
+              {done ? <Check className="h-4 w-4" strokeWidth={3} /> : s}
+            </div>,
           ];
+          if (idx < list.length - 1) {
+            nodes.push(
+              <div
+                key={`l-${s}`}
+                className={cn(
+                  "mx-2 h-[2px] rounded",
+                  done ? "bg-[#2E9E6B]" : "bg-gray-200",
+                )}
+              />,
+            );
+          }
+          return nodes;
         })}
       </div>
-      {/* row 2: labels aligned under circles */}
-      <div className="mt-2 grid grid-cols-[auto_1fr_auto_1fr_auto] items-center">
-        {stepList.map((s, idx) => {
-          const isActive = step === s;
-          const isLocked = lockedMap[s] && !isActive && !doneMap[s];
-          const label = (
-            <span
+      <div className="mt-2 grid grid-cols-[auto_1fr_auto_1fr_auto] items-start">
+        {list.map((s, idx) => {
+          const active = step === s;
+          const done = doneMap[s];
+          const [w1, w2] = labels[s].split(" ");
+          const nodes: React.ReactNode[] = [
+            <div
               key={`t-${s}`}
               className={cn(
-                "w-9 text-center text-[11px]",
-                isActive
-                  ? "font-semibold text-green-700"
-                  : isLocked
-                    ? "text-gray-400"
-                    : "text-gray-600",
+                "w-8 text-center text-[11px] leading-[1.25]",
+                active && "font-bold text-[#2E9E6B]",
+                done && !active && "font-medium text-[#2E9E6B]",
+                !active && !done && "text-gray-400",
               )}
+              style={{ wordBreak: "keep-all", whiteSpace: "normal" }}
             >
-              {labels[s]}
-            </span>
-          );
-          if (idx === stepList.length - 1) return label;
-          return [label, <div key={`s-${s}`} />];
+              <div>{w1}</div>
+              <div>{w2}</div>
+            </div>,
+          ];
+          if (idx < list.length - 1) nodes.push(<div key={`sp-${s}`} />);
+          return nodes;
         })}
       </div>
     </div>
@@ -387,27 +364,24 @@ function Stepper({
 /* ---------- Step 1 ---------- */
 
 function Step1Category({
+  selectedCategoryId,
   onPickCategory,
   onSearchJump,
-  selectionCards,
 }: {
+  selectedCategoryId?: string;
   onPickCategory: (id: string) => void;
   onSearchJump: (r: SearchResult) => void;
-  selectionCards: React.ReactNode;
 }) {
   const [q, setQ] = useState("");
   const categories = getCategories();
-
   const results = useMemo(() => (q.trim() ? searchAll(q) : []), [q]);
 
   return (
-    <div className="px-4 py-4">
-      <SearchInput value={q} onChange={setQ} placeholder="부류 검색" />
-      {selectionCards}
-
+    <div>
+      <SearchInput value={q} onChange={setQ} placeholder={PLACEHOLDER[1]} />
 
       {q.trim() ? (
-        <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <div className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white">
           {results.length === 0 ? (
             <div className="px-4 py-8 text-center text-sm text-gray-500">
               검색 결과가 없어요.
@@ -442,32 +416,43 @@ function Step1Category({
           )}
         </div>
       ) : (
-        <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
-          <ul>
+        <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-4">
+          <div className="mb-3 text-[14px] font-bold text-gray-900">부류 선택</div>
+          <div className="grid grid-cols-2 gap-2.5">
             {categories.map((c) => {
               const count = getItemsByCategory(c.id).length;
+              const selected = selectedCategoryId === c.id;
               return (
-                <li key={c.id}>
-                  <button
-                    type="button"
-                    onClick={() => onPickCategory(c.id)}
-                    className="flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-3.5 text-left last:border-b-0 active:bg-gray-50"
-                  >
-                    <span className="flex items-center gap-3">
-                      <CropIcon iconKey={c.iconKey} size={24} />
-                      <span className="text-sm font-medium text-gray-900">
-                        {c.name}
-                      </span>
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => onPickCategory(c.id)}
+                  aria-pressed={selected}
+                  className={cn(
+                    "flex min-h-[56px] items-center justify-between rounded-xl border bg-white px-3 py-3 text-left transition-colors",
+                    selected
+                      ? "border-[#2E9E6B] bg-[#F0FAF4]"
+                      : "border-gray-200 active:bg-gray-50",
+                  )}
+                >
+                  <span className="flex items-center gap-2 min-w-0">
+                    <CropIcon iconKey={c.iconKey} size={26} />
+                    <span
+                      className={cn(
+                        "truncate text-[14px] font-semibold",
+                        selected ? "text-[#2E9E6B]" : "text-gray-900",
+                      )}
+                    >
+                      {c.name}
                     </span>
-                    <span className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400">{count}</span>
-                      <ChevronRight className="h-4 w-4 text-gray-400" />
-                    </span>
-                  </button>
-                </li>
+                  </span>
+                  <span className="ml-2 inline-flex h-5 min-w-[22px] items-center justify-center rounded-full bg-gray-100 px-1.5 text-[11px] font-medium text-gray-500">
+                    {count}
+                  </span>
+                </button>
               );
             })}
-          </ul>
+          </div>
         </div>
       )}
     </div>
@@ -480,14 +465,15 @@ function Step2Item({
   categoryId,
   selectedItemId,
   onPickItem,
-  selectionCards,
+  onRemoveCategory,
 }: {
   categoryId: string;
   selectedItemId?: string;
   onPickItem: (id: string) => void;
-  selectionCards: React.ReactNode;
+  onRemoveCategory: () => void;
 }) {
   const [q, setQ] = useState("");
+  const category = getCategoryById(categoryId);
   const items = getItemsByCategory(categoryId);
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -496,17 +482,23 @@ function Step2Item({
   }, [items, q]);
 
   return (
-    <div className="px-4 py-4">
-      <SearchInput value={q} onChange={setQ} placeholder="품목 검색" />
-      {selectionCards}
+    <div>
+      <SearchInput value={q} onChange={setQ} placeholder={PLACEHOLDER[2]} />
 
-      <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+      {category && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          <UpperChip label={category.name} onRemove={onRemoveCategory} />
+        </div>
+      )}
+
+      <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4">
+        <div className="mb-3 text-[14px] font-bold text-gray-900">품목 선택</div>
         {filtered.length === 0 ? (
           <div className="px-4 py-8 text-center text-sm text-gray-500">
             해당하는 품목이 없어요.
           </div>
         ) : (
-          <ul>
+          <ul className="flex flex-col gap-2">
             {filtered.map((it) => {
               const selected = selectedItemId === it.id;
               return (
@@ -514,33 +506,27 @@ function Step2Item({
                   <button
                     type="button"
                     onClick={() => onPickItem(it.id)}
+                    aria-pressed={selected}
                     className={cn(
-                      "flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-4 text-left last:border-b-0 active:bg-gray-50",
-                      selected && "bg-green-50",
+                      "flex min-h-[52px] w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+                      selected
+                        ? "border-[#2E9E6B] bg-[#F0FAF4]"
+                        : "border-gray-200 bg-white active:bg-gray-50",
                     )}
                   >
-                    <span className="flex items-center gap-3">
-                      <CropIcon iconKey={it.iconKey} size={24} />
-                      <span
-                        className={cn(
-                          "text-sm font-medium",
-                          selected ? "text-green-700" : "text-gray-900",
-                        )}
-                      >
-                        {it.name}
-                      </span>
-                      {it.prediction.status === "active" && (
-                        <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">
-                          시세 예측
-                        </span>
-                      )}
-                    </span>
-                    <ChevronRight
+                    <span
                       className={cn(
-                        "h-4 w-4",
-                        selected ? "text-green-600" : "text-gray-400",
+                        "text-[14px] font-semibold",
+                        selected ? "text-[#2E9E6B]" : "text-gray-900",
                       )}
-                    />
+                    >
+                      {it.name}
+                    </span>
+                    {selected && (
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2E9E6B] text-white">
+                        <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                      </span>
+                    )}
                   </button>
                 </li>
               );
@@ -555,20 +541,21 @@ function Step2Item({
 /* ---------- Step 3 ---------- */
 
 function Step3Variety({
-  categoryId: _categoryId,
   itemId,
   selectedVarietyId,
   onPickVariety,
-  selectionCards,
+  onRemoveCategory,
+  onRemoveItem,
 }: {
-  categoryId: string;
   itemId: string;
   selectedVarietyId?: string;
   onPickVariety: (id: string) => void;
-  selectionCards: React.ReactNode;
+  onRemoveCategory: () => void;
+  onRemoveItem: () => void;
 }) {
   const [q, setQ] = useState("");
   const item = getItemById(itemId);
+  const category = item ? getCategoryById(item.categoryId) : undefined;
   const varieties = item?.varieties ?? [];
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -576,19 +563,23 @@ function Step3Variety({
     return varieties.filter((v) => v.name.toLowerCase().includes(query));
   }, [varieties, q]);
 
-  const rows: { id: string; name: string; isAll?: boolean }[] = [
-    { id: ALL_VARIETY_ID, name: "전체 품종", isAll: true },
+  const rows: { id: string; name: string }[] = [
+    { id: ALL_VARIETY_ID, name: "전체 품종" },
     ...filtered.map((v) => ({ id: v.id, name: v.name })),
   ];
 
   return (
-    <div className="px-4 py-4">
-      <SearchInput value={q} onChange={setQ} placeholder="품종 검색" />
-      {selectionCards}
+    <div>
+      <SearchInput value={q} onChange={setQ} placeholder={PLACEHOLDER[3]} />
 
+      <div className="mt-3 flex flex-wrap gap-2">
+        {category && <UpperChip label={category.name} onRemove={onRemoveCategory} />}
+        {item && <UpperChip label={item.name} onRemove={onRemoveItem} />}
+      </div>
 
-      <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
-        <ul>
+      <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4">
+        <div className="mb-3 text-[14px] font-bold text-gray-900">품종 선택</div>
+        <ul className="flex flex-col gap-2">
           {rows.map((r) => {
             const selected = selectedVarietyId === r.id;
             return (
@@ -596,25 +587,32 @@ function Step3Variety({
                 <button
                   type="button"
                   onClick={() => onPickVariety(r.id)}
+                  role="radio"
+                  aria-checked={selected}
                   className={cn(
-                    "flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-3.5 text-left last:border-b-0 active:bg-gray-50",
-                    r.isAll && "bg-gray-50/60",
+                    "flex min-h-[52px] w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+                    selected
+                      ? "border-[#2E9E6B] bg-[#F0FAF4]"
+                      : "border-gray-200 bg-white active:bg-gray-50",
                   )}
                 >
-                  <span className="text-sm font-medium text-gray-900">
+                  <span
+                    className={cn(
+                      "text-[14px] font-semibold",
+                      selected ? "text-[#2E9E6B]" : "text-gray-900",
+                    )}
+                  >
                     {r.name}
                   </span>
                   <span
+                    aria-hidden
                     className={cn(
                       "flex h-5 w-5 items-center justify-center rounded-full border-2",
-                      selected
-                        ? "border-green-600"
-                        : "border-gray-300",
+                      selected ? "border-[#2E9E6B]" : "border-gray-300",
                     )}
-                    aria-hidden
                   >
                     {selected && (
-                      <span className="h-2.5 w-2.5 rounded-full bg-green-600" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#2E9E6B]" />
                     )}
                   </span>
                 </button>
@@ -631,16 +629,18 @@ function Step3Variety({
 
 function BottomBar({
   draft,
-  ctaLabel,
-  onApply,
+  step,
+  label,
+  canProceed,
+  onClick,
 }: {
   draft: ReturnType<typeof useCropSelection.getState>["draft"];
-  ctaLabel: string;
-  onApply: () => void;
+  step: Step;
+  label: string;
+  canProceed: boolean;
+  onClick: () => void;
 }) {
-  const category = draft.categoryId
-    ? getCategoryById(draft.categoryId)
-    : undefined;
+  const category = draft.categoryId ? getCategoryById(draft.categoryId) : undefined;
   const item = draft.itemId ? getItemById(draft.itemId) : undefined;
   const varietyName = (() => {
     if (!draft.varietyId) return undefined;
@@ -648,37 +648,41 @@ function BottomBar({
     return item?.varieties.find((v) => v.id === draft.varietyId)?.name;
   })();
 
-  const summary = [
-    category?.name,
-    item?.name,
-    varietyName,
-  ].filter(Boolean) as string[];
-
-  const canApply = Boolean(draft.varietyId);
+  // Highlight color for the current step's most recent selection.
+  const parts: { text: string; highlight: boolean }[] = [];
+  if (category) parts.push({ text: category.name, highlight: step === 1 });
+  if (item) parts.push({ text: item.name, highlight: step === 2 });
+  if (varietyName) parts.push({ text: varietyName, highlight: step === 3 });
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
-      {summary.length > 0 && (
-        <div className="mb-3 rounded-xl border border-gray-200 bg-white px-3 py-2.5">
-          <div className="text-[11px] font-medium text-gray-500">선택한 조건</div>
-          <div className="mt-1 text-sm font-semibold text-gray-900">
-            {summary.join(" > ")}
+    <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] bg-[#F7F8FA] px-5 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
+      {parts.length > 0 && (
+        <div className="mb-3 rounded-xl border border-gray-200 bg-white px-4 py-3">
+          <div className="text-[12px] font-medium text-gray-500">선택한 조건</div>
+          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[15px] font-bold">
+            {parts.map((p, i) => (
+              <span key={i} className="flex items-center gap-1.5">
+                {i > 0 && <span className="text-gray-300">›</span>}
+                <span className={p.highlight ? "text-[#2E9E6B]" : "text-gray-900"}>
+                  {p.text}
+                </span>
+              </span>
+            ))}
           </div>
         </div>
       )}
-      <button
+      <Button
         type="button"
-        onClick={onApply}
-        disabled={!canApply}
+        size="mobile"
+        onClick={onClick}
+        disabled={!canProceed}
         className={cn(
-          "h-12 w-full rounded-xl text-sm font-semibold transition-colors",
-          canApply
-            ? "bg-green-700 text-white active:bg-green-800"
-            : "bg-gray-200 text-gray-400",
+          "w-full bg-[#2E9E6B] text-white hover:bg-[#268A5C]",
+          !canProceed && "bg-gray-200 text-gray-400 hover:bg-gray-200",
         )}
       >
-        {ctaLabel}
-      </button>
+        {label}
+      </Button>
     </div>
   );
 }
@@ -695,13 +699,14 @@ function SearchInput({
   placeholder: string;
 }) {
   return (
-    <div className="flex h-11 items-center gap-2 rounded-full border border-gray-200 bg-white px-4">
+    <div className="flex h-12 items-center gap-2 rounded-full border border-gray-200 bg-white px-4">
       <Search className="h-4 w-4 text-gray-400" />
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-full flex-1 bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
+        className="h-full flex-1 bg-transparent text-[14px] text-gray-900 outline-none placeholder:text-gray-400"
+        aria-label={placeholder}
       />
       {value && (
         <button
@@ -717,57 +722,18 @@ function SearchInput({
   );
 }
 
-function SelectionCards({
-  draft,
-  onRemoveCategory,
-  onRemoveItem,
-  onRemoveVariety,
-}: {
-  draft: ReturnType<typeof useCropSelection.getState>["draft"];
-  onRemoveCategory: () => void;
-  onRemoveItem: () => void;
-  onRemoveVariety: () => void;
-}) {
-  const category = draft.categoryId ? getCategoryById(draft.categoryId) : undefined;
-  const item = draft.itemId ? getItemById(draft.itemId) : undefined;
-  const varietyName = (() => {
-    if (!draft.varietyId) return undefined;
-    if (draft.varietyId === ALL_VARIETY_ID) return "전체 품종";
-    return item?.varieties.find((v) => v.id === draft.varietyId)?.name;
-  })();
-
-  const chips: { key: string; label: string; onRemove: () => void }[] = [];
-  if (category) {
-    chips.push({ key: "cat", label: category.name, onRemove: onRemoveCategory });
-  }
-  if (item) {
-    chips.push({ key: "item", label: item.name, onRemove: onRemoveItem });
-  }
-  if (varietyName) {
-    chips.push({ key: "var", label: varietyName, onRemove: onRemoveVariety });
-  }
-
-  if (chips.length === 0) return null;
-
+function UpperChip({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <div className="mt-3 flex flex-wrap gap-2">
-      {chips.map((c) => (
-        <span
-          key={c.key}
-          className="inline-flex h-8 items-center gap-1.5 rounded-full bg-green-50 pl-3 pr-2 text-xs font-medium text-gray-800"
-        >
-          {c.label}
-          <button
-            type="button"
-            onClick={c.onRemove}
-            aria-label={`${c.label} 선택 해제`}
-            className="flex h-5 w-5 items-center justify-center rounded-full text-gray-500 active:bg-green-100"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
-        </span>
-      ))}
-    </div>
+    <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#EAF6EF] pl-3 pr-2 text-[13px] font-semibold text-[#2E9E6B]">
+      {label}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`${label} 선택 해제`}
+        className="flex h-5 w-5 items-center justify-center rounded-full text-[#2E9E6B]/70 active:bg-white/40"
+      >
+        <X className="h-3.5 w-3.5" />
+      </button>
+    </span>
   );
 }
-
