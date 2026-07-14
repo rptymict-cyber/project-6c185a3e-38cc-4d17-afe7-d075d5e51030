@@ -1,5 +1,15 @@
+type CauseStep = { icon: string; t: string; sm: string; risk?: boolean };
+type Weather = {
+  region: string;
+  regionFull: string;
+  current: { icon: string; temp: number; desc: string };
+  tip: string;
+  forecast: { label: string; icon: string; temp: number }[];
+  cause: { steps: CauseStep[]; result: string };
+};
+
 // 틸다 날씨 API 교체 대상
-export const MOCK_WEATHER = {
+export const MOCK_WEATHER: Weather = {
   region: "청송",
   regionFull: "경북 청송",
   current: { icon: "⛅", temp: 28, desc: "구름 조금" },
@@ -17,4 +27,4 @@ export const MOCK_WEATHER = {
     ],
     result: "가격 상승 요인",
   },
-} as const;
+};
