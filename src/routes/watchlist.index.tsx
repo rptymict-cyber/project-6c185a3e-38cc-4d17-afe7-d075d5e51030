@@ -108,6 +108,11 @@ function WatchlistPage() {
                 </button>
               )}
             </label>
+            {!isSearching && filtered.length > 1 && (
+              <p className="mt-2 text-[12px] text-muted-foreground">
+                <span className="mr-1 tracking-tighter">⋮⋮</span>를 드래그해 순서를 바꿀 수 있어요
+              </p>
+            )}
           </div>
 
           {filtered.length === 0 ? (
@@ -115,23 +120,16 @@ function WatchlistPage() {
               <p className="text-[13px] text-muted-foreground">조건에 맞는 저장된 시세가 없어요</p>
             </div>
           ) : (
-            <>
-              <SwipeReorderList
-                items={rows}
-                onDelete={handleDelete}
-                onReorder={handleReorder}
-                className="w-full bg-background box-border"
-                wrapperClassName="w-full box-border rounded-2xl border border-border bg-background overflow-hidden"
-                dragHandlePosition="top-right"
-              />
-
-              {!isSearching && filtered.length > 1 && (
-                <p className="pb-6 text-center text-[12px] text-muted-foreground">
-                  <span className="mr-1 tracking-tighter">⋮⋮</span>를 드래그해 순서를 바꿀 수 있어요
-                </p>
-              )}
-            </>
+            <SwipeReorderList
+              items={rows}
+              onDelete={handleDelete}
+              onReorder={handleReorder}
+              className="w-full bg-background box-border"
+              wrapperClassName="w-full box-border rounded-2xl border border-border bg-background overflow-hidden"
+              dragHandlePosition="top-right"
+            />
           )}
+
         </>
       )}
 
