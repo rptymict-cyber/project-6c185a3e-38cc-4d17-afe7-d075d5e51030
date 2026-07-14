@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Plus, Search, Star, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Check, Plus, Search, Star, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { AppShell } from "@/components/app-shell";
+import { AppShell, TopHeader } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
@@ -10,6 +10,16 @@ import { SwipeReorderList, type SRItem } from "@/components/swipe-reorder-list";
 import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
 import type { FavoritePriceItem } from "@/features/favorites/types";
 import { useMarketFilter } from "@/store/market";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/watchlist/")({
   component: WatchlistPage,
@@ -31,7 +41,6 @@ function sortFavorites(items: FavoritePriceItem[]): FavoritePriceItem[] {
     if (ao != null && bo != null) return ao - bo;
     if (ao != null) return -1;
     if (bo != null) return 1;
-    // 등록순 fallback: 최근 등록이 위
     return a.createdAt > b.createdAt ? -1 : 1;
   });
 }
@@ -41,6 +50,9 @@ function WatchlistPage() {
   const removeFavorite = useFavoritePriceStore((s) => s.removeFavorite);
   const setOrder = useFavoritePriceStore((s) => s.setOrder);
   const [query, setQuery] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const sorted = useMemo(() => sortFavorites(items), [items]);
 
@@ -58,31 +70,148 @@ function WatchlistPage() {
 
   const isSearching = query.trim().length > 0;
 
+  // 목록이 비면 편집 모드 자동 종료
+  useEffect(() => {
+    if (items.length === 0 && editMode) {
+      setEditMode(false);
+      setSelectedIds(new Set());
+    }
+  }, [items.length, editMode]);
+
+  const exitEditMode = () => {
+    setEditMode(false);
+    setSelectedIds(new Set());
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const visibleIds = filtered.map((it) => it.id);
+  const allVisibleSelected =
+    visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
+
+  const toggleSelectAllVisible = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allVisibleSelected) {
+        visibleIds.forEach((id) => next.delete(id));
+      } else {
+        visibleIds.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  };
+
+  const performDelete = () => {
+    selectedIds.forEach((id) => removeFavorite(id));
+    const n = selectedIds.size;
+    setConfirmOpen(false);
+    setSelectedIds(new Set());
+    setEditMode(false);
+    toast(`${n}개의 즐겨찾기를 삭제했어요`);
+  };
+
+  const handleReorder = (ids: string[]) => {
+    if (isSearching) return;
+    setOrder(ids);
+  };
+
   const rows: SRItem[] = filtered.map((it) => ({
     id: it.id,
     render: () => <FavoriteCardBody item={it} />,
   }));
 
-  const handleReorder = (ids: string[]) => {
-    // 검색 중이면 재정렬 대상이 부분집합이 되므로 무시.
-    if (isSearching) return;
-    setOrder(ids);
-  };
+  const editHeader = (
+    <TopHeader
+      left={
+        <button
+          type="button"
+          onClick={exitEditMode}
+          className="min-h-[44px] px-1 text-[15px] font-medium text-foreground"
+        >
+          취소
+        </button>
+      }
+      title={`${selectedIds.size}개 선택됨`}
+      right={
+        <button
+          type="button"
+          onClick={exitEditMode}
+          className="min-h-[44px] px-1 text-[15px] font-bold text-[#3A8A3A]"
+        >
+          완료
+        </button>
+      }
+    />
+  );
 
-  const handleDelete = (id: string) => {
-    removeFavorite(id);
-    toast("즐겨찾기에서 제거되었습니다");
-  };
+  const normalHeader = (
+    <AppHeader
+      title="즐겨찾기"
+      showRefresh={false}
+      showBell={false}
+      right={
+        items.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => setEditMode(true)}
+            className="min-h-[44px] px-3 text-[15px] font-bold text-[#3A8A3A]"
+          >
+            편집
+          </button>
+        ) : undefined
+      }
+    />
+  );
+
+  const bottomBar = editMode ? (
+    <div
+      className="sticky bottom-[60px] z-20 border-t border-border bg-background"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
+        <button
+          type="button"
+          onClick={toggleSelectAllVisible}
+          className="flex min-h-[44px] items-center gap-2 px-1 text-[14px] font-medium text-foreground"
+        >
+          <SelectCircle checked={allVisibleSelected} />
+          전체 선택
+        </button>
+        <button
+          type="button"
+          disabled={selectedIds.size === 0}
+          onClick={() => setConfirmOpen(true)}
+          className={cn(
+            "inline-flex min-h-[44px] items-center justify-center rounded-lg px-4 text-[14px] font-bold",
+            selectedIds.size === 0
+              ? "bg-muted text-muted-foreground"
+              : "bg-[#E03131] text-white active:opacity-90",
+          )}
+        >
+          선택 삭제 ({selectedIds.size})
+        </button>
+      </div>
+    </div>
+  ) : undefined;
 
   return (
-    <AppShell header={<AppHeader title="즐겨찾기" />}>
-      <div className="px-4 pt-4">
-        <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
-        <p className="mt-1 text-[13px] text-muted-foreground">
-          총 <span className="font-semibold text-foreground">{items.length}</span>
-          개의 저장한 시세 조건
-        </p>
-      </div>
+    <AppShell header={editMode ? editHeader : normalHeader} bottom={bottomBar}>
+      {items.length > 0 && (
+        <div className="px-4 pt-4">
+          <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
+          <p className="mt-1 text-[13px] text-muted-foreground">
+            총 <span className="font-semibold text-foreground">{items.length}</span>
+            개의 저장한 시세 조건
+          </p>
+        </div>
+      )}
 
       {items.length === 0 ? (
         <EmptyState />
@@ -108,7 +237,7 @@ function WatchlistPage() {
                 </button>
               )}
             </label>
-            {!isSearching && filtered.length > 1 && (
+            {!editMode && !isSearching && filtered.length > 1 && (
               <p className="mt-2 text-center text-[12px] text-muted-foreground">
                 <span className="mr-1 tracking-tighter">⋮⋮</span>를 드래그해 순서를 바꿀 수 있어요
               </p>
@@ -119,22 +248,83 @@ function WatchlistPage() {
             <div className="flex flex-col items-center px-6 pb-16 pt-16 text-center">
               <p className="text-[13px] text-muted-foreground">조건에 맞는 저장된 시세가 없어요</p>
             </div>
+          ) : editMode ? (
+            <ul className="grid gap-2 px-4 py-4">
+              {filtered.map((it) => {
+                const selected = selectedIds.has(it.id);
+                return (
+                  <li
+                    key={it.id}
+                    className="overflow-hidden rounded-2xl border border-border bg-background"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleSelect(it.id)}
+                      className={cn(
+                        "flex w-full items-stretch gap-3 bg-background pl-3 pr-2 text-left",
+                        selected && "bg-[#F0F9F0]",
+                      )}
+                    >
+                      <div className="flex items-center">
+                        <SelectCircle checked={selected} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <FavoriteCardBody item={it} disableLink />
+                      </div>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
           ) : (
             <SwipeReorderList
               items={rows}
-              onDelete={handleDelete}
               onReorder={handleReorder}
+              swipeToDelete={false}
               className="w-full bg-background box-border"
               wrapperClassName="w-full box-border rounded-2xl border border-border bg-background overflow-hidden"
               dragHandlePosition="top-right"
             />
           )}
-
         </>
       )}
 
-      <FabAdd />
+      {!editMode && <FabAdd />}
+
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>선택한 {selectedIds.size}개를 삭제할까요?</AlertDialogTitle>
+            <AlertDialogDescription>
+              삭제한 즐겨찾기는 되돌릴 수 없어요.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>취소</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={performDelete}
+              className="bg-[#E03131] text-white hover:bg-[#E03131]/90"
+            >
+              삭제
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppShell>
+  );
+}
+
+function SelectCircle({ checked }: { checked: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "grid h-6 w-6 place-items-center rounded-full border-2 transition-colors",
+        checked ? "border-[#3A8A3A] bg-[#3A8A3A] text-white" : "border-[#CED4DA] bg-background",
+      )}
+    >
+      {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+    </span>
   );
 }
 
@@ -150,7 +340,13 @@ function FabAdd() {
   );
 }
 
-function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
+function FavoriteCardBody({
+  item,
+  disableLink = false,
+}: {
+  item: FavoritePriceItem;
+  disableLink?: boolean;
+}) {
   const navigate = useNavigate();
   const setItem = useMarketFilter((s) => s.setItem);
   const setMarket = useMarketFilter((s) => s.setMarket);
@@ -159,10 +355,10 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
   const rising = (item.changeRate ?? 0) >= 0;
   const flat = Math.abs(item.changeRate ?? 0) < 0.05;
 
-  // "8kg 기준 기준" 중복 버그 방지: 저장된 unit 문자열에 이미 "기준"이 붙어있어도 한 번만 표기.
   const unitLabel = item.unit.replace(/\s*기준\s*$/, "");
 
   const handleOpen = () => {
+    if (disableLink) return;
     setItem({
       categoryId: "all",
       categoryLabel: "",
@@ -183,69 +379,80 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
   const kgPrice = item.kgPrice ?? item.price ?? 0;
   const unitPrice = item.price ?? 0;
 
-  return (
-    <div className="bg-background p-4">
-      <button type="button" onClick={handleOpen} className="block w-full text-left">
-        <div className="flex items-start gap-3">
-          <div
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-muted"
-            aria-hidden
-          >
-            <CropIcon name={item.cropName} size={26} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-[15px] font-bold text-foreground">
-                  {item.cropName}
-                  {item.varietyName ? ` · ${item.varietyName}` : ""}
-                </div>
+  const Inner = (
+    <>
+      <div className="flex items-start gap-3">
+        <div
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-muted"
+          aria-hidden
+        >
+          <CropIcon name={item.cropName} size={26} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-[15px] font-bold text-foreground">
+                {item.cropName}
+                {item.varietyName ? ` · ${item.varietyName}` : ""}
               </div>
+            </div>
+            {!disableLink && (
               <Star
                 className="mr-9 h-5 w-5 shrink-0 text-[#F5B301]"
                 fill="#F5B301"
                 strokeWidth={1.5}
                 aria-hidden
               />
-
-            </div>
-            <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
-              {item.marketName} · {item.corporationName ?? "전체 법인"}
-            </div>
-            <div className="truncate text-[12px] text-muted-foreground">
-              {item.originName ?? "전체 산지"} · {unitLabel} 기준
-              {item.grade ? ` · ${item.grade}` : ""}
-            </div>
+            )}
+          </div>
+          <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
+            {item.marketName} · {item.corporationName ?? "전체 법인"}
+          </div>
+          <div className="truncate text-[12px] text-muted-foreground">
+            {item.originName ?? "전체 산지"} · {unitLabel} 기준
+            {item.grade ? ` · ${item.grade}` : ""}
           </div>
         </div>
+      </div>
 
-        <div className="my-3 border-t border-[#F1F3F5]" />
+      <div className="my-3 border-t border-[#F1F3F5]" />
 
-        <div className="flex items-end justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-baseline gap-1">
-              <span className="font-data text-[26px] font-black leading-none tabular-nums text-foreground">
-                {kgPrice.toLocaleString()}
-              </span>
-              <span className="text-[12px] font-medium text-muted-foreground">원/kg</span>
-            </div>
-            <div className="mt-1.5 text-[11.5px] text-muted-foreground">
-              {unitLabel} 기준 {unitPrice.toLocaleString()}원
-              {item.totalVolume != null ? ` · 거래량 ${item.totalVolume.toLocaleString()}t` : ""}
-            </div>
-          </div>
-          <div className="flex shrink-0 flex-col items-end gap-1">
-            <span
-              className={cn(
-                "inline-flex items-center whitespace-nowrap text-[15px] font-bold tabular-nums",
-                flat ? "text-muted-foreground" : rising ? "text-[#E03131]" : "text-[#1971C2]",
-              )}
-            >
-              {flat ? "— 0.0%" : `${rising ? "▲ +" : "▼ "}${(item.changeRate ?? 0).toFixed(1)}%`}
+      <div className="flex items-end justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-baseline gap-1">
+            <span className="font-data text-[26px] font-black leading-none tabular-nums text-foreground">
+              {kgPrice.toLocaleString()}
             </span>
-            <span className="text-[11px] text-muted-foreground">전일 대비</span>
+            <span className="text-[12px] font-medium text-muted-foreground">원/kg</span>
+          </div>
+          <div className="mt-1.5 text-[11.5px] text-muted-foreground">
+            {unitLabel} 기준 {unitPrice.toLocaleString()}원
+            {item.totalVolume != null ? ` · 거래량 ${item.totalVolume.toLocaleString()}t` : ""}
           </div>
         </div>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <span
+            className={cn(
+              "inline-flex items-center whitespace-nowrap text-[15px] font-bold tabular-nums",
+              flat ? "text-muted-foreground" : rising ? "text-[#E03131]" : "text-[#1971C2]",
+            )}
+          >
+            {flat ? "— 0.0%" : `${rising ? "▲ +" : "▼ "}${(item.changeRate ?? 0).toFixed(1)}%`}
+          </span>
+          <span className="text-[11px] text-muted-foreground">전일 대비</span>
+        </div>
+      </div>
+    </>
+  );
+
+  if (disableLink) {
+    return <div className="bg-transparent p-4">{Inner}</div>;
+  }
+
+  return (
+    <div className="bg-background p-4">
+      <button type="button" onClick={handleOpen} className="block w-full text-left">
+        {Inner}
       </button>
     </div>
   );
@@ -253,20 +460,17 @@ function FavoriteCardBody({ item }: { item: FavoritePriceItem }) {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center px-6 pb-16 pt-20 text-center">
+    <div
+      className="flex flex-col items-center justify-center px-6 text-center"
+      style={{ minHeight: "calc(100dvh - 52px - 60px - env(safe-area-inset-bottom))" }}
+    >
       <Star className="mb-5 text-[#B2DFB2]" size={48} strokeWidth={1.5} />
       <h3 className="text-[16px] font-bold text-foreground">저장한 시세 조건이 아직 없어요</h3>
       <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
         아래 + 버튼으로 관심 있는 품목과 시장을
         <br />
-        직접 추가해 보세요.
+        추가해 보세요.
       </p>
-      <Link
-        to="/watchlist/add"
-        className="mt-6 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-[14px] font-bold text-primary-foreground"
-      >
-        즐겨찾기 추가
-      </Link>
     </div>
   );
 }

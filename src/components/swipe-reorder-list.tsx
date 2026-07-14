@@ -14,13 +14,15 @@ export function SwipeReorderList({
   className,
   wrapperClassName,
   dragHandlePosition = "center",
+  swipeToDelete = true,
 }: {
   items: SRItem[];
-  onDelete: (id: string) => void;
+  onDelete?: (id: string) => void;
   onReorder: (ids: string[]) => void;
   className?: string;
   wrapperClassName?: string;
   dragHandlePosition?: "center" | "top-right";
+  swipeToDelete?: boolean;
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
@@ -92,7 +94,7 @@ export function SwipeReorderList({
             onOpenChange={(open) => setOpenId(open ? id : null)}
             onDelete={() => {
               setOpenId(null);
-              onDelete(id);
+              onDelete?.(id);
             }}
             onGripDown={(e) => {
               const el = rowRefs.current.get(id);
@@ -108,6 +110,7 @@ export function SwipeReorderList({
             className={className}
             wrapperClassName={wrapperClassName}
             dragHandlePosition={dragHandlePosition}
+            swipeToDelete={swipeToDelete}
           >
             {item.render()}
           </SwipeRow>
@@ -130,6 +133,7 @@ function SwipeRow({
   className,
   wrapperClassName,
   dragHandlePosition = "center",
+  swipeToDelete = true,
 }: {
   id: string;
   open: boolean;
@@ -143,6 +147,7 @@ function SwipeRow({
   className?: string;
   wrapperClassName?: string;
   dragHandlePosition?: "center" | "top-right";
+  swipeToDelete?: boolean;
 }) {
   const [tx, setTx] = useState(open ? -SWIPE_MAX : 0);
   const startX = useRef<number | null>(null);
@@ -167,17 +172,19 @@ function SwipeRow({
       }}
     >
       {/* delete button under */}
-      <button
-        type="button"
-        aria-label="삭제"
-        onClick={onDelete}
-        className={cn(
-          "absolute inset-y-0 right-0 flex w-20 items-center justify-center bg-[#E03131] text-white transition-opacity duration-200",
-          tx <= -OPEN_THRESHOLD ? "opacity-100" : "opacity-0",
-        )}
-      >
-        <Trash2 className="h-5 w-5" />
-      </button>
+      {swipeToDelete && (
+        <button
+          type="button"
+          aria-label="삭제"
+          onClick={onDelete}
+          className={cn(
+            "absolute inset-y-0 right-0 flex w-20 items-center justify-center bg-[#E03131] text-white transition-opacity duration-200",
+            tx <= -OPEN_THRESHOLD ? "opacity-100" : "opacity-0",
+          )}
+        >
+          <Trash2 className="h-5 w-5" />
+        </button>
+      )}
       {/* foreground content */}
       <div
         className={cn("relative z-10 flex w-full items-stretch bg-surface", className)}
@@ -187,12 +194,14 @@ function SwipeRow({
         }}
 
         onPointerDown={(e) => {
+          if (!swipeToDelete) return;
           if ((e.target as HTMLElement).closest("[data-drag-handle]")) return;
           startX.current = e.clientX;
           startTx.current = tx;
           moved.current = false;
         }}
         onPointerMove={(e) => {
+          if (!swipeToDelete) return;
           if (startX.current === null) return;
           const dx = e.clientX - startX.current;
           if (Math.abs(dx) > 4) moved.current = true;
@@ -200,12 +209,14 @@ function SwipeRow({
           setTx(next);
         }}
         onPointerUp={() => {
+          if (!swipeToDelete) return;
           if (startX.current === null) return;
           startX.current = null;
           const shouldOpen = tx < -OPEN_THRESHOLD;
           onOpenChange(shouldOpen);
         }}
         onPointerCancel={() => {
+          if (!swipeToDelete) return;
           startX.current = null;
           setTx(open ? -SWIPE_MAX : 0);
         }}
