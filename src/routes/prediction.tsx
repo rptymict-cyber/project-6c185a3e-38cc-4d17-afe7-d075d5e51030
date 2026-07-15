@@ -150,7 +150,7 @@ function PredictionPage() {
         {/* 1. 상단 조건 선택 그리드 */}
         <PredictionConditionGrid
           quantityHeading={isFarmer ? "출하량" : "매입량"}
-          quantityLabel={`${quantityBoxes}상자`}
+          quantityLabel={`${quantityBoxes.toLocaleString()}${QUANTITY_UNIT_LABEL[quantityUnit]}`}
           cropLabel={`${cropMeta.categoryName} · ${cropMeta.name} · ${cropMeta.varietyName}`}
           marketLabel={marketName}
           viewpointLabel={isFarmer ? "농민" : "도매상"}
