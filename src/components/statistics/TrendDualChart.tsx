@@ -80,7 +80,8 @@ export function TrendDualChart({
                 stroke={s.color}
                 strokeWidth={s.id === "all" || s.id === "2026" ? 2.4 : 1.8}
                 strokeOpacity={s.disabled ? 0.25 : 1}
-                dot={false}
+                dot={{ r: 2.6, strokeWidth: 0, fill: s.color }}
+                activeDot={{ r: 3.8 }}
                 isAnimationActive={false}
               />
             ))}
