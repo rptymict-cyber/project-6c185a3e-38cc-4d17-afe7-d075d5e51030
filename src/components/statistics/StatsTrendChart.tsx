@@ -1,4 +1,4 @@
-import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { TooltipProps } from "recharts";
 import { type TrendPoint } from "@/lib/mock/statistics-mock";
 
@@ -16,9 +16,9 @@ export function StatsTrendChart({
   const series = marketIds.map((id, i) => ({ id, color: PRICE_COLORS[i % PRICE_COLORS.length] }));
   return (
     <div className="w-full">
-      <div className="h-[280px] w-full">
+      <div className="h-[260px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={points} margin={{ top: 10, right: 12, left: 0, bottom: 4 }}>
+          <ComposedChart data={points} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
             <CartesianGrid stroke={GRID} vertical={false} />
             <XAxis dataKey="label" tick={{ fontSize: 11, fill: AXIS_LABEL }} axisLine={false} tickLine={false} interval="preserveStartEnd" minTickGap={16} />
             <YAxis yAxisId="p" tick={{ fontSize: 10, fill: AXIS_LABEL }} axisLine={false} tickLine={false} width={44}
@@ -31,10 +31,21 @@ export function StatsTrendChart({
               <Line key={s.id} yAxisId="p" type="monotone" dataKey={s.id} stroke={s.color} strokeWidth={2.4}
                     dot={{ r: 2.6, strokeWidth: 0, fill: s.color }} activeDot={{ r: 3.8 }} name={s.id} isAnimationActive={false} />
             ))}
-            <Legend verticalAlign="bottom" align="center" height={24} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
+      <ul className="mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 px-2">
+        <li className="inline-flex items-center gap-1.5 text-[11px] text-[#495057]">
+          <span className="h-2.5 w-2.5 rounded-[2px]" style={{ background: VOLUME_BAR }} />
+          거래량
+        </li>
+        {series.map((s) => (
+          <li key={s.id} className="inline-flex items-center gap-1.5 text-[11px] text-[#495057]">
+            <span className="h-[2.5px] w-3.5 rounded-full" style={{ background: s.color }} />
+            {s.id}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
