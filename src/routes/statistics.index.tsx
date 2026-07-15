@@ -209,11 +209,9 @@ function StatisticsPage() {
           </div>
         </section>
 
-        {/* 3-2 등락 비교 3칸 카드 */}
-        <section className="mt-3 grid grid-cols-3 gap-2">
-          <StatsGauge label="전순 대비" data={gauges.prevXun} />
-          <StatsGauge label="전년 동순 대비" data={gauges.prevYear} />
-          <StatsGauge label="평년 동순 대비" data={gauges.normalYear} />
+        {/* 3-3 비교 KPI 그룹 카드 (기간 토글과 워딩 연동) */}
+        <section className="mt-3">
+          <StatsKpiGroup kpis={kpis} />
         </section>
 
         {/* 3-3 콤보 차트 */}
