@@ -205,11 +205,7 @@ function WatchlistPage() {
               : "bg-[#E03131] text-white active:opacity-90",
           )}
         >
-          {isDeleting
-            ? "삭제 중…"
-            : selectedIds.size === 0
-              ? "삭제"
-              : `삭제 (${selectedIds.size})`}
+          {isDeleting ? "삭제 중…" : "삭제"}
         </button>
       </div>
     </div>
