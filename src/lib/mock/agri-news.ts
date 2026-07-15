@@ -99,8 +99,6 @@ export const mockAgriNews: AgriNewsItem[] = [
       "5월 kg당 500원대까지 떨어졌던 양파 도매가격이 7월 들어 1,000원대를 회복하며 두 달 만에 약 80% 반등했다.",
     source: "AGDICT AI",
     publishedAt: "2시간 전",
-    imageUrl:
-      "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=400&q=60",
     body: [
       "5월 kg당 500원대까지 떨어졌던 양파 도매가격이 7월 들어 1,000원대를 회복하며 두 달 만에 약 80% 반등했다.",
       "서울 가락시장 기준 양파 평균 경락가는 6월 중순 저점을 찍은 뒤 저장 물량 소진과 여름철 수요 증가가 맞물리며 꾸준한 오름세를 보이고 있다.",
@@ -125,8 +123,6 @@ export const mockAgriNews: AgriNewsItem[] = [
       "고랭지 여름배추 출하가 늦어지며 가락시장 배추 도매가격이 평년 대비 높은 수준을 유지하고 있다.",
     source: "AGDICT AI",
     publishedAt: "5시간 전",
-    imageUrl:
-      "https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&w=400&q=60",
     body: [
       "고랭지 여름배추 출하가 늦어지며 가락시장 배추 도매가격이 평년 대비 높은 수준을 유지하고 있다.",
       "최근 잦은 강우로 산지 작업이 지연되면서 일일 반입량이 줄었고, 이에 따라 상품(上品) 기준 경락가가 강세를 이어가는 흐름이다.",
