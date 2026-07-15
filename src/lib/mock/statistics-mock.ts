@@ -101,36 +101,47 @@ export function buildSeries(cropId: CropId, marketIds: string[], mode: PeriodMod
   });
 }
 
-// ---------- Gauges (vs previous xun / previous year / normal year) ----------
+// ---------- KPIs (period-driven comparisons) ----------
 
 export type GaugeDatum = { base: number; delta: number; pct: number } | null;
 export type Gauges = {
-  prevXun: GaugeDatum;    // 7월 상순 대비 (직전 순)
-  prevYear: GaugeDatum;   // 전년 동순 대비
-  normalYear: GaugeDatum; // 평년 동순 대비
+  prevXun: GaugeDatum;
+  prevYear: GaugeDatum;
+  normalYear: GaugeDatum;
+};
+export type Kpi = { label: string; base: number | null; delta: number | null; pct: number | null };
+
+const KPI_LABELS: Record<PeriodMode, [string, string, string]> = {
+  day:   ["전일 대비", "전주 동일 대비", "전년 동일 대비"],
+  month: ["전월 대비", "전년 동월 대비", "평년 동월 대비"],
+  year:  ["전년 대비", "전전년 대비",     "평년 대비"],
 };
 
-export function buildGauges(cropId: CropId): Gauges {
+function makeKpi(current: number, basis: number | null, label: string): Kpi {
+  if (basis == null || basis <= 0) return { label, base: null, delta: null, pct: null };
+  const delta = current - basis;
+  const pct = Math.round((delta / basis) * 1000) / 10;
+  return { label, base: basis, delta, pct };
+}
+
+export function buildKpis(cropId: CropId, mode: PeriodMode): Kpi[] {
   const base = CROPS[cropId].base;
-  // 현재 = 7월 중순 평균가 (approx)
-  const current = Math.round(base * (1 + (rand(cropId + "cur") - 0.5) * 0.05));
+  const current = Math.round(base * (1 + (rand(cropId + mode + "cur") - 0.5) * 0.05));
+  const seeds = ["k1", "k2", "k3"] as const;
+  const labels = KPI_LABELS[mode];
+  return seeds.map((s, i) => {
+    const drift = (rand(cropId + mode + s) - 0.5) * (mode === "year" ? 0.35 : mode === "month" ? 0.25 : 0.12);
+    const basis = Math.round(current * (1 + drift));
+    return makeKpi(current, basis, labels[i]);
+  });
+}
 
-  const make = (basis: number | null): GaugeDatum => {
-    if (basis == null) return null;
-    const delta = current - basis;
-    const pct = Math.round((delta / basis) * 1000) / 10;
-    return { base: basis, delta, pct };
-  };
-
-  const prevXun = Math.round(current * (1 + (rand(cropId + "px") - 0.3) * 0.5));
-  const prevYear = Math.round(current * (1 + (rand(cropId + "py") - 0.5) * 0.4));
-  const normalYear = Math.round(current * (1 + (rand(cropId + "ny") - 0.5) * 0.3));
-
-  return {
-    prevXun: make(prevXun),
-    prevYear: make(prevYear),
-    normalYear: make(normalYear),
-  };
+// Kept for backward-compat with any legacy imports; delegates to buildKpis.
+export function buildGauges(cropId: CropId): Gauges {
+  const [a, b, c] = buildKpis(cropId, "day");
+  const toDatum = (k: Kpi): GaugeDatum =>
+    k.base == null || k.delta == null || k.pct == null ? null : { base: k.base, delta: k.delta, pct: k.pct };
+  return { prevXun: toDatum(a), prevYear: toDatum(b), normalYear: toDatum(c) };
 }
 
 // ---------- Origin & market share (donut) ----------
