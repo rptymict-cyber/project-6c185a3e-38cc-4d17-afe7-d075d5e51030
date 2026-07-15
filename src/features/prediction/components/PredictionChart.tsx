@@ -1,5 +1,6 @@
 import { memo } from "react";
 import {
+  Area,
   Bar,
   CartesianGrid,
   ComposedChart,
@@ -11,6 +12,8 @@ import {
   YAxis,
 } from "recharts";
 import type { PredictionPoint } from "../types";
+
+const INFLECT = "#C9A227";
 
 const RED = "#E03B3B";
 const PINK = "rgba(224,59,59,0.20)";
