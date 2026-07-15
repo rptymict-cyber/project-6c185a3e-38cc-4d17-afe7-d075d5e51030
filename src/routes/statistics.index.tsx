@@ -194,18 +194,35 @@ function StatisticsPage() {
 
       {/* Body */}
       <div className="px-4 pb-16 pt-4">
-        {/* 3-1 요약 헤드라인 */}
-        <section className="rounded-[12px] border border-[#E9ECEF] bg-white p-3">
-          <div className="text-[11.5px] font-medium text-[#868E96]">
+        {/* 3-2 추이 카드 (헤드라인 + 타이틀 + 콤보 차트 + 범례를 하나의 카드로 통합) */}
+        <section className="rounded-[16px] border border-[#EAECEF] bg-white p-4">
+          {/* 1) 현재값 헤드라인 */}
+          <div className="text-[12px] font-medium text-[#868E96]">
             2026년 7월 중순 기준
           </div>
           <div className="mt-1 text-[14px] font-bold leading-snug text-foreground">
-            {cropDef.name}
-            {varietyName ? ` ${varietyName}` : ""} 평균 가격은{" "}
-            <span className="text-[16px] font-black text-[#3A8A3A] tabular-nums">
+            <span className="text-[#3A8A3A]">
+              {cropDef.name}
+              {varietyName ? ` ${varietyName}` : ""}
+            </span>{" "}
+            평균 가격은{" "}
+            <span className="text-[16px] font-black text-foreground tabular-nums">
               {headlinePrice.toLocaleString()}
             </span>
             원 (kg당)
+          </div>
+
+          {/* 2) 차트 타이틀 */}
+          <div className="mt-3 flex items-center justify-between">
+            <h4 className="text-[14px] font-extrabold text-[#212529]">
+              가격 · 거래량 추이
+            </h4>
+            <span className="text-[11px] text-[#ADB5BD]">원/kg · 거래량 t</span>
+          </div>
+
+          {/* 3) 콤보 차트 + 4) 범례 (StatsTrendChart 내부에서 렌더) */}
+          <div className="mt-2">
+            <StatsTrendChart points={series} marketIds={markets} />
           </div>
         </section>
 
@@ -214,16 +231,6 @@ function StatisticsPage() {
           <StatsKpiGroup kpis={kpis} />
         </section>
 
-        {/* 3-3 콤보 차트 */}
-        <section className="mt-4 rounded-[12px] border border-[#E9ECEF] bg-white p-3">
-          <div className="mb-2 flex items-center justify-between">
-            <h4 className="text-[13px] font-bold text-foreground">
-              가격 · 거래량 추이
-            </h4>
-            <span className="text-[10.5px] text-[#868E96]">원/kg · 거래량 t</span>
-          </div>
-          <StatsTrendChart points={series} marketIds={markets} />
-        </section>
 
         {/* 3-4 주산지 도넛 */}
         <div className="mt-4">
