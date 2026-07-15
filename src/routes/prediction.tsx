@@ -65,11 +65,12 @@ function PredictionPage() {
   const selectedViewpoint = usePredictionView((s) => s.selectedViewpoint);
   const selectedRangeDays = usePredictionView((s) => s.selectedRangeDays);
   const quantityBoxes = usePredictionView((s) => s.quantityBoxes);
+  const quantityUnit = usePredictionView((s) => s.quantityUnit);
   const marketId = usePredictionView((s) => s.marketId);
   const setSelectedCropId = usePredictionView((s) => s.setSelectedCropId);
   const setSelectedViewpoint = usePredictionView((s) => s.setSelectedViewpoint);
   const setSelectedRangeDays = usePredictionView((s) => s.setSelectedRangeDays);
-  const setQuantityBoxes = usePredictionView((s) => s.setQuantityBoxes);
+  const setQuantity = usePredictionView((s) => s.setQuantity);
   const setMarketId = usePredictionView((s) => s.setMarketId);
 
   useEffect(() => {
