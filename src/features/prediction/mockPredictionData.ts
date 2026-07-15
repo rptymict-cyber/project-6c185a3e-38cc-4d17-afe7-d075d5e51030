@@ -1,14 +1,11 @@
 import type {
   PredictableCrop,
+  PredictionGrade,
   PredictionPoint,
   PredictionRangeDays,
   PricePrediction,
 } from "./types";
 
-/**
- * AI 가격 예측 지원 작물 (사과, 배추, 무, 양파, 마늘).
- * 카탈로그와 별개로, 예측 화면 내부에서 사용하는 슬림 데이터.
- */
 export const PREDICTABLE_CROPS: PredictableCrop[] = [
   {
     id: "apple",
@@ -84,8 +81,6 @@ export function getPredictableCrop(
   return PREDICTABLE_CROPS.find((c) => c.id === id);
 }
 
-/* --------------- deterministic mock generator --------------- */
-
 const BASE_PRICE: Record<string, number> = {
   apple: 12840,
   cabbage: 5640,
@@ -100,6 +95,13 @@ const PREV_DELTA_PCT: Record<string, number> = {
   radish: 6.1,
   onion: -4.1,
   garlic: 3.0,
+};
+
+const GRADE_ADJ: Record<PredictionGrade, number> = {
+  all: 1.0,
+  "특": 1.06,
+  "중": 1.0,
+  "하": 0.9,
 };
 
 function seed(n: number) {
@@ -125,18 +127,17 @@ function labelOf(d: Date) {
 function buildPoints(
   cropId: string,
   rangeDays: PredictionRangeDays,
+  grade: PredictionGrade,
 ): { points: PredictionPoint[]; recommendedIdx: number } {
   const rand = seed(hashId(cropId) + rangeDays);
-  const base = BASE_PRICE[cropId] ?? 5000;
+  const gradeMul = GRADE_ADJ[grade];
+  const base = (BASE_PRICE[cropId] ?? 5000) * gradeMul;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // 과거 7일 실제 + 오늘 + 미래 rangeDays 예측
   const pastDays = 7;
-  const total = pastDays + 1 + rangeDays;
   const points: PredictionPoint[] = [];
 
-  // 실제 가격: base 근처 완만한 흐름
   let actual = base * (1 - PREV_DELTA_PCT[cropId] / 100 / 4);
   for (let i = 0; i < pastDays; i++) {
     actual = actual * (1 + (rand() - 0.5) * 0.03);
@@ -149,7 +150,6 @@ function buildPoints(
     });
   }
 
-  // 오늘
   const todayPrice = Math.round(base);
   points.push({
     date: formatDate(today),
@@ -159,27 +159,33 @@ function buildPoints(
     isToday: true,
   });
 
-  // 예측 곡선: 매개 트렌드 방향 결정 (도매상은 저점, 농민은 고점)
   const trendUp = ["apple", "garlic", "radish"].includes(cropId);
-  let predicted = todayPrice;
   const targetChangePct = trendUp ? 0.05 : -0.04;
+  const infA = Math.max(1, Math.round(rangeDays * 0.35));
+  const infB = Math.max(infA + 1, Math.round(rangeDays * 0.78));
   for (let i = 1; i <= rangeDays; i++) {
     const t = i / rangeDays;
     const drift = 1 + targetChangePct * t + (rand() - 0.5) * 0.02;
-    predicted = todayPrice * drift;
+    const mid = todayPrice * drift;
+    const spread = mid * (0.008 + t * t * 0.075);
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     points.push({
       date: formatDate(d),
       label: labelOf(d),
-      predictedPrice: Math.round(predicted),
+      predictedPrice: Math.round(mid),
+      optimisticPrice: Math.round(mid + spread),
+      pessimisticPrice: Math.round(mid - spread),
+      isInflection: i === infA || i === infB,
     });
   }
 
-  // 추천일: 예측 구간 내에서 농민=max, 도매상=min (여기선 두 관점 공통으로 극값 표시)
   const futureSlice = points.slice(pastDays + 1);
   const maxIdxInSlice = futureSlice.reduce(
-    (acc, p, i) => (p.predictedPrice! > futureSlice[acc].predictedPrice! ? i : acc),
+    (acc, p, i) =>
+      (p.predictedPrice ?? 0) > (futureSlice[acc].predictedPrice ?? 0)
+        ? i
+        : acc,
     0,
   );
   const recommendedIdx = pastDays + 1 + maxIdxInSlice;
@@ -189,26 +195,27 @@ function buildPoints(
 }
 
 function toDateLabel(iso: string) {
-  const [year, month, date] = iso.split("-").map(Number);
+  const [, month, date] = iso.split("-").map(Number);
   return `${month}월 ${date}일`;
 }
 
 export function buildMockPrediction(
   cropId: string,
   rangeDays: PredictionRangeDays,
+  grade: PredictionGrade = "특",
 ): PricePrediction | null {
   const crop = getPredictableCrop(cropId);
   if (!crop) return null;
 
-  const { points, recommendedIdx } = buildPoints(cropId, rangeDays);
-  const currentPrice = BASE_PRICE[cropId] ?? 5000;
+  const gradeMul = GRADE_ADJ[grade];
+  const { points, recommendedIdx } = buildPoints(cropId, rangeDays, grade);
+  const currentPrice = Math.round((BASE_PRICE[cropId] ?? 5000) * gradeMul);
   const previousChangeRate = PREV_DELTA_PCT[cropId] ?? 0;
   const previousChangePrice = Math.round(
     (currentPrice * previousChangeRate) / (100 + previousChangeRate),
   );
 
-  // 농민: max 시점을 추천 판매일로
-  const futureSlice = points.slice(8); // 과거7 + 오늘1 이후
+  const futureSlice = points.slice(8);
   const maxPoint = futureSlice.reduce((a, b) =>
     (a.predictedPrice ?? 0) >= (b.predictedPrice ?? 0) ? a : b,
   );
@@ -224,7 +231,6 @@ export function buildMockPrediction(
   const wholesalerDiff = wholesalerExpected - currentPrice;
   const wholesalerRate = (wholesalerDiff / currentPrice) * 100;
 
-  // recommendedIdx는 농민(max) 시점으로 유지
   points.forEach((p, i) => {
     p.isRecommendedDate = i === recommendedIdx;
   });
@@ -296,5 +302,7 @@ export function buildMockPrediction(
       },
     ],
     updatedAt,
+    grade,
+    gradeAvailable: false,
   };
 }
