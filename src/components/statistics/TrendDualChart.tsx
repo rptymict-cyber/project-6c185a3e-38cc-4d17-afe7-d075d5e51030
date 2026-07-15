@@ -12,6 +12,10 @@ import {
 import type { TooltipProps } from "recharts";
 import { cn } from "@/lib/utils";
 
+const VOLUME_BAR = "#A7B4E0";
+const GRID = "#F1F3F5";
+const AXIS_LABEL = "#ADB5BD";
+
 export type TrendChartSeries = {
   id: string;
   label: string;
