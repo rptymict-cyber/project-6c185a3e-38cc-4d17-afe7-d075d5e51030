@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { PredictionRangeDays, PredictionViewpoint } from "./types";
+import type {
+  PredictionGrade,
+  PredictionRangeDays,
+  PredictionViewpoint,
+} from "./types";
 import { isPredictableCropId, PREDICTABLE_CROPS } from "./mockPredictionData";
 import {
   clampQuantity,
@@ -12,21 +16,24 @@ interface PredictionViewState {
   selectedCropId: string;
   selectedViewpoint: PredictionViewpoint;
   selectedRangeDays: PredictionRangeDays;
-  quantityBoxes: number; // 현재 선택 단위 기준 수량 (필드명은 호환용)
+  selectedGrade: PredictionGrade;
+  quantityBoxes: number;
   quantityUnit: QuantityUnit;
   marketId: string;
   setSelectedCropId: (id: string) => void;
   setSelectedViewpoint: (v: PredictionViewpoint) => void;
   setSelectedRangeDays: (d: PredictionRangeDays) => void;
+  setSelectedGrade: (g: PredictionGrade) => void;
   setQuantityBoxes: (n: number) => void;
   setQuantity: (value: number, unit: QuantityUnit) => void;
   setQuantityUnit: (u: QuantityUnit) => void;
   setMarketId: (id: string) => void;
 }
 
-const DEFAULT_CROP_ID = PREDICTABLE_CROPS[0].id; // 사과
+const DEFAULT_CROP_ID = PREDICTABLE_CROPS[0].id;
 const DEFAULT_UNIT: QuantityUnit = "kg";
 const DEFAULT_QTY = QUANTITY_UNIT_DEFAULT[DEFAULT_UNIT];
+const DEFAULT_GRADE: PredictionGrade = "특";
 
 export const usePredictionView = create<PredictionViewState>()(
   persist(
@@ -34,6 +41,7 @@ export const usePredictionView = create<PredictionViewState>()(
       selectedCropId: DEFAULT_CROP_ID,
       selectedViewpoint: "farmer",
       selectedRangeDays: 7,
+      selectedGrade: DEFAULT_GRADE,
       quantityBoxes: DEFAULT_QTY,
       quantityUnit: DEFAULT_UNIT,
       marketId: "seoul-garak",
@@ -41,6 +49,7 @@ export const usePredictionView = create<PredictionViewState>()(
         set({ selectedCropId: isPredictableCropId(id) ? id : DEFAULT_CROP_ID }),
       setSelectedViewpoint: (v) => set({ selectedViewpoint: v }),
       setSelectedRangeDays: (d) => set({ selectedRangeDays: d }),
+      setSelectedGrade: (g) => set({ selectedGrade: g }),
       setQuantityBoxes: (n) => {
         const unit = get().quantityUnit;
         set({ quantityBoxes: clampQuantity(n, unit) });
@@ -53,12 +62,14 @@ export const usePredictionView = create<PredictionViewState>()(
     }),
     {
       name: "agdict:aiPricePrediction",
-      version: 3,
+      version: 4,
       migrate: (persisted: any, fromVersion) => {
         if (!persisted) return persisted;
-        // v2 이하: 단위 개념 없음 → 상자로 간주
         if (fromVersion < 3) {
           persisted.quantityUnit = "box";
+        }
+        if (fromVersion < 4) {
+          persisted.selectedGrade = DEFAULT_GRADE;
         }
         return persisted;
       },
@@ -72,6 +83,7 @@ export const usePredictionView = create<PredictionViewState>()(
           state.quantityBoxes = QUANTITY_UNIT_DEFAULT[state.quantityUnit];
         }
         if (!state.marketId) state.marketId = "seoul-garak";
+        if (!state.selectedGrade) state.selectedGrade = DEFAULT_GRADE;
       },
     },
   ),

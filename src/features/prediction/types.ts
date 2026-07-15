@@ -2,6 +2,7 @@ export type PredictionStatus = "available" | "unavailable" | "comingSoon";
 
 export type PredictionViewpoint = "farmer" | "wholesaler";
 export type PredictionRangeDays = 7 | 10 | 14 | 30;
+export type PredictionGrade = "all" | "특" | "중" | "하";
 
 export interface PredictableCrop {
   id: string;
@@ -21,9 +22,12 @@ export interface PredictionPoint {
   label: string;
   actualPrice?: number;
   predictedPrice?: number;
+  optimisticPrice?: number;
+  pessimisticPrice?: number;
   volume?: number;
   isToday?: boolean;
   isRecommendedDate?: boolean;
+  isInflection?: boolean;
 }
 
 export interface PredictionInsight {
@@ -64,4 +68,6 @@ export interface PricePrediction {
   wholesalerInsight: PredictionInsight;
   factors: PredictionFactor[];
   updatedAt: string;
+  grade: PredictionGrade;
+  gradeAvailable: boolean;
 }

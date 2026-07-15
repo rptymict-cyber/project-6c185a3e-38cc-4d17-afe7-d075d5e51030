@@ -8,7 +8,9 @@ import { PredictionConditionGrid } from "@/features/prediction/components/Predic
 import { PredictionCropSheet } from "@/features/prediction/components/PredictionCropSheet";
 import { PredictionFactorList } from "@/features/prediction/components/PredictionFactorList";
 import { PredictionInsightCard } from "@/features/prediction/components/PredictionInsightCard";
-import { PredictionDateWeatherCard } from "@/features/prediction/components/PredictionDateWeatherCard";
+import { PredictionGradeSegment } from "@/features/prediction/components/PredictionGradeSegment";
+import { PredictionScenarioCards } from "@/features/prediction/components/PredictionScenarioCards";
+import { PredictionRangeDetailSheet } from "@/features/prediction/components/PredictionRangeDetailSheet";
 
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
@@ -22,6 +24,8 @@ import {
 } from "@/features/prediction/mockPredictionData";
 import type { PredictionRangeDays } from "@/features/prediction/types";
 import { MARKETS } from "@/lib/mock/markets";
+import { MOCK_WEATHER } from "@/lib/mock/weather";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 interface PredictionSearch {
@@ -59,18 +63,20 @@ function parseBaseUnitKg(unit: string): number {
 
 function PredictionPage() {
   const navigate = useNavigate();
-  
+
   const search = Route.useSearch();
 
   const selectedCropId = usePredictionView((s) => s.selectedCropId);
   const selectedViewpoint = usePredictionView((s) => s.selectedViewpoint);
   const selectedRangeDays = usePredictionView((s) => s.selectedRangeDays);
+  const selectedGrade = usePredictionView((s) => s.selectedGrade);
   const quantityBoxes = usePredictionView((s) => s.quantityBoxes);
   const quantityUnit = usePredictionView((s) => s.quantityUnit);
   const marketId = usePredictionView((s) => s.marketId);
   const setSelectedCropId = usePredictionView((s) => s.setSelectedCropId);
   const setSelectedViewpoint = usePredictionView((s) => s.setSelectedViewpoint);
   const setSelectedRangeDays = usePredictionView((s) => s.setSelectedRangeDays);
+  const setSelectedGrade = usePredictionView((s) => s.setSelectedGrade);
   const setQuantity = usePredictionView((s) => s.setQuantity);
   const setMarketId = usePredictionView((s) => s.setMarketId);
 
@@ -86,20 +92,23 @@ function PredictionPage() {
   const [qtySheetOpen, setQtySheetOpen] = useState(false);
   const [marketSheetOpen, setMarketSheetOpen] = useState(false);
   const [viewpointSheetOpen, setViewpointSheetOpen] = useState(false);
+  const [rangeDetailOpen, setRangeDetailOpen] = useState(false);
 
-  const prediction = usePrediction(selectedCropId, selectedRangeDays);
+  const prediction = usePrediction(
+    selectedCropId,
+    selectedRangeDays,
+    selectedGrade,
+  );
   const cropMeta = getPredictableCrop(selectedCropId);
   const marketName =
     MARKETS.find((m) => m.id === marketId)?.name ??
     cropMeta?.marketName ??
     "서울가락";
 
-  // 예측 지점 선택 상태 (헤이딜러식). null = 추천일 기본 선택.
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
-  // 기간 칩/작물 변경 시 추천일로 초기화
   useEffect(() => {
     setSelectedDayIndex(null);
-  }, [selectedRangeDays, selectedCropId]);
+  }, [selectedRangeDays, selectedCropId, selectedGrade]);
 
   if (!prediction || !cropMeta) {
     return (
@@ -119,7 +128,6 @@ function PredictionPage() {
   const baseUnitKg = parseBaseUnitKg(prediction.unit);
   const baseUnitLabel = `${baseUnitKg}kg`;
 
-  // 추천일 인덱스 → 기본 선택
   const recommendedIdx = prediction.predictedPoints.findIndex(
     (p) => p.isRecommendedDate,
   );
@@ -140,10 +148,8 @@ function PredictionPage() {
   const selectedDate = selectedPoint?.label ?? insight.recommendationDate;
   const selectedPrice = selectedPoint?.predictedPrice ?? insight.expectedPrice;
 
-  // 관점별 유리 방향: 농민 = 상승, 도매상 = 하락
   const priceDiff = selectedPrice - prediction.currentPrice;
   const isPositiveForUser = isFarmer ? priceDiff > 0 : priceDiff < 0;
-
 
   return (
     <AppShell header={<AppHeader title="AI 시세 예측" />}>
@@ -161,7 +167,15 @@ function PredictionPage() {
           onViewpointClick={() => setViewpointSheetOpen(true)}
         />
 
-        {/* 2. AI 추천 카드 (선택 날짜 반영) */}
+        {/* 2. 등급 세그먼트 (신규) */}
+        <div className="mt-3">
+          <PredictionGradeSegment
+            value={selectedGrade}
+            onChange={setSelectedGrade}
+          />
+        </div>
+
+        {/* 3. AI 추천 카드 */}
         <div className="mt-3">
           <PredictionInsightCard
             viewpoint={selectedViewpoint}
@@ -182,8 +196,7 @@ function PredictionPage() {
           />
         </div>
 
-
-        {/* 3. 가격 예측 차트 */}
+        {/* 4. 가격 예측 차트 */}
         <section className="mt-4">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-[13px] font-bold text-foreground">
@@ -225,12 +238,12 @@ function PredictionPage() {
               baseUnitLabel={baseUnitLabel}
             />
           </div>
+
+          {/* 범례 */}
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[11px] text-[#495057]">
             <span className="inline-flex items-center gap-1.5">
-              <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03131]" /> 평균가(원/kg)
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="inline-block h-2 w-3 rounded-sm bg-[#E03131]/20" /> 거래량
+              <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03B3B]" />
+              실제 평균가
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span
@@ -239,22 +252,38 @@ function PredictionPage() {
                   backgroundImage:
                     "linear-gradient(to right, #2E9E6B 0 4px, transparent 4px 8px, #2E9E6B 8px 12px, transparent 12px 16px)",
                 }}
-              />{" "}
-              예측
+              />
+              중립 예측
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                className="inline-block h-2.5 w-4 rounded-sm"
+                style={{ background: "rgba(46,158,107,0.24)" }}
+              />
+              낙관~비관 범위
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="inline-block h-2 w-2 rounded-full bg-[#C9A227]" />
+              변곡점
             </span>
           </div>
 
-          {/* 힌트 + 선택 날짜 날씨 카드 */}
-          <div className="mt-3 rounded-lg bg-[#F1F8F3] px-3 py-2 text-[11.5px] text-[#1F5C1F]">
-            📅 그래프의 날짜를 누르면 그날의 예상 시세 + 날씨 영향이 표시됩니다
+          {/* 5. 낙관/중립/비관 3 값카드 */}
+          <div className="mt-3">
+            <PredictionScenarioCards
+              point={selectedPoint}
+              baseUnitLabel={baseUnitLabel}
+              onOpenRangeDetail={() => setRangeDetailOpen(true)}
+            />
           </div>
-          <PredictionDateWeatherCard
-            dateIso={selectedPoint?.date}
-            dateLabel={selectedDate}
-          />
+
+          {/* 힌트 */}
+          <div className="mt-3 rounded-lg bg-[#F1F8F3] px-3 py-2 text-[11.5px] text-[#1F5C1F]">
+            📅 그래프의 날짜를 누르면 그날의 예상 시세가 표시됩니다
+          </div>
         </section>
 
-        {/* 4. 출하/매입 시점 비교 (선택 날짜 반영) */}
+        {/* 6. 출하/매입 시점 비교 */}
         <div className="mt-4">
           <PredictionCompareCards
             viewpoint={selectedViewpoint}
@@ -268,16 +297,84 @@ function PredictionPage() {
           />
         </div>
 
-
-
-        {/* 5. 예측 근거 */}
+        {/* 7. 예측 근거 */}
         <section className="mt-4">
           <h2 className="mb-2 text-[13px] font-bold text-foreground">
             예측 근거
           </h2>
+
+          {/* 날씨 근거 카드 (요약) */}
+          <div className="mb-2 rounded-xl border border-[#E9ECEF] bg-white p-3">
+            <div className="flex items-start gap-2">
+              <span className="text-[20px] leading-none">🌧️</span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[13px] font-bold text-foreground">
+                    날씨 영향
+                  </span>
+                  <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-[10px] font-extrabold text-[#E03B3B]">
+                    출하 주의
+                  </span>
+                </div>
+                <p className="mt-1 text-[11.5px] leading-snug text-[#495057]">
+                  {MOCK_WEATHER.regionFull} · {selectedDate} ·{" "}
+                  {MOCK_WEATHER.current.temp}° {MOCK_WEATHER.current.desc} —
+                  강수 20~35mm로 수확·출하 차질 가능, 공급 감소가 추천가에
+                  반영됨.
+                </p>
+                <div className="mt-2 grid grid-cols-3 gap-1.5">
+                  <div className="rounded-lg bg-[#F8F9FA] px-2 py-1.5 text-center">
+                    <div className="text-[10px] text-[#6C757D]">강수</div>
+                    <div className="text-[11.5px] font-bold text-[#212529]">
+                      20~35mm
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-[#FEF3F3] px-2 py-1.5 text-center">
+                    <div className="text-[10px] text-[#E03B3B]">수확 지연</div>
+                    <div className="text-[11.5px] font-bold text-[#E03B3B]">
+                      우려
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-[#FEF3F3] px-2 py-1.5 text-center">
+                    <div className="text-[10px] text-[#E03B3B]">반입</div>
+                    <div className="text-[11.5px] font-bold text-[#E03B3B]">
+                      ↓
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <PredictionFactorList factors={prediction.factors} />
         </section>
 
+        {/* 8. AI 상세 예측 리포트 (프리미엄) */}
+        <section className="mt-4">
+          <div className="rounded-2xl border border-dashed border-[#2E9E6B] bg-white p-4 text-center">
+            <div className="text-[13px] font-bold text-foreground">
+              📑 AI 상세 예측 리포트
+            </div>
+            <p className="mt-1.5 text-[11.5px] leading-snug text-[#6C757D]">
+              방향성 지수 · 리스크 팩터 · 과거 vs 예측 추세 · 토픽별 뉴스 정리
+              <br />
+              (틸다 ArgMax 기반 · 프리미엄)
+            </p>
+            <button
+              type="button"
+              onClick={() => toast("리포트 미리보기는 준비 중입니다.")}
+              className="mt-3 inline-flex h-9 items-center justify-center rounded-lg bg-[#2E9E6B] px-4 text-[12.5px] font-bold text-white active:bg-[#1F7A50]"
+            >
+              리포트 미리보기 ›
+            </button>
+          </div>
+        </section>
+
+        {/* 고지문 */}
+        <p className="mt-4 px-2 text-center text-[10.5px] leading-snug text-[#adb5bd]">
+          본 예측은 데이터 기반 AI의 참고용 세컨드 오피니언입니다. 실제 시세와
+          다를 수 있으니 최종 판단은 사용자에게 있습니다.
+        </p>
       </div>
 
       <PredictionCropSheet
@@ -305,6 +402,12 @@ function PredictionPage() {
         onOpenChange={setViewpointSheetOpen}
         value={selectedViewpoint}
         onChange={setSelectedViewpoint}
+      />
+      <PredictionRangeDetailSheet
+        open={rangeDetailOpen}
+        onOpenChange={setRangeDetailOpen}
+        point={selectedPoint}
+        baseUnitLabel={baseUnitLabel}
       />
     </AppShell>
   );

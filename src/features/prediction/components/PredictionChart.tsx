@@ -1,5 +1,6 @@
 import { memo } from "react";
 import {
+  Area,
   Bar,
   CartesianGrid,
   ComposedChart,
@@ -11,6 +12,8 @@ import {
   YAxis,
 } from "recharts";
 import type { PredictionPoint } from "../types";
+
+const INFLECT = "#C9A227";
 
 const RED = "#E03B3B";
 const PINK = "rgba(224,59,59,0.20)";
@@ -389,7 +392,11 @@ function PredictionChartBase({
       isPast && p.actualPrice !== undefined
         ? Math.round(120 + (seed / 233280) * 220)
         : undefined;
-    return { ...p, pastVolume };
+    const band: [number, number] | undefined =
+      p.optimisticPrice != null && p.pessimisticPrice != null
+        ? [p.pessimisticPrice, p.optimisticPrice]
+        : undefined;
+    return { ...p, pastVolume, band };
   });
 
   const futurePrices = points
@@ -539,6 +546,18 @@ function PredictionChartBase({
               barSize={8}
               isAnimationActive={false}
             />
+            {/* 신뢰구간 밴드 (pess~opt) */}
+            <Area
+              xAxisId="main"
+              yAxisId="price"
+              type="monotone"
+              dataKey="band"
+              stroke="none"
+              fill="rgba(46,158,107,0.16)"
+              activeDot={false}
+              isAnimationActive={false}
+              connectNulls={false}
+            />
             <Line
               xAxisId="main"
               yAxisId="price"
@@ -570,18 +589,30 @@ function PredictionChartBase({
                   return <g key={`d-${index}`} />;
                 }
                 const isSelected = index === selectedIndex;
+                const isInflect = !!payload.isInflection;
                 return (
-                  <circle
-                    key={`d-${index}`}
-                    cx={cx}
-                    cy={cy}
-                    r={isSelected ? 5 : 3.5}
-                    fill={TEAL}
-                    stroke="#fff"
-                    strokeWidth={1.5}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => onSelectIndex?.(index)}
-                  />
+                  <g key={`d-${index}`}>
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={isSelected ? 5 : 3.5}
+                      fill={TEAL}
+                      stroke="#fff"
+                      strokeWidth={1.5}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => onSelectIndex?.(index)}
+                    />
+                    {isInflect && (
+                      <circle
+                        cx={cx}
+                        cy={cy - 10}
+                        r={4}
+                        fill={INFLECT}
+                        stroke="#fff"
+                        strokeWidth={1.5}
+                      />
+                    )}
+                  </g>
                 );
               }}
               activeDot={{
