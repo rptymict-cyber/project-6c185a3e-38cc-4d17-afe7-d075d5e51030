@@ -149,10 +149,16 @@ export function QuantityPickerSheet({
             ))}
           </div>
 
+          <div className="mt-5 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-[11px] leading-snug text-[#2c6444]">
+            ⚖️ <b>단위 환산 안내</b> · aT 경락 데이터는 상자·망·포대 등 규격이
+            혼재하고 kg이 미표기된 경우가 많아, 1kg 기준으로 환산해 시세를
+            계산해요. (선택 단위 기준 총액도 함께 표시)
+          </div>
+
           <button
             type="button"
             onClick={apply}
-            className="mt-5 grid h-11 w-full place-items-center rounded-xl bg-[#3A8A3A] text-[14px] font-bold text-white active:bg-[#2F6F2F]"
+            className="mt-3 grid h-11 w-full place-items-center rounded-xl bg-[#3A8A3A] text-[14px] font-bold text-white active:bg-[#2F6F2F]"
           >
             적용
           </button>
