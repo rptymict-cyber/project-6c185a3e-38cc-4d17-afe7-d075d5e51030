@@ -85,9 +85,6 @@ export function PredictionScenarioCards({
         </button>
       </div>
 
-      <div className="mt-1 text-center text-[10.5px] text-[#adb5bd]">
-        기준 단위: 원 / {baseUnitLabel}
-      </div>
     </section>
   );
 }
