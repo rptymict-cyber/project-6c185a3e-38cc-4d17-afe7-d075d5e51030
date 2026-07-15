@@ -236,7 +236,7 @@ function StatisticsPage() {
         )}
       </div>
 
-      <StatsCropSheet open={cropOpen} onOpenChange={setCropOpen} selected={crop} onSelect={setCrop} />
+      
       <StatsMarketSheet open={marketOpen} onOpenChange={setMarketOpen} selected={markets} onConfirm={setMarkets} />
       <DatePickerSheet open={dateOpen} onOpenChange={setDateOpen} selected={date} onConfirm={setDate} />
     </AppShell>
