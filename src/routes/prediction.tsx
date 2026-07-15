@@ -255,6 +255,7 @@ function PredictionPage() {
             expectedPrice={selectedPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
+            quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
             recommendationDate={selectedDate}
             isRecommendedSelection={!!selectedPoint?.isRecommendedDate}
           />
