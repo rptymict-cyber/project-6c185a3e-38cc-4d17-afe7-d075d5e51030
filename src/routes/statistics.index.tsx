@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { AppHeader } from "@/components/app-header";
 import { DatePickerSheet } from "@/components/date-picker-sheet";
 import { useStatistics } from "@/store/statistics";
 import {
@@ -64,15 +65,11 @@ function StatisticsPage() {
   const curPct = prevPrice > 0 ? Math.round((curDelta / prevPrice) * 1000) / 10 : 0;
 
   return (
-    <AppShell>
-      {/* Header */}
-      <header className="sticky top-0 z-30 flex h-[54px] items-center gap-2 border-b border-[#E9ECEF] bg-white px-4">
-        <h1 className="text-[17px] font-black text-foreground">통계</h1>
-        <span className="text-[11.5px] text-[#868E96]">경락 데이터 분석</span>
-      </header>
-
+    <AppShell
+      header={<AppHeader title="통계" />}
+    >
       {/* Filter bar */}
-      <div className="sticky top-[54px] z-20 space-y-2 border-b border-[#E9ECEF] bg-white px-4 pb-2 pt-3">
+      <div className="sticky top-[52px] z-20 space-y-2 border-b border-[#E9ECEF] bg-white px-4 pb-2 pt-3">
         <button
           type="button"
           onClick={() => setCropOpen(true)}
