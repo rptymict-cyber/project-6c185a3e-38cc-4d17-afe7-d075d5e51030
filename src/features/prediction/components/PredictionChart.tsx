@@ -104,16 +104,63 @@ function ForecastOverlay({
         strokeWidth={1}
         strokeDasharray="3 3"
       />
-      <text
-        x={xToday}
-        y={top - 4}
-        textAnchor="middle"
-        fontSize={10}
-        fontWeight={700}
-        fill="#64748B"
-      >
-        오늘
-      </text>
+    </g>
+  );
+}
+
+// X-axis labels with priority-based collision filtering (32px gap).
+function XLabelsOverlay({
+  xAxisMap,
+  offset,
+  candidates,
+}: {
+  xAxisMap?: Record<string, any>;
+  offset?: { top: number; left: number; width: number; height: number };
+  candidates: Array<{ index: number; label: string; display: string; priority: number }>;
+}) {
+  if (!xAxisMap || !offset || candidates.length === 0) return null;
+  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
+  if (!xAxis?.scale) return null;
+  const scale = xAxis.scale;
+  const bw = typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
+  const centerOf = (label: string): number | null => {
+    const v = scale(label);
+    if (typeof v !== "number" || Number.isNaN(v)) return null;
+    return v + bw / 2;
+  };
+  const withX = candidates
+    .map((c) => ({ ...c, x: centerOf(c.label) }))
+    .filter((c): c is typeof c & { x: number } => typeof c.x === "number");
+  // Greedy by priority ascending, keep only if ≥32px from all accepted.
+  const sorted = [...withX].sort((a, b) => a.priority - b.priority);
+  const accepted: typeof sorted = [];
+  const GAP = 32;
+  for (const c of sorted) {
+    if (accepted.every((a) => Math.abs(a.x - c.x) >= GAP)) {
+      accepted.push(c);
+      if (accepted.length >= 5) break;
+    }
+  }
+  accepted.sort((a, b) => a.x - b.x);
+  const y = offset.top + offset.height + 14;
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      {accepted.map((c) => {
+        const emphasized = c.priority === 1 || c.priority === 3;
+        return (
+          <text
+            key={`xl-${c.index}`}
+            x={c.x}
+            y={y}
+            textAnchor="middle"
+            fontSize={9}
+            fontWeight={emphasized ? 700 : 400}
+            fill={emphasized ? "#495057" : "#ADB5BD"}
+          >
+            {c.display}
+          </text>
+        );
+      })}
     </g>
   );
 }
