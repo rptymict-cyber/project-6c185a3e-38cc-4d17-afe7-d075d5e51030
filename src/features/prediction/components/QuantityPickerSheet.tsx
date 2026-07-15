@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -7,37 +7,60 @@ import {
 } from "@/components/ui/sheet";
 import { Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const PRESETS = [5, 10, 15, 20, 30, 50, 100];
+import {
+  clampQuantity,
+  formatQuantity,
+  QUANTITY_MAX,
+  QUANTITY_UNITS,
+  QUANTITY_UNIT_DEFAULT,
+  QUANTITY_UNIT_LABEL,
+  QUANTITY_UNIT_PRESETS,
+  QUANTITY_UNIT_STEP,
+  type QuantityUnit,
+} from "../quantityUnits";
 
 export function QuantityPickerSheet({
   open,
   onOpenChange,
   value,
+  unit,
   onChange,
   heading,
 }: {
   open: boolean;
   onOpenChange: (o: boolean) => void;
   value: number;
-  onChange: (n: number) => void;
+  unit: QuantityUnit;
+  onChange: (value: number, unit: QuantityUnit) => void;
   heading: "출하량" | "매입량";
 }) {
   const [n, setN] = useState<number>(value);
+  const [u, setU] = useState<QuantityUnit>(unit);
+
+  useEffect(() => {
+    if (open) {
+      setN(value);
+      setU(unit);
+    }
+  }, [open, value, unit]);
+
+  const step = QUANTITY_UNIT_STEP[u];
+  const presets = QUANTITY_UNIT_PRESETS[u];
+  const unitLabel = QUANTITY_UNIT_LABEL[u];
+
+  const handleUnitChange = (next: QuantityUnit) => {
+    if (next === u) return;
+    setU(next);
+    setN(QUANTITY_UNIT_DEFAULT[next]);
+  };
 
   const apply = () => {
-    onChange(n);
+    onChange(clampQuantity(n, u), u);
     onOpenChange(false);
   };
 
   return (
-    <Sheet
-      open={open}
-      onOpenChange={(o) => {
-        if (o) setN(value);
-        onOpenChange(o);
-      }}
-    >
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
         className="mx-auto max-w-[430px] rounded-t-2xl p-0"
@@ -48,11 +71,34 @@ export function QuantityPickerSheet({
           </SheetTitle>
         </SheetHeader>
         <div className="px-4 py-4">
+          {/* 단위 세그먼트 */}
+          <div className="mb-4 grid grid-cols-4 gap-1 rounded-full bg-[#F1F3F5] p-1">
+            {QUANTITY_UNITS.map((opt) => {
+              const active = opt === u;
+              return (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => handleUnitChange(opt)}
+                  className={cn(
+                    "h-8 rounded-full text-[12px] font-semibold transition-colors",
+                    active
+                      ? "bg-white text-[#1F5C1F] shadow-sm"
+                      : "text-[#6C757D]",
+                  )}
+                >
+                  {QUANTITY_UNIT_LABEL[opt]}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 카운터 */}
           <div className="flex items-center justify-center gap-3">
             <button
               type="button"
               aria-label="감소"
-              onClick={() => setN((v) => Math.max(1, v - 1))}
+              onClick={() => setN((v) => Math.max(step, v - step))}
               className="grid h-11 w-11 place-items-center rounded-full border border-[#E9ECEF] bg-white text-foreground active:bg-[#F8F9FA]"
             >
               <Minus className="h-4 w-4" />
@@ -61,30 +107,32 @@ export function QuantityPickerSheet({
               <input
                 type="number"
                 inputMode="numeric"
-                min={1}
+                min={step}
                 value={n}
                 onChange={(e) => {
                   const v = parseInt(e.target.value, 10);
-                  setN(isNaN(v) ? 1 : Math.max(1, Math.min(9999, v)));
+                  setN(isNaN(v) ? step : Math.max(1, Math.min(QUANTITY_MAX, v)));
                 }}
-                className="w-24 border-0 bg-transparent text-center text-[28px] font-black tabular-nums text-foreground outline-none"
+                onBlur={() => setN((v) => clampQuantity(v, u))}
+                className="w-28 border-0 bg-transparent text-center text-[30px] font-black tabular-nums text-foreground outline-none"
               />
               <span className="text-[14px] font-semibold text-[#495057]">
-                상자
+                {unitLabel}
               </span>
             </div>
             <button
               type="button"
               aria-label="증가"
-              onClick={() => setN((v) => Math.min(9999, v + 1))}
+              onClick={() => setN((v) => Math.min(QUANTITY_MAX, v + step))}
               className="grid h-11 w-11 place-items-center rounded-full border border-[#E9ECEF] bg-white text-foreground active:bg-[#F8F9FA]"
             >
               <Plus className="h-4 w-4" />
             </button>
           </div>
 
+          {/* 프리셋 */}
           <div className="mt-4 grid grid-cols-4 gap-2">
-            {PRESETS.map((p) => (
+            {presets.map((p) => (
               <button
                 key={p}
                 type="button"
@@ -96,7 +144,7 @@ export function QuantityPickerSheet({
                     : "border-[#E9ECEF] bg-white text-[#495057]",
                 )}
               >
-                {p}상자
+                {formatQuantity(p, u)}
               </button>
             ))}
           </div>
