@@ -566,27 +566,19 @@ function PredictionChartBase({
             <XAxis
               xAxisId="main"
               dataKey="label"
-              tick={(props: any) => {
-                const { x, y, payload } = props;
-                const isSelected = payload.value === selectedLabel;
-                return (
-                  <text
-                    x={x}
-                    y={y + 10}
-                    textAnchor="middle"
-                    fontSize={10.5}
-                    fontWeight={isSelected ? 800 : 400}
-                    fill={isSelected ? TEAL : "#868E96"}
-                  >
-                    {payload.value}
-                  </text>
-                );
-              }}
+              tick={() => <g />}
               axisLine={false}
               tickLine={false}
               ticks={ticks}
               interval={0}
+              height={22}
             />
+            <Customized
+              component={(props: any) => (
+                <XLabelsOverlay {...props} candidates={candidates} />
+              )}
+            />
+
             <YAxis
               yAxisId="price"
               tick={{ fontSize: 10, fill: "#868E96" }}
