@@ -28,7 +28,6 @@ import { Route as StatisticsIndexRouteImport } from './routes/statistics.index'
 import { Route as NotificationsIndexRouteImport } from './routes/notifications.index'
 import { Route as MarketIndexRouteImport } from './routes/market.index'
 import { Route as WatchlistAddRouteImport } from './routes/watchlist.add'
-import { Route as StatisticsSelectRouteImport } from './routes/statistics.select'
 import { Route as StatisticsVarietyRouteImport } from './routes/statistics.$variety'
 import { Route as PriceVarietyRouteImport } from './routes/price.$variety'
 import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
@@ -138,11 +137,6 @@ const WatchlistAddRoute = WatchlistAddRouteImport.update({
   path: '/watchlist/add',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StatisticsSelectRoute = StatisticsSelectRouteImport.update({
-  id: '/statistics/select',
-  path: '/statistics/select',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const StatisticsVarietyRoute = StatisticsVarietyRouteImport.update({
   id: '/statistics/$variety',
   path: '/statistics/$variety',
@@ -231,7 +225,6 @@ export interface FileRoutesByFullPath {
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
-  '/statistics/select': typeof StatisticsSelectRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market/': typeof MarketIndexRoute
   '/notifications/': typeof NotificationsIndexRoute
@@ -263,7 +256,6 @@ export interface FileRoutesByTo {
   '/market/$crop': typeof MarketCropRoute
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
-  '/statistics/select': typeof StatisticsSelectRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market': typeof MarketIndexRoute
   '/notifications': typeof NotificationsIndexRoute
@@ -299,7 +291,6 @@ export interface FileRoutesById {
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
-  '/statistics/select': typeof StatisticsSelectRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market/': typeof MarketIndexRoute
   '/notifications/': typeof NotificationsIndexRoute
@@ -336,7 +327,6 @@ export interface FileRouteTypes {
     | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
-    | '/statistics/select'
     | '/watchlist/add'
     | '/market/'
     | '/notifications/'
@@ -368,7 +358,6 @@ export interface FileRouteTypes {
     | '/market/$crop'
     | '/price/$variety'
     | '/statistics/$variety'
-    | '/statistics/select'
     | '/watchlist/add'
     | '/market'
     | '/notifications'
@@ -403,7 +392,6 @@ export interface FileRouteTypes {
     | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
-    | '/statistics/select'
     | '/watchlist/add'
     | '/market/'
     | '/notifications/'
@@ -437,7 +425,6 @@ export interface RootRouteChildren {
   WeatherRoute: typeof WeatherRoute
   PriceVarietyRoute: typeof PriceVarietyRouteWithChildren
   StatisticsVarietyRoute: typeof StatisticsVarietyRoute
-  StatisticsSelectRoute: typeof StatisticsSelectRoute
   WatchlistAddRoute: typeof WatchlistAddRoute
   StatisticsIndexRoute: typeof StatisticsIndexRoute
   WatchlistIndexRoute: typeof WatchlistIndexRoute
@@ -576,13 +563,6 @@ declare module '@tanstack/react-router' {
       path: '/watchlist/add'
       fullPath: '/watchlist/add'
       preLoaderRoute: typeof WatchlistAddRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/statistics/select': {
-      id: '/statistics/select'
-      path: '/statistics/select'
-      fullPath: '/statistics/select'
-      preLoaderRoute: typeof StatisticsSelectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/statistics/$variety': {
@@ -762,7 +742,6 @@ const rootRouteChildren: RootRouteChildren = {
   WeatherRoute: WeatherRoute,
   PriceVarietyRoute: PriceVarietyRouteWithChildren,
   StatisticsVarietyRoute: StatisticsVarietyRoute,
-  StatisticsSelectRoute: StatisticsSelectRoute,
   WatchlistAddRoute: WatchlistAddRoute,
   StatisticsIndexRoute: StatisticsIndexRoute,
   WatchlistIndexRoute: WatchlistIndexRoute,
