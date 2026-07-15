@@ -7,6 +7,7 @@ interface Props {
   expectedPrice: number;
   baseUnitLabel: string; // "10kg"
   quantityBoxes: number;
+  quantityUnitLabel?: string;
   recommendationDate: string;
   isRecommendedSelection: boolean;
 }
@@ -17,6 +18,7 @@ export function PredictionCompareCards({
   expectedPrice,
   baseUnitLabel,
   quantityBoxes,
+  quantityUnitLabel = "상자",
   recommendationDate,
   isRecommendedSelection,
 }: Props) {
@@ -84,7 +86,7 @@ export function PredictionCompareCards({
             <span className="text-[11px] text-[#6C757D]">원/{baseUnitLabel}</span>
           </div>
           <div className="mt-2 text-[11.5px] text-[#495057]">
-            {qtyLabel} {quantityBoxes}상자
+            {qtyLabel} {quantityBoxes.toLocaleString()}{quantityUnitLabel}
           </div>
           <div className="mt-0.5 text-[11.5px] text-[#495057]">
             {totalLabel}{" "}
@@ -116,7 +118,7 @@ export function PredictionCompareCards({
             </span>
           </div>
           <div className="mt-2 text-[11.5px] text-[#145A3A]">
-            {qtyLabel} {quantityBoxes}상자
+            {qtyLabel} {quantityBoxes.toLocaleString()}{quantityUnitLabel}
           </div>
           <div className="mt-0.5 text-[11.5px] text-[#145A3A]">
             {totalLabel}{" "}

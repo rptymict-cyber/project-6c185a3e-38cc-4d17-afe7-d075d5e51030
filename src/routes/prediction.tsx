@@ -12,6 +12,7 @@ import { PredictionWeatherCause } from "@/features/prediction/components/Predict
 
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
+import { QUANTITY_UNIT_LABEL } from "@/features/prediction/quantityUnits";
 import { ViewpointPickerSheet } from "@/features/prediction/components/ViewpointPickerSheet";
 import { usePrediction } from "@/features/prediction/usePrediction";
 import { usePredictionView } from "@/features/prediction/usePredictionView";
@@ -65,11 +66,12 @@ function PredictionPage() {
   const selectedViewpoint = usePredictionView((s) => s.selectedViewpoint);
   const selectedRangeDays = usePredictionView((s) => s.selectedRangeDays);
   const quantityBoxes = usePredictionView((s) => s.quantityBoxes);
+  const quantityUnit = usePredictionView((s) => s.quantityUnit);
   const marketId = usePredictionView((s) => s.marketId);
   const setSelectedCropId = usePredictionView((s) => s.setSelectedCropId);
   const setSelectedViewpoint = usePredictionView((s) => s.setSelectedViewpoint);
   const setSelectedRangeDays = usePredictionView((s) => s.setSelectedRangeDays);
-  const setQuantityBoxes = usePredictionView((s) => s.setQuantityBoxes);
+  const setQuantity = usePredictionView((s) => s.setQuantity);
   const setMarketId = usePredictionView((s) => s.setMarketId);
 
   useEffect(() => {
@@ -149,7 +151,7 @@ function PredictionPage() {
         {/* 1. 상단 조건 선택 그리드 */}
         <PredictionConditionGrid
           quantityHeading={isFarmer ? "출하량" : "매입량"}
-          quantityLabel={`${quantityBoxes}상자`}
+          quantityLabel={`${quantityBoxes.toLocaleString()}${QUANTITY_UNIT_LABEL[quantityUnit]}`}
           cropLabel={`${cropMeta.categoryName} · ${cropMeta.name} · ${cropMeta.varietyName}`}
           marketLabel={marketName}
           viewpointLabel={isFarmer ? "농민" : "도매상"}
@@ -170,6 +172,7 @@ function PredictionPage() {
             currentPrice={prediction.currentPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
+            quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
             isPositiveForUser={isPositiveForUser}
             cropName={prediction.cropName}
             onDetailClick={() =>
@@ -252,6 +255,7 @@ function PredictionPage() {
             expectedPrice={selectedPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
+            quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
             recommendationDate={selectedDate}
             isRecommendedSelection={!!selectedPoint?.isRecommendedDate}
           />
@@ -279,7 +283,8 @@ function PredictionPage() {
         open={qtySheetOpen}
         onOpenChange={setQtySheetOpen}
         value={quantityBoxes}
-        onChange={setQuantityBoxes}
+        unit={quantityUnit}
+        onChange={(v, u) => setQuantity(v, u)}
         heading={isFarmer ? "출하량" : "매입량"}
       />
       <MarketPickerSheet
