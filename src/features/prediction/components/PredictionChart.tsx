@@ -546,6 +546,18 @@ function PredictionChartBase({
               barSize={8}
               isAnimationActive={false}
             />
+            {/* 신뢰구간 밴드 (pess~opt) */}
+            <Area
+              xAxisId="main"
+              yAxisId="price"
+              type="monotone"
+              dataKey="band"
+              stroke="none"
+              fill="rgba(46,158,107,0.16)"
+              activeDot={false}
+              isAnimationActive={false}
+              connectNulls={false}
+            />
             <Line
               xAxisId="main"
               yAxisId="price"
