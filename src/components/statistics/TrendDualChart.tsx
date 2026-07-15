@@ -123,7 +123,11 @@ export function TrendDualChart({
       )}
 
       {/* Legend */}
-      <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 px-1">
+      <ul className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-1">
+        <li className="inline-flex items-center gap-1.5 text-[11.5px] text-[#495057]">
+          <span className="h-2 w-2 rounded-[2px]" style={{ background: VOLUME_BAR }} />
+          거래량
+        </li>
         {series.map((s) => (
           <li
             key={s.id}
@@ -133,7 +137,7 @@ export function TrendDualChart({
             )}
           >
             <span
-              className="h-2 w-2 rounded-full"
+              className="h-[2.5px] w-3.5 rounded-full"
               style={{ background: s.color, opacity: s.disabled ? 0.4 : 1 }}
             />
             {s.label}
