@@ -44,11 +44,17 @@ function NewsPage() {
       {/* News cards */}
       <ul className="space-y-3 px-4 pb-24 pt-4">
         {mockAgriNews.map((n) => {
+          const isAi = n.format === "ai";
           const inner = (
             <div className="flex items-stretch gap-3 rounded-2xl border border-[#EEF0F2] bg-white p-3 shadow-[0_1px_2px_rgba(16,24,40,0.04),0_4px_12px_-2px_rgba(16,24,40,0.06)] active:bg-[#F8F9FA]">
               <NewsThumb item={n} size={104} radius={14} />
               <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
                 <div className="min-w-0">
+                  {isAi && (
+                    <span className="mb-1 inline-flex items-center gap-0.5 rounded-md bg-[#F0EBFF] px-2 py-0.5 text-[9.5px] font-bold text-[#6741D9]">
+                      ✨ AI를 통해 작성된 기사
+                    </span>
+                  )}
                   <div
                     className="text-[12px] font-bold"
                     style={{ color: AGRI_NEWS_TYPE_COLOR[n.type] }}
@@ -69,10 +75,13 @@ function NewsPage() {
               <ChevronRight className="h-4 w-4 shrink-0 self-center text-[#ADB5BD]" />
             </div>
           );
-          // TODO: 추후 인앱 웹뷰 또는 상세 페이지 연결 예정
           return (
             <li key={n.id}>
-              {n.url && n.url !== "#" ? (
+              {isAi ? (
+                <Link to="/news/$id" params={{ id: n.id }}>
+                  {inner}
+                </Link>
+              ) : n.url && n.url !== "#" ? (
                 <a href={n.url} target="_blank" rel="noreferrer noopener">
                   {inner}
                 </a>
