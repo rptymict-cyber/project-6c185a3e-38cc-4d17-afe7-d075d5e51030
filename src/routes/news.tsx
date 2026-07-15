@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, Newspaper, Share2, Star } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
+import aiArticleThumb from "@/assets/ai-article-thumb.png.asset.json";
 import {
   AGRI_NEWS_TYPE_COLOR,
   mockAgriNews,
@@ -258,6 +259,21 @@ function NewsThumb({
   radius: number;
 }) {
   const style = { width: size, height: size, borderRadius: radius } as const;
+
+  // AI형 기사는 공통 썸네일 사용
+  if (item.format === "ai") {
+    return (
+      <img
+        src={aiArticleThumb.url}
+        alt=""
+        loading="lazy"
+        className="shrink-0 object-cover"
+        style={style}
+      />
+    );
+  }
+
+  // 링크형: 원문 이미지, 없으면 기본 fallback
   if (item.imageUrl) {
     return (
       <img
