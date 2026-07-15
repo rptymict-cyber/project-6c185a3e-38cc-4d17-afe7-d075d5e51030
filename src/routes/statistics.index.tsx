@@ -7,7 +7,7 @@ import { useStatistics, type PeriodMode } from "@/store/statistics";
 import {
   CROPS,
   buildSeries,
-  buildGauges,
+  buildKpis,
   getOriginShare,
   getMarketShare,
   getGradeAvg,
@@ -16,7 +16,7 @@ import {
 import { StatsMarketSheet } from "@/components/statistics/StatsMarketSheet";
 import { StatsTrendChart } from "@/components/statistics/StatsTrendChart";
 import { StatsDonut } from "@/components/statistics/StatsDonut";
-import { StatsGauge } from "@/components/statistics/StatsGauge";
+import { StatsKpiGroup } from "@/components/statistics/StatsKpiGroup";
 import { StatsGradeBars } from "@/components/statistics/StatsGradeBars";
 import { FullSelectCard } from "@/components/common/ConditionSelectCard";
 import { useCropSelection } from "@/store/cropSelection";
