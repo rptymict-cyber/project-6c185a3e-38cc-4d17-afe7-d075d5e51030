@@ -589,18 +589,30 @@ function PredictionChartBase({
                   return <g key={`d-${index}`} />;
                 }
                 const isSelected = index === selectedIndex;
+                const isInflect = !!payload.isInflection;
                 return (
-                  <circle
-                    key={`d-${index}`}
-                    cx={cx}
-                    cy={cy}
-                    r={isSelected ? 5 : 3.5}
-                    fill={TEAL}
-                    stroke="#fff"
-                    strokeWidth={1.5}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => onSelectIndex?.(index)}
-                  />
+                  <g key={`d-${index}`}>
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={isSelected ? 5 : 3.5}
+                      fill={TEAL}
+                      stroke="#fff"
+                      strokeWidth={1.5}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => onSelectIndex?.(index)}
+                    />
+                    {isInflect && (
+                      <circle
+                        cx={cx}
+                        cy={cy - 10}
+                        r={4}
+                        fill={INFLECT}
+                        stroke="#fff"
+                        strokeWidth={1.5}
+                      />
+                    )}
+                  </g>
                 );
               }}
               activeDot={{
