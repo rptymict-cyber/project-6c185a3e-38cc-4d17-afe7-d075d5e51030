@@ -423,24 +423,46 @@ function PredictionChartBase({
   const canRenderSelected =
     !!selectedLabel && typeof selectedPrice === "number";
 
-  // Ticks: past start · past mid · today · forecast mid · recommended · selected · last forecast
-  const ticks: string[] = (() => {
-    const t: string[] = [];
-    if (points.length) t.push(points[0].label);
-    const pastEndIdx = todayIdx >= 0 ? todayIdx : points.length - 1;
-    if (pastEndIdx >= 2) t.push(points[Math.floor(pastEndIdx / 2)].label);
-    if (todayPoint) t.push(todayPoint.label);
-    const futureStart = pastEndIdx + 1;
-    const futureEnd = points.length - 1;
-    if (futureEnd > futureStart) {
-      const mid = Math.floor((futureStart + futureEnd) / 2);
-      t.push(points[mid].label);
+  // X-axis labels — priority-based selection with 32px collision.
+  // Priority: 1=today, 2=end, 3=recommended, 4=start, 5=mid
+  type LabelCand = { index: number; label: string; display: string; priority: number };
+  const toMD = (p?: PredictionPoint): string => {
+    if (!p) return "";
+    if (p.date) {
+      const [, m, dd] = p.date.split("-");
+      return `${Number(m)}/${Number(dd)}`;
     }
-    if (recommended) t.push(recommended.label);
-    if (selectedLabel) t.push(selectedLabel);
-    if (futureEnd >= 0 && points[futureEnd]) t.push(points[futureEnd].label);
-    return Array.from(new Set(t));
-  })();
+    // fallback: parse "M월 D일"
+    const m = p.label.match(/(\d+)월\s*(\d+)일/);
+    return m ? `${Number(m[1])}/${Number(m[2])}` : p.label;
+  };
+  const candidates: LabelCand[] = [];
+  if (todayPoint) {
+    candidates.push({ index: todayIdx, label: todayPoint.label, display: "오늘", priority: 1 });
+  }
+  const endIdx = points.length - 1;
+  if (endIdx >= 0 && endIdx !== todayIdx) {
+    candidates.push({ index: endIdx, label: points[endIdx].label, display: toMD(points[endIdx]), priority: 2 });
+  }
+  if (recommended) {
+    const rIdx = points.findIndex((p) => p === recommended);
+    if (rIdx >= 0 && rIdx !== todayIdx && rIdx !== endIdx) {
+      candidates.push({ index: rIdx, label: recommended.label, display: toMD(recommended), priority: 3 });
+    }
+  }
+  if (points.length > 0 && 0 !== todayIdx && 0 !== endIdx) {
+    candidates.push({ index: 0, label: points[0].label, display: toMD(points[0]), priority: 4 });
+  }
+  if (points.length >= 3) {
+    const midIdx = Math.floor(points.length / 2);
+    if (!candidates.some((c) => c.index === midIdx)) {
+      candidates.push({ index: midIdx, label: points[midIdx].label, display: toMD(points[midIdx]), priority: 5 });
+    }
+  }
+  // Keep all label strings as ticks so Recharts still allocates x positions;
+  // the overlay renders the actual labels with collision filtering.
+  const ticks: string[] = Array.from(new Set(candidates.map((c) => c.label)));
+
 
   const showTopInfo =
     canRenderSelected && currentPrice != null && quantityBoxes != null;
