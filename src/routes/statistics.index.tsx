@@ -94,7 +94,7 @@ function StatisticsPage() {
     () => buildSeries(crop, markets, period),
     [crop, markets, period],
   );
-  const gauges = useMemo(() => buildGauges(crop), [crop]);
+  const kpis = useMemo(() => buildKpis(crop, period), [crop, period]);
   const origin = useMemo(() => getOriginShare(crop), [crop]);
   const marketShare = useMemo(() => getMarketShare(crop), [crop]);
   const grades = useMemo(() => getGradeAvg(crop), [crop]);
