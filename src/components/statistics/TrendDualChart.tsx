@@ -12,6 +12,10 @@ import {
 import type { TooltipProps } from "recharts";
 import { cn } from "@/lib/utils";
 
+const VOLUME_BAR = "#A7B4E0";
+const GRID = "#F1F3F5";
+const AXIS_LABEL = "#ADB5BD";
+
 export type TrendChartSeries = {
   id: string;
   label: string;
@@ -48,17 +52,17 @@ export function TrendDualChart({
       <div className="h-[220px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={points} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid stroke="#F1F3F5" vertical={false} />
+            <CartesianGrid stroke={GRID} vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 11, fill: "#868E96" }}
+              tick={{ fontSize: 11, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               interval="preserveStartEnd"
               minTickGap={20}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#868E96" }}
+              tick={{ fontSize: 11, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               width={44}
@@ -76,7 +80,8 @@ export function TrendDualChart({
                 stroke={s.color}
                 strokeWidth={s.id === "all" || s.id === "2026" ? 2.4 : 1.8}
                 strokeOpacity={s.disabled ? 0.25 : 1}
-                dot={false}
+                dot={{ r: 2.6, strokeWidth: 0, fill: s.color }}
+                activeDot={{ r: 3.8 }}
                 isAnimationActive={false}
               />
             ))}
@@ -91,33 +96,38 @@ export function TrendDualChart({
           <BarChart data={points} margin={{ top: 4, right: 10, left: 0, bottom: 4 }}>
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 10, fill: "#868E96" }}
+              tick={{ fontSize: 10, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               interval="preserveStartEnd"
               minTickGap={20}
             />
             <YAxis
-              tick={{ fontSize: 10, fill: "#868E96" }}
+              tick={{ fontSize: 10, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               width={44}
               tickFormatter={(v: number) => `${v}t`}
             />
             <Tooltip
-              cursor={{ fill: "#F1F3F5" }}
+              cursor={{ fill: GRID }}
               contentStyle={{ borderRadius: 8, border: "1px solid #E9ECEF", fontSize: 11 }}
+              itemStyle={{ color: VOLUME_BAR }}
               formatter={(value: number) => [`${value}t`, "물량"]}
               labelFormatter={(l) => `${l}`}
             />
-            <Bar dataKey="volume" fill="#CED4DA" radius={[2, 2, 0, 0]} barSize={8} />
+            <Bar dataKey="volume" fill={VOLUME_BAR} radius={[2, 2, 0, 0]} barSize={8} />
           </BarChart>
         </ResponsiveContainer>
       </div>
       )}
 
       {/* Legend */}
-      <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 px-1">
+      <ul className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-1">
+        <li className="inline-flex items-center gap-1.5 text-[11.5px] text-[#495057]">
+          <span className="h-2 w-2 rounded-[2px]" style={{ background: VOLUME_BAR }} />
+          거래량
+        </li>
         {series.map((s) => (
           <li
             key={s.id}
@@ -127,7 +137,7 @@ export function TrendDualChart({
             )}
           >
             <span
-              className="h-2 w-2 rounded-full"
+              className="h-[2.5px] w-3.5 rounded-full"
               style={{ background: s.color, opacity: s.disabled ? 0.4 : 1 }}
             />
             {s.label}
