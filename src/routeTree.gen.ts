@@ -31,6 +31,7 @@ import { Route as WatchlistAddRouteImport } from './routes/watchlist.add'
 import { Route as StatisticsVarietyRouteImport } from './routes/statistics.$variety'
 import { Route as PriceVarietyRouteImport } from './routes/price.$variety'
 import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
+import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as MarketCropRouteImport } from './routes/market.$crop'
 import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
 import { Route as MarketWholesaleIndexRouteImport } from './routes/market.wholesale.index'
@@ -152,6 +153,11 @@ const NotificationsSettingsRoute = NotificationsSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => NotificationsRoute,
 } as any)
+const NewsIdRoute = NewsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NewsRoute,
+} as any)
 const MarketCropRoute = MarketCropRouteImport.update({
   id: '/$crop',
   path: '/$crop',
@@ -215,13 +221,14 @@ export interface FileRoutesByFullPath {
   '/live': typeof LiveRoute
   '/market': typeof MarketRouteWithChildren
   '/market-compare': typeof MarketCompareRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/weather': typeof WeatherRoute
   '/market/$crop': typeof MarketCropRoute
+  '/news/$id': typeof NewsIdRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
@@ -248,12 +255,13 @@ export interface FileRoutesByTo {
   '/grades': typeof GradesRoute
   '/live': typeof LiveRoute
   '/market-compare': typeof MarketCompareRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/weather': typeof WeatherRoute
   '/market/$crop': typeof MarketCropRoute
+  '/news/$id': typeof NewsIdRoute
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/watchlist/add': typeof WatchlistAddRoute
@@ -281,13 +289,14 @@ export interface FileRoutesById {
   '/live': typeof LiveRoute
   '/market': typeof MarketRouteWithChildren
   '/market-compare': typeof MarketCompareRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/notifications': typeof NotificationsRouteWithChildren
   '/prediction': typeof PredictionRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/weather': typeof WeatherRoute
   '/market/$crop': typeof MarketCropRoute
+  '/news/$id': typeof NewsIdRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
   '/price/$variety': typeof PriceVarietyRouteWithChildren
   '/statistics/$variety': typeof StatisticsVarietyRoute
@@ -324,6 +333,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/weather'
     | '/market/$crop'
+    | '/news/$id'
     | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/weather'
     | '/market/$crop'
+    | '/news/$id'
     | '/price/$variety'
     | '/statistics/$variety'
     | '/watchlist/add'
@@ -389,6 +400,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/weather'
     | '/market/$crop'
+    | '/news/$id'
     | '/notifications/settings'
     | '/price/$variety'
     | '/statistics/$variety'
@@ -417,7 +429,7 @@ export interface RootRouteChildren {
   LiveRoute: typeof LiveRoute
   MarketRoute: typeof MarketRouteWithChildren
   MarketCompareRoute: typeof MarketCompareRoute
-  NewsRoute: typeof NewsRoute
+  NewsRoute: typeof NewsRouteWithChildren
   NotificationsRoute: typeof NotificationsRouteWithChildren
   PredictionRoute: typeof PredictionRoute
   SearchRoute: typeof SearchRoute
@@ -586,6 +598,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsSettingsRouteImport
       parentRoute: typeof NotificationsRoute
     }
+    '/news/$id': {
+      id: '/news/$id'
+      path: '/$id'
+      fullPath: '/news/$id'
+      preLoaderRoute: typeof NewsIdRouteImport
+      parentRoute: typeof NewsRoute
+    }
     '/market/$crop': {
       id: '/market/$crop'
       path: '/$crop'
@@ -682,6 +701,16 @@ const MarketRouteChildren: MarketRouteChildren = {
 const MarketRouteWithChildren =
   MarketRoute._addFileChildren(MarketRouteChildren)
 
+interface NewsRouteChildren {
+  NewsIdRoute: typeof NewsIdRoute
+}
+
+const NewsRouteChildren: NewsRouteChildren = {
+  NewsIdRoute: NewsIdRoute,
+}
+
+const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
+
 interface NotificationsSettingsRouteChildren {
   NotificationsSettingsRuleIdRoute: typeof NotificationsSettingsRuleIdRoute
   NotificationsSettingsNewRoute: typeof NotificationsSettingsNewRoute
@@ -734,7 +763,7 @@ const rootRouteChildren: RootRouteChildren = {
   LiveRoute: LiveRoute,
   MarketRoute: MarketRouteWithChildren,
   MarketCompareRoute: MarketCompareRoute,
-  NewsRoute: NewsRoute,
+  NewsRoute: NewsRouteWithChildren,
   NotificationsRoute: NotificationsRouteWithChildren,
   PredictionRoute: PredictionRoute,
   SearchRoute: SearchRoute,
