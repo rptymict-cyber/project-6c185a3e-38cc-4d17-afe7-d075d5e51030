@@ -340,7 +340,9 @@ function SelectCircle({ checked }: { checked: boolean }) {
       aria-hidden
       className={cn(
         "grid h-6 w-6 place-items-center rounded-full border-2 transition-colors",
-        checked ? "border-[#3A8A3A] bg-[#3A8A3A] text-white" : "border-[#CED4DA] bg-background",
+        checked
+          ? "border-[#E03131] bg-[#E03131] text-white"
+          : "border-[#CED4DA] bg-background",
       )}
     >
       {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
