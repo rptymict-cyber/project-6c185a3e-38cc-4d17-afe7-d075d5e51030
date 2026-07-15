@@ -232,60 +232,58 @@ function WatchlistPage() {
         <EmptyState />
       ) : (
         <>
-          <div className="px-4 pt-3">
-            <label className="flex h-11 items-center gap-2 rounded-xl border border-input bg-secondary/50 px-3">
-              <Search className="h-4 w-4 text-muted-foreground" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="품목, 품종, 시장명으로 검색하세요"
-                className="min-w-0 flex-1 bg-transparent text-[13.5px] outline-none placeholder:text-muted-foreground"
-              />
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => setQuery("")}
-                  aria-label="지우기"
-                  className="grid h-6 w-6 place-items-center rounded-full text-muted-foreground"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
+          {!editMode && (
+            <div className="px-4 pt-3">
+              <label className="flex h-11 items-center gap-2 rounded-xl border border-input bg-secondary/50 px-3">
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="품목, 품종, 시장명으로 검색하세요"
+                  className="min-w-0 flex-1 bg-transparent text-[13.5px] outline-none placeholder:text-muted-foreground"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery("")}
+                    aria-label="지우기"
+                    className="grid h-6 w-6 place-items-center rounded-full text-muted-foreground"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </label>
+              {!isSearching && filtered.length > 1 && (
+                <p className="mt-2 text-center text-[12px] text-muted-foreground">
+                  <span className="mr-1 tracking-tighter">⋮⋮</span>를 드래그해 순서를 바꿀 수 있어요
+                </p>
               )}
-            </label>
-            {!editMode && !isSearching && filtered.length > 1 && (
-              <p className="mt-2 text-center text-[12px] text-muted-foreground">
-                <span className="mr-1 tracking-tighter">⋮⋮</span>를 드래그해 순서를 바꿀 수 있어요
-              </p>
-            )}
-          </div>
+            </div>
+          )}
 
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center px-6 pb-16 pt-16 text-center">
               <p className="text-[13px] text-muted-foreground">조건에 맞는 저장된 시세가 없어요</p>
             </div>
           ) : editMode ? (
-            <ul className="grid gap-2 px-4 py-4">
+            <ul className="grid gap-2.5 px-4 pb-32 pt-3">
               {filtered.map((it) => {
                 const selected = selectedIds.has(it.id);
                 return (
-                  <li
-                    key={it.id}
-                    className="overflow-hidden rounded-2xl border border-border bg-background"
-                  >
+                  <li key={it.id}>
                     <button
                       type="button"
                       onClick={() => toggleSelect(it.id)}
+                      aria-pressed={selected}
                       className={cn(
-                        "flex w-full items-stretch gap-3 bg-background pl-3 pr-2 text-left",
-                        selected && "bg-[#F0F9F0]",
+                        "relative block w-full overflow-hidden rounded-2xl border bg-background text-left transition-colors",
+                        selected ? "border-[#E03131]" : "border-border",
                       )}
                     >
-                      <div className="flex items-center">
+                      <span className="absolute right-3 top-3 z-10">
                         <SelectCircle checked={selected} />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <FavoriteCardBody item={it} disableLink />
-                      </div>
+                      </span>
+                      <FavoriteCardBody item={it} disableLink />
                     </button>
                   </li>
                 );
@@ -309,18 +307,25 @@ function WatchlistPage() {
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>선택한 {selectedIds.size}개를 삭제할까요?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {selectedIds.size === 1
+                ? "즐겨찾기를 삭제할까요?"
+                : "선택한 즐겨찾기를 삭제할까요?"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              삭제한 즐겨찾기는 되돌릴 수 없어요.
+              {selectedIds.size === 1
+                ? "선택한 시세 조건이 즐겨찾기에서 삭제됩니다."
+                : `선택한 ${selectedIds.size}개의 시세 조건이 즐겨찾기에서 삭제됩니다.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>취소</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>취소</AlertDialogCancel>
             <AlertDialogAction
               onClick={performDelete}
+              disabled={isDeleting}
               className="bg-[#E03131] text-white hover:bg-[#E03131]/90"
             >
-              삭제
+              {isDeleting ? "삭제 중…" : "삭제"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
