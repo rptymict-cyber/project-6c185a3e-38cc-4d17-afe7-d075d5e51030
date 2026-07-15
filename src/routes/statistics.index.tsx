@@ -7,7 +7,7 @@ import { useStatistics, type PeriodMode } from "@/store/statistics";
 import {
   CROPS,
   buildSeries,
-  buildGauges,
+  buildKpis,
   getOriginShare,
   getMarketShare,
   getGradeAvg,
@@ -16,7 +16,7 @@ import {
 import { StatsMarketSheet } from "@/components/statistics/StatsMarketSheet";
 import { StatsTrendChart } from "@/components/statistics/StatsTrendChart";
 import { StatsDonut } from "@/components/statistics/StatsDonut";
-import { StatsGauge } from "@/components/statistics/StatsGauge";
+import { StatsKpiGroup } from "@/components/statistics/StatsKpiGroup";
 import { StatsGradeBars } from "@/components/statistics/StatsGradeBars";
 import { FullSelectCard } from "@/components/common/ConditionSelectCard";
 import { useCropSelection } from "@/store/cropSelection";
@@ -94,7 +94,7 @@ function StatisticsPage() {
     () => buildSeries(crop, markets, period),
     [crop, markets, period],
   );
-  const gauges = useMemo(() => buildGauges(crop), [crop]);
+  const kpis = useMemo(() => buildKpis(crop, period), [crop, period]);
   const origin = useMemo(() => getOriginShare(crop), [crop]);
   const marketShare = useMemo(() => getMarketShare(crop), [crop]);
   const grades = useMemo(() => getGradeAvg(crop), [crop]);
@@ -209,11 +209,9 @@ function StatisticsPage() {
           </div>
         </section>
 
-        {/* 3-2 등락 비교 3칸 카드 */}
-        <section className="mt-3 grid grid-cols-3 gap-2">
-          <StatsGauge label="전순 대비" data={gauges.prevXun} />
-          <StatsGauge label="전년 동순 대비" data={gauges.prevYear} />
-          <StatsGauge label="평년 동순 대비" data={gauges.normalYear} />
+        {/* 3-3 비교 KPI 그룹 카드 (기간 토글과 워딩 연동) */}
+        <section className="mt-3">
+          <StatsKpiGroup kpis={kpis} />
         </section>
 
         {/* 3-3 콤보 차트 */}
