@@ -392,7 +392,11 @@ function PredictionChartBase({
       isPast && p.actualPrice !== undefined
         ? Math.round(120 + (seed / 233280) * 220)
         : undefined;
-    return { ...p, pastVolume };
+    const band: [number, number] | undefined =
+      p.optimisticPrice != null && p.pessimisticPrice != null
+        ? [p.pessimisticPrice, p.optimisticPrice]
+        : undefined;
+    return { ...p, pastVolume, band };
   });
 
   const futurePrices = points
