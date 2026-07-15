@@ -108,13 +108,24 @@ function WatchlistPage() {
     });
   };
 
-  const performDelete = () => {
-    selectedIds.forEach((id) => removeFavorite(id));
-    const n = selectedIds.size;
-    setConfirmOpen(false);
-    setSelectedIds(new Set());
-    setEditMode(false);
-    toast(`${n}개의 즐겨찾기를 삭제했어요`);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const performDelete = async () => {
+    if (isDeleting || selectedIds.size === 0) return;
+    const ids = Array.from(selectedIds);
+    setIsDeleting(true);
+    try {
+      // 기존 단건 삭제 API를 안전하게 순차 호출 (removeFavorite은 로컬 스토어)
+      ids.forEach((id) => removeFavorite(id));
+      setConfirmOpen(false);
+      setSelectedIds(new Set());
+      setEditMode(false);
+      toast("즐겨찾기에서 삭제되었습니다.");
+    } catch {
+      toast("삭제하지 못했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleReorder = (ids: string[]) => {
@@ -138,14 +149,14 @@ function WatchlistPage() {
           취소
         </button>
       }
-      title={`${selectedIds.size}개 선택됨`}
+      title="즐겨찾기 삭제"
       right={
         <button
           type="button"
-          onClick={exitEditMode}
-          className="min-h-[44px] px-1 text-[15px] font-bold text-[#3A8A3A]"
+          onClick={toggleSelectAllVisible}
+          className="min-h-[44px] px-1 text-[15px] font-bold text-[#E03131]"
         >
-          완료
+          {allVisibleSelected ? "전체 해제" : "전체 선택"}
         </button>
       }
     />
@@ -175,31 +186,35 @@ function WatchlistPage() {
       className="sticky bottom-[60px] z-20 border-t border-border bg-background"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="flex items-center justify-between gap-3 px-4 py-3">
+      <div className="grid grid-cols-2 items-center gap-3 px-4 py-3">
         <button
           type="button"
-          onClick={toggleSelectAllVisible}
-          className="flex min-h-[44px] items-center gap-2 px-1 text-[14px] font-medium text-foreground"
+          onClick={exitEditMode}
+          className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-muted text-[15px] font-bold text-foreground active:opacity-90"
         >
-          <SelectCircle checked={allVisibleSelected} />
-          전체 선택
+          취소
         </button>
         <button
           type="button"
-          disabled={selectedIds.size === 0}
+          disabled={selectedIds.size === 0 || isDeleting}
           onClick={() => setConfirmOpen(true)}
           className={cn(
-            "inline-flex min-h-[44px] items-center justify-center rounded-lg px-4 text-[14px] font-bold",
-            selectedIds.size === 0
-              ? "bg-muted text-muted-foreground"
+            "inline-flex min-h-[48px] items-center justify-center rounded-xl px-4 text-[15px] font-bold",
+            selectedIds.size === 0 || isDeleting
+              ? "cursor-not-allowed bg-muted text-muted-foreground"
               : "bg-[#E03131] text-white active:opacity-90",
           )}
         >
-          선택 삭제 ({selectedIds.size})
+          {isDeleting
+            ? "삭제 중…"
+            : selectedIds.size === 0
+              ? "삭제"
+              : `삭제 (${selectedIds.size})`}
         </button>
       </div>
     </div>
   ) : undefined;
+
 
   return (
     <AppShell header={editMode ? editHeader : normalHeader} bottom={bottomBar}>
