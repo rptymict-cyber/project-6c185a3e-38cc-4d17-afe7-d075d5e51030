@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -7,13 +7,29 @@ import { DatePickerSheet } from "@/components/date-picker-sheet";
 import { useStatistics } from "@/store/statistics";
 import {
   CROPS, PERIODS, buildTrend, buildSnapshot, getOriginShare, getMarketShare,
+  type CropId,
 } from "@/lib/mock/statistics-mock";
-import { StatsCropSheet } from "@/components/statistics/StatsCropSheet";
 import { StatsMarketSheet } from "@/components/statistics/StatsMarketSheet";
 import { StatsTrendChart } from "@/components/statistics/StatsTrendChart";
 import { StatsDonut } from "@/components/statistics/StatsDonut";
 import { StatsSnapshotTable } from "@/components/statistics/StatsSnapshotTable";
+import { FullSelectCard } from "@/components/common/ConditionSelectCard";
+import { useCropSelection } from "@/store/cropSelection";
+import { getCategoryById, getItemById, getVarietyById } from "@/lib/catalog-service";
 import { cn } from "@/lib/utils";
+
+// 카탈로그 품목명 → 통계 mock CropId 매핑.
+// 매핑되지 않는 품목은 통계 데이터가 없으므로 이전 crop 유지.
+const ITEM_NAME_TO_CROP_ID: Record<string, CropId> = {
+  "사과": "apple", "배": "pear", "포도": "grape", "감귤": "citrus",
+  "배추": "cabbage", "상추": "lettuce", "얼갈이배추": "napa",
+  "마늘": "garlic", "양파": "onion", "청양고추": "chili", "고추": "chili",
+  "무": "radish", "당근": "carrot",
+  "감자": "potato", "고구마": "sweetpotato",
+  "표고버섯": "shiitake", "팽이버섯": "enoki",
+  "쌀": "rice", "보리": "barley", "콩": "soybean", "팥": "redbean",
+};
+
 
 export const Route = createFileRoute("/statistics/")({
   component: StatisticsPage,
