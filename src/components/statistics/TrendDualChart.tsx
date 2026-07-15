@@ -96,26 +96,27 @@ export function TrendDualChart({
           <BarChart data={points} margin={{ top: 4, right: 10, left: 0, bottom: 4 }}>
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 10, fill: "#868E96" }}
+              tick={{ fontSize: 10, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               interval="preserveStartEnd"
               minTickGap={20}
             />
             <YAxis
-              tick={{ fontSize: 10, fill: "#868E96" }}
+              tick={{ fontSize: 10, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               width={44}
               tickFormatter={(v: number) => `${v}t`}
             />
             <Tooltip
-              cursor={{ fill: "#F1F3F5" }}
+              cursor={{ fill: GRID }}
               contentStyle={{ borderRadius: 8, border: "1px solid #E9ECEF", fontSize: 11 }}
+              itemStyle={{ color: VOLUME_BAR }}
               formatter={(value: number) => [`${value}t`, "물량"]}
               labelFormatter={(l) => `${l}`}
             />
-            <Bar dataKey="volume" fill="#CED4DA" radius={[2, 2, 0, 0]} barSize={8} />
+            <Bar dataKey="volume" fill={VOLUME_BAR} radius={[2, 2, 0, 0]} barSize={8} />
           </BarChart>
         </ResponsiveContainer>
       </div>
