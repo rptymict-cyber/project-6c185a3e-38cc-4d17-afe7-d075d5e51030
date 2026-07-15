@@ -8,7 +8,7 @@ import { PredictionConditionGrid } from "@/features/prediction/components/Predic
 import { PredictionCropSheet } from "@/features/prediction/components/PredictionCropSheet";
 import { PredictionFactorList } from "@/features/prediction/components/PredictionFactorList";
 import { PredictionInsightCard } from "@/features/prediction/components/PredictionInsightCard";
-import { PredictionWeatherCause } from "@/features/prediction/components/PredictionWeatherCause";
+import { PredictionDateWeatherCard } from "@/features/prediction/components/PredictionDateWeatherCard";
 
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
@@ -160,8 +160,6 @@ function PredictionPage() {
           onMarketClick={() => setMarketSheetOpen(true)}
           onViewpointClick={() => setViewpointSheetOpen(true)}
         />
-        {/* 날씨→가격 인과 카드 */}
-        <PredictionWeatherCause />
 
         {/* 2. AI 추천 카드 (선택 날짜 반영) */}
         <div className="mt-3">
