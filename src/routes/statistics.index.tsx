@@ -209,23 +209,11 @@ function StatisticsPage() {
           </div>
         </section>
 
-        {/* 3-2 게이지 3개 */}
+        {/* 3-2 등락 비교 3칸 카드 */}
         <section className="mt-3 grid grid-cols-3 gap-2">
-          <StatsGauge
-            label="전순 대비"
-            data={gauges.prevXun}
-            detailBaseLabel="직전 순 평균가"
-          />
-          <StatsGauge
-            label="전년 동순 대비"
-            data={gauges.prevYear}
-            detailBaseLabel="전년 동순 평균가"
-          />
-          <StatsGauge
-            label="평년 동순 대비"
-            data={gauges.normalYear}
-            detailBaseLabel="평년 동순 평균가"
-          />
+          <StatsGauge label="전순 대비" data={gauges.prevXun} />
+          <StatsGauge label="전년 동순 대비" data={gauges.prevYear} />
+          <StatsGauge label="평년 동순 대비" data={gauges.normalYear} />
         </section>
 
         {/* 3-3 콤보 차트 */}
