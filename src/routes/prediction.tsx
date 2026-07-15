@@ -277,10 +277,6 @@ function PredictionPage() {
             />
           </div>
 
-          {/* 힌트 */}
-          <div className="mt-3 rounded-lg bg-[#F1F8F3] px-3 py-2 text-[11.5px] text-[#1F5C1F]">
-            📅 그래프의 날짜를 누르면 그날의 예상 시세가 표시됩니다
-          </div>
         </section>
 
         {/* 6. 출하/매입 시점 비교 */}
