@@ -39,8 +39,8 @@ export function PredictionRangeDetailSheet({
         </SheetHeader>
         <div className="px-4 py-4">
           <p className="text-[12px] leading-snug text-[#495057]">
-            AI는 하나의 값이 아니라 가격이 들어올 <b>범위</b>를 예측해요.
-            확신하는 정도에 따라 범위 넓이가 달라집니다.
+            AI는 하나의 값이 아니라 가격이 들어올 <b>범위</b>를 예측합니다.
+            확신하는 정도에 따라 범위의 넓이가 달라집니다.
           </p>
 
           {has && (
@@ -70,7 +70,7 @@ export function PredictionRangeDetailSheet({
                     최대 범위
                   </div>
                   <div className="text-[11px] text-[#6C757D]">
-                    거의 대부분(90%) 이 안
+                    거의 대부분(90%)이 이 안에 듭니다
                   </div>
                 </div>
                 <div className="text-right text-[12.5px] font-extrabold tabular-nums text-foreground">
@@ -84,8 +84,8 @@ export function PredictionRangeDetailSheet({
           )}
 
           <div className="mt-3 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-[11.5px] leading-snug text-[#2c6444]">
-            📌 화면의 낙관·중립·비관은 이 범위를 알기 쉽게 3갈래로 나눈
-            거예요. 중립이 가장 가능성 높은 값입니다.
+            📌 화면의 낙관·중립·비관은 이 범위에서 각각 위쪽·가운데·아래쪽
+            값입니다. 중립이 가장 가능성이 높습니다.
           </div>
 
           <button
