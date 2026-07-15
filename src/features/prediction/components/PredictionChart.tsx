@@ -104,16 +104,63 @@ function ForecastOverlay({
         strokeWidth={1}
         strokeDasharray="3 3"
       />
-      <text
-        x={xToday}
-        y={top - 4}
-        textAnchor="middle"
-        fontSize={10}
-        fontWeight={700}
-        fill="#64748B"
-      >
-        오늘
-      </text>
+    </g>
+  );
+}
+
+// X-axis labels with priority-based collision filtering (32px gap).
+function XLabelsOverlay({
+  xAxisMap,
+  offset,
+  candidates,
+}: {
+  xAxisMap?: Record<string, any>;
+  offset?: { top: number; left: number; width: number; height: number };
+  candidates: Array<{ index: number; label: string; display: string; priority: number }>;
+}) {
+  if (!xAxisMap || !offset || candidates.length === 0) return null;
+  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
+  if (!xAxis?.scale) return null;
+  const scale = xAxis.scale;
+  const bw = typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
+  const centerOf = (label: string): number | null => {
+    const v = scale(label);
+    if (typeof v !== "number" || Number.isNaN(v)) return null;
+    return v + bw / 2;
+  };
+  const withX = candidates
+    .map((c) => ({ ...c, x: centerOf(c.label) }))
+    .filter((c): c is typeof c & { x: number } => typeof c.x === "number");
+  // Greedy by priority ascending, keep only if ≥32px from all accepted.
+  const sorted = [...withX].sort((a, b) => a.priority - b.priority);
+  const accepted: typeof sorted = [];
+  const GAP = 32;
+  for (const c of sorted) {
+    if (accepted.every((a) => Math.abs(a.x - c.x) >= GAP)) {
+      accepted.push(c);
+      if (accepted.length >= 5) break;
+    }
+  }
+  accepted.sort((a, b) => a.x - b.x);
+  const y = offset.top + offset.height + 14;
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      {accepted.map((c) => {
+        const emphasized = c.priority === 1 || c.priority === 3;
+        return (
+          <text
+            key={`xl-${c.index}`}
+            x={c.x}
+            y={y}
+            textAnchor="middle"
+            fontSize={9}
+            fontWeight={emphasized ? 700 : 400}
+            fill={emphasized ? "#495057" : "#ADB5BD"}
+          >
+            {c.display}
+          </text>
+        );
+      })}
     </g>
   );
 }
@@ -423,24 +470,46 @@ function PredictionChartBase({
   const canRenderSelected =
     !!selectedLabel && typeof selectedPrice === "number";
 
-  // Ticks: past start · past mid · today · forecast mid · recommended · selected · last forecast
-  const ticks: string[] = (() => {
-    const t: string[] = [];
-    if (points.length) t.push(points[0].label);
-    const pastEndIdx = todayIdx >= 0 ? todayIdx : points.length - 1;
-    if (pastEndIdx >= 2) t.push(points[Math.floor(pastEndIdx / 2)].label);
-    if (todayPoint) t.push(todayPoint.label);
-    const futureStart = pastEndIdx + 1;
-    const futureEnd = points.length - 1;
-    if (futureEnd > futureStart) {
-      const mid = Math.floor((futureStart + futureEnd) / 2);
-      t.push(points[mid].label);
+  // X-axis labels — priority-based selection with 32px collision.
+  // Priority: 1=today, 2=end, 3=recommended, 4=start, 5=mid
+  type LabelCand = { index: number; label: string; display: string; priority: number };
+  const toMD = (p?: PredictionPoint): string => {
+    if (!p) return "";
+    if (p.date) {
+      const [, m, dd] = p.date.split("-");
+      return `${Number(m)}/${Number(dd)}`;
     }
-    if (recommended) t.push(recommended.label);
-    if (selectedLabel) t.push(selectedLabel);
-    if (futureEnd >= 0 && points[futureEnd]) t.push(points[futureEnd].label);
-    return Array.from(new Set(t));
-  })();
+    // fallback: parse "M월 D일"
+    const m = p.label.match(/(\d+)월\s*(\d+)일/);
+    return m ? `${Number(m[1])}/${Number(m[2])}` : p.label;
+  };
+  const candidates: LabelCand[] = [];
+  if (todayPoint) {
+    candidates.push({ index: todayIdx, label: todayPoint.label, display: "오늘", priority: 1 });
+  }
+  const endIdx = points.length - 1;
+  if (endIdx >= 0 && endIdx !== todayIdx) {
+    candidates.push({ index: endIdx, label: points[endIdx].label, display: toMD(points[endIdx]), priority: 2 });
+  }
+  if (recommended) {
+    const rIdx = points.findIndex((p) => p === recommended);
+    if (rIdx >= 0 && rIdx !== todayIdx && rIdx !== endIdx) {
+      candidates.push({ index: rIdx, label: recommended.label, display: toMD(recommended), priority: 3 });
+    }
+  }
+  if (points.length > 0 && 0 !== todayIdx && 0 !== endIdx) {
+    candidates.push({ index: 0, label: points[0].label, display: toMD(points[0]), priority: 4 });
+  }
+  if (points.length >= 3) {
+    const midIdx = Math.floor(points.length / 2);
+    if (!candidates.some((c) => c.index === midIdx)) {
+      candidates.push({ index: midIdx, label: points[midIdx].label, display: toMD(points[midIdx]), priority: 5 });
+    }
+  }
+  // Keep all label strings as ticks so Recharts still allocates x positions;
+  // the overlay renders the actual labels with collision filtering.
+  const ticks: string[] = Array.from(new Set(candidates.map((c) => c.label)));
+
 
   const showTopInfo =
     canRenderSelected && currentPrice != null && quantityBoxes != null;
@@ -497,27 +566,19 @@ function PredictionChartBase({
             <XAxis
               xAxisId="main"
               dataKey="label"
-              tick={(props: any) => {
-                const { x, y, payload } = props;
-                const isSelected = payload.value === selectedLabel;
-                return (
-                  <text
-                    x={x}
-                    y={y + 10}
-                    textAnchor="middle"
-                    fontSize={10.5}
-                    fontWeight={isSelected ? 800 : 400}
-                    fill={isSelected ? TEAL : "#868E96"}
-                  >
-                    {payload.value}
-                  </text>
-                );
-              }}
+              tick={() => <g />}
               axisLine={false}
               tickLine={false}
               ticks={ticks}
               interval={0}
+              height={22}
             />
+            <Customized
+              component={(props: any) => (
+                <XLabelsOverlay {...props} candidates={candidates} />
+              )}
+            />
+
             <YAxis
               yAxisId="price"
               tick={{ fontSize: 10, fill: "#868E96" }}
