@@ -9,6 +9,7 @@ interface Props {
   currentPrice: number;
   baseUnitLabel: string; // "10kg"
   quantityBoxes: number;
+  quantityUnitLabel?: string; // "상자" | "kg" | "톤" | "개"
   isPositiveForUser: boolean;
   cropName: string;
   onDetailClick: () => void;
@@ -21,6 +22,7 @@ export function PredictionInsightCard({
   currentPrice,
   baseUnitLabel,
   quantityBoxes,
+  quantityUnitLabel = "상자",
   isPositiveForUser,
   cropName,
   onDetailClick,
