@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -7,13 +7,29 @@ import { DatePickerSheet } from "@/components/date-picker-sheet";
 import { useStatistics } from "@/store/statistics";
 import {
   CROPS, PERIODS, buildTrend, buildSnapshot, getOriginShare, getMarketShare,
+  type CropId,
 } from "@/lib/mock/statistics-mock";
-import { StatsCropSheet } from "@/components/statistics/StatsCropSheet";
 import { StatsMarketSheet } from "@/components/statistics/StatsMarketSheet";
 import { StatsTrendChart } from "@/components/statistics/StatsTrendChart";
 import { StatsDonut } from "@/components/statistics/StatsDonut";
 import { StatsSnapshotTable } from "@/components/statistics/StatsSnapshotTable";
+import { FullSelectCard } from "@/components/common/ConditionSelectCard";
+import { useCropSelection } from "@/store/cropSelection";
+import { getCategoryById, getItemById, getVarietyById } from "@/lib/catalog-service";
 import { cn } from "@/lib/utils";
+
+// 카탈로그 품목명 → 통계 mock CropId 매핑.
+// 매핑되지 않는 품목은 통계 데이터가 없으므로 이전 crop 유지.
+const ITEM_NAME_TO_CROP_ID: Record<string, CropId> = {
+  "사과": "apple", "배": "pear", "포도": "grape", "감귤": "citrus",
+  "배추": "cabbage", "상추": "lettuce", "얼갈이배추": "napa",
+  "마늘": "garlic", "양파": "onion", "청양고추": "chili", "고추": "chili",
+  "무": "radish", "당근": "carrot",
+  "감자": "potato", "고구마": "sweetpotato",
+  "표고버섯": "shiitake", "팽이버섯": "enoki",
+  "쌀": "rice", "보리": "barley", "콩": "soybean", "팥": "redbean",
+};
+
 
 export const Route = createFileRoute("/statistics/")({
   component: StatisticsPage,
@@ -40,9 +56,35 @@ function formatDate(iso: string) {
 
 function StatisticsPage() {
   const { crop, markets, period, date, tab, setCrop, setMarkets, setPeriod, setDate, setTab } = useStatistics();
-  const [cropOpen, setCropOpen] = useState(false);
   const [marketOpen, setMarketOpen] = useState(false);
   const [dateOpen, setDateOpen] = useState(false);
+
+  // 공용 작물 선택 스토어(committed)를 SSOT로 사용.
+  const committed = useCropSelection((s) => s.committed);
+  const setDraftCategory = useCropSelection((s) => s.setDraftCategory);
+  const setDraftItem = useCropSelection((s) => s.setDraftItem);
+  const setDraftVariety = useCropSelection((s) => s.setDraftVariety);
+  const commitDraft = useCropSelection((s) => s.commitDraft);
+
+  // 최초 진입 시 committed가 비어 있으면 기본 작물(사과)로 seed.
+  useEffect(() => {
+    if (!committed.itemId) {
+      setDraftCategory("06");
+      setDraftItem("0601");
+      setDraftVariety("ALL");
+      commitDraft();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // committed 변경 시 통계 crop 동기화.
+  useEffect(() => {
+    if (!committed.itemId) return;
+    const item = getItemById(committed.itemId);
+    if (!item) return;
+    const mapped = ITEM_NAME_TO_CROP_ID[item.name];
+    if (mapped && mapped !== crop) setCrop(mapped);
+  }, [committed.itemId, crop, setCrop]);
 
   const trend = useMemo(() => buildTrend(crop, markets, period), [crop, markets, period]);
   const snapshot = useMemo(() => buildSnapshot(crop, date), [crop, date]);
@@ -51,6 +93,19 @@ function StatisticsPage() {
 
   const cropDef = CROPS[crop];
   const marketLabel = markets.length === 1 ? markets[0] : `${markets[0]} 외 ${markets.length - 1}`;
+
+  // 작물 카드 라벨: "부류 · 품목 · 품종"
+  const cropCardLabel = useMemo(() => {
+    if (!committed.itemId) return undefined;
+    const cat = committed.categoryId ? getCategoryById(committed.categoryId) : undefined;
+    const item = getItemById(committed.itemId);
+    const varietyName =
+      committed.varietyId && committed.varietyId !== "ALL" && committed.itemId
+        ? getVarietyById(committed.itemId, committed.varietyId)?.name
+        : "전체 품종";
+    const parts = [cat?.name, item?.name, varietyName].filter(Boolean);
+    return parts.join(" · ");
+  }, [committed]);
 
   const avgAll = useMemo(() => {
     if (trend.length === 0) return 0;
@@ -70,17 +125,15 @@ function StatisticsPage() {
     >
       {/* Filter bar */}
       <div className="sticky top-[52px] z-20 space-y-2 border-b border-[#E9ECEF] bg-white px-4 pb-2 pt-3">
-        <button
-          type="button"
-          onClick={() => setCropOpen(true)}
-          className="flex w-full items-center justify-between rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
-        >
-          <span className="flex items-center gap-2">
-            <span className="text-[18px] leading-none">{cropDef.emoji}</span>
-            <span className="text-[14px] font-bold text-foreground">{cropDef.name}</span>
-          </span>
-          <ChevronDown className="h-4 w-4 text-[#868E96]" />
-        </button>
+        <FullSelectCard
+          icon={<span className="text-[16px] leading-none">{cropDef.emoji}</span>}
+          label="작물"
+          value={cropCardLabel}
+          placeholder="작물 선택"
+          to="/crop-select"
+          search={{ from: "statistics", return: "/statistics" }}
+        />
+
 
         {/* Tabs */}
         <div className="flex">
@@ -183,7 +236,7 @@ function StatisticsPage() {
         )}
       </div>
 
-      <StatsCropSheet open={cropOpen} onOpenChange={setCropOpen} selected={crop} onSelect={setCrop} />
+      
       <StatsMarketSheet open={marketOpen} onOpenChange={setMarketOpen} selected={markets} onConfirm={setMarkets} />
       <DatePickerSheet open={dateOpen} onOpenChange={setDateOpen} selected={date} onConfirm={setDate} />
     </AppShell>
