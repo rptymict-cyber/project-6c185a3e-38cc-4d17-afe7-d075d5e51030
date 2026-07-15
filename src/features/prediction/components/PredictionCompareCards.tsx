@@ -7,6 +7,7 @@ interface Props {
   expectedPrice: number;
   baseUnitLabel: string; // "10kg"
   quantityBoxes: number;
+  quantityUnitLabel?: string;
   recommendationDate: string;
   isRecommendedSelection: boolean;
 }
@@ -17,6 +18,7 @@ export function PredictionCompareCards({
   expectedPrice,
   baseUnitLabel,
   quantityBoxes,
+  quantityUnitLabel = "상자",
   recommendationDate,
   isRecommendedSelection,
 }: Props) {
