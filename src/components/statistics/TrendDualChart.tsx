@@ -48,17 +48,17 @@ export function TrendDualChart({
       <div className="h-[220px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={points} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid stroke="#F1F3F5" vertical={false} />
+            <CartesianGrid stroke={GRID} vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 11, fill: "#868E96" }}
+              tick={{ fontSize: 11, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               interval="preserveStartEnd"
               minTickGap={20}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#868E96" }}
+              tick={{ fontSize: 11, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               width={44}
