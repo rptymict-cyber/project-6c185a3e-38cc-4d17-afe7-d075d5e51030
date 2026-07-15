@@ -72,17 +72,21 @@ export function PredictionScenarioCards({
       <div className="mt-2 rounded-xl bg-[#F0F9F0] px-3 py-2 text-[11px] leading-snug text-[#2c6444]">
         💡 추천일 시세는 보통 이 정도(중립), 잘 되면 낙관, 안 되면 비관까지
         움직일 수 있어요. 뒤로 갈수록 범위가 넓어지는 건 그만큼 예측이
-        어렵다는 뜻이에요.
-      </div>
-
-      <div className="mt-1.5 text-center">
-        <button
-          type="button"
+        어렵다는 뜻이에요.{" "}
+        <span
+          role="button"
+          tabIndex={0}
           onClick={onOpenRangeDetail}
-          className="text-[11.5px] text-[#6C757D] underline underline-offset-2"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onOpenRangeDetail();
+            }
+          }}
+          className="ml-0.5 cursor-pointer whitespace-nowrap font-bold text-[#1F7A50] underline underline-offset-2"
         >
-          예측 범위 자세히 보기 ›
-        </button>
+          자세히›
+        </span>
       </div>
 
     </section>
