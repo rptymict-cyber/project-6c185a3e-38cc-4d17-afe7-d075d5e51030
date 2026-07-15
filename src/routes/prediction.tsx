@@ -280,7 +280,8 @@ function PredictionPage() {
         open={qtySheetOpen}
         onOpenChange={setQtySheetOpen}
         value={quantityBoxes}
-        onChange={setQuantityBoxes}
+        unit={quantityUnit}
+        onChange={(v, u) => setQuantity(v, u)}
         heading={isFarmer ? "출하량" : "매입량"}
       />
       <MarketPickerSheet
