@@ -212,11 +212,6 @@ function StatisticsPage() {
                 label={`현재가${markets.length > 1 ? ` (${markets[0]})` : ""}`}
                 value={currentPrice.toLocaleString()}
                 unit="원"
-                extra={
-                  <span className={cn("text-[11px] font-bold tabular-nums", deltaClass(curDelta))}>
-                    {curDelta > 0 ? "▲" : curDelta < 0 ? "▼" : ""} {Math.abs(curPct)}%
-                  </span>
-                }
               />
             </div>
 
