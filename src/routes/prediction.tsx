@@ -243,6 +243,15 @@ function PredictionPage() {
               예측
             </span>
           </div>
+
+          {/* 힌트 + 선택 날짜 날씨 카드 */}
+          <div className="mt-3 rounded-lg bg-[#F1F8F3] px-3 py-2 text-[11.5px] text-[#1F5C1F]">
+            📅 그래프의 날짜를 누르면 그날의 예상 시세 + 날씨 영향이 표시됩니다
+          </div>
+          <PredictionDateWeatherCard
+            dateIso={selectedPoint?.date}
+            dateLabel={selectedDate}
+          />
         </section>
 
         {/* 4. 출하/매입 시점 비교 (선택 날짜 반영) */}
