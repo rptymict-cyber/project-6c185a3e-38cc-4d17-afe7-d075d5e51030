@@ -12,6 +12,7 @@ import { PredictionWeatherCause } from "@/features/prediction/components/Predict
 
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
+import { QUANTITY_UNIT_LABEL } from "@/features/prediction/quantityUnits";
 import { ViewpointPickerSheet } from "@/features/prediction/components/ViewpointPickerSheet";
 import { usePrediction } from "@/features/prediction/usePrediction";
 import { usePredictionView } from "@/features/prediction/usePredictionView";
