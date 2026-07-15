@@ -172,6 +172,7 @@ function PredictionPage() {
             currentPrice={prediction.currentPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
+            quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
             isPositiveForUser={isPositiveForUser}
             cropName={prediction.cropName}
             onDetailClick={() =>
