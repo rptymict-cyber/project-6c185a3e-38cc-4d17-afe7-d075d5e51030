@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { AppHeader } from "@/components/app-header";
 import { DatePickerSheet } from "@/components/date-picker-sheet";
 import { useStatistics } from "@/store/statistics";
 import {
