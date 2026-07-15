@@ -159,7 +159,7 @@ export function PredictionInsightCard({
               </span>
             </div>
             <div className="mt-0.5 text-[9.5px] text-white/60">
-              {quantityBoxes}상자
+              {quantityBoxes.toLocaleString()}{quantityUnitLabel}
             </div>
           </div>
 
