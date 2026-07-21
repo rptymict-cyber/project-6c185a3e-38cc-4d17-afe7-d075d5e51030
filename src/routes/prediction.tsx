@@ -342,7 +342,21 @@ function PredictionPage() {
             </div>
           </div>
 
+          <div className="mb-2">
+            <TrendDirectionCard />
+          </div>
+          <div className="mb-2">
+            <AuctionSupplyCard />
+          </div>
+
           <PredictionFactorList factors={prediction.factors} />
+
+          <div className="mt-2">
+            <PriceOutlookReportCard />
+          </div>
+          <div className="mt-2">
+            <TopicRelatedNewsCard />
+          </div>
         </section>
 
         {/* 8. AI 상세 예측 리포트 (프리미엄) */}
