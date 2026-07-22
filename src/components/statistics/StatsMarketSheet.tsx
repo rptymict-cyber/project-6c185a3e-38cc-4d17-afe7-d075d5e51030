@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { MARKET_OPTIONS } from "@/lib/mock/statistics-mock";
-import { X, Check, AlertTriangle } from "lucide-react";
+import { Check, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+
 
 export function StatsMarketSheet({
   open, onOpenChange, selected, onConfirm,
