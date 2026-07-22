@@ -63,7 +63,7 @@ export function MarketListHome({
         />
       </section>
 
-      {/* 오늘의 농산물 소식 */}
+      {/* 오늘의 농업 뉴스 */}
       <HomeAgriNewsSection />
 
       {/* 주요 진입 카드 */}
