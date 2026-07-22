@@ -33,8 +33,8 @@ export function StatsMarketSheet({
       <SheetContent side="bottom" className="max-h-[80vh] rounded-t-2xl p-0">
         <div className="flex items-center justify-between px-4 pt-4 pb-2">
           <h3 className="text-[16px] font-black">시장 선택</h3>
-          <button onClick={() => onOpenChange(false)} aria-label="닫기" className="p-1"><X className="h-5 w-5" /></button>
         </div>
+
         {warn && (
           <div className="mx-4 mb-2 flex items-center gap-2 rounded-[10px] bg-[#FFF4E6] px-3 py-2 text-[12px] text-[#B76E00]">
             <AlertTriangle className="h-4 w-4" />
