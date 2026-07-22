@@ -42,7 +42,7 @@ const MENU: Item[] = [
   { label: "시장별 가격 비교", to: "/market-compare", icon: Scale },
   { label: "즐겨찾기", to: "/watchlist", icon: Star },
   { label: "통계", to: "/statistics", icon: BarChart3 },
-  { label: "농산물 소식", to: "/news", icon: Newspaper },
+  { label: "농업 뉴스", to: "/news", icon: Newspaper },
   { label: "날씨", to: "/weather", icon: CloudSun },
   { label: "설정", to: "/settings", icon: Settings },
   { label: "데이터 기준 안내", to: "/data-guide", icon: Info },

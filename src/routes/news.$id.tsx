@@ -15,10 +15,10 @@ export const Route = createFileRoute("/news/$id")({
     const item = mockAgriNews.find((n) => n.id === params.id);
     return {
       meta: [
-        { title: `${item?.title ?? "농산물 소식"} — AGDICT` },
+        { title: `${item?.title ?? "농업 뉴스"} — AGDICT` },
         {
           name: "description",
-          content: item?.description ?? "AGDICT 농산물 소식",
+          content: item?.description ?? "AGDICT 농업 뉴스",
         },
       ],
     };
@@ -45,7 +45,7 @@ function NewsDetailPage() {
           >
             <ChevronLeft className="h-5 w-5 text-foreground" />
           </Link>
-          <div className="text-[14px] font-bold text-foreground">농산물 소식</div>
+          <div className="text-[14px] font-bold text-foreground">농업 뉴스</div>
           <div className="flex items-center">
             <button
               type="button"

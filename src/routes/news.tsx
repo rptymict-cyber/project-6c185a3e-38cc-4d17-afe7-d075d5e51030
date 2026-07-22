@@ -14,10 +14,10 @@ export const Route = createFileRoute("/news")({
   component: NewsPage,
   head: () => ({
     meta: [
-      { title: "농산물 소식 — AGDICT" },
+      { title: "농업 뉴스 — AGDICT" },
       {
         name: "description",
-        content: "매일 업데이트되는 농산물 관련 주요 소식을 확인하세요.",
+        content: "매일 업데이트되는 농업 뉴스를 확인하세요.",
       },
     ],
   }),
@@ -33,18 +33,18 @@ function NewsPage() {
   }
 
   return (
-    <AppShell header={<AppHeader title="농산물 소식" />}>
+    <AppShell header={<AppHeader title="농업 뉴스" />}>
       {/* Hero — 초록 톤 배경 밴드 */}
       <section className="bg-[#EAF5EA] px-5 pb-7 pt-6">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <h2 className="text-[26px] font-black leading-[1.2] text-foreground">
-              농산물 소식
+              농업 뉴스
             </h2>
             <p className="mt-2 text-[13px] leading-[1.55] text-[#495057]">
-              매일 업데이트되는 농산물 관련
+              매일 업데이트되는 농업 뉴스를
               <br />
-              주요 소식을 확인해보세요.
+              확인해보세요.
             </p>
           </div>
           <NewsHeroIllustration />
@@ -135,7 +135,7 @@ function NewsDetailView({
             <ChevronLeft className="h-5 w-5 text-foreground" />
           </button>
           <div className="text-[14px] font-bold text-foreground">
-            농산물 소식
+            농업 뉴스
           </div>
           <div className="flex items-center">
             <button
