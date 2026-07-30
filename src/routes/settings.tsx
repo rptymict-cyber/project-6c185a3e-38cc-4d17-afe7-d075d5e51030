@@ -26,7 +26,7 @@ export const Route = createFileRoute("/settings")({
 
 function SettingsPage() {
   return (
-    <AppShell header={<AppHeader title="설정" />}>
+    <AppShell screenId="SET-001_설정" header={<AppHeader title="설정" />}>
       <div className="px-4 pt-4 pb-8">
         <SectionLabel>알림</SectionLabel>
         <div className="overflow-hidden rounded-[10px] bg-surface">

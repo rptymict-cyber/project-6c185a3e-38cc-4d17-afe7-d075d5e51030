@@ -213,7 +213,7 @@ function WatchlistPage() {
 
 
   return (
-    <AppShell header={editMode ? editHeader : normalHeader} bottom={bottomBar}>
+    <AppShell screenId="FAV-001_즐겨찾기" screenState={items.length === 0 || filtered.length === 0 ? "Empty" : "Default"} header={editMode ? editHeader : normalHeader} bottom={bottomBar}>
       {items.length > 0 && (
         <div className="px-4 pt-4">
           <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>

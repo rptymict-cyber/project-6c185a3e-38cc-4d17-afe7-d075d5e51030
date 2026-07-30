@@ -67,7 +67,7 @@ function NotificationsPage() {
   };
 
   return (
-    <AppShell
+    <AppShell screenId="NOTI-001_알림함" screenState={sorted.length === 0 ? "Empty" : "Default"}
       header={
         <DetailHeader
           title="알림"

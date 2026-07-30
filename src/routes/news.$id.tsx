@@ -35,7 +35,7 @@ function NewsDetailPage() {
   const cropRouteId = basis?.cropRouteId;
 
   return (
-    <AppShell
+    <AppShell screenId="NEWS-002_뉴스상세"
       header={
         <div className="flex h-12 items-center justify-between border-b border-[#F1F3F5] bg-white px-2">
           <Link
