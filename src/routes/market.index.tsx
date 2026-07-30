@@ -36,7 +36,7 @@ function MarketPage() {
   });
 
   return (
-    <AppShell header={<AppHeader title="시세 조회" />}>
+    <AppShell screenId="MKT-001_시세조회" header={<AppHeader title="시세 조회" />}>
       <MarketSearchBar />
       <MarketFilterBar />
 

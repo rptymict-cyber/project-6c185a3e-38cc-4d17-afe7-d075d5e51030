@@ -135,7 +135,7 @@ function VarietyDetailPage() {
   const pricePerKg = Math.round(quote.price / unitKg(quote.unit));
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-011_품종시세상세"
       header={
         <DetailHeader
           title="시세 상세"

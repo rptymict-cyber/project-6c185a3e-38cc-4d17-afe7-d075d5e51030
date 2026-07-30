@@ -83,6 +83,7 @@ export function RuleForm({
 
   return (
     <AppShell
+      screenId={isEdit ? "NOTI-004_알림규칙수정" : "NOTI-003_알림규칙추가"}
       header={
         <DetailHeader
           title={isEdit ? "알림 수정" : "알림 추가"}

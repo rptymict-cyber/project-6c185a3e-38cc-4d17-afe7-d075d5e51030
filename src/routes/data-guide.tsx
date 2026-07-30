@@ -55,7 +55,7 @@ const items: GuideItem[] = [
 function DataGuidePage() {
   const router = useRouter();
   return (
-    <AppShell
+    <AppShell screenId="SET-002_데이터안내"
       header={
         <DetailHeader
           title="데이터 기준 안내"

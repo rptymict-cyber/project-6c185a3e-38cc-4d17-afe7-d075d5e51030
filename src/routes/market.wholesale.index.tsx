@@ -73,7 +73,7 @@ function WholesaleBrowsePage() {
   };
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-005_도매시장목록"
       header={
         <AppHeader
           title="도매시장별 조회"

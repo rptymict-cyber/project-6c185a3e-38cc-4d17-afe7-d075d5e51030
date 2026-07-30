@@ -29,7 +29,7 @@ function Home() {
   const router = useRouter();
 
   return (
-    <AppShell
+    <AppShell screenId="HOME-001_홈"
       header={
         <>
           <AppHeader title="농산물 시세 조회" />

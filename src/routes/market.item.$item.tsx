@@ -45,7 +45,7 @@ function ItemVarietiesPage() {
   const sorted = [...item.varieties].sort((a, b) => b.volumeTon - a.volumeTon);
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-004_품목시세상세"
       header={
         <DetailHeader
           title="시세 상세"

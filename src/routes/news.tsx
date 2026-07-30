@@ -33,7 +33,7 @@ function NewsPage() {
   }
 
   return (
-    <AppShell header={<AppHeader title="농업 뉴스" />}>
+    <AppShell screenId="NEWS-001_농업뉴스" header={<AppHeader title="농업 뉴스" />}>
       {/* Hero — 초록 톤 배경 밴드 */}
       <section className="bg-[#EAF5EA] px-5 pb-7 pt-6">
         <div className="flex items-start justify-between gap-3">
@@ -123,7 +123,7 @@ function NewsDetailView({
   const cropRouteId = basis?.cropRouteId;
 
   return (
-    <AppShell
+    <AppShell screenId="NEWS-002_뉴스상세"
       header={
         <div className="flex h-12 items-center justify-between border-b border-[#F1F3F5] bg-white px-2">
           <button

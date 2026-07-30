@@ -74,7 +74,7 @@ function ItemBrowsePage() {
   };
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-003_품목별시세"
       header={<AppHeader title="품목별 조회" showRefresh={false} showBell={false} showSearch />}
     >
       <div className="px-4 pb-8 pt-3">

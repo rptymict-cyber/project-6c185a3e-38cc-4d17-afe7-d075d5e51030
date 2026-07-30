@@ -72,7 +72,7 @@ function MarketComparePage() {
   const bottom = ranked[ranked.length - 1];
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-008_시장비교"
       header={<AppHeader title="시장별 가격 비교" showBell={false} />}
     >
       <div className="px-4 pb-24 pt-4">

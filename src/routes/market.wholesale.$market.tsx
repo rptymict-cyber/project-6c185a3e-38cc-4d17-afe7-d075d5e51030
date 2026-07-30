@@ -76,7 +76,7 @@ function WholesaleDetailPage() {
   const data = buildRows(selected, market);
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-006_도매시장상세"
       header={
         <DetailHeader
           title="시세 상세"

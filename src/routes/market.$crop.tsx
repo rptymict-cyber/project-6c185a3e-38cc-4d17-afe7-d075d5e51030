@@ -53,7 +53,7 @@ function CropDetail() {
 
   if (!crop) {
     return (
-      <AppShell header={<DetailHeader title="시세 상세" onBack={() => router.history.back()} />}>
+      <AppShell screenId="MKT-002_시세상세" screenState="Empty" header={<DetailHeader title="시세 상세" onBack={() => router.history.back()} />}>
         <div className="p-8 text-center text-muted-foreground">품목을 찾을 수 없어요.</div>
       </AppShell>
     );
@@ -65,7 +65,7 @@ function CropDetail() {
   const avg = Math.round(series.reduce((s, r) => s + r.price, 0) / Math.max(1, series.length));
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-002_시세상세"
       header={
         <DetailHeader
           title="시세 상세"

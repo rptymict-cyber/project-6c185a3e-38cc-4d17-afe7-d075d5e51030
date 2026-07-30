@@ -44,7 +44,7 @@ function LivePage() {
   const { rows, total } = getLivePrices({ sort, limit: pageSize });
 
   return (
-    <AppShell
+    <AppShell screenId="LIVE-001_실시간시세"
       header={
         <AppHeader
           title="실시간 시세"

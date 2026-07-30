@@ -28,7 +28,7 @@ function AuctionDetail() {
   });
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-007_경매상세" screenState={record ? "Default" : "Empty"}
       header={
         <DetailHeader
           title="경매 상세 결과"

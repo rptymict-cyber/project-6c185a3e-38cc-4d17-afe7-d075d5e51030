@@ -38,7 +38,7 @@ function WeatherDetailPage() {
   };
 
   return (
-    <AppShell
+    <AppShell screenId="WTR-001_날씨상세"
       header={
         <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-[#E9ECEF] bg-background px-2">
           <button

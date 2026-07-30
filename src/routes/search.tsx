@@ -108,7 +108,11 @@ function SearchPage() {
   };
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-background">
+    <div
+      className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-background"
+      data-screen-id="SRCH-001_검색"
+      data-screen-state={noResults ? "Empty" : "Default"}
+    >
       {/* Search header */}
       <header className="sticky top-0 z-30 flex h-[52px] items-center gap-1 border-b border-[#E9ECEF] bg-background px-2">
         <Link
