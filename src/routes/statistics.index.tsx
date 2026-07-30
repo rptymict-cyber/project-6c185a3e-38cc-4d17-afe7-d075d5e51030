@@ -137,7 +137,7 @@ function StatisticsPage() {
       : "";
 
   return (
-    <AppShell header={<AppHeader title="통계" />}>
+    <AppShell screenId="STAT-001_통계" header={<AppHeader title="통계" />}>
       {/* Filter bar */}
       <div className="sticky top-[52px] z-20 space-y-2.5 border-b border-[#E9ECEF] bg-white px-4 pb-3 pt-3">
         <div className="grid grid-cols-2 gap-2">

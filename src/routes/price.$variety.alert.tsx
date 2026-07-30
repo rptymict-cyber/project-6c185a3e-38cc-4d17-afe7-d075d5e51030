@@ -43,7 +43,7 @@ function PriceAlertPage() {
   };
 
   return (
-    <AppShell
+    <AppShell screenId="MKT-012_품종가격알림"
       header={
         <DetailHeader
           title="가격 알림 설정"

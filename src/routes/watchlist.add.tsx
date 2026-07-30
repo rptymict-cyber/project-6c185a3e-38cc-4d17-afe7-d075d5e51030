@@ -106,7 +106,7 @@ function WatchlistAddPage() {
   const flat = Math.abs(quote?.prevPct ?? 0) < 0.05;
 
   return (
-    <AppShell
+    <AppShell screenId="FAV-002_즐겨찾기추가"
       header={
         <DetailHeader
           title="즐겨찾기 추가"
