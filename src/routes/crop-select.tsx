@@ -218,7 +218,11 @@ function CropSelectPage() {
   const buttonLabel = step === 3 ? finalCtaLabel : ctaLabel;
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#F7F8FA]">
+    <div
+      className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#F7F8FA]"
+      data-screen-id="SEL-001_작물선택"
+      data-screen-state="Default"
+    >
       {/* Header */}
       <header className="sticky top-0 z-30 bg-[#F7F8FA] px-4 pt-3 pb-1">
         <button
