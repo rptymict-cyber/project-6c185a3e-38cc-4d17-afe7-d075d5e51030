@@ -1,0 +1,211 @@
+{
+  "schemaVersion": "1.0",
+  "generatedFrom": [
+    "src/components/bottom-nav.tsx",
+    "src/components/app-drawer.tsx",
+    "src/components/app-shell.tsx",
+    "src/components/app-header.tsx",
+    "src/routes/",
+    "docs/ds/screen-registry.json"
+  ],
+  "menus": [
+    {
+      "order": 1,
+      "menuId": "home",
+      "menuName": "홈",
+      "routes": ["/"],
+      "dsFile": "docs/ds/pages/home.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 2,
+      "menuId": "market",
+      "menuName": "시세",
+      "routes": [
+        "/market",
+        "/market/$crop",
+        "/market/item",
+        "/market/item/$item",
+        "/market/wholesale",
+        "/market/wholesale/$market",
+        "/market/auction/$id",
+        "/market-compare",
+        "/compare",
+        "/grades",
+        "/price/$variety",
+        "/price/$variety/alert"
+      ],
+      "dsFile": "docs/ds/pages/market.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 3,
+      "menuId": "live",
+      "menuName": "실시간 시세",
+      "routes": ["/live"],
+      "dsFile": "docs/ds/pages/live.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 4,
+      "menuId": "watchlist",
+      "menuName": "즐겨찾기",
+      "routes": ["/watchlist", "/watchlist/add"],
+      "dsFile": "docs/ds/pages/watchlist.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 5,
+      "menuId": "statistics",
+      "menuName": "통계",
+      "routes": ["/statistics", "/statistics/$variety"],
+      "dsFile": "docs/ds/pages/statistics.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 6,
+      "menuId": "prediction",
+      "menuName": "AI 시세 예측",
+      "routes": ["/prediction"],
+      "dsFile": "docs/ds/pages/prediction.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 7,
+      "menuId": "news",
+      "menuName": "농업 뉴스",
+      "routes": ["/news", "/news/$id"],
+      "dsFile": "docs/ds/pages/news.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 8,
+      "menuId": "weather",
+      "menuName": "날씨",
+      "routes": ["/weather"],
+      "dsFile": "docs/ds/pages/weather.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 9,
+      "menuId": "notifications",
+      "menuName": "알림",
+      "routes": [
+        "/notifications",
+        "/notifications/settings",
+        "/notifications/settings/new",
+        "/notifications/settings/$ruleId"
+      ],
+      "dsFile": "docs/ds/pages/notifications.md",
+      "screenIds": [],
+      "common": false,
+      "note": "하단 GNB·드로어에 직접 노출되지 않고 헤더 벨 아이콘·설정에서 진입하는 숨은 route 그룹"
+    },
+    {
+      "order": 10,
+      "menuId": "settings",
+      "menuName": "설정",
+      "routes": ["/settings", "/data-guide"],
+      "dsFile": "docs/ds/pages/settings.md",
+      "screenIds": [],
+      "common": false
+    },
+    {
+      "order": 11,
+      "menuId": "common-layout",
+      "menuName": "공통 레이아웃",
+      "routes": [],
+      "components": [
+        "src/components/app-shell.tsx",
+        "src/components/app-header.tsx",
+        "src/components/bottom-nav.tsx",
+        "src/components/app-drawer.tsx",
+        "src/components/detail-header.tsx",
+        "src/routes/__root.tsx"
+      ],
+      "dsFile": "docs/ds/pages/common-layout.md",
+      "screenIds": [],
+      "common": true
+    },
+    {
+      "order": 12,
+      "menuId": "common-state",
+      "menuName": "공통 전역 상태",
+      "routes": [],
+      "components": [
+        "src/store/cropSelection.ts",
+        "src/store/watchlist.ts",
+        "src/store/market.ts",
+        "src/store/statistics.ts",
+        "src/store/alerts.ts",
+        "src/store/location.ts",
+        "src/store/ui.ts",
+        "src/features/favorites/favoriteStore.ts",
+        "src/features/prediction/usePredictionView.ts"
+      ],
+      "dsFile": "docs/ds/pages/common-state.md",
+      "screenIds": [],
+      "common": true
+    },
+    {
+      "order": 13,
+      "menuId": "common-modal",
+      "menuName": "공통 모달·바텀시트",
+      "routes": [],
+      "components": [
+        "src/components/date-picker-sheet.tsx",
+        "src/components/market-v2/MarketSheet.tsx",
+        "src/components/market-v2/CorporationSheet.tsx",
+        "src/components/market-v2/UnitSheet.tsx",
+        "src/components/market-v2/SortSheet.tsx",
+        "src/components/statistics/StatsMarketSheet.tsx",
+        "src/components/RatePromptModal.tsx",
+        "src/components/empty-state.tsx"
+      ],
+      "dsFile": "docs/ds/pages/common-modal.md",
+      "screenIds": [],
+      "common": true
+    },
+    {
+      "order": 14,
+      "menuId": "common-auth",
+      "menuName": "인증",
+      "routes": [],
+      "status": "not-implemented",
+      "dsFile": "docs/ds/pages/common-auth.md",
+      "screenIds": [],
+      "common": true,
+      "note": "현재 코드에 로그인·회원가입 화면 및 인증 가드가 존재하지 않음"
+    }
+  ],
+  "commonReview": [
+    {
+      "route": "/crop-select",
+      "reason": "홈·시세·통계·즐겨찾기·예측 등 여러 상위 메뉴에서 공용 진입하는 작물 선택 페이지",
+      "candidateMenuIds": ["common-modal", "market"]
+    },
+    {
+      "route": "/search",
+      "reason": "공통 헤더 검색에서 진입하며 결과가 시세·품목 전반을 포괄",
+      "candidateMenuIds": ["common-layout", "market"]
+    },
+    {
+      "route": "/compare",
+      "reason": "/market-compare와 기능이 중복되어 귀속 정리 필요",
+      "candidateMenuIds": ["market"]
+    },
+    {
+      "route": "/grades",
+      "reason": "시세 상세의 등급·규격 탭과 중복 가능",
+      "candidateMenuIds": ["market"]
+    }
+  ]
+}
