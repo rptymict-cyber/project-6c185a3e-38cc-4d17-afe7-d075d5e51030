@@ -1,0 +1,525 @@
+{
+  "schemaVersion": "1.0",
+  "screens": [
+    {
+      "screenId": "HOM-001_root_Default",
+      "sectionId": "home-main",
+      "route": "/",
+      "page": "홈",
+      "section": "홈 대시보드",
+      "state": "Default",
+      "file": "src/routes/index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-001_market_Default",
+      "sectionId": "market-main",
+      "route": "/market",
+      "page": "시세 조회",
+      "section": "시세 조회 메인",
+      "state": "Default",
+      "file": "src/routes/market.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-002_market-id_Default",
+      "sectionId": "market-crop-detail",
+      "route": "/market/$crop",
+      "page": "시세 상세",
+      "section": "시세 상세",
+      "state": "Default",
+      "file": "src/routes/market.$crop.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-002_market-id_Empty",
+      "sectionId": "market-crop-detail",
+      "route": "/market/$crop",
+      "page": "시세 상세",
+      "section": "시세 상세",
+      "state": "Empty",
+      "file": "src/routes/market.$crop.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-003_market-item_Default",
+      "sectionId": "market-item-list",
+      "route": "/market/item",
+      "page": "품목별 시세",
+      "section": "품목 목록",
+      "state": "Default",
+      "file": "src/routes/market.item.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-004_market-item-id_Default",
+      "sectionId": "market-item-detail",
+      "route": "/market/item/$item",
+      "page": "품목 시세 상세",
+      "section": "품목 상세",
+      "state": "Default",
+      "file": "src/routes/market.item.$item.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-005_market-wholesale_Default",
+      "sectionId": "market-wholesale-list",
+      "route": "/market/wholesale",
+      "page": "도매시장 목록",
+      "section": "도매시장 목록",
+      "state": "Default",
+      "file": "src/routes/market.wholesale.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-006_market-wholesale-id_Default",
+      "sectionId": "market-wholesale-detail",
+      "route": "/market/wholesale/$market",
+      "page": "도매시장 상세",
+      "section": "도매시장 상세",
+      "state": "Default",
+      "file": "src/routes/market.wholesale.$market.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-007_market-crop-tab-chart_Default",
+      "sectionId": "chart",
+      "route": "Parent=/market/$crop",
+      "page": "시세 상세",
+      "section": "차트 탭",
+      "state": "Default",
+      "file": "src/components/market/MarketChartView.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-008_market-crop-tab-auction_Default",
+      "sectionId": "auction",
+      "route": "Parent=/market/$crop",
+      "page": "시세 상세",
+      "section": "경매내역 탭",
+      "state": "Default",
+      "file": "src/components/market/MarketAuctionView.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-009_market-crop-tab-compare_Default",
+      "sectionId": "compare",
+      "route": "Parent=/market/$crop",
+      "page": "시세 상세",
+      "section": "시장비교 탭",
+      "state": "Default",
+      "file": "src/components/market/MarketCompareView.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-010_market-crop-tab-origin_Default",
+      "sectionId": "origin",
+      "route": "Parent=/market/$crop",
+      "page": "시세 상세",
+      "section": "산지 탭",
+      "state": "Default",
+      "file": "src/components/market/MarketOriginView.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-011_market-crop-tab-grade_Default",
+      "sectionId": "grade",
+      "route": "Parent=/market/$crop",
+      "page": "시세 상세",
+      "section": "등급·규격 탭",
+      "state": "Default",
+      "file": "src/components/market/MarketGradeSpecView.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-012_market-sheet-date_Default",
+      "sectionId": "market-date-sheet",
+      "route": "Parent=/market",
+      "page": "시세 조회",
+      "section": "조회 날짜 선택 시트",
+      "state": "Default",
+      "file": "src/components/date-picker-sheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-013_market-sheet-market_Default",
+      "sectionId": "market-select-sheet",
+      "route": "Parent=/market",
+      "page": "시세 조회",
+      "section": "도매시장 선택 시트",
+      "state": "Default",
+      "file": "src/components/market-v2/MarketSheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "MKT-014_market-sheet-corporation_Default",
+      "sectionId": "corporation-select-sheet",
+      "route": "Parent=/market",
+      "page": "시세 조회",
+      "section": "도매법인 선택 시트",
+      "state": "Default",
+      "file": "src/components/market-v2/CorporationSheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "AUC-001_market-auction-id_Default",
+      "sectionId": "auction-detail",
+      "route": "/market/auction/$id",
+      "page": "경매 상세",
+      "section": "경매 상세",
+      "state": "Default",
+      "file": "src/routes/market.auction.$id.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "AUC-001_market-auction-id_Empty",
+      "sectionId": "auction-detail",
+      "route": "/market/auction/$id",
+      "page": "경매 상세",
+      "section": "경매 상세",
+      "state": "Empty",
+      "file": "src/routes/market.auction.$id.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "CMP-001_market-compare_Default",
+      "sectionId": "market-compare",
+      "route": "/market-compare",
+      "page": "시장 비교",
+      "section": "시장 비교",
+      "state": "Default",
+      "file": "src/routes/market-compare.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "CMP-002_compare_Default",
+      "sectionId": "price-compare",
+      "route": "/compare",
+      "page": "시장별 가격 비교",
+      "section": "가격 비교",
+      "state": "Default",
+      "file": "src/routes/compare.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "GRD-001_grades_Default",
+      "sectionId": "grade-guide",
+      "route": "/grades",
+      "page": "등급별 가격 정보",
+      "section": "등급 정보",
+      "state": "Default",
+      "file": "src/routes/grades.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRC-001_price-id_Default",
+      "sectionId": "variety-price-detail",
+      "route": "/price/$variety",
+      "page": "품종 시세 상세",
+      "section": "품종 상세",
+      "state": "Default",
+      "file": "src/routes/price.$variety.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRC-002_price-id-alert_Default",
+      "sectionId": "variety-price-alert",
+      "route": "/price/$variety/alert",
+      "page": "품종 가격 알림",
+      "section": "알림 설정",
+      "state": "Default",
+      "file": "src/routes/price.$variety.alert.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "LIV-001_live_Default",
+      "sectionId": "live-prices",
+      "route": "/live",
+      "page": "실시간 시세",
+      "section": "실시간 목록",
+      "state": "Default",
+      "file": "src/routes/live.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "FAV-001_watchlist_Default",
+      "sectionId": "watchlist-list",
+      "route": "/watchlist",
+      "page": "즐겨찾기",
+      "section": "즐겨찾기 목록",
+      "state": "Default",
+      "file": "src/routes/watchlist.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "FAV-001_watchlist_Empty",
+      "sectionId": "watchlist-list",
+      "route": "/watchlist",
+      "page": "즐겨찾기",
+      "section": "즐겨찾기 목록",
+      "state": "Empty",
+      "file": "src/routes/watchlist.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "FAV-002_watchlist-add_Default",
+      "sectionId": "watchlist-add",
+      "route": "/watchlist/add",
+      "page": "즐겨찾기 추가",
+      "section": "즐겨찾기 추가",
+      "state": "Default",
+      "file": "src/routes/watchlist.add.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "STA-001_statistics_Default",
+      "sectionId": "statistics-main",
+      "route": "/statistics",
+      "page": "통계",
+      "section": "통계 대시보드",
+      "state": "Default",
+      "file": "src/routes/statistics.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "STA-002_statistics-id_Default",
+      "sectionId": "statistics-variety",
+      "route": "/statistics/$variety",
+      "page": "품종 통계",
+      "section": "품종 통계",
+      "state": "Default",
+      "file": "src/routes/statistics.$variety.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "STA-003_statistics-sheet-market_Default",
+      "sectionId": "statistics-market-sheet",
+      "route": "Parent=/statistics",
+      "page": "통계",
+      "section": "도매시장 선택 시트",
+      "state": "Default",
+      "file": "src/components/statistics/StatsMarketSheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRD-001_prediction_Default",
+      "sectionId": "prediction-main",
+      "route": "/prediction",
+      "page": "AI 시세 예측",
+      "section": "예측 메인",
+      "state": "Default",
+      "file": "src/routes/prediction.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRD-001_prediction_Empty",
+      "sectionId": "prediction-main",
+      "route": "/prediction",
+      "page": "AI 시세 예측",
+      "section": "예측 메인",
+      "state": "Empty",
+      "file": "src/routes/prediction.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRD-002_prediction-sheet-crop_Default",
+      "sectionId": "prediction-crop-sheet",
+      "route": "Parent=/prediction",
+      "page": "AI 시세 예측",
+      "section": "작물 선택 시트",
+      "state": "Default",
+      "file": "src/features/prediction/components/PredictionCropSheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRD-003_prediction-sheet-quantity_Default",
+      "sectionId": "prediction-quantity-sheet",
+      "route": "Parent=/prediction",
+      "page": "AI 시세 예측",
+      "section": "출하량·매입량 선택 시트",
+      "state": "Default",
+      "file": "src/features/prediction/components/QuantityPickerSheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRD-004_prediction-sheet-market_Default",
+      "sectionId": "prediction-market-sheet",
+      "route": "Parent=/prediction",
+      "page": "AI 시세 예측",
+      "section": "도매시장 선택 시트",
+      "state": "Default",
+      "file": "src/features/prediction/components/MarketPickerSheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRD-005_prediction-sheet-viewpoint_Default",
+      "sectionId": "prediction-viewpoint-sheet",
+      "route": "Parent=/prediction",
+      "page": "AI 시세 예측",
+      "section": "관점 선택 시트",
+      "state": "Default",
+      "file": "src/features/prediction/components/ViewpointPickerSheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "PRD-006_prediction-sheet-range_Default",
+      "sectionId": "prediction-range-sheet",
+      "route": "Parent=/prediction",
+      "page": "AI 시세 예측",
+      "section": "예측 범위 상세 시트",
+      "state": "Default",
+      "file": "src/features/prediction/components/PredictionRangeDetailSheet.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NWS-001_news_Default",
+      "sectionId": "news-list",
+      "route": "/news",
+      "page": "농업 뉴스",
+      "section": "뉴스 목록",
+      "state": "Default",
+      "file": "src/routes/news.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NWS-002_news-id_Default",
+      "sectionId": "news-detail",
+      "route": "/news/$id",
+      "page": "뉴스 상세",
+      "section": "AI 기사 상세",
+      "state": "Default",
+      "file": "src/routes/news.$id.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NTF-001_notifications_Default",
+      "sectionId": "notification-inbox",
+      "route": "/notifications",
+      "page": "알림함",
+      "section": "알림 목록",
+      "state": "Default",
+      "file": "src/routes/notifications.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NTF-001_notifications_Empty",
+      "sectionId": "notification-inbox",
+      "route": "/notifications",
+      "page": "알림함",
+      "section": "알림 목록",
+      "state": "Empty",
+      "file": "src/routes/notifications.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NTF-002_notifications-settings_Default",
+      "sectionId": "notification-settings",
+      "route": "/notifications/settings",
+      "page": "알림 설정",
+      "section": "알림 규칙 목록",
+      "state": "Default",
+      "file": "src/routes/notifications.settings.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NTF-002_notifications-settings_Empty",
+      "sectionId": "notification-settings",
+      "route": "/notifications/settings",
+      "page": "알림 설정",
+      "section": "알림 규칙 목록",
+      "state": "Empty",
+      "file": "src/routes/notifications.settings.index.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NTF-003_notifications-settings-new_Default",
+      "sectionId": "notification-rule-new",
+      "route": "/notifications/settings/new",
+      "page": "알림 규칙 추가",
+      "section": "규칙 폼",
+      "state": "Default",
+      "file": "src/routes/notifications.settings.new.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NTF-004_notifications-settings-id_Default",
+      "sectionId": "notification-rule-edit",
+      "route": "/notifications/settings/$ruleId",
+      "page": "알림 규칙 수정",
+      "section": "규칙 폼",
+      "state": "Default",
+      "file": "src/routes/notifications.settings.$ruleId.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "SET-001_settings_Default",
+      "sectionId": "settings-main",
+      "route": "/settings",
+      "page": "설정",
+      "section": "설정 목록",
+      "state": "Default",
+      "file": "src/routes/settings.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "DTA-001_data-guide_Default",
+      "sectionId": "data-guide",
+      "route": "/data-guide",
+      "page": "데이터 기준 안내",
+      "section": "데이터 안내",
+      "state": "Default",
+      "file": "src/routes/data-guide.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "SRC-001_search_Default",
+      "sectionId": "search-results",
+      "route": "/search",
+      "page": "검색",
+      "section": "검색 결과",
+      "state": "Default",
+      "file": "src/routes/search.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "SRC-001_search_Empty",
+      "sectionId": "search-results",
+      "route": "/search",
+      "page": "검색",
+      "section": "검색 결과",
+      "state": "Empty",
+      "file": "src/routes/search.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "SEL-001_crop-select_Default",
+      "sectionId": "crop-select",
+      "route": "/crop-select",
+      "page": "작물 선택",
+      "section": "부류·품목·품종 선택",
+      "state": "Default",
+      "file": "src/routes/crop-select.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "WTR-001_weather_Default",
+      "sectionId": "weather-detail",
+      "route": "/weather",
+      "page": "날씨",
+      "section": "날씨 상세",
+      "state": "Default",
+      "file": "src/routes/weather.tsx",
+      "deprecated": false
+    },
+    {
+      "screenId": "NAV-001_app-drawer_Default",
+      "sectionId": "app-drawer",
+      "route": "Parent=/",
+      "page": "전체 메뉴",
+      "section": "더보기 드로어",
+      "state": "Default",
+      "file": "src/components/app-drawer.tsx",
+      "deprecated": false
+    }
+  ]
+}
