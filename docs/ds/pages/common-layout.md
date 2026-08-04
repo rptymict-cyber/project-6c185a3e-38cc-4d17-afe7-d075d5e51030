@@ -120,5 +120,5 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 ## 미구현·확인필요 요약
 
-- 미구현(Invisible -미구현): 1건 (LAY-005, 임시 상태 아이콘 비표시 정책을 미구현 성격으로 명시)
-- ⚠️ 확인 필요: 4건 (LAY-003 Tracking 1건, LAY-004 Tracking 1건, NAV-001 Tracking 1건, SRC-001 Default Invisible 1건, SEL-001 Tracking 1건 — 총 5건)
+- 미구현(Invisible -미구현): 0건
+- ⚠️ 확인 필요: 5건 (LAY-003 Tracking 1건, LAY-004 Tracking 1건, NAV-001 Tracking 1건, SRC-001 Default Invisible 1건, SEL-001 Tracking 1건)
