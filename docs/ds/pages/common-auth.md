@@ -1,34 +1,47 @@
-# 공통 인증(Auth) DS 초안
+# 인증 및 권한 관리
 
-- Menu ID: common-auth
-- Registry: docs/ds/screen-registry.json
-- Baseline: 2026-07-31 코드 기준
-- **등록 Screen ID 없음** — 로그인/회원가입/계정 등 사용자 대면 인증 UI 화면이 코드에 존재하지 않는다. `docs/ds/.tmp/common-auth.json`도 빈 배열(`[]`)로 유지한다.
+본 문서는 AGDICT 서비스의 사용자 인증 체계 및 보안 구성 현황에 대한 명세입니다. 현재 인증 관련 화면 및 라우트 가드는 구현되지 않은 상태이며, 인프라스트럭처 수준의 기본 코드만 포함하고 있습니다.
 
-## 조사 범위
+## 인증 현황 개요
 
-`rg`로 `src/routes`, `src/components`, `src/store` 전체에서 로그인/가입/인증 관련 키워드(login, signin, signup, auth.)를 검색했으나 라우트·컴포넌트·스토어 어디에도 해당 화면이 없다. Supabase 인증 관련 코드는 서버/클라이언트 인프라 레이어(`src/integrations/supabase/`)에만 존재하며, 사용자가 조작하는 화면(Screen)이 아니다.
+- **현재 상태**: 인증 기능 미구현 (Unimplemented)
+- **인증 방식**: Supabase Auth (계정 및 세션 관리) 기반 설계
+- **보안 통제**: TanStack Start 미들웨어를 통한 서버 기능 보호 구조 준비
 
-## 상세 사양
+---
 
-| DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
-|---|---|---|---|---|---|
-| - | 인증 UI | (없음) | Invisible | 미구현.01: 로그인/회원가입/로그아웃 등 사용자 대면 인증 화면이 `src/routes`에 존재하지 않는다(라우트 없음)<br>미구현.02: 인증 상태를 표시하거나 전환하는 UI 컴포넌트가 `src/components`에 존재하지 않는다<br>미구현.03: 인증 세션을 다루는 전역 상태(zustand store)가 `src/store`, `src/features`에 존재하지 않는다 | - |
-| - | 인증 인프라(비-Screen) | (없음) | Invisible | 확인필요.01: `src/integrations/supabase/auth-middleware.ts`(`requireSupabaseAuth`)는 서버 함수 미들웨어로, 요청 헤더의 Bearer 토큰을 검증해 `supabase.auth.getClaims(token)`으로 `userId`/`claims`를 컨텍스트에 주입한다. 그러나 토큰을 어떻게 최초 발급받는지(로그인 UI/플로우)는 코드베이스에 없어 확인이 필요하다<br>확인필화.02: `src/integrations/supabase/auth-attacher.ts`(`attachSupabaseAuth`)는 클라이언트 측 함수 미들웨어로 `supabase.auth.getSession()`의 `access_token`을 매 서버 함수 호출에 `Authorization` 헤더로 첨부한다. 세션을 생성하는 로그인 동작 자체는 UI로 노출되어 있지 않다 | - |
+## 인증 관련 인프라 (파일 목록)
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+현재 프로젝트 내에 존재하는 인증 관련 주요 파일 및 역할은 다음과 같습니다.
 
-비고(공통): Registry: docs/ds/screen-registry.json<br>Route: 없음(화면 미구현)<br>File: src/integrations/supabase/auth-middleware.ts, src/integrations/supabase/auth-attacher.ts<br>Baseline: 2026-07-31 코드 기준
+1. **src/integrations/supabase/client.ts**
+   - 클라이언트 사이드 Supabase 인스턴스 생성.
+   - `localStorage`를 이용한 세션 유지 설정.
 
-## 분석 파일
+2. **src/integrations/supabase/client.server.ts**
+   - 서버 사이드 관리자용 Supabase 클라이언트 (`service_role_key` 사용).
+   - RLS(Row Level Security)를 우회하는 신뢰된 작업 수행용.
 
-- src/integrations/supabase/auth-middleware.ts
-- src/integrations/supabase/auth-attacher.ts
-- src/start.ts
-- (검색 대상) src/routes/*, src/components/*, src/store/*
+3. **src/integrations/supabase/auth-attacher.ts**
+   - 클라이언트 미들웨어로, RPC(Server Function) 호출 시 Bearer 토큰을 헤더에 자동 첨부하는 역할.
 
-## 미구현·확인필요 요약
+4. **src/integrations/supabase/auth-middleware.ts**
+   - 서버 사이드 미들웨어로, 유효한 JWT 토큰 존재 여부를 검증하고 유저 컨텍스트를 주입하는 역할.
 
-- 미구현.01~03: 로그인/회원가입/인증 상태 UI·컴포넌트·전역 상태 전부 미구현 (3건)
-- 확인필요.01~02: 토큰 발급(로그인) 플로우의 실제 구현 위치 및 방식 확인 필요 (2건)
-- 총 5건.
+5. **src/integrations/supabase/types.ts**
+   - Supabase 데이터베이스 스키마 및 인증 관련 타입 정의.
+
+---
+
+## 라우트 가드 적용 현황
+
+- **Guard 존재 여부**: 미적용
+- **상세 내용**: `src/routes/__root.tsx` 및 개별 라우트 파일 내에서 사용자 로그인 상태를 체크하여 접근을 제한하는 로직(예: `beforeLoad`)은 현재 존재하지 않습니다. 모든 서비스 화면은 비로그인 상태에서 접근 가능합니다.
+
+---
+
+## 향후 확인 필요 사항 (비고)
+
+- ⚠️ 확인 필요.01: Supabase 프로젝트의 **Social Login(Kakao, Apple 등)** 연동 범위 및 API Key 설정 상태 확인이 필요합니다.
+- ⚠️ 확인 필요.02: 데이터베이스 테이블별 **RLS(Row Level Security)** 정책 수립이 선행되어야 합니다.
+- ⚠️ 확인 필요.03: 로그인 화면(Login Page) 및 프로필 관리 화면의 UI 설계 및 구현 일정이 필요합니다.
