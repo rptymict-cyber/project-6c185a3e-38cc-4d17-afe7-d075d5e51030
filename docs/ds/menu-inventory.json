@@ -17,10 +17,7 @@
         "/"
       ],
       "dsFile": "docs/ds/pages/home.md",
-      "screenIds": [
-        "HOM-001_root_Default",
-        "HOM-001_root_Empty"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -42,30 +39,7 @@
         "/price/$variety/alert"
       ],
       "dsFile": "docs/ds/pages/market.md",
-      "screenIds": [
-        "MKT-001_market_Default",
-        "MKT-002_market-id_Default",
-        "MKT-002_market-id_Empty",
-        "MKT-003_market-item_Default",
-        "MKT-004_market-item-id_Default",
-        "MKT-005_market-wholesale_Default",
-        "MKT-006_market-wholesale-id_Default",
-        "MKT-007_market-crop-tab-chart_Default",
-        "MKT-008_market-crop-tab-auction_Default",
-        "MKT-009_market-crop-tab-compare_Default",
-        "MKT-010_market-crop-tab-origin_Default",
-        "MKT-011_market-crop-tab-grade_Default",
-        "MKT-012_market-sheet-date_Default",
-        "MKT-013_market-sheet-market_Default",
-        "MKT-014_market-sheet-corporation_Default",
-        "AUC-001_market-auction-id_Default",
-        "AUC-001_market-auction-id_Empty",
-        "CMP-001_market-compare_Default",
-        "CMP-002_compare_Default",
-        "GRD-001_grades_Default",
-        "PRC-001_price-id_Default",
-        "PRC-002_price-id-alert_Default"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -76,9 +50,7 @@
         "/live"
       ],
       "dsFile": "docs/ds/pages/live.md",
-      "screenIds": [
-        "LIV-001_live_Default"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -90,11 +62,7 @@
         "/watchlist/add"
       ],
       "dsFile": "docs/ds/pages/watchlist.md",
-      "screenIds": [
-        "FAV-001_watchlist_Default",
-        "FAV-001_watchlist_Empty",
-        "FAV-002_watchlist-add_Default"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -106,11 +74,7 @@
         "/statistics/$variety"
       ],
       "dsFile": "docs/ds/pages/statistics.md",
-      "screenIds": [
-        "STA-001_statistics_Default",
-        "STA-002_statistics-id_Default",
-        "STA-003_statistics-sheet-market_Default"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -121,16 +85,7 @@
         "/prediction"
       ],
       "dsFile": "docs/ds/pages/prediction.md",
-      "screenIds": [
-        "PRD-001_prediction_Default",
-        "PRD-001_prediction_Empty",
-        "PRD-002_prediction-sheet-crop_Default",
-        "PRD-002_prediction-sheet-crop_Empty",
-        "PRD-003_prediction-sheet-quantity_Default",
-        "PRD-004_prediction-sheet-market_Default",
-        "PRD-005_prediction-sheet-viewpoint_Default",
-        "PRD-006_prediction-sheet-range_Default"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -142,10 +97,7 @@
         "/news/$id"
       ],
       "dsFile": "docs/ds/pages/news.md",
-      "screenIds": [
-        "NWS-001_news_Default",
-        "NWS-002_news-id_Default"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -156,9 +108,7 @@
         "/weather"
       ],
       "dsFile": "docs/ds/pages/weather.md",
-      "screenIds": [
-        "WTR-001_weather_Default"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -172,14 +122,7 @@
         "/notifications/settings/$ruleId"
       ],
       "dsFile": "docs/ds/pages/notifications.md",
-      "screenIds": [
-        "NTF-001_notifications_Default",
-        "NTF-001_notifications_Empty",
-        "NTF-002_notifications-settings_Default",
-        "NTF-002_notifications-settings_Empty",
-        "NTF-003_notifications-settings-new_Default",
-        "NTF-004_notifications-settings-id_Default"
-      ],
+      "screenIds": [],
       "common": false,
       "note": "하단 GNB·드로어에 직접 노출되지 않고 헤더 벨 아이콘·설정에서 진입하는 숨은 route 그룹"
     },
@@ -192,10 +135,7 @@
         "/data-guide"
       ],
       "dsFile": "docs/ds/pages/settings.md",
-      "screenIds": [
-        "SET-001_settings_Default",
-        "DTA-001_data-guide_Default"
-      ],
+      "screenIds": [],
       "common": false
     },
     {
@@ -212,19 +152,7 @@
         "src/routes/__root.tsx"
       ],
       "dsFile": "docs/ds/pages/common-layout.md",
-      "screenIds": [
-        "LAY-001_root-shell_Default",
-        "LAY-001_root-shell_Empty",
-        "LAY-001_root-shell_Error",
-        "LAY-002_app-shell_Default",
-        "LAY-003_app-header_Default",
-        "LAY-004_bottom-nav_Default",
-        "LAY-005_detail-header_Default",
-        "NAV-001_app-drawer_Default",
-        "SRC-001_search_Default",
-        "SRC-001_search_Empty",
-        "SEL-001_crop-select_Default"
-      ],
+      "screenIds": [],
       "common": true
     },
     {
@@ -263,12 +191,7 @@
         "src/components/empty-state.tsx"
       ],
       "dsFile": "docs/ds/pages/common-modal.md",
-      "screenIds": [
-        "CMN-001_unit-sheet_Default",
-        "CMN-002_sort-sheet_Default",
-        "CMN-003_rate-prompt-modal_Default",
-        "CMN-004_load-more-button_Default"
-      ],
+      "screenIds": [],
       "common": true
     },
     {
