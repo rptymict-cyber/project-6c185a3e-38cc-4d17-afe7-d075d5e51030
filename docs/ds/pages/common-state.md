@@ -1,129 +1,67 @@
-# 공통 상태 관리
+# 공통 전역 상태 DS
 
-본 문서는 AGDICT 서비스 전체에서 사용되는 공통 상태(Store) 명세입니다. 해당 스토어들은 특정 화면에 종속되지 않고 앱 전역에서 참조되거나 여러 화면에 걸쳐 사용되므로 별도의 **등록 Screen ID**를 부여하지 않습니다.
+- Menu ID: common-state
+- Registry: docs/ds/screen-registry.json
+- Baseline: 2026-08-05 코드 기준
 
-## 상태 관리 개요
+## 개요
 
-- **라이브러리**: `zustand`
-- **영속성**: `persist` 미들웨어를 사용하여 `localStorage`에 상태를 저장하고 복원합니다.
-- **포맷**: 모든 항목은 `-라벨.01: 내용` 형식을 준수합니다.
+본 문서가 다루는 대상은 특정 화면 하나에 속하지 않고 앱 여러 화면에서 공통으로 참조하는 전역 상태 모음이다. docs/ds/screen-registry.json에는 menuId가 common-state로 등록된 Screen ID가 존재하지 않으므로, 이 문서는 규격 v3의 Screen ID별 표 구성 대신 전역 상태별 불릿 정리로 대체한다. 각 전역 상태는 브라우저에 설치된 상태 관리 라이브러리(zustand)로 구현되어 있으며, 그중 일부는 지속성 기능(persist)을 통해 브라우저의 localStorage에 값을 저장하고 앱 재실행 시 복원한다.
 
----
+## 전역 상태 목록
 
-## 스토어 명세
+-정의.01: 가격 알림 상태 — 사용자가 설정한 품목별 가격 알림 조건과 알림 활성화 여부를 보관<br>-저장위치.01: localStorage 키 "agdict:alerts"에 저장되어 앱 재실행 후에도 유지<br>-초기값.01: 저장된 값이 없으면 빈 알림 목록으로 시작<br>-미구현.01: 서버를 통한 실제 푸시 알림 발송 연동은 구현되어 있지 않음
 
-### 1. 가격 알림 스토어 (useAlerts)
-- 목적.01: 사용자가 설정한 농산물 가격 알림 규칙 및 관련 상태 관리
-- 상태값.01: `rules` (알림 규칙 목록), `byKey` (레거시 식별자 기반 알림 설정)
-- 주요 액션.01: `upsert` (규칙 추가/수정), `remove` (규칙 삭제), `setEnabled` (활성화 토글)
-- persist storage key.01: `agdict:alerts`
-- 미구현 항목.01: 서버 푸시 알림(FCM 등) 발송 인프라와의 실시간 연동
+-정의.02: 작물 선택 상태 — 화면 곳곳에서 사용하는 확정된 작물 선택값과 선택 화면에서 편집 중인 임시값을 구분해 보관<br>-저장위치.02: localStorage 키 "agdict:crop-selection"에 저장되어 앱 재실행 후에도 유지<br>-초기값.02: 저장된 값이 없으면 선택되지 않은 상태로 시작
 
-### 2. 작물 선택 스토어 (useCropSelection)
-- 목적.01: 앱 전역에서 사용하는 확정된 작물 선택 상태 및 편집용 임시 상태 관리
-- 상태값.01: `committed` (확정된 선택), `draft` (편집 중인 상태)
-- 주요 액션.01: `commitDraft` (편집본 확정), `setDraftCategory` (부류 선택), `clearDraft` (초기화)
-- persist storage key.01: `agdict:crop-selection`
-- 미구현 항목.01: 선택 기록 기반의 추천 작물 로직
+-정의.03: 피드백 상태 — 사용자가 남긴 의견 목록을 보관<br>-저장위치.03: localStorage 키 "agdict:feedback"에 저장되어 앱 재실행 후에도 유지<br>-초기값.03: 저장된 값이 없으면 빈 목록으로 시작
 
-### 3. 피드백 스토어 (useFeedback)
-- 목적.01: 사용자 만족도 및 개선 의견 데이터 관리
-- 상태값.01: `items` (피드백 목록)
-- 주요 액션.01: `add` (신규 피드백 등록)
-- persist storage key.01: `agdict:feedback`
-- 미구현 항목.01: 관리자 대시보드로의 피드백 데이터 자동 전송 API
+-정의.04: 홈 고정 항목 상태 — 홈 화면에 고정 노출할 도매시장과 품목 목록을 보관<br>-저장위치.04: localStorage 키 "agdict:homeFixed"에 저장되어 앱 재실행 후에도 유지<br>-초기값.04: 저장된 값이 없으면 빈 목록으로 시작
 
-### 4. 홈 고정 항목 스토어 (useHomeFixed)
-- 목적.01: 홈 화면에 노출할 도매시장 및 품목의 사용자 정의 목록 관리
-- 상태값.01: `markets` (시장 ID 목록), `items` (품목 ID 목록)
-- 주요 액션.01: `addMarket` (시장 추가), `removeMarket` (시장 삭제), `setItems` (순서 변경)
-- persist storage key.01: `agdict:homeFixed`
-- 미구현 항목.01: 드래그 앤 드롭을 이용한 직관적인 순서 변경 UI
+-정의.05: 관심 품목 상태 — 사용자가 즐겨찾는 품목 목록과 그중 대표로 지정한 품목을 보관<br>-저장위치.05: localStorage 키 "agdict:interests"에 저장되어 앱 재실행 후에도 유지<br>-초기값.05: 저장된 값이 없으면 빈 목록으로 시작
 
-### 5. 관심 작물 스토어 (useInterests)
-- 목적.01: 사용자가 즐겨찾는 주요 관심 품목 관리
-- 상태값.01: `ids` (관심 품목 ID 목록), `selectedId` (현재 선택된 대표 품목)
-- 주요 액션.01: `add` (추가), `remove` (삭제), `select` (대표 설정)
-- persist storage key.01: `agdict:interests`
-- 미구현 항목.01: 없음
+-정의.06: 위치 권한 상태 — 위치 정보 접근 권한을 요청했는지와 허용되었는지 여부를 보관<br>-저장위치.06: 별도로 저장하지 않으며 앱을 새로 열 때마다 초기화되는 세션 단위 값<br>-초기값.06: 요청 전 상태로 시작<br>-미구현.06: 실제 위도·경도 좌표 저장 및 산지 거리 계산 기능은 구현되어 있지 않음
 
-### 6. 위치 권한 스토어 (useLocation)
-- 목적.01: 브라우저/기기의 GPS 위치 권한 획득 상태 관리
-- 상태값.01: `granted` (권한 허용 여부), `requested` (요청 수행 여부)
-- 주요 액션.01: `request` (권한 요청 실행)
-- persist storage key.01: 없음 (세션 단위 관리)
-- 미구현 항목.01: 실제 위경도 좌표값 저장 및 산지 거리 계산 로직
+-정의.07: 시세 조회 필터 상태 — 시세 화면에서 사용하는 부류·품목·시장·간편 보기 여부 등 조회 조건을 보관<br>-저장위치.07: localStorage 키 "agdict:marketFilter:v2"에 저장되어 앱 재실행 후에도 유지<br>-초기값.07: 저장된 값이 없으면 기본 부류·품목·시장 조합으로 시작
 
-### 7. 시장 필터 스토어 (useMarketFilter)
-- 목적.01: 도매 시세 조회 시 사용하는 날짜, 품목, 시장 등 상세 필터링 조건 관리
-- 상태값.01: `categoryId`, `itemId`, `marketId`, `simpleMode` (간편 보기 여부)
-- 주요 액션.01: `setItem` (품목 변경), `setMarket` (시장 변경), `toggleSimpleMode` (보기 모드 전환)
-- persist storage key.01: `agdict:marketFilter:v2`
-- 미구현 항목.01: `useMarketStore` (Legacy) 코드의 완전한 제거 및 통합
+-정의.08: 알림 이벤트 상태 — 발생한 알림 이벤트 이력과 읽음 여부를 보관<br>-저장위치.08: localStorage 키 "agdict:notification-events"에 저장되어 앱 재실행 후에도 유지<br>-초기값.08: 최초 진입 시 안내용 기본 이벤트를 한 번 채워 넣은 뒤 유지
 
-### 8. 알림 이벤트 스토어 (useNotificationEvents)
-- 목적.01: 발생한 알림 이벤트(피드)의 이력 및 읽음 상태 관리
-- 상태값.01: `events` (이벤트 목록), `_seeded` (초기 데이터 주입 여부)
-- 주요 액션.01: `markRead` (읽음 처리), `add` (이벤트 수신), `markAllRead` (전체 읽음)
-- persist storage key.01: `agdict:notification-events`
-- 미구현 항목.01: 서버 DB와의 알림 동기화 로직
+-정의.09: 최근 조회 통계 상태 — 사용자가 최근 조회한 품종 통계 이력을 보관<br>-저장위치.09: localStorage 키 "agdict.recent-stats.v1"에 저장되어 앱 재실행 후에도 유지<br>-초기값.09: 저장된 값이 없으면 빈 이력으로 시작
 
-### 9. 최근 본 통계 스토어 (useRecentStats)
-- 목적.01: 사용자가 최근에 조회한 품종 통계 이력 관리
-- 상태값.01: `items` (최근 조회 이력 목록)
-- 주요 액션.01: `push` (조회 이력 추가), `clear` (전체 삭제)
-- persist storage key.01: `agdict.recent-stats.v1`
-- 미구현 항목.01: 없음
+-정의.10: 저장된 조회 조건 상태 — 사용자가 저장한 시세 조회 조건 목록을 보관<br>-저장위치.10: localStorage 키 "agdict:saved-queries:v1"에 저장되어 앱 재실행 후에도 유지<br>-초기값.10: 저장된 값이 없으면 빈 목록으로 시작
 
-### 10. 저장된 쿼리 스토어 (useSavedQueries)
-- 목적.01: 사용자가 저장한 시세 조회 조건(마이 리스트) 관리
-- 상태값.01: `items` (저장된 쿼리 목록)
-- 주요 액션.01: `remove` (삭제), `reorder` (순서 변경), `refresh` (최신화 시점 갱신)
-- persist storage key.01: `agdict:saved-queries:v1`
-- 미구현 항목.01: 개별 쿼리별 메모 작성 기능
+-정의.11: 통계 화면 조회 조건 상태 — 통계 화면에서 선택한 작물·비교 시장·조회 기간을 보관<br>-저장위치.11: 별도로 저장하지 않으며 앱을 새로 열 때마다 초기화<br>-초기값.11: 기본 작물과 기본 조회 기간으로 시작
 
-### 11. 통계 설정 스토어 (useStatistics)
-- 목적.01: 통계 페이지의 시각화 조건 관리
-- 상태값.01: `crop` (대상 작물), `markets` (비교 시장 목록), `period` (조회 기간)
-- 주요 액션.01: `setCrop` (작물 변경), `setMarkets` (시장 선택)
-- persist storage key.01: 없음
-- 미구현 항목.01: 사용자 정의 차트 설정 저장 기능
+-정의.12: 추세 비교 상태 — 시세 추세 그래프에서 비교 대상으로 지정한 시장 목록과 연간 비교 여부를 보관<br>-저장위치.12: localStorage 키 "agdict:trend-compare"에 저장되어 앱 재실행 후에도 유지<br>-초기값.12: 저장된 값이 없으면 비교 대상 없이 시작
 
-### 12. 추세 비교 스토어 (useTrendCompare)
-- 목적.01: 시세 추세 그래프에서 비교군으로 설정된 시장 목록 관리
-- 상태값.01: `compareIds` (비교 대상 ID 목록), `yearMode` (연간 비교 여부)
-- 주요 액션.01: `toggleCompare` (비교군 추가/제거), `reset` (초기화)
-- persist storage key.01: `agdict:trend-compare`
-- 미구현 항목.01: 비교 대상별 색상 커스텀 기능
+-정의.13: 화면 공통 필터 상태 — 앱 전역에서 참조하는 기본 카테고리와 기본 조회 기간을 보관<br>-저장위치.13: localStorage 키 "agdict:ui"에 저장되어 앱 재실행 후에도 유지<br>-초기값.13: 저장된 값이 없으면 기본 카테고리와 기본 기간으로 시작
 
-### 13. UI 스토어 (useUi)
-- 목적.01: 앱 전역 UI 관련 기본 필터링 상태 관리
-- 상태값.01: `category` (활성 카테고리), `period` (기본 조회 기간)
-- 주요 액션.01: `setCategory`, `setPeriod`
-- persist storage key.01: `agdict:ui`
-- 미구현 항목.01: 다크/라이트 모드 설정값 통합
+-정의.14: 관심 목록 상태 — 관심 품목과 관심 시장 아이디 목록을 보관<br>-저장위치.14: localStorage 키 "agdict:watchlist"에 저장되어 앱 재실행 후에도 유지<br>-초기값.14: 저장된 값이 없으면 빈 목록으로 시작
 
-### 14. 관심 목록 스토어 (useWatchlist)
-- 목적.01: 관심 작물 및 시장의 단순 리스팅 관리
-- 상태값.01: `crops` (품목 ID 목록), `markets` (시장 ID 목록)
-- 주요 액션.01: `toggleCrop`, `toggleMarket`
-- persist storage key.01: `agdict:watchlist`
-- 미구현 항목.01: 없음
+-정의.15: 즐겨찾기 시세 상태 — 시장·품목·법인 등 조건이 결합된 상세 시세 즐겨찾기 항목을 보관<br>-저장위치.15: localStorage 키 "agdict:favoritePriceItems"에 저장되어 앱 재실행 후에도 유지<br>-초기값.15: 저장된 값이 없으면 빈 목록으로 시작
 
-### 15. 즐겨찾기 시세 스토어 (useFavoritePriceStore)
-- 목적.01: 특정 조건(시장/품목/법인 등)이 결합된 상세 시세 즐겨찾기 관리
-- 상태값.01: `items` (즐겨찾기 항목 목록)
-- 주요 액션.01: `addFavorite`, `removeFavorite`, `setOrder`
-- persist storage key.01: `agdict:favoritePriceItems`
-- 미구현 항목.01: 없음
-
-### 16. AI 예측 설정 스토어 (usePredictionView)
-- 목적.01: AI 가격 예측 화면의 조회 옵션 및 사용자 설정값 관리
-- 상태값.01: `selectedCropId`, `quantityBoxes` (물량), `selectedGrade` (등급)
-- 주요 액션.01: `setSelectedCropId`, `setQuantity`
-- persist storage key.01: `agdict:aiPricePrediction`
-- 미구현 항목.01: 실제 AI 예측 API 연동 (현재 Mock 데이터 사용 중)
+-정의.16: AI 시세 예측 조회 조건 상태 — 예측 화면에서 선택한 작물, 물량, 등급 등 조회 옵션을 보관<br>-저장위치.16: localStorage 키 "agdict:aiPricePrediction"에 저장되어 앱 재실행 후에도 유지<br>-초기값.16: 저장된 값이 없으면 선택되지 않은 상태로 시작<br>-미구현.16: 실제 AI 예측 서버 연동은 구현되어 있지 않으며 현재는 예시 데이터로 동작
 
 ## 비고
-- ⚠️ 확인 필요.01: `useMarketStore`와 `useMarketFilter`의 역할이 중복되므로 추후 통합 및 리팩토링이 필요합니다.
-- ⚠️ 확인 필요.02: 로컬 스토리지 용량 제한(약 5MB)을 고려하여 영속성 데이터의 크기를 모니터링해야 합니다.
+
+- ⚠️ 확인 필요.01: 시세 조회 필터 상태와 별도로 존재하는 구버전 시세 상태(useMarketStore)의 정리·통합 여부 확인이 필요하다.
+- ⚠️ 확인 필요.02: localStorage 용량 제한을 고려한 저장 데이터 크기 점검이 필요하다.
+
+## 분석 파일
+
+- src/store/alerts.ts
+- src/store/cropSelection.ts
+- src/store/feedback.ts
+- src/store/homeFixedItems.ts
+- src/store/interests.ts
+- src/store/location.ts
+- src/store/market.ts
+- src/store/notification-events.ts
+- src/store/recent-stats.ts
+- src/store/saved-queries.ts
+- src/store/statistics.ts
+- src/store/trend-compare.ts
+- src/store/ui.ts
+- src/store/watchlist.ts
+- src/features/favorites/favoriteStore.ts
+- src/features/prediction/usePredictionView.ts

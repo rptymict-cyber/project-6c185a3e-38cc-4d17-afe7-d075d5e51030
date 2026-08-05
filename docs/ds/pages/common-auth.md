@@ -1,47 +1,33 @@
-# 인증 및 권한 관리
+# 공통 인증 DS
 
-본 문서는 AGDICT 서비스의 사용자 인증 체계 및 보안 구성 현황에 대한 명세입니다. 현재 인증 관련 화면 및 라우트 가드는 구현되지 않은 상태이며, 인프라스트럭처 수준의 기본 코드만 포함하고 있습니다.
+- Menu ID: common-auth
+- Registry: docs/ds/screen-registry.json
+- Baseline: 2026-08-05 코드 기준
 
-## 인증 현황 개요
+## 개요
 
-- **현재 상태**: 인증 기능 미구현 (Unimplemented)
-- **인증 방식**: Supabase Auth (계정 및 세션 관리) 기반 설계
-- **보안 통제**: TanStack Start 미들웨어를 통한 서버 기능 보호 구조 준비
+docs/ds/screen-registry.json에는 menuId가 common-auth로 등록된 Screen ID가 존재하지 않는다. 실제 코드를 확인한 결과 로그인, 회원가입, 비밀번호 재설정 등 사용자에게 노출되는 인증 화면은 구현되어 있지 않으며, 화면 진입을 막는 로그인 여부 확인(라우트 가드)도 존재하지 않는다. 따라서 본 문서는 Screen ID별 표를 작성하지 않고, 코드에서 확인되는 인증 관련 기반 코드 현황만 근거와 함께 정리한다.
 
----
+## 인증 화면 미구현 근거
 
-## 인증 관련 인프라 (파일 목록)
+-미구현.01: src/routes 폴더 전체를 확인한 결과 로그인, 회원가입, 비밀번호 재설정, 마이페이지 등 인증과 직접 관련된 화면 파일이 존재하지 않는다.<br>-미구현.02: 각 라우트 파일의 진입 조건(beforeLoad)을 확인한 결과 로그인 여부를 검사해 접근을 막는 로직이 존재하지 않으며, 확인된 beforeLoad는 통계 상세 옛 경로를 새 경로로 이동시키는 용도와 뉴스 상세 파라미터 처리 용도뿐이다.<br>-미구현.03: 화면 어디에도 로그인 버튼, 로그아웃 버튼, 사용자 계정 정보 표시 영역이 확인되지 않는다.<br>-미구현.04: 이에 따라 서비스의 모든 화면은 로그인 여부와 무관하게 접근 가능한 상태다.
 
-현재 프로젝트 내에 존재하는 인증 관련 주요 파일 및 역할은 다음과 같습니다.
+## 확인된 인증 관련 기반 코드
 
-1. **src/integrations/supabase/client.ts**
-   - 클라이언트 사이드 Supabase 인스턴스 생성.
-   - `localStorage`를 이용한 세션 유지 설정.
+-구성.01: 브라우저에서 실행되는 공용 접속 도구가 준비되어 있으며 접속 정보를 브라우저 저장소에 보관하도록 설정되어 있다.<br>-구성.02: 서버에서만 실행되는 관리자 권한 접속 도구가 별도로 준비되어 있다.<br>-구성.03: 서버로 보내는 요청에 로그인 토큰을 자동으로 붙여 주는 처리기가 준비되어 있다.<br>-구성.04: 서버에서 로그인 토큰의 유효성을 검사해 요청에 사용자 정보를 실어 주는 처리기가 준비되어 있다.<br>-미구현.05: 다만 위 도구·처리기를 실제로 사용하는 로그인 화면이나 로그인 여부에 따라 기능을 제한하는 화면은 아직 만들어지지 않았다.
 
-2. **src/integrations/supabase/client.server.ts**
-   - 서버 사이드 관리자용 Supabase 클라이언트 (`service_role_key` 사용).
-   - RLS(Row Level Security)를 우회하는 신뢰된 작업 수행용.
+## 비고
 
-3. **src/integrations/supabase/auth-attacher.ts**
-   - 클라이언트 미들웨어로, RPC(Server Function) 호출 시 Bearer 토큰을 헤더에 자동 첨부하는 역할.
+- ⚠️ 확인 필요.01: 소셜 로그인(카카오, 애플 등) 연동 범위와 키 발급 상태 확인이 필요하다.
+- ⚠️ 확인 필요.02: 로그인 화면과 마이페이지 화면의 설계·구현 일정 확정이 필요하다.
+- ⚠️ 확인 필요.03: 데이터베이스 접근 제어(행 단위 보안 정책) 수립 여부 확인이 필요하다.
 
-4. **src/integrations/supabase/auth-middleware.ts**
-   - 서버 사이드 미들웨어로, 유효한 JWT 토큰 존재 여부를 검증하고 유저 컨텍스트를 주입하는 역할.
+## 분석 파일
 
-5. **src/integrations/supabase/types.ts**
-   - Supabase 데이터베이스 스키마 및 인증 관련 타입 정의.
-
----
-
-## 라우트 가드 적용 현황
-
-- **Guard 존재 여부**: 미적용
-- **상세 내용**: `src/routes/__root.tsx` 및 개별 라우트 파일 내에서 사용자 로그인 상태를 체크하여 접근을 제한하는 로직(예: `beforeLoad`)은 현재 존재하지 않습니다. 모든 서비스 화면은 비로그인 상태에서 접근 가능합니다.
-
----
-
-## 향후 확인 필요 사항 (비고)
-
-- ⚠️ 확인 필요.01: Supabase 프로젝트의 **Social Login(Kakao, Apple 등)** 연동 범위 및 API Key 설정 상태 확인이 필요합니다.
-- ⚠️ 확인 필요.02: 데이터베이스 테이블별 **RLS(Row Level Security)** 정책 수립이 선행되어야 합니다.
-- ⚠️ 확인 필요.03: 로그인 화면(Login Page) 및 프로필 관리 화면의 UI 설계 및 구현 일정이 필요합니다.
+- src/routes (전체 라우트 파일)
+- src/integrations/supabase/client.ts
+- src/integrations/supabase/client.server.ts
+- src/integrations/supabase/auth-attacher.ts
+- src/integrations/supabase/auth-middleware.ts
+- src/integrations/supabase/types.ts
+- src/start.ts
