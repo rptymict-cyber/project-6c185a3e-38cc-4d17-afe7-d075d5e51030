@@ -4,7 +4,8 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## LAY-001 — 루트 셸
+
+## LAY-001_root-shell_Default — 루트 셸 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -12,10 +13,24 @@
 | DS-1101 | 루트 셸 | LAY-001_root-shell_Default | Invisible | -진입조건.01: 사용자가 앱의 어떤 경로로 진입하더라도 최초 1회 이 루트 컴포넌트가 항상 실행된다<br>-초기값.01: React Query 클라이언트 컨텍스트를 하위 전체 라우트에 제공한다<br>-자동동작.01: 화면 진입 시 위치정보 스토어를 불러와 OS 위치 권한 요청을 실행한다(세션당 1회)<br>-액션.01: 문서 head에 페이지 제목·설명·OG 메타·Pretendard 폰트 스타일시트를 등록한다 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Store: src/store/location.ts<br>Baseline: 2026-08-05 코드 기준 |
 | DS-1101 | 루트 셸 | LAY-001_root-shell_Default | Tracking | - | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준 |
 | DS-1101 | 루트 셸 | LAY-001_root-shell_Default | Design | -배경색.01: 본문 배경 #FFFFFF (--background)<br>-글자색.01: 기본 글자색 #212529 (--foreground)<br>-글꼴.01: Pretendard, Noto Sans KR, 시스템 기본 sans-serif (--font-sans)<br>-레이어.01: 토스트 z-index 최상위(라이브러리 기본값, sonner 내부 처리) | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: RootShell, Toaster(sonner)<br>토큰 참조: --background, --foreground, --font-sans |
+
+Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+
+## LAY-001_root-shell_Empty — 루트 셸 · 빈 상태
+
+| DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
+|---|---|---|---|---|---|
 | DS-1102 | 루트 셸 | LAY-001_root-shell_Empty | Visible | -제목.01: "404"<br>-제목.02: "페이지를 찾을 수 없어요"<br>-문구.01: "주소가 잘못되었거나 이동된 페이지입니다."<br>-버튼.01: "홈으로" | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: NotFoundComponent |
 | DS-1102 | 루트 셸 | LAY-001_root-shell_Empty | Invisible | -진입조건.01: 요청 경로에 일치하는 라우트가 없을 때 표시된다<br>-이동.01: "홈으로" 버튼 클릭 시 루트 경로(/)로 이동한다 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준 |
 | DS-1102 | 루트 셸 | LAY-001_root-shell_Empty | Tracking | - | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준 |
 | DS-1102 | 루트 셸 | LAY-001_root-shell_Empty | Design | -배경색.01: 컨테이너 배경 #FFFFFF (--background)<br>-너비.01: 컨테이너 최대너비 430px, 좌우 중앙정렬<br>-글자크기.01: "404" 60px(3.75rem, text-6xl), 굵기 700<br>-글자크기.02: 안내 제목 18px(1.125rem, text-lg), 굵기 600<br>-글자색.01: 본문 설명 #6C757D (--muted-foreground)<br>-배경색.02: 버튼 배경 #3A8A3A (--primary)<br>-글자색.02: 버튼 글자 #FFFFFF (--primary-foreground)<br>-모서리.01: 버튼 border-radius 8px(rounded-lg)<br>-내부여백.01: 버튼 padding 상하 8px 좌우 16px | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: NotFoundComponent<br>토큰 참조: --background, --primary, --primary-foreground, --muted-foreground |
+
+Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+
+## LAY-001_root-shell_Error — 루트 셸 · 오류 상태
+
+| DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
+|---|---|---|---|---|---|
 | DS-1103 | 루트 셸 | LAY-001_root-shell_Error | Visible | -제목.01: "페이지를 불러오지 못했어요"<br>-문구.01: "잠시 후 다시 시도해 주세요."<br>-버튼.01: "다시 시도"<br>-버튼.02: "홈으로" | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: ErrorComponent |
 | DS-1103 | 루트 셸 | LAY-001_root-shell_Error | Invisible | -진입조건.01: 라우트 렌더 도중 예외가 발생하면 표시된다<br>-예외.01: 발생한 에러를 콘솔에 출력한다<br>-자동동작.01: 화면 표시 시 에러 리포팅 서비스에 에러 내용과 발생 위치("tanstack_root_error_component")를 전송한다<br>-액션.01: "다시 시도" 클릭 시 라우터를 무효화하고 에러 상태를 초기화한다<br>-이동.01: "홈으로" 클릭 시 루트 경로(/)로 이동한다 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준 |
 | DS-1103 | 루트 셸 | LAY-001_root-shell_Error | Tracking | -함수.01: reportLovableError<br>-호출조건.01: ErrorComponent가 화면에 표시된 시점(마운트)<br>-파라미터.01: 발생한 error 객체, boundary="tanstack_root_error_component" | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: reportLovableError(src/lib/lovable-error-reporting) |
@@ -23,7 +38,7 @@
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-002 — 공통 앱 셸
+## LAY-002_app-shell_Default — 공통 앱 셸 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -34,7 +49,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-003 — 공통 상단바(GNB)
+## LAY-003_app-header_Default — 공통 상단바(GNB) · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -45,7 +60,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-004 — 하단 탭바
+## LAY-004_bottom-nav_Default — 하단 탭바 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -56,7 +71,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-005 — 공통 상세 상단바
+## LAY-005_detail-header_Default — 공통 상세 상단바 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -67,7 +82,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## NAV-001 — 더보기 드로어
+## NAV-001_app-drawer_Default — 더보기 드로어 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -78,7 +93,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## SRC-001 — 검색 결과
+## SRC-001_search_Default — 검색 결과 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -86,6 +101,13 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 | DS-1109 | 검색 결과 | SRC-001_search_Default | Invisible | -진입조건.01: 화면 진입 시 검색 입력창에 자동 포커스되고 localStorage(agdict.recentSearches)의 최근 검색어를 불러온다<br>-데이터소스.01: 작물 목록은 src/lib/mock/crops의 CROPS, 시장 목록은 src/lib/mock/markets의 MARKETS<br>-검증.01: 검색어는 소문자로 변환 후 부분일치로 필터링한다<br>-저장.01: 작물 행 클릭 또는 Enter 입력 시 검색어를 최근 검색어 목록 최상단에 추가하고 localStorage에 저장한다(최대 10건 유지)<br>-액션.01: 최근 검색어 개별 삭제 시 해당 항목만 제거 후 재저장<br>-액션.02: "전체삭제" 클릭 시 최근 검색어 전체를 비우고 저장한다<br>-이동.01: 작물 결과 클릭 시 해당 작물의 시세 상세 화면(/market/$crop)으로 이동<br>-이동.02: 시장 결과 클릭 시 시세 조회 화면(/market)으로 이동<br>-계산식.01: "지금 많이 찾는 작물"은 (현재가-전일가)/전일가 등락률의 절대값 기준 내림차순 정렬 후 상위 8개 추출 | Registry: docs/ds/screen-registry.json<br>Route: /search<br>File: src/routes/search.tsx<br>Baseline: 2026-08-05 코드 기준<br>Source: src/lib/mock/crops.ts, src/lib/mock/markets.ts<br>⚠️ 확인 필요: CROPS/MARKETS가 목데이터로, 실제 API 연동 여부 확인 필요 |
 | DS-1109 | 검색 결과 | SRC-001_search_Default | Tracking | - | Registry: docs/ds/screen-registry.json<br>Route: /search<br>File: src/routes/search.tsx<br>Baseline: 2026-08-05 코드 기준<br>⚠️ 확인 필요: 검색/결과 클릭에 대한 별도 분석 이벤트 로깅 코드는 확인되지 않음 |
 | DS-1109 | 검색 결과 | SRC-001_search_Default | Design | -배경색.01: 화면 배경 #FFFFFF (--background)<br>-높이.01: 검색 헤더 높이 52px, 하단 테두리 1px solid #E9ECEF<br>-배경색.02: 검색 입력창 배경 #F1F3F5, 모서리 완전 원형(rounded-full)<br>-높이.02: 입력창 내부 높이 36px(h-9)<br>-글자크기.01: 입력 텍스트 14px<br>-너비.01: 지우기 버튼(원형) 24px×24px, 배경 #ADB5BD, 글자 흰색<br>-글자크기.02: 섹션 제목 12px, 굵기 700, 색상 #6C757D (--muted-foreground)<br>-글자크기.03: 결과 행 이름 14px, 굵기 600<br>-배경색.03: 부류 배지 배경 #F0F9F0, 글자색 #3A8A3A, 크기 10px 굵기 700<br>-배경색.04: 등락 상승 배지 배경 #FFF5F5, 글자색 #E03131 (--price-up)<br>-배경색.05: 등락 하락 배지 배경 #EDF2FF, 글자색 #1971C2 (--price-down)<br>-배경색.06: 등락 보합 배지 배경 #F1F3F5, 글자색 #6C757D<br>-너비.02: 결과 행 아이콘 박스 36px×36px, 모서리 8px(rounded-lg), 배경 #F8F9FA (--surface)<br>-테두리.01: 결과 목록 항목 사이 구분선 1px solid #E9ECEF (divide-border)<br>-글자색.01: 하이라이트 텍스트 색상 #3A8A3A, 굵기 700, 배경 투명 | Registry: docs/ds/screen-registry.json<br>Route: /search<br>File: src/routes/search.tsx<br>Baseline: 2026-08-05 코드 기준<br>토큰 참조: --background, --muted-foreground, --surface, --price-up, --price-down |
+
+Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+
+## SRC-001_search_Empty — 검색 결과 · 빈 상태
+
+| DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
+|---|---|---|---|---|---|
 | DS-1110 | 검색 결과 | SRC-001_search_Empty | Visible | -문구.01: "검색 결과가 없어요"<br>-문구.02: "다른 키워드로 검색해보세요" | Registry: docs/ds/screen-registry.json<br>Route: /search<br>File: src/routes/search.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: EmptyResults |
 | DS-1110 | 검색 결과 | SRC-001_search_Empty | Invisible | -진입조건.01: 검색어가 입력됐지만 작물·시장 결과가 모두 0건일 때 표시된다 | Registry: docs/ds/screen-registry.json<br>Route: /search<br>File: src/routes/search.tsx<br>Baseline: 2026-08-05 코드 기준 |
 | DS-1110 | 검색 결과 | SRC-001_search_Empty | Tracking | - | Registry: docs/ds/screen-registry.json<br>Route: /search<br>File: src/routes/search.tsx<br>Baseline: 2026-08-05 코드 기준 |
@@ -93,7 +115,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## SEL-001 — 부류·품목·품종 선택
+## SEL-001_crop-select_Default — 부류·품목·품종 선택 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
