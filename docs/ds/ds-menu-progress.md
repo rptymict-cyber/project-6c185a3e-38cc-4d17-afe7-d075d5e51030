@@ -12,10 +12,10 @@ Registry 기준(`docs/ds/screen-registry.json`, `docs/ds/menu-inventory.json`)�
 
 | Order | Menu ID | 메뉴명 | DS 파일 | Screen ID 수 | DS No. 수 | 상태 | 마지막 검증 Git 커밋 | 완료 시각 | 오류 | 확인 필요 항목 | 결과 파일 경로 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 01 | home | 홈 | docs/ds/pages/home.md | 2 | 63 | 완료 | (커밋 예정) | 미기록(체크포인트 형식 도입 이전 완료) | 없음 | DS-0154(위치 권한 거부 빈 상태, 코드상 도달 불가로 확정 — 기획 참고용) | docs/ds/pages/home.md, docs/ds/pages/home-ds-confluence.html |
-| 02 | market | 시세 | docs/ds/pages/market.md | 22 | 323 | 완료 | (커밋 예정) | 미기록(체크포인트 형식 도입 이전 완료) | 없음 | DS-0239·02127·02132·02142·02152·02163·02174(탭 미배선 연결계획), DS-0256·0258(품목없음 중복처리), DS-0296·02100(품목 미전달), DS-02113(법인가 mock), DS-0220·02199(위치조회 미구현), DS-02304·02307·02308·02309(알림 저장 로직 전환계획) | docs/ds/pages/market.md, docs/ds/pages/market-ds-confluence.html |
-| 03 | live | 실시간 시세 | docs/ds/pages/live.md | 1 | 38 | 완료 | (커밋 예정) | 미기록(체크포인트 형식 도입 이전 완료) | 없음 | 없음 | docs/ds/pages/live.md, docs/ds/pages/live-ds-confluence.html |
-| 04 | watchlist | 즐겨찾기 | docs/ds/pages/watchlist.md | 3 | 92 | 완료 | (커밋 예정) | 미기록(체크포인트 형식 도입 이전 완료) | 없음 | DS-0455·0456(빈 상태·검색결과없음 상태 구분 여부) | docs/ds/pages/watchlist.md, docs/ds/pages/watchlist-ds-confluence.html |
+| 01 | home | 홈 | docs/ds/pages/home.md | 2 | 63 | 완료 | 3d30b51 | 미기록(체크포인트 형식 도입 이전 완료) | 없음 | DS-0154(위치 권한 거부 빈 상태, 코드상 도달 불가로 확정 — 기획 참고용) | docs/ds/pages/home.md, docs/ds/pages/home-ds-confluence.html |
+| 02 | market | 시세 | docs/ds/pages/market.md | 22 | 323 | 완료 | 3d30b51 | 미기록(체크포인트 형식 도입 이전 완료) | 없음 | DS-0239·02127·02132·02142·02152·02163·02174(탭 미배선 연결계획), DS-0256·0258(품목없음 중복처리), DS-0296·02100(품목 미전달), DS-02113(법인가 mock), DS-0220·02199(위치조회 미구현), DS-02304·02307·02308·02309(알림 저장 로직 전환계획) | docs/ds/pages/market.md, docs/ds/pages/market-ds-confluence.html |
+| 03 | live | 실시간 시세 | docs/ds/pages/live.md | 1 | 38 | 완료 | 3d30b51 | 미기록(체크포인트 형식 도입 이전 완료) | 없음 | 없음 | docs/ds/pages/live.md, docs/ds/pages/live-ds-confluence.html |
+| 04 | watchlist | 즐겨찾기 | docs/ds/pages/watchlist.md | 3 | 92 | 완료 | 3d30b51 | 미기록(체크포인트 형식 도입 이전 완료) | 없음 | DS-0455·0456(빈 상태·검색결과없음 상태 구분 여부) | docs/ds/pages/watchlist.md, docs/ds/pages/watchlist-ds-confluence.html |
 | 05 | statistics | 통계 | docs/ds/pages/statistics.md | 3 | 70 | 대기 | - | - | - | - | - |
 | 06 | prediction | AI 시세 예측 | docs/ds/pages/prediction.md | 8 | 246 | 대기 | - | - | - | - | - |
 | 07 | news | 농업 뉴스 | docs/ds/pages/news.md | 2 | 48 | 대기 | - | - | - | - | - |
@@ -31,7 +31,7 @@ Registry 기준(`docs/ds/screen-registry.json`, `docs/ds/menu-inventory.json`)�
 `node docs/ds/scripts/validate-ds.mjs <menuId>`로 재확인·갱신한다).
 
 `node docs/ds/scripts/validate-ds.mjs --all` 기준 registry 전체 DS No. 1465건, 전역 중복 0건
-(2026-08-07 확인, 위 (커밋 예정) 커밋에서 확정).
+(2026-08-07 확인, 위 3d30b51 커밋에서 확정).
 
 ## 메뉴별 처리 로그
 
