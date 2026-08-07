@@ -8,55 +8,206 @@
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-0901 | 알림 목록 | NTF-001_notifications_Default | Visible | -구성.01: 화면은 상단 헤더와 날짜 그룹별 알림 리스트로 구성된다<br>-구성.02: 헤더는 뒤로가기 버튼, "알림" 타이틀, 우측 설정 아이콘 버튼으로 구성된다<br>-구성.03: 알림은 등록일 기준 "오늘", "어제", "이전" 3개 그룹으로 묶여 표시되며 항목이 없는 그룹은 표시되지 않는다<br>-목록항목.01: 각 알림 항목은 유형별 원형 아이콘, 안읽음 표시 점, 제목, 상대 시각, 본문 문구로 구성된다<br>-목록항목.02: 알림 유형은 목표가 도달·급등·거래량 급증(상승 계열), 급락(하락 계열), 경매 시작(경매 계열), 일반 공지(일반 계열) 총 5가지로 구분되며 유형별로 아이콘과 색상이 다르게 표시된다<br>-상태표시.01: 읽지 않은 알림은 아이콘 좌상단에 빨간 점이 표시되고 제목 글자가 굵게 강조된다<br>-상태표시.02: 상대 시각은 "방금", "○분 전", "○시간 전", "○일 전", "M월/D일" 형식 중 경과 시간에 맞는 표현으로 표시된다<br>-버튼.01: 헤더 우측 설정 아이콘 버튼을 누르면 알림 설정 화면으로 이동한다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: DetailHeader 컴포넌트(src/components/detail-header.tsx)<br>기술근거.02: 알림 목록 데이터는 useNotificationEvents 스토어(src/store/notification-events.ts)에서 조회<br>기술근거.03: kindStyle 함수로 알림 유형별 아이콘·색상 결정 |
-| DS-0901 | 알림 목록 | NTF-001_notifications_Default | Invisible | -진입조건.01: /notifications 경로에 접근하면 별도 권한 확인 없이 노출된다<br>-데이터.01: 알림 목록은 브라우저 로컬 저장소에 저장된 알림 이벤트 데이터를 데이터소스로 사용하며 최초 실행 시 3건의 예시 알림으로 시딩된다<br>-정렬.01: 알림은 등록 시각 내림차순으로 정렬한 뒤 오늘·어제·이전 3개 그룹으로 다시 나눠 표시한다<br>-액션.01: 알림 항목을 클릭하면 우선 해당 알림을 읽음 처리한다<br>-액션.02: 알림에 조건 정보(품목·품종·시장·법인·단위)가 포함된 경우 전역 시세 필터 값을 해당 조건과 동일하게 순서대로 갱신한 뒤 품종 상세 화면으로 이동한다<br>-액션.03: 조건 정보가 없는 알림(일반 공지 등)은 읽음 처리만 하고 화면을 이동하지 않는다<br>-이동.01: 헤더 설정 아이콘을 클릭하면 알림 설정 화면으로 이동한다<br>-미구현.01: 알림 삭제, 전체 읽음 처리 기능은 화면에 진입 버튼이 없어 사용할 수 없다<br>-미구현.02: 알림은 실제 시세 급등락 등 조건에 따라 자동으로 생성되지 않고 최초 예시 데이터만 존재한다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 로컬 저장소 키 agdict:notification-events, 스토어 src/store/notification-events.ts(useNotificationEvents), 예시 데이터 SEED_EVENTS 3건<br>기술근거.02: 클릭 시 markRead(id) 호출 후 context 존재 시 useMarketFilter(src/store/market.ts)의 setItem→setMarket→setCorp→setUnit 순으로 호출하고 navigate({ to: "/price/$variety" }) 호출<br>기술근거.03: 삭제·전체읽음 함수(remove, markAllRead)는 스토어에 존재하나 화면에서 호출하는 곳이 없음<br>⚠️ 확인 필요.01: 알림 자동 생성(가격 급등락 감지 등) 트리거 로직이 구현되어 있는지 확인 필요, 현재는 정적 예시 데이터만 존재함 |
-| DS-0901 | 알림 목록 | NTF-001_notifications_Default | Tracking | -이벤트.01: 알림 항목 클릭 시 markRead(id) 함수가 호출되어 읽음 상태로 변경된다<br>-이벤트.02: 조건 정보가 있는 알림 클릭 시 setItem·setMarket·setCorp·setUnit 함수가 순서대로 호출되어 전역 시세 필터가 알림 조건과 동기화된다<br>-이벤트.03: 조건 정보가 있는 알림 클릭 시 navigate 함수가 호출되어 품종 상세 화면으로 이동한다<br>-조건.01: 위 함수들은 알림 항목 클릭(onClick) 시 markRead → 필터 동기화(조건 있을 때만) → 이동 순서로 실행된다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>⚠️ 확인 필요.01: 클릭·노출에 대한 별도 분석 트래킹 이벤트 로깅 코드는 존재하지 않음 |
-| DS-0901 | 알림 목록 | NTF-001_notifications_Default | Design | -배경색.01: 페이지 배경 흰색(#FFFFFF)<br>-배경색.02: 알림 리스트 배경 흰색(#FFFFFF)<br>-배경색.03: 상승 계열 아이콘 배경 연한 빨강(#FFF5F5), 아이콘 글자색 빨강(#E03131)<br>-배경색.04: 하락 계열 아이콘 배경 연한 파랑(#EDF2FF), 아이콘 글자색 파랑(#1971C2)<br>-배경색.05: 경매 계열 아이콘 배경 연한 초록(#F0F9F0), 아이콘 글자색 초록(#3A8A3A)<br>-배경색.06: 일반 계열 아이콘 배경 연한 회색(#F1F3F5), 아이콘 글자색 회색(#6C757D)<br>-배경색.07: 안읽음 표시 점 색상 빨강(#E03131)<br>-글자색.01: 그룹 라벨 글자색 회색(#868E96)<br>-글자색.02: 알림 제목 글자색 짙은 회색(#212529)<br>-글자색.03: 상대 시각 글자색 회색(#6C757D)<br>-글자색.04: 본문 문구 글자색 회색(#6C757D)<br>-글자크기.01: 그룹 라벨 12px<br>-글자크기.02: 알림 제목 14px<br>-글자크기.03: 상대 시각 11px<br>-글자크기.04: 본문 문구 13px<br>-글자굵기.01: 안읽음 알림 제목은 굵게(700), 읽은 알림 제목은 중간 굵게(600)로 표시된다<br>-너비.01: 유형 아이콘 원형 크기 36px×36px<br>-너비.02: 안읽음 표시 점 크기 6px×6px<br>-안쪽여백.01: 알림 항목 좌우 16px, 상하 16px<br>-안쪽여백.02: 그룹 라벨 좌우 16px, 상단 16px, 하단 6px<br>-요소간격.01: 아이콘과 텍스트 사이 간격 12px<br>-테두리.01: 알림 항목 사이 구분선 1px 실선, 연한 회색(#E9ECEF)<br>-아이콘크기.01: 알림 유형 아이콘 16px×16px<br>-아이콘크기.02: 헤더 설정 아이콘 20px×20px | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: src/styles.css --muted-foreground:#6c757d, --border:#e9ecef 토큰 사용<br>기술근거.02: 클래스 h-9 w-9(아이콘), h-1.5 w-1.5(점), px-4 py-4, gap-3, divide-border, h-4 w-4, h-5 w-5 |
+| DS-0901 | 알림 목록 | NTF-001_notifications_Default | Visible | -구성.01: 화면은 상단 헤더와 날짜 그룹별 알림 리스트로 구성된다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: DetailHeader 컴포넌트(src/components/detail-header.tsx)<br>기술근거.02: 알림 목록 데이터는 useNotificationEvents 스토어(src/store/notification-events.ts)에서 조회<br>기술근거.03: kindStyle 함수로 알림 유형별 아이콘·색상 결정 |
+| DS-0902 | 알림 목록 | NTF-001_notifications_Default | Visible | -구성.02: 헤더는 뒤로가기 버튼, "알림" 타이틀, 우측 설정 아이콘 버튼으로 구성된다 | - |
+| DS-0903 | 알림 목록 | NTF-001_notifications_Default | Visible | -구성.03: 알림은 등록일 기준 "오늘", "어제", "이전" 3개 그룹으로 묶여 표시되며 항목이 없는 그룹은 표시되지 않는다 | - |
+| DS-0904 | 알림 목록 | NTF-001_notifications_Default | Visible | -목록항목.01: 각 알림 항목은 유형별 원형 아이콘, 안읽음 표시 점, 제목, 상대 시각, 본문 문구로 구성된다 | - |
+| DS-0905 | 알림 목록 | NTF-001_notifications_Default | Visible | -목록항목.02: 알림 유형은 목표가 도달·급등·거래량 급증(상승 계열), 급락(하락 계열), 경매 시작(경매 계열), 일반 공지(일반 계열) 총 5가지로 구분되며 유형별로 아이콘과 색상이 다르게 표시된다 | - |
+| DS-0906 | 알림 목록 | NTF-001_notifications_Default | Visible | -상태표시.01: 읽지 않은 알림은 아이콘 좌상단에 빨간 점이 표시되고 제목 글자가 굵게 강조된다 | - |
+| DS-0907 | 알림 목록 | NTF-001_notifications_Default | Visible | -상태표시.02: 상대 시각은 "방금", "○분 전", "○시간 전", "○일 전", "M월/D일" 형식 중 경과 시간에 맞는 표현으로 표시된다 | - |
+| DS-0908 | 알림 목록 | NTF-001_notifications_Default | Visible | -버튼.01: 헤더 우측 설정 아이콘 버튼을 누르면 알림 설정 화면으로 이동한다 | - |
+| DS-0909 | 알림 목록 | NTF-001_notifications_Default | Invisible | -진입조건.01: /notifications 경로에 접근하면 별도 권한 확인 없이 노출된다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 로컬 저장소 키 agdict:notification-events, 스토어 src/store/notification-events.ts(useNotificationEvents), 예시 데이터 SEED_EVENTS 3건<br>기술근거.02: 클릭 시 markRead(id) 호출 후 context 존재 시 useMarketFilter(src/store/market.ts)의 setItem→setMarket→setCorp→setUnit 순으로 호출하고 navigate({ to: "/price/$variety" }) 호출<br>기술근거.03: 삭제·전체읽음 함수(remove, markAllRead)는 스토어에 존재하나 화면에서 호출하는 곳이 없음<br>⚠️ 확인 필요.01: 알림 자동 생성(가격 급등락 감지 등) 트리거 로직이 구현되어 있는지 확인 필요, 현재는 정적 예시 데이터만 존재함 |
+| DS-0910 | 알림 목록 | NTF-001_notifications_Default | Invisible | -데이터.01: 알림 목록은 브라우저 로컬 저장소에 저장된 알림 이벤트 데이터를 데이터소스로 사용하며 최초 실행 시 3건의 예시 알림으로 시딩된다 | - |
+| DS-0911 | 알림 목록 | NTF-001_notifications_Default | Invisible | -정렬.01: 알림은 등록 시각 내림차순으로 정렬한 뒤 오늘·어제·이전 3개 그룹으로 다시 나눠 표시한다 | - |
+| DS-0912 | 알림 목록 | NTF-001_notifications_Default | Invisible | -액션.01: 알림 항목을 클릭하면 우선 해당 알림을 읽음 처리한다 | - |
+| DS-0913 | 알림 목록 | NTF-001_notifications_Default | Invisible | -액션.02: 알림에 조건 정보(품목·품종·시장·법인·단위)가 포함된 경우 전역 시세 필터 값을 해당 조건과 동일하게 순서대로 갱신한 뒤 품종 상세 화면으로 이동한다 | - |
+| DS-0914 | 알림 목록 | NTF-001_notifications_Default | Invisible | -액션.03: 조건 정보가 없는 알림(일반 공지 등)은 읽음 처리만 하고 화면을 이동하지 않는다 | - |
+| DS-0915 | 알림 목록 | NTF-001_notifications_Default | Invisible | -이동.01: 헤더 설정 아이콘을 클릭하면 알림 설정 화면으로 이동한다 | - |
+| DS-0916 | 알림 목록 | NTF-001_notifications_Default | Invisible | -미구현.01: 알림 삭제, 전체 읽음 처리 기능은 화면에 진입 버튼이 없어 사용할 수 없다 | - |
+| DS-0917 | 알림 목록 | NTF-001_notifications_Default | Invisible | -미구현.02: 알림은 실제 시세 급등락 등 조건에 따라 자동으로 생성되지 않고 최초 예시 데이터만 존재한다 | - |
+| DS-0918 | 알림 목록 | NTF-001_notifications_Default | Tracking | -이벤트.01: 알림 항목 클릭 시 markRead(id) 함수가 호출되어 읽음 상태로 변경된다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>⚠️ 확인 필요.01: 클릭·노출에 대한 별도 분석 트래킹 이벤트 로깅 코드는 존재하지 않음 |
+| DS-0919 | 알림 목록 | NTF-001_notifications_Default | Tracking | -이벤트.02: 조건 정보가 있는 알림 클릭 시 setItem·setMarket·setCorp·setUnit 함수가 순서대로 호출되어 전역 시세 필터가 알림 조건과 동기화된다 | - |
+| DS-0920 | 알림 목록 | NTF-001_notifications_Default | Tracking | -이벤트.03: 조건 정보가 있는 알림 클릭 시 navigate 함수가 호출되어 품종 상세 화면으로 이동한다 | - |
+| DS-0921 | 알림 목록 | NTF-001_notifications_Default | Tracking | -조건.01: 위 함수들은 알림 항목 클릭(onClick) 시 markRead → 필터 동기화(조건 있을 때만) → 이동 순서로 실행된다 | - |
+| DS-0922 | 알림 목록 | NTF-001_notifications_Default | Design | -배경색.01: 페이지 배경 흰색(#FFFFFF) | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: src/styles.css --muted-foreground:#6c757d, --border:#e9ecef 토큰 사용<br>기술근거.02: 클래스 h-9 w-9(아이콘), h-1.5 w-1.5(점), px-4 py-4, gap-3, divide-border, h-4 w-4, h-5 w-5 |
+| DS-0923 | 알림 목록 | NTF-001_notifications_Default | Design | -배경색.02: 알림 리스트 배경 흰색(#FFFFFF) | - |
+| DS-0924 | 알림 목록 | NTF-001_notifications_Default | Design | -배경색.03: 상승 계열 아이콘 배경 연한 빨강(#FFF5F5), 아이콘 글자색 빨강(#E03131) | - |
+| DS-0925 | 알림 목록 | NTF-001_notifications_Default | Design | -배경색.04: 하락 계열 아이콘 배경 연한 파랑(#EDF2FF), 아이콘 글자색 파랑(#1971C2) | - |
+| DS-0926 | 알림 목록 | NTF-001_notifications_Default | Design | -배경색.05: 경매 계열 아이콘 배경 연한 초록(#F0F9F0), 아이콘 글자색 초록(#3A8A3A) | - |
+| DS-0927 | 알림 목록 | NTF-001_notifications_Default | Design | -배경색.06: 일반 계열 아이콘 배경 연한 회색(#F1F3F5), 아이콘 글자색 회색(#6C757D) | - |
+| DS-0928 | 알림 목록 | NTF-001_notifications_Default | Design | -배경색.07: 안읽음 표시 점 색상 빨강(#E03131) | - |
+| DS-0929 | 알림 목록 | NTF-001_notifications_Default | Design | -글자색.01: 그룹 라벨 글자색 회색(#868E96) | - |
+| DS-0930 | 알림 목록 | NTF-001_notifications_Default | Design | -글자색.02: 알림 제목 글자색 짙은 회색(#212529) | - |
+| DS-0931 | 알림 목록 | NTF-001_notifications_Default | Design | -글자색.03: 상대 시각 글자색 회색(#6C757D) | - |
+| DS-0932 | 알림 목록 | NTF-001_notifications_Default | Design | -글자색.04: 본문 문구 글자색 회색(#6C757D) | - |
+| DS-0933 | 알림 목록 | NTF-001_notifications_Default | Design | -글자크기.01: 그룹 라벨 12px | - |
+| DS-0934 | 알림 목록 | NTF-001_notifications_Default | Design | -글자크기.02: 알림 제목 14px | - |
+| DS-0935 | 알림 목록 | NTF-001_notifications_Default | Design | -글자크기.03: 상대 시각 11px | - |
+| DS-0936 | 알림 목록 | NTF-001_notifications_Default | Design | -글자크기.04: 본문 문구 13px | - |
+| DS-0937 | 알림 목록 | NTF-001_notifications_Default | Design | -글자굵기.01: 안읽음 알림 제목은 굵게(700), 읽은 알림 제목은 중간 굵게(600)로 표시된다 | - |
+| DS-0938 | 알림 목록 | NTF-001_notifications_Default | Design | -너비.01: 유형 아이콘 원형 크기 36px×36px | - |
+| DS-0939 | 알림 목록 | NTF-001_notifications_Default | Design | -너비.02: 안읽음 표시 점 크기 6px×6px | - |
+| DS-0940 | 알림 목록 | NTF-001_notifications_Default | Design | -안쪽여백.01: 알림 항목 좌우 16px, 상하 16px | - |
+| DS-0941 | 알림 목록 | NTF-001_notifications_Default | Design | -안쪽여백.02: 그룹 라벨 좌우 16px, 상단 16px, 하단 6px | - |
+| DS-0942 | 알림 목록 | NTF-001_notifications_Default | Design | -요소간격.01: 아이콘과 텍스트 사이 간격 12px | - |
+| DS-0943 | 알림 목록 | NTF-001_notifications_Default | Design | -테두리.01: 알림 항목 사이 구분선 1px 실선, 연한 회색(#E9ECEF) | - |
+| DS-0944 | 알림 목록 | NTF-001_notifications_Default | Design | -아이콘크기.01: 알림 유형 아이콘 16px×16px | - |
+| DS-0945 | 알림 목록 | NTF-001_notifications_Default | Design | -아이콘크기.02: 헤더 설정 아이콘 20px×20px | - |
 
 ## NTF-001_notifications_Empty — 알림 목록 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-0902 | 알림 목록 | NTF-001_notifications_Empty | Visible | -빈상태.01: 화면 중앙에 회색 원형 배경 안의 종 모양 아이콘, "새 알림이 없어요" 안내 문구, "관심 작물을 등록하면 가격 변동 알림을 받을 수 있어요" 보조 문구가 표시된다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준 |
-| DS-0902 | 알림 목록 | NTF-001_notifications_Empty | Invisible | -조건.01: 알림 이벤트 데이터가 하나도 없을 때 이 빈 상태가 렌더링된다<br>-미구현.01: 빈 상태 안내 문구에서 언급하는 관심 작물 등록 화면으로 바로 이동하는 버튼이나 링크가 없다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 조건식 sorted.length === 0<br>⚠️ 확인 필요.01: 빈 상태 안내문에서 "관심 작물 등록"을 언급하지만 실제 이동 진입점이 없어 UX 연결 필요 여부 확인 필요 |
-| DS-0902 | 알림 목록 | NTF-001_notifications_Empty | Tracking | - | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 별도 이벤트 로깅 코드 없음 |
-| DS-0902 | 알림 목록 | NTF-001_notifications_Empty | Design | -배경색.01: 아이콘 원형 배경 연한 회색(#F1F3F5)<br>-글자색.01: 종 아이콘 색상 회색(#ADB5BD)<br>-글자색.02: 안내 문구 글자색 짙은 회색(#212529)<br>-글자색.03: 보조 문구 글자색 회색(#6C757D)<br>-글자크기.01: 안내 문구 15px<br>-글자크기.02: 보조 문구 12px<br>-글자굵기.01: 안내 문구는 굵게(700) 표시된다<br>-너비.01: 아이콘 원형 크기 64px×64px<br>-아이콘크기.01: 종 아이콘 크기 28px×28px<br>-안쪽여백.01: 빈 상태 영역 좌우 24px, 상하 96px<br>-바깥여백.01: 아이콘과 문구 사이 상단 여백 16px, 문구 사이 여백 4px | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: src/styles.css --muted-foreground:#6c757d, --foreground:#212529 토큰 사용 |
+| DS-0946 | 알림 목록 | NTF-001_notifications_Empty | Visible | -빈상태.01: 화면 중앙에 회색 원형 배경 안의 종 모양 아이콘, "새 알림이 없어요" 안내 문구, "관심 작물을 등록하면 가격 변동 알림을 받을 수 있어요" 보조 문구가 표시된다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준 |
+| DS-0947 | 알림 목록 | NTF-001_notifications_Empty | Invisible | -조건.01: 알림 이벤트 데이터가 하나도 없을 때 이 빈 상태가 렌더링된다 | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 조건식 sorted.length === 0<br>⚠️ 확인 필요.01: 빈 상태 안내문에서 "관심 작물 등록"을 언급하지만 실제 이동 진입점이 없어 UX 연결 필요 여부 확인 필요 |
+| DS-0948 | 알림 목록 | NTF-001_notifications_Empty | Invisible | -미구현.01: 빈 상태 안내 문구에서 언급하는 관심 작물 등록 화면으로 바로 이동하는 버튼이나 링크가 없다 | - |
+| DS-0949 | 알림 목록 | NTF-001_notifications_Empty | Design | -배경색.01: 아이콘 원형 배경 연한 회색(#F1F3F5) | Route: /notifications<br>File: src/routes/notifications.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: src/styles.css --muted-foreground:#6c757d, --foreground:#212529 토큰 사용 |
+| DS-0950 | 알림 목록 | NTF-001_notifications_Empty | Design | -글자색.01: 종 아이콘 색상 회색(#ADB5BD) | - |
+| DS-0951 | 알림 목록 | NTF-001_notifications_Empty | Design | -글자색.02: 안내 문구 글자색 짙은 회색(#212529) | - |
+| DS-0952 | 알림 목록 | NTF-001_notifications_Empty | Design | -글자색.03: 보조 문구 글자색 회색(#6C757D) | - |
+| DS-0953 | 알림 목록 | NTF-001_notifications_Empty | Design | -글자크기.01: 안내 문구 15px | - |
+| DS-0954 | 알림 목록 | NTF-001_notifications_Empty | Design | -글자크기.02: 보조 문구 12px | - |
+| DS-0955 | 알림 목록 | NTF-001_notifications_Empty | Design | -글자굵기.01: 안내 문구는 굵게(700) 표시된다 | - |
+| DS-0956 | 알림 목록 | NTF-001_notifications_Empty | Design | -너비.01: 아이콘 원형 크기 64px×64px | - |
+| DS-0957 | 알림 목록 | NTF-001_notifications_Empty | Design | -아이콘크기.01: 종 아이콘 크기 28px×28px | - |
+| DS-0958 | 알림 목록 | NTF-001_notifications_Empty | Design | -안쪽여백.01: 빈 상태 영역 좌우 24px, 상하 96px | - |
+| DS-0959 | 알림 목록 | NTF-001_notifications_Empty | Design | -바깥여백.01: 아이콘과 문구 사이 상단 여백 16px, 문구 사이 여백 4px | - |
 
 ## NTF-002_notifications-settings_Default — 알림 규칙 목록 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-0903 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Visible | -구성.01: 화면은 상단 헤더("알림 설정"), 일반 알림 설정 영역, 품종별 알림 규칙 목록으로 구성된다<br>-구성.02: 일반 알림 설정은 전체 알림 마스터 스위치, 시세 알림 그룹(급등락 알림·임계값 슬라이더, 즐겨찾기 시세 요약, 경매 마감 알림), 앱 알림 그룹(공지·업데이트)으로 구성된다<br>-목록항목.01: 각 알림 규칙 항목은 품종명·품목명, 시장·법인·단위 정보, 활성 조건 뱃지(목표가/등락 N%/거래량 N%/경매시작), 우측 화살표, 온오프 스위치로 구성된다<br>-상태표시.01: 비활성 상태인 규칙 항목은 행 전체가 절반 투명하게 표시된다<br>-상태표시.02: 급등락 알림의 변동폭 임계값은 슬라이더로 5~30% 범위에서 1% 단위로 조절 가능하며 현재 값이 "±N%"로 표시된다<br>-필터.01: 규칙 항목을 좌우로 스와이프하면 삭제할 수 있다<br>-정렬.01: 규칙 항목을 드래그하면 순서를 변경할 수 있다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 컴포넌트 GeneralNotiSettings(src/components/notifications/GeneralNotiSettings.tsx), SwipeReorderList(src/components/swipe-reorder-list.tsx)<br>기술근거.02: 규칙 데이터는 useAlerts 스토어(src/store/alerts.ts)에서 조회 |
-| DS-0903 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -진입조건.01: /notifications/settings 경로에 접근하면 노출된다<br>-데이터.01: 알림 규칙 목록은 브라우저 로컬 저장소에 저장된 규칙 데이터가 데이터소스이다<br>-데이터.02: 일반 알림 설정 값도 별도의 브라우저 로컬 저장소 항목에 저장되며 화면 진입 시 불러오고 값이 바뀔 때마다 자동 저장된다<br>-정렬.01: 규칙 목록은 지정된 순서값 오름차순으로 정렬해 표시한다<br>-조건.01: 등록된 규칙이 없으면 규칙 목록 영역이 표시되지 않고 일반 알림 설정 영역만 표시된다<br>-액션.01: 규칙의 온오프 스위치를 조작하면 해당 규칙의 활성 상태가 즉시 바뀐다<br>-액션.02: 규칙 항목(화살표 영역)을 클릭하면 해당 규칙의 수정 화면으로 이동한다<br>-액션.03: 규칙 항목을 스와이프해 삭제하면 완료 안내 문구("알림을 삭제했어요")가 표시된다<br>-액션.04: 규칙 항목을 드래그해 순서를 바꾸면 순서값이 갱신된다<br>-자동동작.01: 일반 알림 설정의 모든 스위치·슬라이더 값은 변경 즉시 로컬 저장소에 저장된다<br>-미구현.01: 일반 알림 설정 값은 로컬에만 저장될 뿐 실제 알림 발송 로직과 연결되어 있지 않다<br>-미구현.02: 전체 알림 마스터 스위치를 끄면 하위 항목이 시각적으로만 비활성화될 뿐 실제 알림 차단 로직은 없다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 로컬 저장소 키 agdict:alerts(useAlerts.rules), agdict:notiSettings(GeneralNotiSettings)<br>기술근거.02: setEnabled(rule.id, v), navigate({ to: "/notifications/settings/$ruleId" }), remove(id)+toast.success, reorder(ids) 호출<br>⚠️ 확인 필요.01: 일반 알림 설정값이 실제 알림 발송 조건에 반영되는지 백엔드 연동 여부 확인 필요 |
-| DS-0903 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Tracking | -이벤트.01: 스위치 토글 시 setEnabled 함수가 호출되어 규칙 활성 상태가 변경된다<br>-이벤트.02: 드래그 종료 시 reorder 함수가 호출되어 규칙 순서가 변경된다<br>-이벤트.03: 스와이프 삭제 시 remove 함수가 호출된 뒤 완료 안내 문구가 표시된다<br>-조건.01: 각 함수는 스위치 토글, 드래그 종료, 스와이프 삭제 시점에 각각 호출된다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 완료 안내는 toast.success("알림을 삭제했어요") 호출이며 로깅 목적이 아닌 사용자 피드백 UI임 |
-| DS-0903 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -배경색.01: 일반 설정 카드 배경 연한 회색(#F8F9FA)<br>-배경색.02: 규칙 항목 배경 흰색(#FFFFFF)<br>-배경색.03: 활성 조건 뱃지 배경 연한 초록(#F0F9F0), 글자색 진한 초록(#1F5C1F)<br>-배경색.04: 스위치 켜짐 배경 초록(#3A8A3A), 꺼짐 배경 연한 회색(#E9ECEF)<br>-배경색.05: 스위치 손잡이 배경 흰색(#FFFFFF)<br>-글자색.01: 그룹 타이틀 글자색 회색(#6C757D)<br>-글자색.02: 규칙 품종명 글자색 짙은 회색(#212529)<br>-글자색.03: 규칙 품목명 글자색 회색(#868E96)<br>-글자색.04: 규칙 부가정보(시장·법인·단위) 글자색 회색(#6C757D)<br>-글자크기.01: 그룹 타이틀 12px<br>-글자크기.02: 규칙 품종명 14.5px<br>-글자크기.03: 활성 조건 뱃지 10.5px<br>-글자크기.04: 일반 설정 타이틀 14px, 보조 문구 11px<br>-글자굵기.01: 규칙 품종명은 굵게(700) 표시된다<br>-너비.01: 스위치 트랙 36px×20px, 손잡이 16px×16px<br>-모서리.01: 일반 설정 카드 모서리 10px 둥글게 처리한다<br>-모서리.02: 활성 조건 뱃지는 완전한 둥근 형태(알약형)로 처리한다<br>-안쪽여백.01: 규칙 항목 좌우 12px, 상하 14px<br>-안쪽여백.02: 일반 설정 항목 좌우 16px, 상하 16px<br>-요소간격.01: 뱃지 사이 간격 4px<br>-투명도.01: 비활성 규칙 항목은 50% 투명도로 표시된다<br>-투명도.02: 마스터 알림을 끄면 하위 그룹은 50% 투명도로 표시되고 클릭이 막힌다<br>-아이콘크기.01: 화살표 아이콘 16px×16px, 색상 연한 회색(#ADB5BD) | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: Switch(src/components/ui/switch.tsx), Slider(src/components/ui/slider.tsx)<br>기술근거.02: src/styles.css --surface:#f8f9fa, --primary:#3a8a3a, --input:#e9ecef, --background:#ffffff 토큰 사용 |
+| DS-0960 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Visible | -구성.01: 화면은 상단 헤더("알림 설정"), 일반 알림 설정 영역, 품종별 알림 규칙 목록으로 구성된다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 컴포넌트 GeneralNotiSettings(src/components/notifications/GeneralNotiSettings.tsx), SwipeReorderList(src/components/swipe-reorder-list.tsx)<br>기술근거.02: 규칙 데이터는 useAlerts 스토어(src/store/alerts.ts)에서 조회 |
+| DS-0961 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Visible | -구성.02: 일반 알림 설정은 전체 알림 마스터 스위치, 시세 알림 그룹(급등락 알림·임계값 슬라이더, 즐겨찾기 시세 요약, 경매 마감 알림), 앱 알림 그룹(공지·업데이트)으로 구성된다 | - |
+| DS-0962 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Visible | -목록항목.01: 각 알림 규칙 항목은 품종명·품목명, 시장·법인·단위 정보, 활성 조건 뱃지(목표가/등락 N%/거래량 N%/경매시작), 우측 화살표, 온오프 스위치로 구성된다 | - |
+| DS-0963 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Visible | -상태표시.01: 비활성 상태인 규칙 항목은 행 전체가 절반 투명하게 표시된다 | - |
+| DS-0964 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Visible | -상태표시.02: 급등락 알림의 변동폭 임계값은 슬라이더로 5~30% 범위에서 1% 단위로 조절 가능하며 현재 값이 "±N%"로 표시된다 | - |
+| DS-0965 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Visible | -필터.01: 규칙 항목을 좌우로 스와이프하면 삭제할 수 있다 | - |
+| DS-0966 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Visible | -정렬.01: 규칙 항목을 드래그하면 순서를 변경할 수 있다 | - |
+| DS-0967 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -진입조건.01: /notifications/settings 경로에 접근하면 노출된다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 로컬 저장소 키 agdict:alerts(useAlerts.rules), agdict:notiSettings(GeneralNotiSettings)<br>기술근거.02: setEnabled(rule.id, v), navigate({ to: "/notifications/settings/$ruleId" }), remove(id)+toast.success, reorder(ids) 호출<br>⚠️ 확인 필요.01: 일반 알림 설정값이 실제 알림 발송 조건에 반영되는지 백엔드 연동 여부 확인 필요 |
+| DS-0968 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -데이터.01: 알림 규칙 목록은 브라우저 로컬 저장소에 저장된 규칙 데이터가 데이터소스이다 | - |
+| DS-0969 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -데이터.02: 일반 알림 설정 값도 별도의 브라우저 로컬 저장소 항목에 저장되며 화면 진입 시 불러오고 값이 바뀔 때마다 자동 저장된다 | - |
+| DS-0970 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -정렬.01: 규칙 목록은 지정된 순서값 오름차순으로 정렬해 표시한다 | - |
+| DS-0971 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -조건.01: 등록된 규칙이 없으면 규칙 목록 영역이 표시되지 않고 일반 알림 설정 영역만 표시된다 | - |
+| DS-0972 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -액션.01: 규칙의 온오프 스위치를 조작하면 해당 규칙의 활성 상태가 즉시 바뀐다 | - |
+| DS-0973 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -액션.02: 규칙 항목(화살표 영역)을 클릭하면 해당 규칙의 수정 화면으로 이동한다 | - |
+| DS-0974 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -액션.03: 규칙 항목을 스와이프해 삭제하면 완료 안내 문구("알림을 삭제했어요")가 표시된다 | - |
+| DS-0975 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -액션.04: 규칙 항목을 드래그해 순서를 바꾸면 순서값이 갱신된다 | - |
+| DS-0976 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -자동동작.01: 일반 알림 설정의 모든 스위치·슬라이더 값은 변경 즉시 로컬 저장소에 저장된다 | - |
+| DS-0977 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -미구현.01: 일반 알림 설정 값은 로컬에만 저장될 뿐 실제 알림 발송 로직과 연결되어 있지 않다 | - |
+| DS-0978 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Invisible | -미구현.02: 전체 알림 마스터 스위치를 끄면 하위 항목이 시각적으로만 비활성화될 뿐 실제 알림 차단 로직은 없다 | - |
+| DS-0979 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Tracking | -이벤트.01: 스위치 토글 시 setEnabled 함수가 호출되어 규칙 활성 상태가 변경된다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 완료 안내는 toast.success("알림을 삭제했어요") 호출이며 로깅 목적이 아닌 사용자 피드백 UI임 |
+| DS-0980 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Tracking | -이벤트.02: 드래그 종료 시 reorder 함수가 호출되어 규칙 순서가 변경된다 | - |
+| DS-0981 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Tracking | -이벤트.03: 스와이프 삭제 시 remove 함수가 호출된 뒤 완료 안내 문구가 표시된다 | - |
+| DS-0982 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Tracking | -조건.01: 각 함수는 스위치 토글, 드래그 종료, 스와이프 삭제 시점에 각각 호출된다 | - |
+| DS-0983 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -배경색.01: 일반 설정 카드 배경 연한 회색(#F8F9FA) | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: Switch(src/components/ui/switch.tsx), Slider(src/components/ui/slider.tsx)<br>기술근거.02: src/styles.css --surface:#f8f9fa, --primary:#3a8a3a, --input:#e9ecef, --background:#ffffff 토큰 사용 |
+| DS-0984 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -배경색.02: 규칙 항목 배경 흰색(#FFFFFF) | - |
+| DS-0985 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -배경색.03: 활성 조건 뱃지 배경 연한 초록(#F0F9F0), 글자색 진한 초록(#1F5C1F) | - |
+| DS-0986 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -배경색.04: 스위치 켜짐 배경 초록(#3A8A3A), 꺼짐 배경 연한 회색(#E9ECEF) | - |
+| DS-0987 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -배경색.05: 스위치 손잡이 배경 흰색(#FFFFFF) | - |
+| DS-0988 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자색.01: 그룹 타이틀 글자색 회색(#6C757D) | - |
+| DS-0989 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자색.02: 규칙 품종명 글자색 짙은 회색(#212529) | - |
+| DS-0990 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자색.03: 규칙 품목명 글자색 회색(#868E96) | - |
+| DS-0991 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자색.04: 규칙 부가정보(시장·법인·단위) 글자색 회색(#6C757D) | - |
+| DS-0992 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자크기.01: 그룹 타이틀 12px | - |
+| DS-0993 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자크기.02: 규칙 품종명 14.5px | - |
+| DS-0994 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자크기.03: 활성 조건 뱃지 10.5px | - |
+| DS-0995 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자크기.04: 일반 설정 타이틀 14px, 보조 문구 11px | - |
+| DS-0996 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -글자굵기.01: 규칙 품종명은 굵게(700) 표시된다 | - |
+| DS-0997 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -너비.01: 스위치 트랙 36px×20px, 손잡이 16px×16px | - |
+| DS-0998 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -모서리.01: 일반 설정 카드 모서리 10px 둥글게 처리한다 | - |
+| DS-0999 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -모서리.02: 활성 조건 뱃지는 완전한 둥근 형태(알약형)로 처리한다 | - |
+| DS-09100 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -안쪽여백.01: 규칙 항목 좌우 12px, 상하 14px | - |
+| DS-09101 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -안쪽여백.02: 일반 설정 항목 좌우 16px, 상하 16px | - |
+| DS-09102 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -요소간격.01: 뱃지 사이 간격 4px | - |
+| DS-09103 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -투명도.01: 비활성 규칙 항목은 50% 투명도로 표시된다 | - |
+| DS-09104 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -투명도.02: 마스터 알림을 끄면 하위 그룹은 50% 투명도로 표시되고 클릭이 막힌다 | - |
+| DS-09105 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -아이콘크기.01: 화살표 아이콘 16px×16px, 색상 연한 회색(#ADB5BD) | - |
 
 ## NTF-002_notifications-settings_Empty — 알림 규칙 목록 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-0904 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Visible | -구성.01: 등록된 규칙이 없을 때 일반 알림 설정 영역만 표시되고 품종별 알림 규칙 목록 영역은 화면에 나타나지 않는다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준 |
-| DS-0904 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Invisible | -조건.01: 등록된 규칙 수가 0건일 때 규칙 목록 영역이 조건부로 렌더링되지 않는다<br>-미구현.01: 규칙이 0건일 때 "등록된 알림 규칙이 없어요" 등 전용 빈 상태 안내 문구나 규칙 추가를 유도하는 버튼이 화면에 없다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 조건식 sorted.length > 0<br>⚠️ 확인 필요.01: 규칙 0건일 때 별도 빈 상태 문구·추가 버튼 노출이 필요한지 기획 확인 필요 |
-| DS-0904 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Tracking | - | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 별도 이벤트 로깅 코드 없음 |
-| DS-0904 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Design | - | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>⚠️ 확인 필요.01: 전용 빈 상태 디자인이 구현되어 있지 않아 실측 값 확인 불가 |
+| DS-09106 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Visible | -구성.01: 등록된 규칙이 없을 때 일반 알림 설정 영역만 표시되고 품종별 알림 규칙 목록 영역은 화면에 나타나지 않는다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준 |
+| DS-09107 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Invisible | -조건.01: 등록된 규칙 수가 0건일 때 규칙 목록 영역이 조건부로 렌더링되지 않는다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 조건식 sorted.length > 0<br>⚠️ 확인 필요.01: 규칙 0건일 때 별도 빈 상태 문구·추가 버튼 노출이 필요한지 기획 확인 필요 |
+| DS-09108 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Invisible | -미구현.01: 규칙이 0건일 때 "등록된 알림 규칙이 없어요" 등 전용 빈 상태 안내 문구나 규칙 추가를 유도하는 버튼이 화면에 없다 | - |
 
 ## NTF-003_notifications-settings-new_Default — 규칙 폼(추가) · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-0905 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Visible | -구성.01: 화면은 상단 헤더("알림 추가"), 조건 요약 카드(품종·품목·시장·법인·단위·현재가), 목표가 알림·등락률 알림·거래량 알림·경매 알림 4개 섹션, 하단 고정 저장 버튼으로 구성된다<br>-입력.01: 목표가 이상/이하를 각각 숫자로 입력할 수 있으며 숫자 이외 문자는 입력되지 않는다<br>-입력.02: 등락률 상승/하락 알림을 각각 온오프 스위치로 켜고 끌 수 있으며 라벨에 임계값이 함께 표시된다(기본 5%)<br>-입력.03: 거래량 급증 알림을 온오프 스위치로 켜고 끌 수 있으며 라벨에 임계값이 함께 표시된다(기본 30%)<br>-입력.04: 경매 시작 알림을 온오프 스위치로 켜고 끌 수 있으며 "{시장} {품종} 첫 경매 체결 시 하루 한 번 알림" 설명 문구가 표시된다<br>-버튼.01: 하단 고정 영역에 전체 너비의 "알림 추가" 저장 버튼이 표시된다<br>-표시.01: 조건 요약 카드 우측에 해당 조건의 현재가가 원 단위로 표시된다 | Route: /notifications/settings/new<br>File: src/routes/notifications.settings.new.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 공용 컴포넌트 RuleForm(src/components/notifications/RuleForm.tsx)<br>기술근거.02: 현재가는 getMarketQuote(src/lib/mock/market-analysis.ts) 결과 사용 |
-| DS-0905 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -진입조건.01: /notifications/settings/new 경로에 접근하며 검색 파라미터로 품종ID·시장ID를 선택적으로 전달할 수 있다<br>-초기값.01: 화면 초기 조건 값은 1) URL 검색 파라미터, 2) 작물 선택 상태, 3) 전역 시세 필터 순서로 우선순위를 정해 결정한다<br>-초기값.02: 동일한 품종·시장 조합의 규칙이 이미 있으면 그 규칙의 기존 값(목표가·등락·거래량·경매 설정)을 기본값으로 사용한다<br>-계산.01: 조건 요약 카드의 현재가는 선택된 품목·품종·시장·단위·오늘 날짜 조건으로 계산된 값을 표시한다<br>-검증.01: 목표가 입력값은 숫자만 입력되도록 필터링된다<br>-저장.01: 저장 버튼을 클릭하면 새 알림 규칙이 생성되며, 식별자는 자동 생성되고 순서값은 마지막 순번+1, 생성 시각은 현재 시각으로 저장된다<br>-성공.01: 저장에 성공하면 "알림을 저장했어요" 완료 안내 문구가 표시된 뒤 알림 규칙 목록 화면으로 이동한다<br>-미구현.01: 목표가 이상 값과 이하 값의 대소 관계 등에 대한 입력 유효성 검증이 없다<br>-미구현.02: 품목 식별값(itemId)은 초기값 계산 로직에는 존재하나 규칙 저장 항목에 필드가 없어 실제로 저장되지 않는다 | Route: /notifications/settings/new<br>File: src/routes/notifications.settings.new.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: seed 우선순위 qVariety/qMarket → useCropSelection().committed → useMarketFilter, existingByKey로 기존 규칙 조회<br>기술근거.02: 현재가 계산은 getMarketQuote({itemId, varietyId, marketId, unit, date})<br>기술근거.03: 목표가 입력 필터 정규식 replace(/[^0-9]/g, "")<br>기술근거.04: 저장은 upsert(rule) 호출, 완료 후 navigate({ to: "/notifications/settings" })<br>⚠️ 확인 필요.01: 목표가 이상/이하 값의 대소 관계 등 입력 유효성 검증 요구사항 확인 필요 |
-| DS-0905 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Tracking | -이벤트.01: 저장 버튼 클릭 시 upsert 함수가 호출되어 새 규칙이 생성된다<br>-이벤트.02: 화면 진입 시 getMarketQuote 함수가 호출되어 현재가가 조회된다<br>-조건.01: upsert는 저장 버튼 클릭 시, getMarketQuote는 화면 렌더링 시 호출된다 | Route: /notifications/settings/new<br>File: src/routes/notifications.settings.new.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 완료 안내는 toast.success("알림을 저장했어요") 호출이며 로깅 목적이 아닌 사용자 피드백 UI임 |
-| DS-0905 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -배경색.01: 조건 요약 카드 배경 흰색(#FFFFFF)<br>-배경색.02: 섹션 카드 배경 흰색(#FFFFFF)<br>-배경색.03: 하단 고정 바 배경 흰색(#FFFFFF)<br>-배경색.04: 저장 버튼 배경 초록(#3A8A3A), 누를 때 배경 진한 초록(#2F6F2F)<br>-배경색.05: 삭제 버튼(수정 화면) 배경 흰색, 누를 때 배경 연한 빨강(#FFF5F5)<br>-글자색.01: 조건 요약 품종명 글자색 짙은 회색(#212529)<br>-글자색.02: 조건 요약 품목명 글자색 회색(#868E96)<br>-글자색.03: 조건 요약 부가정보 글자색 회색(#6C757D)<br>-글자색.04: 현재가 라벨 글자색 회색(#868E96), 현재가 값 글자색 빨강(#E03131)<br>-글자색.05: 섹션 타이틀 글자색 짙은 회색(#212529)<br>-글자색.06: 입력 필드 라벨 글자색 진한 회색(#495057)<br>-글자색.07: 저장 버튼 글자색 흰색(#FFFFFF)<br>-글자크기.01: 조건 요약 품종명 15px<br>-글자크기.02: 현재가 값 16px<br>-글자크기.03: 섹션 타이틀 13.5px<br>-글자크기.04: 입력 필드 라벨 13px<br>-글자크기.05: 저장 버튼 14px<br>-테두리.01: 조건 요약 카드 테두리 1px 실선, 연한 회색(#E9ECEF)<br>-테두리.02: 섹션 카드 테두리 1px 실선, 연한 회색(#E9ECEF)<br>-테두리.03: 삭제 버튼 테두리 1px 실선, 빨강(#E03131)<br>-테두리.04: 하단 고정 바 상단 테두리 1px 실선, 연한 회색(#E9ECEF)<br>-모서리.01: 조건 요약·섹션 카드 모서리 12px 둥글게 처리한다<br>-모서리.02: 저장·삭제 버튼 모서리 10px 둥글게 처리한다<br>-안쪽여백.01: 조건 요약·섹션 카드 안쪽 여백 16px<br>-안쪽여백.02: 입력 필드 행 좌우 16px, 상하 14px<br>-바깥여백.01: 섹션 카드 좌우 바깥 여백 16px<br>-너비.01: 하단 고정 바 최대 너비 430px이며 화면 중앙에 정렬된다<br>-쌓임순서.01: 하단 고정 바는 화면 최하단에 고정되며 다른 요소보다 위에 표시된다 | Route: /notifications/settings/new<br>File: src/routes/notifications.settings.new.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: RuleForm, DetailHeader, Switch 컴포넌트 사용<br>기술근거.02: 하단 고정 바 클래스 fixed inset-x-0 bottom-0 z-30 max-w-[430px] |
+| DS-09109 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Visible | -구성.01: 화면은 상단 헤더("알림 추가"), 조건 요약 카드(품종·품목·시장·법인·단위·현재가), 목표가 알림·등락률 알림·거래량 알림·경매 알림 4개 섹션, 하단 고정 저장 버튼으로 구성된다 | Route: /notifications/settings/new<br>File: src/routes/notifications.settings.new.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 공용 컴포넌트 RuleForm(src/components/notifications/RuleForm.tsx)<br>기술근거.02: 현재가는 getMarketQuote(src/lib/mock/market-analysis.ts) 결과 사용 |
+| DS-09110 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Visible | -입력.01: 목표가 이상/이하를 각각 숫자로 입력할 수 있으며 숫자 이외 문자는 입력되지 않는다 | - |
+| DS-09111 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Visible | -입력.02: 등락률 상승/하락 알림을 각각 온오프 스위치로 켜고 끌 수 있으며 라벨에 임계값이 함께 표시된다(기본 5%) | - |
+| DS-09112 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Visible | -입력.03: 거래량 급증 알림을 온오프 스위치로 켜고 끌 수 있으며 라벨에 임계값이 함께 표시된다(기본 30%) | - |
+| DS-09113 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Visible | -입력.04: 경매 시작 알림을 온오프 스위치로 켜고 끌 수 있으며 "{시장} {품종} 첫 경매 체결 시 하루 한 번 알림" 설명 문구가 표시된다 | - |
+| DS-09114 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Visible | -버튼.01: 하단 고정 영역에 전체 너비의 "알림 추가" 저장 버튼이 표시된다 | - |
+| DS-09115 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Visible | -표시.01: 조건 요약 카드 우측에 해당 조건의 현재가가 원 단위로 표시된다 | - |
+| DS-09116 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -진입조건.01: /notifications/settings/new 경로에 접근하며 검색 파라미터로 품종ID·시장ID를 선택적으로 전달할 수 있다 | Route: /notifications/settings/new<br>File: src/routes/notifications.settings.new.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: seed 우선순위 qVariety/qMarket → useCropSelection().committed → useMarketFilter, existingByKey로 기존 규칙 조회<br>기술근거.02: 현재가 계산은 getMarketQuote({itemId, varietyId, marketId, unit, date})<br>기술근거.03: 목표가 입력 필터 정규식 replace(/[^0-9]/g, "")<br>기술근거.04: 저장은 upsert(rule) 호출, 완료 후 navigate({ to: "/notifications/settings" })<br>⚠️ 확인 필요.01: 목표가 이상/이하 값의 대소 관계 등 입력 유효성 검증 요구사항 확인 필요 |
+| DS-09117 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -초기값.01: 화면 초기 조건 값은 1) URL 검색 파라미터, 2) 작물 선택 상태, 3) 전역 시세 필터 순서로 우선순위를 정해 결정한다 | - |
+| DS-09118 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -초기값.02: 동일한 품종·시장 조합의 규칙이 이미 있으면 그 규칙의 기존 값(목표가·등락·거래량·경매 설정)을 기본값으로 사용한다 | - |
+| DS-09119 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -계산.01: 조건 요약 카드의 현재가는 선택된 품목·품종·시장·단위·오늘 날짜 조건으로 계산된 값을 표시한다 | - |
+| DS-09120 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -검증.01: 목표가 입력값은 숫자만 입력되도록 필터링된다 | - |
+| DS-09121 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -저장.01: 저장 버튼을 클릭하면 새 알림 규칙이 생성되며, 식별자는 자동 생성되고 순서값은 마지막 순번+1, 생성 시각은 현재 시각으로 저장된다 | - |
+| DS-09122 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -성공.01: 저장에 성공하면 "알림을 저장했어요" 완료 안내 문구가 표시된 뒤 알림 규칙 목록 화면으로 이동한다 | - |
+| DS-09123 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -미구현.01: 목표가 이상 값과 이하 값의 대소 관계 등에 대한 입력 유효성 검증이 없다 | - |
+| DS-09124 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Invisible | -미구현.02: 품목 식별값(itemId)은 초기값 계산 로직에는 존재하나 규칙 저장 항목에 필드가 없어 실제로 저장되지 않는다 | - |
+| DS-09125 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Tracking | -이벤트.01: 저장 버튼 클릭 시 upsert 함수가 호출되어 새 규칙이 생성된다 | Route: /notifications/settings/new<br>File: src/routes/notifications.settings.new.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 완료 안내는 toast.success("알림을 저장했어요") 호출이며 로깅 목적이 아닌 사용자 피드백 UI임 |
+| DS-09126 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Tracking | -이벤트.02: 화면 진입 시 getMarketQuote 함수가 호출되어 현재가가 조회된다 | - |
+| DS-09127 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Tracking | -조건.01: upsert는 저장 버튼 클릭 시, getMarketQuote는 화면 렌더링 시 호출된다 | - |
+| DS-09128 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -배경색.01: 조건 요약 카드 배경 흰색(#FFFFFF) | Route: /notifications/settings/new<br>File: src/routes/notifications.settings.new.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: RuleForm, DetailHeader, Switch 컴포넌트 사용<br>기술근거.02: 하단 고정 바 클래스 fixed inset-x-0 bottom-0 z-30 max-w-[430px] |
+| DS-09129 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -배경색.02: 섹션 카드 배경 흰색(#FFFFFF) | - |
+| DS-09130 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -배경색.03: 하단 고정 바 배경 흰색(#FFFFFF) | - |
+| DS-09131 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -배경색.04: 저장 버튼 배경 초록(#3A8A3A), 누를 때 배경 진한 초록(#2F6F2F) | - |
+| DS-09132 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -배경색.05: 삭제 버튼(수정 화면) 배경 흰색, 누를 때 배경 연한 빨강(#FFF5F5) | - |
+| DS-09133 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자색.01: 조건 요약 품종명 글자색 짙은 회색(#212529) | - |
+| DS-09134 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자색.02: 조건 요약 품목명 글자색 회색(#868E96) | - |
+| DS-09135 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자색.03: 조건 요약 부가정보 글자색 회색(#6C757D) | - |
+| DS-09136 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자색.04: 현재가 라벨 글자색 회색(#868E96), 현재가 값 글자색 빨강(#E03131) | - |
+| DS-09137 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자색.05: 섹션 타이틀 글자색 짙은 회색(#212529) | - |
+| DS-09138 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자색.06: 입력 필드 라벨 글자색 진한 회색(#495057) | - |
+| DS-09139 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자색.07: 저장 버튼 글자색 흰색(#FFFFFF) | - |
+| DS-09140 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자크기.01: 조건 요약 품종명 15px | - |
+| DS-09141 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자크기.02: 현재가 값 16px | - |
+| DS-09142 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자크기.03: 섹션 타이틀 13.5px | - |
+| DS-09143 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자크기.04: 입력 필드 라벨 13px | - |
+| DS-09144 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -글자크기.05: 저장 버튼 14px | - |
+| DS-09145 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -테두리.01: 조건 요약 카드 테두리 1px 실선, 연한 회색(#E9ECEF) | - |
+| DS-09146 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -테두리.02: 섹션 카드 테두리 1px 실선, 연한 회색(#E9ECEF) | - |
+| DS-09147 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -테두리.03: 삭제 버튼 테두리 1px 실선, 빨강(#E03131) | - |
+| DS-09148 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -테두리.04: 하단 고정 바 상단 테두리 1px 실선, 연한 회색(#E9ECEF) | - |
+| DS-09149 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -모서리.01: 조건 요약·섹션 카드 모서리 12px 둥글게 처리한다 | - |
+| DS-09150 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -모서리.02: 저장·삭제 버튼 모서리 10px 둥글게 처리한다 | - |
+| DS-09151 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -안쪽여백.01: 조건 요약·섹션 카드 안쪽 여백 16px | - |
+| DS-09152 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -안쪽여백.02: 입력 필드 행 좌우 16px, 상하 14px | - |
+| DS-09153 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -바깥여백.01: 섹션 카드 좌우 바깥 여백 16px | - |
+| DS-09154 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -너비.01: 하단 고정 바 최대 너비 430px이며 화면 중앙에 정렬된다 | - |
+| DS-09155 | 규칙 폼 | NTF-003_notifications-settings-new_Default | Design | -쌓임순서.01: 하단 고정 바는 화면 최하단에 고정되며 다른 요소보다 위에 표시된다 | - |
 
 ## NTF-004_notifications-settings-id_Default — 규칙 폼(수정) · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-0906 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Visible | -구성.01: NTF-003과 동일한 규칙 폼 구성을 사용하되 헤더 타이틀이 "알림 수정"으로 표시되고 하단 고정 바에 삭제 버튼이 추가로 표시된다<br>-버튼.01: 하단 고정 바 좌측에 테두리형 빨간색 "삭제" 버튼, 우측에 전체 너비를 채우는 "저장" 버튼이 표시된다 | Route: /notifications/settings/$ruleId<br>File: src/routes/notifications.settings.$ruleId.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 공용 컴포넌트 RuleForm(src/components/notifications/RuleForm.tsx) 재사용 |
-| DS-0906 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Invisible | -진입조건.01: /notifications/settings/$ruleId 경로에 접근하면 경로 파라미터의 규칙 식별자로 해당 알림 규칙을 조회한다<br>-분기.01: 해당 식별자의 규칙이 존재하지 않으면 화면 진입 즉시 알림 규칙 목록 화면으로 이동한다<br>-초기값.01: 화면 초기 값은 조회된 규칙의 모든 항목 값을 그대로 사용한다<br>-저장.01: 저장 버튼을 클릭하면 기존 규칙을 입력값으로 갱신하며 순서값과 생성 시각은 그대로 유지한다<br>-저장.02: 삭제 버튼을 클릭하면 규칙을 삭제하고 "알림을 삭제했어요" 완료 안내 문구를 표시한 뒤 알림 규칙 목록 화면으로 이동한다<br>-성공.01: 저장에 성공하면 "알림을 저장했어요" 완료 안내 문구가 표시된 뒤 알림 규칙 목록 화면으로 이동한다 | Route: /notifications/settings/$ruleId<br>File: src/routes/notifications.settings.$ruleId.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 규칙 미존재 시 useEffect에서 navigate({ to: "/notifications/settings" }) 호출<br>기술근거.02: 저장은 upsert({ id: ruleId, ...seed, 입력값 }), 삭제는 remove(ruleId) 호출 |
-| DS-0906 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Tracking | -이벤트.01: 저장 버튼 클릭 시 upsert 함수가 호출되어 규칙이 수정된다<br>-이벤트.02: 삭제 버튼 클릭 시 remove 함수가 호출되어 규칙이 삭제된다<br>-조건.01: upsert는 저장 버튼 클릭 시, remove는 삭제 버튼 클릭 시 호출된다 | Route: /notifications/settings/$ruleId<br>File: src/routes/notifications.settings.$ruleId.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 별도 분석 로깅 코드 없음, toast는 사용자 피드백용 UI 표시 |
-| DS-0906 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -배경색.01: 삭제 버튼 배경 흰색(#FFFFFF), 누를 때 배경 연한 빨강(#FFF5F5)<br>-글자색.01: 삭제 버튼 글자색 빨강(#E03131)<br>-글자크기.01: 삭제 버튼 14px<br>-글자굵기.01: 삭제 버튼은 굵게(700) 표시된다<br>-테두리.01: 삭제 버튼 테두리 1px 실선, 빨강(#E03131)<br>-모서리.01: 삭제 버튼 모서리 10px 둥글게 처리한다<br>-안쪽여백.01: 삭제 버튼 좌우 20px, 상하 12px<br>-요소간격.01: 삭제 버튼과 저장 버튼 사이 간격 8px<br>-비고.01: 그 외 시각 속성은 NTF-003_notifications-settings-new_Default와 동일하다 | Route: /notifications/settings/$ruleId<br>File: src/routes/notifications.settings.$ruleId.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: RuleForm 공용 컴포넌트(NTF-003과 동일 파일) |
+| DS-09156 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Visible | -구성.01: NTF-003과 동일한 규칙 폼 구성을 사용하되 헤더 타이틀이 "알림 수정"으로 표시되고 하단 고정 바에 삭제 버튼이 추가로 표시된다 | Route: /notifications/settings/$ruleId<br>File: src/routes/notifications.settings.$ruleId.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 공용 컴포넌트 RuleForm(src/components/notifications/RuleForm.tsx) 재사용 |
+| DS-09157 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Visible | -버튼.01: 하단 고정 바 좌측에 테두리형 빨간색 "삭제" 버튼, 우측에 전체 너비를 채우는 "저장" 버튼이 표시된다 | - |
+| DS-09158 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Invisible | -진입조건.01: /notifications/settings/$ruleId 경로에 접근하면 경로 파라미터의 규칙 식별자로 해당 알림 규칙을 조회한다 | Route: /notifications/settings/$ruleId<br>File: src/routes/notifications.settings.$ruleId.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 규칙 미존재 시 useEffect에서 navigate({ to: "/notifications/settings" }) 호출<br>기술근거.02: 저장은 upsert({ id: ruleId, ...seed, 입력값 }), 삭제는 remove(ruleId) 호출 |
+| DS-09159 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Invisible | -분기.01: 해당 식별자의 규칙이 존재하지 않으면 화면 진입 즉시 알림 규칙 목록 화면으로 이동한다 | - |
+| DS-09160 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Invisible | -초기값.01: 화면 초기 값은 조회된 규칙의 모든 항목 값을 그대로 사용한다 | - |
+| DS-09161 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Invisible | -저장.01: 저장 버튼을 클릭하면 기존 규칙을 입력값으로 갱신하며 순서값과 생성 시각은 그대로 유지한다 | - |
+| DS-09162 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Invisible | -저장.02: 삭제 버튼을 클릭하면 규칙을 삭제하고 "알림을 삭제했어요" 완료 안내 문구를 표시한 뒤 알림 규칙 목록 화면으로 이동한다 | - |
+| DS-09163 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Invisible | -성공.01: 저장에 성공하면 "알림을 저장했어요" 완료 안내 문구가 표시된 뒤 알림 규칙 목록 화면으로 이동한다 | - |
+| DS-09164 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Tracking | -이벤트.01: 저장 버튼 클릭 시 upsert 함수가 호출되어 규칙이 수정된다 | Route: /notifications/settings/$ruleId<br>File: src/routes/notifications.settings.$ruleId.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 별도 분석 로깅 코드 없음, toast는 사용자 피드백용 UI 표시 |
+| DS-09165 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Tracking | -이벤트.02: 삭제 버튼 클릭 시 remove 함수가 호출되어 규칙이 삭제된다 | - |
+| DS-09166 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Tracking | -조건.01: upsert는 저장 버튼 클릭 시, remove는 삭제 버튼 클릭 시 호출된다 | - |
+| DS-09167 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -배경색.01: 삭제 버튼 배경 흰색(#FFFFFF), 누를 때 배경 연한 빨강(#FFF5F5) | Route: /notifications/settings/$ruleId<br>File: src/routes/notifications.settings.$ruleId.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: RuleForm 공용 컴포넌트(NTF-003과 동일 파일) |
+| DS-09168 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -글자색.01: 삭제 버튼 글자색 빨강(#E03131) | - |
+| DS-09169 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -글자크기.01: 삭제 버튼 14px | - |
+| DS-09170 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -글자굵기.01: 삭제 버튼은 굵게(700) 표시된다 | - |
+| DS-09171 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -테두리.01: 삭제 버튼 테두리 1px 실선, 빨강(#E03131) | - |
+| DS-09172 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -모서리.01: 삭제 버튼 모서리 10px 둥글게 처리한다 | - |
+| DS-09173 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -안쪽여백.01: 삭제 버튼 좌우 20px, 상하 12px | - |
+| DS-09174 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -요소간격.01: 삭제 버튼과 저장 버튼 사이 간격 8px | - |
+| DS-09175 | 규칙 폼 | NTF-004_notifications-settings-id_Default | Design | -비고.01: 그 외 시각 속성은 NTF-003_notifications-settings-new_Default와 동일하다 | - |
 
 ## 분석 파일
 - src/routes/notifications.index.tsx
