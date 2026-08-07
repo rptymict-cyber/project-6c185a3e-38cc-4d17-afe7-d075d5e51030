@@ -16,7 +16,7 @@
 | DS-0106 | 홈 대시보드 | HOM-001_root_Default | Visible | -문구.02: 실시간 시세 섹션 제목 "실시간 시세", 더보기 버튼 문구 "더보기 ›". | - |
 | DS-0107 | 홈 대시보드 | HOM-001_root_Default | Visible | -문구.03: 농업 뉴스 섹션 제목 "농업 뉴스", 더보기 링크 문구 "더보기". | - |
 | DS-0108 | 홈 대시보드 | HOM-001_root_Default | Visible | -문구.04: 빠른 조회 섹션 제목 "빠른 조회", 카드1 상단문구 "원하는 품목의 가격을 확인하세요"/제목 "품목별 조회", 카드2 상단문구 "전국 도매시장 시세를 확인하세요"/제목 "도매시장별 조회". | - |
-| DS-0109 | 홈 대시보드 | HOM-001_root_Default | Visible | -문구.05: 데이터 출처 안내 "기준일 2026.07.03 | - |
+| DS-0109 | 홈 대시보드 | HOM-001_root_Default | Visible | -문구.05: 데이터 출처 안내 문구 "기준일 2026.07.03 \| 단위 원/kg \| 출처 KAMIS / aT \| 14:30 업데이트", 하단 보조문구 "kg 환산 가격은 제공 데이터 기준이며, 일부 품목은 원 단위로 표시될 수 있습니다.". | - |
 | DS-0110 | 홈 대시보드 | HOM-001_root_Default | Invisible | -데이터.01: 실시간 시세 목록은 하드코딩된 20건 배열을 정렬·상위 노출한 결과이며 정렬·개수 값만 파라미터로 받는다. | Route: /<br>File: src/routes/index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: getLivePrices()의 POOL 하드코딩 배열(src/lib/services/live-prices.ts)<br>기술근거.02: PredictableCropCards.tsx HOME_PRICE 상수<br>기술근거.03: MOCK_WEATHER(src/lib/mock/weather.ts), mockAgriNews(src/lib/mock/agri-news.ts)<br>기술근거.04: useLocation((s)=>s.granted) 상태값(src/store/location.ts)에 따른 HomeWeatherBar.tsx 3분기 렌더<br>⚠️ 확인 필요.01: src/store/location.ts 기본값이 granted:true로 고정되어 있어(주석: "mock 단계에서는 위치 좌표를 사용하지 않으므로 기본값을 허용 상태로 두어…") 위치 권한 거부·보류 분기가 실제 서비스 흐름에서 언제 트리거되는지 코드만으로 확인 불가. |
 | DS-0111 | 홈 대시보드 | HOM-001_root_Default | Invisible | -데이터.02: AI 예측 카드의 가격·등락률은 5개 품목에 대해 화면 코드 내에 고정 기재된 값이다. | - |
 | DS-0112 | 홈 대시보드 | HOM-001_root_Default | Invisible | -데이터.03: 날씨 배너에 표시되는 지역·기온·날씨 상태는 고정된 목업 값이다. | - |
@@ -66,9 +66,9 @@
 |---|---|---|---|---|---|
 | DS-0152 | 홈 대시보드 | HOM-001_root_Empty | Visible | -정의.01: 위치 권한이 거부된 경우 날씨 배너 자리에 대신 노출되는 대체 안내 카드. | Route: /<br>File: src/components/home/HomeWeatherBar.tsx<br>Baseline: 2026-08-05 코드 기준 |
 | DS-0153 | 홈 대시보드 | HOM-001_root_Empty | Visible | -표시.01: 점선 테두리 카드에 지도핀 아이콘, 안내 문구 "위치를 허용하면 날씨를 볼 수 있어요", 우측 버튼 문구 "설정 ›". | - |
-| DS-0154 | 홈 대시보드 | HOM-001_root_Empty | Invisible | -조건.01: 위치 권한 상태가 "거부"일 때만 이 화면 노출. | Route: /<br>File: src/components/home/HomeWeatherBar.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: useLocation().granted===false 분기, request() 호출 시 navigator.geolocation.getCurrentPosition 실패 처리(src/store/location.ts)<br>⚠️ 확인 필요.01: src/store/location.ts 기본값(granted:true) 정책상 이 빈 상태의 실 서비스 진입 경로를 코드만으로 확인 불가. |
-| DS-0155 | 홈 대시보드 | HOM-001_root_Empty | Invisible | -액션.01: 안내 카드 클릭 시 위치 권한을 다시 요청하며, 위치 확인 성공 시 날씨 배너로 전환되고 실패 시 이 빈 상태를 유지한다. | - |
-| DS-0156 | 홈 대시보드 | HOM-001_root_Empty | Invisible | -미구현.01: 위치 권한 저장 값 기본값이 "허용"으로 고정되어 있어, 실제로는 권한 재요청 후 위치 확인이 실패한 경우에만 이 빈 상태에 도달한다. | - |
+| DS-0154 | 홈 대시보드 | HOM-001_root_Empty | Invisible | -조건.01: 위치 권한 상태 값이 "거부"일 때만 이 화면 노출. | Route: /<br>File: src/components/home/HomeWeatherBar.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: useLocation((s)=>s.granted)===false 분기(src/components/home/HomeWeatherBar.tsx)<br>기술근거.02: 위치 권한 상태 저장소 초기값 granted:true, requested:true(src/store/location.ts)이며 setGranted를 호출하는 코드가 프로젝트 전체에 없음(grep 결과 정의부 외 호출 0건)<br>⚠️ 확인 필요.01: 현재 코드에서는 이 조건이 런타임에 성립할 경로가 없어(아래 DS-0156 참고) 이 빈 상태가 실제로 노출되는 경우를 코드만으로 확인 불가. |
+| DS-0155 | 홈 대시보드 | HOM-001_root_Empty | Invisible | -액션.01: 안내 카드 클릭 시 위치 권한 재요청 함수를 호출한다. | Route: /<br>File: src/components/home/HomeWeatherBar.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: onClick={() => request()}(src/components/home/HomeWeatherBar.tsx) |
+| DS-0156 | 홈 대시보드 | HOM-001_root_Empty | Invisible | -미구현.01: 위치 권한 재요청 함수는 저장소의 요청 여부 값이 이미 참(true)으로 고정되어 있어 호출 시 곧바로 종료되며, 위치 확인을 다시 시도하지 않는다. 앱 진입 시 루트 화면에서도 같은 함수가 한 번 호출되지만 같은 이유로 아무 동작도 일어나지 않는다. 이 때문에 현재 코드에서는 위치 권한이 항상 허용 상태로 유지되어 이 빈 상태 화면에 도달할 방법이 없다. | Route: /<br>File: src/store/location.ts, src/routes/__root.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: request() 내부 `if (get().requested) return;`(src/store/location.ts)<br>기술근거.02: requested 초기값 true(src/store/location.ts)<br>기술근거.03: 앱 진입 시 useLocation.getState().request() 1회 호출(src/routes/__root.tsx) |
 | DS-0157 | 홈 대시보드 | HOM-001_root_Empty | Design | -배경색.01: 대체 카드 배경 연회색(#FAFAFA), 테두리 1px 점선 연회색(#E9ECEF). | Route: /<br>File: src/components/home/HomeWeatherBar.tsx<br>Baseline: 2026-08-05 코드 기준 |
 | DS-0158 | 홈 대시보드 | HOM-001_root_Empty | Design | -글자색.01: 안내 문구 회색(#6C757D), 우측 "설정 ›" 문구 진회색(#495057). | - |
 | DS-0159 | 홈 대시보드 | HOM-001_root_Empty | Design | -글자크기.01: 안내 문구 12.5px, 우측 버튼 문구 11.5px(중간 굵게 600). | - |
@@ -77,7 +77,7 @@
 | DS-0162 | 홈 대시보드 | HOM-001_root_Empty | Design | -요소간격.01: 아이콘·문구·버튼 사이 간격 8px. | - |
 | DS-0163 | 홈 대시보드 | HOM-001_root_Empty | Design | -아이콘크기.01: 지도핀 아이콘 16px×16px, 색상 회색(#6C757D). | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## 분석 파일
 
@@ -104,5 +104,5 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 ## 미구현·확인필요 요약
 
-- 미구현 5건: AI 예측 카드 가격 값 화면 전용 고정 기재(DS-0101), 날씨 배너 외부 서비스 미연동(DS-0101), 실시간 시세·농업 뉴스 데이터 미연동(DS-0101), 헤더 하단 고정 안내 문구 값 고정(DS-0101), 위치 권한 거부 빈 상태 도달 조건 특이사항(DS-0102).
-- 확인필요 2건: 위치 권한 기본값이 "허용"으로 고정되어 있어 빈 상태 실사용 트리거 조건을 코드만으로 확인 불가(DS-0101, DS-0102).
+- 미구현 5건: AI 예측 카드 가격 값 화면 전용 고정 기재(DS-0125), 날씨 배너 외부 서비스 미연동(DS-0126), 실시간 시세·농업 뉴스 데이터 미연동(DS-0127), 헤더 하단 고정 안내 문구 값 고정(DS-0128), 위치 권한 재요청 함수가 항상 조기 종료되어 빈 상태에 도달할 방법이 없음(DS-0156).
+- 확인필요 1건: 위 미구현(DS-0156)으로 인해 위치 권한 거부 빈 상태가 실제로 노출되는 경우를 코드만으로 확인 불가(DS-0154).

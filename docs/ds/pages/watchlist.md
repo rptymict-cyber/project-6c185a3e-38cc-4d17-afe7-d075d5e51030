@@ -111,7 +111,7 @@
 | DS-0491 | 즐겨찾기 추가 | FAV-002_watchlist-add_Default | Design | -높이.01: 하단 저장 버튼 높이 48px, 모서리 둥글기 12px | - |
 | DS-0492 | 즐겨찾기 추가 | FAV-002_watchlist-add_Default | Design | -너비높이.02: 작물·시장 아이콘 24px, 아이콘 배경 40px 사각형(모서리 둥글기 있음, 원형 아님) 배경색 연회색(#F8F9FA) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에 있는 Section명 · Screen ID 셀은 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## 분석 파일
 - src/routes/watchlist.index.tsx
@@ -126,5 +126,5 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 - src/styles.css
 
 ## 미구현·확인필요 요약
-- 미구현: 3건 (FAV-001 트래킹 부재, FAV-002 예측 가능 여부 미반영, FAV-002 트래킹 부재)
-- ⚠️ 확인 필요: 2건 (FAV-001 트래킹 로깅 여부, FAV-001 빈 상태와 검색결과 없음 상태 구분 여부)
+- 미구현: 3건 (FAV-001 트래킹 부재 DS-0426, FAV-002 예측 가능 여부 항상 false로 저장 DS-0481, FAV-002 트래킹 부재 DS-0482)
+- ⚠️ 확인 필요: 1건 (FAV-001 빈 상태와 검색결과 없음 상태를 같은 화면 상태값으로 취급하는지, 구분해야 하는지 기획 의도 확인 필요 DS-0455, DS-0456)

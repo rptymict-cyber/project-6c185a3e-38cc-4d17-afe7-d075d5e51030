@@ -226,7 +226,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 | DS-11159 | 검색 결과 | SRC-001_search_Default | Visible | -검색.02: 입력값이 있을 때 시장명 또는 지역명에 일치하는 시장 결과를 최대 20건 표시(제목 "시장 (N)") | - |
 | DS-11160 | 검색 결과 | SRC-001_search_Default | Visible | -목록항목.03: 작물 결과 행에 아이콘, 이름(검색어 하이라이트), 부류 배지, 현재가, 단위, 등락률 배지를 표시 | - |
 | DS-11161 | 검색 결과 | SRC-001_search_Default | Visible | -목록항목.04: 시장 결과 행에 아이콘, 시장명(검색어 하이라이트), 지역명을 표시 | - |
-| DS-11162 | 검색 결과 | SRC-001_search_Default | Invisible | -진입조건.01: 화면 진입 시 검색 입력창에 자동 포커스되고 localStorage(agdict.recentSearches)의 최근 검색어를 불러온다 | Registry: docs/ds/screen-registry.json<br>Route: /search<br>File: src/routes/search.tsx<br>Baseline: 2026-08-05 코드 기준<br>Source: src/lib/mock/crops.ts, src/lib/mock/markets.ts<br>⚠️ 확인 필요: CROPS/MARKETS가 목데이터로, 실제 API 연동 여부 확인 필요 |
+| DS-11162 | 검색 결과 | SRC-001_search_Default | Invisible | -진입조건.01: 화면 진입 시 검색 입력창에 자동 포커스되고 localStorage(agdict.recentSearches)의 최근 검색어를 불러온다 | Registry: docs/ds/screen-registry.json<br>Route: /search<br>File: src/routes/search.tsx<br>Baseline: 2026-08-05 코드 기준<br>Source: src/lib/mock/crops.ts, src/lib/mock/markets.ts<br>⚠️ 확인 필요.01: CROPS/MARKETS가 목데이터로, 실제 API 연동 여부 확인 필요 |
 | DS-11163 | 검색 결과 | SRC-001_search_Default | Invisible | -데이터소스.01: 작물 목록은 src/lib/mock/crops의 CROPS, 시장 목록은 src/lib/mock/markets의 MARKETS | - |
 | DS-11164 | 검색 결과 | SRC-001_search_Default | Invisible | -검증.01: 검색어는 소문자로 변환 후 부분일치로 필터링한다 | - |
 | DS-11165 | 검색 결과 | SRC-001_search_Default | Invisible | -저장.01: 작물 행 클릭 또는 Enter 입력 시 검색어를 최근 검색어 목록 최상단에 추가하고 localStorage에 저장한다(최대 10건 유지) | - |

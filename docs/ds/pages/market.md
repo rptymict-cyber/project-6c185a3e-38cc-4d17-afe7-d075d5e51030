@@ -16,7 +16,7 @@
 | DS-0206 | 시세 조회 메인 | MKT-001_market_Default | Visible | -구성.06: 분석 섹션 탭 6종 "차트/경매내역/시장비교/법인/산지/품종" | - |
 | DS-0207 | 시세 조회 메인 | MKT-001_market_Default | Visible | -구성.07: 차트 탭 기간 필터 5종 "당일/1주/1개월/3개월/1년", 최고가/최저가/평균가 3셀, 범례 | - |
 | DS-0208 | 시세 조회 메인 | MKT-001_market_Default | Visible | -문구.01: AI 예측 배너 문구 "{추천월}월 {추천일}일 출하를 추천해요", 하단 "AI 예측 보기" 버튼 | - |
-| DS-0209 | 시세 조회 메인 | MKT-001_market_Default | Visible | -문구.02: 차트 하단 안내 문구 "차트는 경매일 기준 · 오늘 이후 {7/30}일은 AI 예측입니다." 또는 "차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다." | - |
+| DS-0209 | 시세 조회 메인 | MKT-001_market_Default | Visible | -문구.02: 차트 하단 안내 문구 — AI 예측 표시 중일 때 "차트는 경매일 기준 · 오늘 이후 {7/30}일은 AI 예측입니다.", 기간이 "당일"이고 조회일이 오늘일 때 "오늘 시간대별 경매 데이터를 제공합니다.", 기간이 "당일"이고 조회일이 다른 날짜일 때 "{월}월 {일}일 시간대별 경매 데이터를 제공합니다.", 그 외에는 "차트는 경매일 기준이며, 선택한 기간의 데이터를 제공합니다." | Route: /market<br>File: src/routes/market.index.tsx<br>Baseline: 2026-08-07 코드 기준<br>기술근거.01: noticeText 분기(src/components/market-v2/ProAnalysisSection.tsx) |
 | DS-0210 | 시세 조회 메인 | MKT-001_market_Default | Invisible | -데이터소스.01: 헤드라인 시세는 getMarketQuote(itemId,varietyId,marketId,unit,date)로 조회한다 | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/routes/market.index.tsx<br>기술근거.01: src/store/market.ts(useMarketFilter), src/lib/mock/market-analysis.ts(getMarketQuote, getPriceVolumeSeries)<br>Baseline: 2026-08-05 코드 기준 |
 | DS-0211 | 시세 조회 메인 | MKT-001_market_Default | Invisible | -데이터소스.02: 차트·거래량 시계열은 getPriceVolumeSeries(...)로 조회한다 | - |
 | DS-0212 | 시세 조회 메인 | MKT-001_market_Default | Invisible | -데이터소스.03: 조건값은 useMarketFilter(zustand, persist key "agdict:marketFilter:v2")에 보관하며 date는 저장 대상에서 제외되어 세션마다 오늘 날짜로 초기화된다 | - |
@@ -39,7 +39,7 @@
 | DS-0229 | 시세 조회 메인 | MKT-001_market_Default | Design | -상태색.03: AI 예측 추천 카드 배경 초록 계열 그라데이션(#2E9E6B→#1F7A50), 글자 흰색 | - |
 | DS-0230 | 시세 조회 메인 | MKT-001_market_Default | Design | -글자크기.01: 품목·품종명 16px/900, 현재가 30px/900, 보조 문구 11~12px | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-002_market-id_Default — 시세 상세 · 기본 상태
 
@@ -68,23 +68,24 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-0251 | 시세 상세 | MKT-002_market-id_Default | Design | -글자크기.01: 현재가 32px/900(font-black) | - |
 | DS-0252 | 시세 상세 | MKT-002_market-id_Default | Design | -테두리.01: 통계 4열 상하 구분선 1px 옅은 회색(#E9ECEF) | - |
 | DS-0253 | 시세 상세 | MKT-002_market-id_Default | Design | -모서리.01: 등급 카드 모서리 반경 10px, 시세 테이블 모서리 반경 10px | - |
+| DS-02323 | 시세 상세 | MKT-002_market-id_Default | Design | -상태색.02: 등급별 가격·시세 테이블 등급 배지 색상 — 상 진초록(#3A8A3A)·배경 연한 초록(#F0F9F0), 중 회색(#6C757D)·배경 연회색(#F1F3F5), 하 파란색(#1971C2)·배경 연한 파란색(#EDF2FF) | Route: /market/$crop<br>File: src/routes/market.$crop.tsx<br>Baseline: 2026-08-07 코드 기준 |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-002_market-id_Empty — 시세 상세 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-0254 | 시세 상세(품목 없음) | MKT-002_market-id_Empty | Visible | -빈상태.01: 안내 문구 "품목을 찾을 수 없어요."가 화면 가운데 표시된다 | Registry: docs/ds/screen-registry.json<br>Route: /market/$crop<br>File: src/routes/market.$crop.tsx<br>Baseline: 2026-08-05 코드 기준 |
-| DS-0255 | 시세 상세(품목 없음) | MKT-002_market-id_Empty | Visible | -구성.01: 헤더 타이틀 "시세 상세"와 뒤로가기 버튼만 노출된다 | - |
-| DS-0256 | 시세 상세(품목 없음) | MKT-002_market-id_Empty | Invisible | -조건.01: 요청한 품목 id로 조회한 품목 정보가 없을 때 이 상태로 진입한다 | Registry: docs/ds/screen-registry.json<br>Route: /market/$crop<br>File: src/routes/market.$crop.tsx<br>⚠️ 확인 필요.01: 컴포넌트 내부 빈 상태 분기와 라우트의 notFoundComponent 분기 두 가지가 동시에 존재해 어느 조건에서 어느 쪽이 노출되는지 라우팅 정책 확인 필요<br>Baseline: 2026-08-05 코드 기준 |
-| DS-0257 | 시세 상세(품목 없음) | MKT-002_market-id_Empty | Invisible | -분기.01: 화면 상태값을 "빈 상태"로 설정한다 | - |
-| DS-0258 | 시세 상세(품목 없음) | MKT-002_market-id_Empty | Invisible | -예외.01: 라우트 자체의 경로 불일치(찾을 수 없음) 처리에서도 동일한 문구의 별도 안내가 한 번 더 제공된다 | - |
-| DS-0259 | 시세 상세(품목 없음) | MKT-002_market-id_Empty | Design | -배경색.01: 페이지 배경 흰색(#FFFFFF) | Registry: docs/ds/screen-registry.json<br>Route: /market/$crop<br>File: src/routes/market.$crop.tsx<br>기술근거.01: AppShell(screenId="MKT-002_시세상세", screenState="Empty")<br>Baseline: 2026-08-05 코드 기준 |
-| DS-0260 | 시세 상세(품목 없음) | MKT-002_market-id_Empty | Design | -글자색.01: 빈 상태 안내 문구 회색(#6C757D) | - |
-| DS-0261 | 시세 상세(품목 없음) | MKT-002_market-id_Empty | Design | -정렬.01: 안내 문구 가로 중앙 정렬 | - |
+| DS-0254 | 시세 상세 | MKT-002_market-id_Empty | Visible | -빈상태.01: 안내 문구 "품목을 찾을 수 없어요."가 화면 가운데 표시된다 | Registry: docs/ds/screen-registry.json<br>Route: /market/$crop<br>File: src/routes/market.$crop.tsx<br>Baseline: 2026-08-05 코드 기준 |
+| DS-0255 | 시세 상세 | MKT-002_market-id_Empty | Visible | -구성.01: 헤더 타이틀 "시세 상세"와 뒤로가기 버튼만 노출된다 | - |
+| DS-0256 | 시세 상세 | MKT-002_market-id_Empty | Invisible | -조건.01: 요청한 품목 id로 조회한 품목 정보가 없을 때 이 상태로 진입한다 | Registry: docs/ds/screen-registry.json<br>Route: /market/$crop<br>File: src/routes/market.$crop.tsx<br>⚠️ 확인 필요.01: 컴포넌트 내부 빈 상태 분기와 라우트의 notFoundComponent 분기 두 가지가 동시에 존재해 어느 조건에서 어느 쪽이 노출되는지 라우팅 정책 확인 필요<br>Baseline: 2026-08-05 코드 기준 |
+| DS-0257 | 시세 상세 | MKT-002_market-id_Empty | Invisible | -분기.01: 화면 상태값을 "빈 상태"로 설정한다 | - |
+| DS-0258 | 시세 상세 | MKT-002_market-id_Empty | Invisible | -예외.01: 라우트 자체의 경로 불일치(찾을 수 없음) 처리에서도 동일한 문구의 별도 안내가 한 번 더 제공된다 | - |
+| DS-0259 | 시세 상세 | MKT-002_market-id_Empty | Design | -배경색.01: 페이지 배경 흰색(#FFFFFF) | Registry: docs/ds/screen-registry.json<br>Route: /market/$crop<br>File: src/routes/market.$crop.tsx<br>기술근거.01: AppShell(screenId="MKT-002_시세상세", screenState="Empty")<br>Baseline: 2026-08-05 코드 기준 |
+| DS-0260 | 시세 상세 | MKT-002_market-id_Empty | Design | -글자색.01: 빈 상태 안내 문구 회색(#6C757D) | - |
+| DS-0261 | 시세 상세 | MKT-002_market-id_Empty | Design | -정렬.01: 안내 문구 가로 중앙 정렬 | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-003_market-item_Default — 품목 목록 · 기본 상태
 
@@ -107,7 +108,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-0276 | 품목 목록 | MKT-003_market-item_Default | Design | -배경색.02: 시트 내 선택된 품목 행 배경 연한 초록색(#F0F9F0) | - |
 | DS-0277 | 품목 목록 | MKT-003_market-item_Default | Design | -상태색.01: 등락률 상승 빨간색(#DC2626), 하락 파란색(#2563EB) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-004_market-item-id_Default — 품목 상세 · 기본 상태
 
@@ -127,7 +128,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-0289 | 품목 상세 | MKT-004_market-item-id_Default | Design | -배경색.02: 품목 칩 배경 연한 초록색(#F0F9F0), 글자 진초록색(#3A8A3A) | - |
 | DS-0290 | 품목 상세 | MKT-004_market-item-id_Default | Design | -글자색.01: 본문 텍스트 진회색(foreground), 보조 텍스트 회색(#6C757D) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-005_market-wholesale_Default — 도매시장 목록 · 기본 상태
 
@@ -148,7 +149,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02103 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -테두리.01: 목록 항목 상단 구분선 1px 옅은 회색(#F1F3F5) | - |
 | DS-02104 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -상태색.01: 등락률 상승 빨간색(#DC2626), 하락 파란색(#2563EB) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-006_market-wholesale-id_Default — 도매시장 상세 · 기본 상태
 
@@ -172,7 +173,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02120 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -테두리.01: 표 행 상하 구분선 1px 옅은 회색(#E9ECEF) | - |
 | DS-02121 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -배경색.03: 선택 시장 칩 배경 연한 초록색(#F0F9F0), 글자 진초록색(#3A8A3A) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-007_market-crop-tab-chart_Default — 차트 탭 · 기본 상태
 
@@ -195,7 +196,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02136 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Design | -테두리.01: 카드 테두리 1px 옅은 회색(#E9ECEF) | - |
 | DS-02137 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Design | -글자색.01: 안내 문구 회색(#6C757D) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-008_market-crop-tab-auction_Default — 경매내역 탭 · 기본 상태
 
@@ -212,7 +213,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02146 | 경매내역 탭 | MKT-008_market-crop-tab-auction_Default | Design | -테두리.01: 카드 테두리 1px 옅은 회색(#E9ECEF) | - |
 | DS-02147 | 경매내역 탭 | MKT-008_market-crop-tab-auction_Default | Design | -글자색.01: 안내 문구 회색(#6C757D) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-009_market-crop-tab-compare_Default — 시장비교 탭 · 기본 상태
 
@@ -230,7 +231,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02157 | 시장비교 탭 | MKT-009_market-crop-tab-compare_Default | Design | -테두리.01: 카드 테두리 1px 옅은 회색(#E9ECEF) | - |
 | DS-02158 | 시장비교 탭 | MKT-009_market-crop-tab-compare_Default | Design | -글자색.01: 안내 문구 회색(#6C757D) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-010_market-crop-tab-origin_Default — 산지 탭 · 기본 상태
 
@@ -248,7 +249,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02168 | 산지 탭 | MKT-010_market-crop-tab-origin_Default | Design | -테두리.01: 카드 테두리 1px 옅은 회색(#E9ECEF) | - |
 | DS-02169 | 산지 탭 | MKT-010_market-crop-tab-origin_Default | Design | -글자색.01: 안내 문구 회색(#6C757D) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-011_market-crop-tab-grade_Default — 등급·규격 탭 · 기본 상태
 
@@ -265,7 +266,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02178 | 등급·규격 탭 | MKT-011_market-crop-tab-grade_Default | Design | -테두리.01: 카드 테두리 1px 옅은 회색(#E9ECEF) | - |
 | DS-02179 | 등급·규격 탭 | MKT-011_market-crop-tab-grade_Default | Design | -글자색.01: 안내 문구 회색(#6C757D) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-012_market-sheet-date_Default — 조회 날짜 선택 시트 · 기본 상태
 
@@ -285,7 +286,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02191 | 조회 날짜 선택 시트 | MKT-012_market-sheet-date_Default | Design | -글자색.02: 평일 텍스트 진회색(#212529) | - |
 | DS-02192 | 조회 날짜 선택 시트 | MKT-012_market-sheet-date_Default | Design | -배경색.02: 완료 버튼 배경 진초록색(#3A8A3A), 글자 흰색 | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-013_market-sheet-market_Default — 도매시장 선택 시트 · 기본 상태
 
@@ -303,7 +304,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02202 | 도매시장 선택 시트 | MKT-013_market-sheet-market_Default | Design | -테두리.01: "가장 가까운 도매시장 찾기" 버튼 테두리 1.5px 진초록색(#3A8A3A), 배경 연한 초록색 | - |
 | DS-02203 | 도매시장 선택 시트 | MKT-013_market-sheet-market_Default | Design | -상태색.01: 선택 항목 체크 배지 배경 진초록색(#3A8A3A), 글자 흰색 | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## MKT-014_market-sheet-corporation_Default — 도매법인 선택 시트 · 기본 상태
 
@@ -318,7 +319,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02210 | 도매법인 선택 시트 | MKT-014_market-sheet-corporation_Default | Design | -배경색.02: 선택 항목 강조 배경 연한 초록색(#F0F9F0), 글자 진초록색(#1F5C1F) | - |
 | DS-02211 | 도매법인 선택 시트 | MKT-014_market-sheet-corporation_Default | Design | -모서리.01: 시트 상단 모서리 반경 16px, 옵션 항목 모서리 반경 10px | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## AUC-001_market-auction-id_Default — 경매 상세 · 기본 상태
 
@@ -333,21 +334,21 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02218 | 경매 상세 | AUC-001_market-auction-id_Default | Design | -글자색.01: 경락가 강조 텍스트 빨간색(#E03131), 15px/700 | - |
 | DS-02219 | 경매 상세 | AUC-001_market-auction-id_Default | Design | -글자색.02: 본문 텍스트 진회색(foreground), 라벨 텍스트 회색(#868E96) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## AUC-001_market-auction-id_Empty — 경매 상세 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-02220 | 경매 상세(결과 없음) | AUC-001_market-auction-id_Empty | Visible | -빈상태.01: 안내 문구 "경매 정보를 찾을 수 없어요."와 링크 "시세 화면으로 돌아가기" | Registry: docs/ds/screen-registry.json<br>Route: /market/auction/$id<br>File: src/routes/market.auction.$id.tsx<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02221 | 경매 상세(결과 없음) | AUC-001_market-auction-id_Empty | Invisible | -조건.01: 경매 상세 레코드를 만들 수 없을 때 이 상태로 진입한다 | Registry: docs/ds/screen-registry.json<br>Route: /market/auction/$id<br>File: src/routes/market.auction.$id.tsx<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02222 | 경매 상세(결과 없음) | AUC-001_market-auction-id_Empty | Invisible | -분기.01: 화면 상태값을 "빈 상태"로 설정한다 | - |
-| DS-02223 | 경매 상세(결과 없음) | AUC-001_market-auction-id_Empty | Invisible | -이동.01: "시세 화면으로 돌아가기"를 누르면 시세 조회 메인으로 이동한다 | - |
-| DS-02224 | 경매 상세(결과 없음) | AUC-001_market-auction-id_Empty | Design | -배경색.01: 페이지 배경 흰색(#FFFFFF) | Registry: docs/ds/screen-registry.json<br>Route: /market/auction/$id<br>File: src/routes/market.auction.$id.tsx<br>기술근거.01: AppShell(screenState="Empty"), DetailHeader<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02225 | 경매 상세(결과 없음) | AUC-001_market-auction-id_Empty | Design | -글자색.01: 빈 상태 안내 문구 회색(#6C757D) | - |
-| DS-02226 | 경매 상세(결과 없음) | AUC-001_market-auction-id_Empty | Design | -글자색.02: 링크 텍스트 진초록색(#3A8A3A), 밑줄 표기 | - |
+| DS-02220 | 경매 상세 | AUC-001_market-auction-id_Empty | Visible | -빈상태.01: 안내 문구 "경매 정보를 찾을 수 없어요."와 링크 "시세 화면으로 돌아가기" | Registry: docs/ds/screen-registry.json<br>Route: /market/auction/$id<br>File: src/routes/market.auction.$id.tsx<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02221 | 경매 상세 | AUC-001_market-auction-id_Empty | Invisible | -조건.01: 경매 상세 레코드를 만들 수 없을 때 이 상태로 진입한다 | Registry: docs/ds/screen-registry.json<br>Route: /market/auction/$id<br>File: src/routes/market.auction.$id.tsx<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02222 | 경매 상세 | AUC-001_market-auction-id_Empty | Invisible | -분기.01: 화면 상태값을 "빈 상태"로 설정한다 | - |
+| DS-02223 | 경매 상세 | AUC-001_market-auction-id_Empty | Invisible | -이동.01: "시세 화면으로 돌아가기"를 누르면 시세 조회 메인으로 이동한다 | - |
+| DS-02224 | 경매 상세 | AUC-001_market-auction-id_Empty | Design | -배경색.01: 페이지 배경 흰색(#FFFFFF) | Registry: docs/ds/screen-registry.json<br>Route: /market/auction/$id<br>File: src/routes/market.auction.$id.tsx<br>기술근거.01: AppShell(screenState="Empty"), DetailHeader<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02225 | 경매 상세 | AUC-001_market-auction-id_Empty | Design | -글자색.01: 빈 상태 안내 문구 회색(#6C757D) | - |
+| DS-02226 | 경매 상세 | AUC-001_market-auction-id_Empty | Design | -글자색.02: 링크 텍스트 진초록색(#3A8A3A), 밑줄 표기 | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## CMP-001_market-compare_Default — 시장 비교 · 기본 상태
 
@@ -372,7 +373,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02243 | 시장 비교 | CMP-001_market-compare_Default | Design | -배경색.02: 가장 비쌈 카드 배경 연한 빨간색(#FFF5F5)·테두리(#FFC9C9), 가장 저렴 카드 배경 연한 파란색(#F0F6FF)·테두리(#C5DAFB) | - |
 | DS-02244 | 시장 비교 | CMP-001_market-compare_Default | Design | -모서리.01: 카드 모서리 반경 12~14px | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## CMP-002_compare_Default — 가격 비교 · 기본 상태
 
@@ -393,7 +394,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02257 | 가격 비교 | CMP-002_compare_Default | Design | -상태색.01: 상승(가장 비쌈) 빨간색 계열, 하락(가장 저렴) 파란색 계열 | - |
 | DS-02258 | 가격 비교 | CMP-002_compare_Default | Design | -모서리.01: 카드·목록 모서리 반경 10px | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## GRD-001_grades_Default — 등급 정보 · 기본 상태
 
@@ -410,7 +411,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02267 | 등급 정보 | GRD-001_grades_Default | Design | -글자색.01: 본문 텍스트 진회색(foreground) | - |
 | DS-02268 | 등급 정보 | GRD-001_grades_Default | Design | -모서리.01: 안내 배너·작물 카드 모서리 반경 10px | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## PRC-001_price-id_Default — 품종 상세 · 기본 상태
 
@@ -445,7 +446,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02295 | 품종 상세 | PRC-001_price-id_Default | Design | -글자크기.01: 품종명 19px/900, 현재가 32px/900, 보조 텍스트 12px, 표 본문 12px | - |
 | DS-02296 | 품종 상세 | PRC-001_price-id_Default | Design | -아이콘크기.01: 헤더 아이콘 20px × 20px, 색상 회색(#868E96), 알림 켜짐 상태 진초록색(#3A8A3A) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## PRC-002_price-id-alert_Default — 알림 설정 · 기본 상태
 
@@ -478,7 +479,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 | DS-02321 | 알림 설정 | PRC-002_price-id-alert_Default | Design | -상태색.03: 취소 버튼 배경 흰색·테두리 1px 진초록색(#3A8A3A)·글자 진초록색, 눌림 상태 배경 연한 초록색(#F0F9F0) | - |
 | DS-02322 | 알림 설정 | PRC-002_price-id-alert_Default | Design | -상태색.04: 스위치 켜짐 배경 진초록색(#3A8A3A) | - |
 
-Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## 분석 파일
 
@@ -526,10 +527,11 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 ## 미구현·확인필요 요약
 
-- MKT-007~011(차트/경매내역/시장비교/산지/등급·규격 탭 컴포넌트, src/components/market/*)은 어느 라우트에서도 배선되지 않아 실제 화면에 노출되지 않는다. /market/$crop 또는 /price/$variety 화면과의 연결 계획을 기획 확인 필요(DS-0202, DS-0208~DS-0212).
-- /market/$crop(DS-0203)에는 품목 없음 처리가 컴포넌트 내부 분기와 라우트 notFoundComponent 두 곳에 중복 구현되어 있어 어느 조건에서 어느 쪽이 노출되는지 확인 필요.
-- /market/wholesale(DS-0206)에서 품목 행을 눌러 상세로 이동할 때 선택한 품목 정보가 다음 화면에 전달되지 않아 상세 화면에서 품목이 자동 선택되지 않는 것이 의도된 동작인지 확인 필요.
-- /market/wholesale/$market(DS-0207)의 법인별 가격은 실거래가 아닌 결정론적 mock 오프셋으로 산출된다.
-- /market, /market/wholesale의 "가장 가까운 도매시장 찾기" 버튼(DS-0201, DS-0213)은 안내 문구만 표시하고 실제 위치 조회 기능이 없다.
-- /price/$variety/alert(DS-0222)는 목표가 입력값이 저장되지 않고, 등락률 상승/하락 토글이 값을 공유하며, 거래량 알림 토글이 실제로는 목표가 플래그에 연결되는 등 저장 로직이 화면 문구와 일치하지 않는다. 알림 저장소에 존재하는 신규 스키마로 전환할 계획인지 확인 필요.
-- 시세 조회 메인(DS-0201)의 조회 날짜는 세션 저장 대상에서 제외되어 있어 새로고침 시 항상 오늘 날짜로 초기화된다.
+- MKT-007~011(차트/경매내역/시장비교/산지/등급·규격 탭 컴포넌트, src/components/market/*)은 어느 라우트에서도 배선되지 않아 실제 화면에 노출되지 않는다. /market/$crop 또는 /price/$variety 화면과의 연결 계획을 기획 확인 필요(DS-0239, DS-02127, DS-02132, DS-02142, DS-02152, DS-02163, DS-02174).
+- /market/$crop에는 품목 없음 처리가 컴포넌트 내부 분기와 라우트 notFoundComponent 두 곳에 중복 구현되어 있어 어느 조건에서 어느 쪽이 노출되는지 확인 필요(DS-0256, DS-0258).
+- /market/wholesale에서 품목 행을 눌러 상세로 이동할 때 선택한 품목 정보가 다음 화면에 전달되지 않아 상세 화면에서 품목이 자동 선택되지 않는 것이 의도된 동작인지 확인 필요(DS-0296, DS-02100).
+- /market/wholesale/$market의 법인별 가격은 실거래가 아닌 결정론적 mock 오프셋으로 산출된다(DS-02113).
+- /market, MKT-013 도매시장 선택 시트의 "가장 가까운 도매시장 찾기" 버튼(DS-0220, DS-02199)은 안내 문구만 표시하고 실제 위치 조회 기능이 없다.
+- /price/$variety/alert는 목표가 입력값이 저장되지 않고, 등락률 상승/하락 토글이 값을 공유하며, 거래량 알림 토글이 실제로는 목표가 플래그에 연결되는 등 저장 로직이 화면 문구와 일치하지 않는다. 알림 저장소에 존재하는 신규 스키마로 전환할 계획인지 확인 필요(DS-02304, DS-02307, DS-02308, DS-02309).
+- 시세 조회 메인의 조회 날짜는 세션 저장 대상에서 제외되어 있어 새로고침 시 항상 오늘 날짜로 초기화된다(DS-0212).
+- 시세 상세(MKT-002)의 등급 배지 색상 사양이 원본 문서에 없어 코드 기준으로 신규 DS No.를 발급해 추가했다(DS-02323).
