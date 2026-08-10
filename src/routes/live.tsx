@@ -88,7 +88,11 @@ function LivePage() {
                 rank={i + 1}
                 row={row}
                 onClick={() =>
-                  navigate({ to: "/market", search: { crop: row.id, tab: "chart" } })
+                  navigate({
+                    to: "/price/$variety",
+                    params: { variety: row.id },
+                    search: { tab: "chart" },
+                  })
                 }
               />
             ))}

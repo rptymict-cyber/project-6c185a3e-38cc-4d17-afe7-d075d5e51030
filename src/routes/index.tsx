@@ -42,8 +42,9 @@ function Home() {
       <MarketListHome
         onSelectCrop={(id) => {
           router.navigate({
-            to: "/market",
-            search: { crop: id, tab: "chart" },
+            to: "/price/$variety",
+            params: { variety: id },
+            search: { tab: "chart" },
           });
         }}
       />
