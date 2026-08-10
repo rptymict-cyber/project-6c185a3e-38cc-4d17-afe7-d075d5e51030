@@ -29,8 +29,8 @@ export function CropRankingRow({ item }: { item: RankingItem }) {
         {item.rank}
       </span>
       <Link
-        to="/market/$crop"
-        params={{ crop: item.cropId }}
+        to="/price/$variety"
+        params={{ variety: item.cropId }}
         className="flex flex-1 items-center gap-3 min-w-0"
       >
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F1F3F5]">

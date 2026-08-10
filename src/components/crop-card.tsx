@@ -38,8 +38,8 @@ export function CropCard({ crop }: { crop: Crop }) {
 
   return (
     <Link
-      to="/market/$crop"
-      params={{ crop: crop.id }}
+      to="/price/$variety"
+      params={{ variety: crop.id }}
       className={cn(
         "block overflow-hidden rounded-[12px] bg-white px-4 py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-colors active:bg-secondary",
         urgentUp && "bg-[#FFFAFA]",

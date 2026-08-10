@@ -120,8 +120,8 @@ function ComparePage() {
 
         <div className="mt-6 text-center">
           <Link
-            to="/market/$crop"
-            params={{ crop: cropId }}
+            to="/price/$variety"
+            params={{ variety: cropId }}
             className="text-[13px] font-semibold text-primary"
           >
             {crop.name} 상세 시세 보기 →
