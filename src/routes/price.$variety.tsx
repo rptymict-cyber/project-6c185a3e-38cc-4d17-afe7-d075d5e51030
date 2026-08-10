@@ -82,20 +82,44 @@ function VarietyDetailPage() {
   const router = useRouter();
   const navigate = useNavigate();
   const f = useMarketFilter();
-  
 
-  const emoji = EMOJI[f.itemId] ?? "🌾";
+  // 진입한 품종 파라미터를 정본으로 삼아 부류/품목/품종/기본단위를 해석한다.
+  const sel = useMemo(() => resolveVarietySelection(variety), [variety]);
+  const cropId = useMemo(() => getPriceBase(variety).cropId, [variety]);
+
+  const setItem = useMarketFilter((s) => s.setItem);
+  const setUnit = useMarketFilter((s) => s.setUnit);
+  const synced = f.itemId === sel.itemId && f.varietyId === sel.varietyId;
+
+  useEffect(() => {
+    if (synced) return;
+    setItem({
+      categoryId: sel.categoryId,
+      categoryLabel: sel.categoryLabel,
+      itemId: sel.itemId,
+      itemLabel: sel.itemLabel,
+      varietyId: sel.varietyId,
+      varietyLabel: sel.varietyLabel,
+    });
+    setUnit(sel.unit);
+  }, [synced, sel, setItem, setUnit]);
+
+  // 스토어 동기화 전 첫 렌더에서도 클릭한 품목 데이터가 보이도록 해석값을 사용한다.
+  const itemId = sel.itemId;
+  const unit = synced ? f.unit : sel.unit;
+
+  const emoji = EMOJI[cropId] ?? "🌾";
 
   const quote = useMemo(
     () =>
       getMarketQuote({
-        itemId: f.itemId,
+        itemId,
         varietyId: variety,
         marketId: f.marketId,
-        unit: f.unit,
+        unit,
         date: f.date,
       }),
-    [f.itemId, variety, f.marketId, f.unit, f.date],
+    [itemId, variety, f.marketId, unit, f.date],
   );
 
   const initialTab = TABS.some((t) => t.id === tabParam)
@@ -104,16 +128,16 @@ function VarietyDetailPage() {
   const [tab, setTab] = useState<Tab>(initialTab);
   const [period, setPeriod] = useState<DetailPeriod>("1w");
 
-  const crop = getCrop(f.itemId);
+  const crop = getCrop(cropId);
   const isPredictable = Boolean(
     crop?.isPredictable && crop.predictionStatus === "available",
   );
   const favInput = {
-    itemId: f.itemId,
-    itemName: f.itemLabel,
+    itemId,
+    itemName: sel.itemLabel,
     emoji,
     varietyId: variety,
-    varietyName: f.varietyLabel,
+    varietyName: sel.varietyLabel,
     marketId: f.marketId,
     marketName: f.marketLabel,
     corporationId: f.corpId === "all" ? undefined : f.corpId,
@@ -123,7 +147,7 @@ function VarietyDetailPage() {
     isPredictable,
   };
   const favId = favoriteKey({
-    cropId: f.itemId,
+    cropId: itemId,
     varietyId: variety,
     marketId: f.marketId,
     corporationId: f.corpId === "all" ? undefined : f.corpId,
@@ -133,6 +157,7 @@ function VarietyDetailPage() {
   const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
   const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
   const existingRule = useAlerts((s) => s.getByKey(variety, f.marketId));
+
 
 
   const up = quote.prevPct > 0;
