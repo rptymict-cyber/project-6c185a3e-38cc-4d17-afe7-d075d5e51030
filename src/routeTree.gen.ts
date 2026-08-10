@@ -35,7 +35,6 @@ import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
 import { Route as MarketWholesaleIndexRouteImport } from './routes/market.wholesale.index'
 import { Route as MarketItemIndexRouteImport } from './routes/market.item.index'
-import { Route as PriceVarietyAlertRouteImport } from './routes/price.$variety.alert'
 import { Route as NotificationsSettingsNewRouteImport } from './routes/notifications.settings.new'
 import { Route as NotificationsSettingsRuleIdRouteImport } from './routes/notifications.settings.$ruleId'
 import { Route as MarketWholesaleMarketRouteImport } from './routes/market.wholesale.$market'
@@ -173,11 +172,6 @@ const MarketItemIndexRoute = MarketItemIndexRouteImport.update({
   path: '/item/',
   getParentRoute: () => MarketRoute,
 } as any)
-const PriceVarietyAlertRoute = PriceVarietyAlertRouteImport.update({
-  id: '/alert',
-  path: '/alert',
-  getParentRoute: () => PriceVarietyRoute,
-} as any)
 const NotificationsSettingsNewRoute =
   NotificationsSettingsNewRouteImport.update({
     id: '/new',
@@ -223,7 +217,7 @@ export interface FileRoutesByFullPath {
   '/weather': typeof WeatherRoute
   '/news/$id': typeof NewsIdRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
-  '/price/$variety': typeof PriceVarietyRouteWithChildren
+  '/price/$variety': typeof PriceVarietyRoute
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market/': typeof MarketIndexRoute
@@ -235,7 +229,6 @@ export interface FileRoutesByFullPath {
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
-  '/price/$variety/alert': typeof PriceVarietyAlertRoute
   '/market/item/': typeof MarketItemIndexRoute
   '/market/wholesale/': typeof MarketWholesaleIndexRoute
   '/notifications/settings/': typeof NotificationsSettingsIndexRoute
@@ -254,7 +247,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/weather': typeof WeatherRoute
   '/news/$id': typeof NewsIdRoute
-  '/price/$variety': typeof PriceVarietyRouteWithChildren
+  '/price/$variety': typeof PriceVarietyRoute
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market': typeof MarketIndexRoute
@@ -266,7 +259,6 @@ export interface FileRoutesByTo {
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
-  '/price/$variety/alert': typeof PriceVarietyAlertRoute
   '/market/item': typeof MarketItemIndexRoute
   '/market/wholesale': typeof MarketWholesaleIndexRoute
   '/notifications/settings': typeof NotificationsSettingsIndexRoute
@@ -289,7 +281,7 @@ export interface FileRoutesById {
   '/weather': typeof WeatherRoute
   '/news/$id': typeof NewsIdRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
-  '/price/$variety': typeof PriceVarietyRouteWithChildren
+  '/price/$variety': typeof PriceVarietyRoute
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market/': typeof MarketIndexRoute
@@ -301,7 +293,6 @@ export interface FileRoutesById {
   '/market/wholesale/$market': typeof MarketWholesaleMarketRoute
   '/notifications/settings/$ruleId': typeof NotificationsSettingsRuleIdRoute
   '/notifications/settings/new': typeof NotificationsSettingsNewRoute
-  '/price/$variety/alert': typeof PriceVarietyAlertRoute
   '/market/item/': typeof MarketItemIndexRoute
   '/market/wholesale/': typeof MarketWholesaleIndexRoute
   '/notifications/settings/': typeof NotificationsSettingsIndexRoute
@@ -337,7 +328,6 @@ export interface FileRouteTypes {
     | '/market/wholesale/$market'
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
-    | '/price/$variety/alert'
     | '/market/item/'
     | '/market/wholesale/'
     | '/notifications/settings/'
@@ -368,7 +358,6 @@ export interface FileRouteTypes {
     | '/market/wholesale/$market'
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
-    | '/price/$variety/alert'
     | '/market/item'
     | '/market/wholesale'
     | '/notifications/settings'
@@ -402,7 +391,6 @@ export interface FileRouteTypes {
     | '/market/wholesale/$market'
     | '/notifications/settings/$ruleId'
     | '/notifications/settings/new'
-    | '/price/$variety/alert'
     | '/market/item/'
     | '/market/wholesale/'
     | '/notifications/settings/'
@@ -423,7 +411,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
   WeatherRoute: typeof WeatherRoute
-  PriceVarietyRoute: typeof PriceVarietyRouteWithChildren
+  PriceVarietyRoute: typeof PriceVarietyRoute
   StatisticsVarietyRoute: typeof StatisticsVarietyRoute
   WatchlistAddRoute: typeof WatchlistAddRoute
   StatisticsIndexRoute: typeof StatisticsIndexRoute
@@ -614,13 +602,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketItemIndexRouteImport
       parentRoute: typeof MarketRoute
     }
-    '/price/$variety/alert': {
-      id: '/price/$variety/alert'
-      path: '/alert'
-      fullPath: '/price/$variety/alert'
-      preLoaderRoute: typeof PriceVarietyAlertRouteImport
-      parentRoute: typeof PriceVarietyRoute
-    }
     '/notifications/settings/new': {
       id: '/notifications/settings/new'
       path: '/new'
@@ -721,18 +702,6 @@ const NotificationsRouteWithChildren = NotificationsRoute._addFileChildren(
   NotificationsRouteChildren,
 )
 
-interface PriceVarietyRouteChildren {
-  PriceVarietyAlertRoute: typeof PriceVarietyAlertRoute
-}
-
-const PriceVarietyRouteChildren: PriceVarietyRouteChildren = {
-  PriceVarietyAlertRoute: PriceVarietyAlertRoute,
-}
-
-const PriceVarietyRouteWithChildren = PriceVarietyRoute._addFileChildren(
-  PriceVarietyRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompareRoute: CompareRoute,
@@ -748,7 +717,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
   WeatherRoute: WeatherRoute,
-  PriceVarietyRoute: PriceVarietyRouteWithChildren,
+  PriceVarietyRoute: PriceVarietyRoute,
   StatisticsVarietyRoute: StatisticsVarietyRoute,
   WatchlistAddRoute: WatchlistAddRoute,
   StatisticsIndexRoute: StatisticsIndexRoute,
@@ -757,3 +726,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
