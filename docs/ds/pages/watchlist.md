@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## FAV-001_watchlist_Default — 즐겨찾기 목록 · 기본 상태
+## 즐겨찾기 목록 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -58,7 +58,7 @@
 | DS-0448 | 즐겨찾기 목록 | FAV-001_watchlist_Default | Design | -요소간격.01: 편집 모드 카드 목록 항목 간 간격 10px | - |
 | DS-0449 | 즐겨찾기 목록 | FAV-001_watchlist_Default | Design | -높이.01: 편집 모드 하단 버튼 높이 48px, 모서리 둥글기 12px | - |
 
-## FAV-001_watchlist_Empty — 즐겨찾기 목록 · 빈 상태
+## 즐겨찾기 목록 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -76,7 +76,7 @@
 | DS-0461 | 즐겨찾기 목록 | FAV-001_watchlist_Empty | Design | -글자색.02: 안내문 텍스트 회색(#6C757D), 13px, 줄간격 여유 있게 | - |
 | DS-0462 | 즐겨찾기 목록 | FAV-001_watchlist_Empty | Design | -배치.01: 안내 화면은 화면 세로 가운데 정렬, 좌우 안쪽 여백 24px | - |
 
-## FAV-002_watchlist-add_Default — 즐겨찾기 추가 · 기본 상태
+## 즐겨찾기 추가 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|

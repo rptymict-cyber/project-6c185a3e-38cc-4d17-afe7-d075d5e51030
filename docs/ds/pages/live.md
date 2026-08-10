@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## LIV-001_live_Default — 실시간 목록 · 기본 상태
+## 실시간 목록 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|

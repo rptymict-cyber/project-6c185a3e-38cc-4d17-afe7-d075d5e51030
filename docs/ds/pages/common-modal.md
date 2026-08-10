@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## CMN-001_unit-sheet_Default — 단위 선택 시트 · 기본 상태
+## 단위 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -25,7 +25,7 @@
 | DS-1315 | 단위 선택 시트 | CMN-001_unit-sheet_Default | Design | -안쪽여백.01: 행 안쪽 여백 좌우 12px, 상하 12px | - |
 | DS-1316 | 단위 선택 시트 | CMN-001_unit-sheet_Default | Design | -아이콘크기.01: 체크 아이콘 16x16px | - |
 
-## CMN-002_sort-sheet_Default — 정렬 시트 · 기본 상태
+## 정렬 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -44,7 +44,7 @@
 | DS-1329 | 정렬 시트 | CMN-002_sort-sheet_Default | Design | -안쪽여백.01: 행 상하 여백 14px | - |
 | DS-1330 | 정렬 시트 | CMN-002_sort-sheet_Default | Design | -아이콘크기.01: 체크 아이콘 16x16px | - |
 
-## CMN-003_rate-prompt-modal_Default — 별점 유도 모달 · 기본 상태
+## 별점 유도 모달 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -92,7 +92,7 @@
 | DS-1372 | 별점 유도 모달 | CMN-003_rate-prompt-modal_Default | Design | -높이.01: 자유 입력란 높이 110px | - |
 | DS-1373 | 별점 유도 모달 | CMN-003_rate-prompt-modal_Default | Design | -쌓임순서.01: 팝업 레이어 z-index 100 | - |
 
-## CMN-004_load-more-button_Default — 공통 더보기 버튼 · 기본 상태
+## 공통 더보기 버튼 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|

@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## MKT-001_market_Default — 시세 조회 메인 · 기본 상태
+## 시세 조회 메인 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -41,7 +41,7 @@
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-002_market-id_Default — 시세 상세 · 기본 상태
+## 시세 상세 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -72,7 +72,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-002_market-id_Empty — 시세 상세 · 빈 상태
+## 시세 상세 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -87,7 +87,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-003_market-item_Default — 품목 목록 · 기본 상태
+## 품목 목록 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -110,7 +110,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-004_market-item-id_Default — 품목 상세 · 기본 상태
+## 품목 상세 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -130,7 +130,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-005_market-wholesale_Default — 도매시장 목록 · 기본 상태
+## 도매시장 목록 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -151,7 +151,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-006_market-wholesale-id_Default — 도매시장 상세 · 기본 상태
+## 도매시장 상세 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -175,7 +175,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-007_market-crop-tab-chart_Default — 차트 탭 · 기본 상태
+## 차트 탭 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -198,7 +198,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-008_market-crop-tab-auction_Default — 경매내역 탭 · 기본 상태
+## 경매내역 탭 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -215,7 +215,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-009_market-crop-tab-compare_Default — 시장비교 탭 · 기본 상태
+## 시장비교 탭 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -233,7 +233,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-010_market-crop-tab-origin_Default — 산지 탭 · 기본 상태
+## 산지 탭 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -251,7 +251,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-011_market-crop-tab-grade_Default — 등급·규격 탭 · 기본 상태
+## 등급·규격 탭 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -268,7 +268,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-012_market-sheet-date_Default — 조회 날짜 선택 시트 · 기본 상태
+## 조회 날짜 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -288,7 +288,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-013_market-sheet-market_Default — 도매시장 선택 시트 · 기본 상태
+## 도매시장 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -306,7 +306,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## MKT-014_market-sheet-corporation_Default — 도매법인 선택 시트 · 기본 상태
+## 도매법인 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -321,7 +321,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## AUC-001_market-auction-id_Default — 경매 상세 · 기본 상태
+## 경매 상세 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -336,7 +336,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## AUC-001_market-auction-id_Empty — 경매 상세 · 빈 상태
+## 경매 상세 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -350,7 +350,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## CMP-001_market-compare_Default — 시장 비교 · 기본 상태
+## 시장 비교 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -375,7 +375,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## CMP-002_compare_Default — 가격 비교 · 기본 상태
+## 가격 비교 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -396,7 +396,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## GRD-001_grades_Default — 등급 정보 · 기본 상태
+## 등급 정보 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -413,7 +413,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRC-001_price-id_Default — 품종 상세 · 기본 상태
+## 품종 상세 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -448,7 +448,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRC-002_price-id-alert_Default — 알림 설정 · 기본 상태
+## 알림 설정 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|

@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## PRD-001_prediction_Default — 예측 메인 · 기본 상태
+## 예측 메인 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -94,7 +94,7 @@
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRD-001_prediction_Empty — 예측 메인 · 빈 상태
+## 예측 메인 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -115,7 +115,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRD-002_prediction-sheet-crop_Default — 작물 선택 시트 · 기본 상태
+## 작물 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -152,7 +152,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRD-002_prediction-sheet-crop_Empty — 작물 선택 시트 · 빈 상태
+## 작물 선택 시트 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -168,7 +168,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRD-003_prediction-sheet-quantity_Default — 출하량·매입량 선택 시트 · 기본 상태
+## 출하량·매입량 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -216,7 +216,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRD-004_prediction-sheet-market_Default — 도매시장 선택 시트 · 기본 상태
+## 도매시장 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -242,7 +242,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRD-005_prediction-sheet-viewpoint_Default — 관점 선택 시트 · 기본 상태
+## 관점 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -267,7 +267,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## PRD-006_prediction-sheet-range_Default — 예측 범위 상세 시트 · 기본 상태
+## 예측 범위 상세 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|

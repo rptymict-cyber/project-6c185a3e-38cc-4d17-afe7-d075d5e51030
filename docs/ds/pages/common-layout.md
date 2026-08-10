@@ -5,7 +5,7 @@
 - Baseline: 2026-08-05 코드 기준
 
 
-## LAY-001_root-shell_Default — 루트 셸 · 기본 상태
+## 루트 셸 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -24,7 +24,7 @@
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-001_root-shell_Empty — 루트 셸 · 빈 상태
+## 루트 셸 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -46,7 +46,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-001_root-shell_Error — 루트 셸 · 오류 상태
+## 루트 셸 · 오류 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -72,7 +72,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-002_app-shell_Default — 공통 앱 셸 · 기본 상태
+## 공통 앱 셸 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -91,7 +91,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-003_app-header_Default — 공통 상단바(GNB) · 기본 상태
+## 공통 상단바(GNB) · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -123,7 +123,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-004_bottom-nav_Default — 하단 탭바 · 기본 상태
+## 하단 탭바 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -150,7 +150,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## LAY-005_detail-header_Default — 공통 상세 상단바 · 기본 상태
+## 공통 상세 상단바 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -175,7 +175,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## NAV-001_app-drawer_Default — 더보기 드로어 · 기본 상태
+## 더보기 드로어 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -213,7 +213,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## SRC-001_search_Default — 검색 결과 · 기본 상태
+## 검색 결과 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -253,7 +253,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## SRC-001_search_Empty — 검색 결과 · 빈 상태
+## 검색 결과 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -269,7 +269,7 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## SEL-001_crop-select_Default — 부류·품목·품종 선택 · 기본 상태
+## 부류·품목·품종 선택 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|

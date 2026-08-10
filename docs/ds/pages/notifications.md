@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## NTF-001_notifications_Default — 알림 목록 · 기본 상태
+## 알림 목록 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -54,7 +54,7 @@
 | DS-0944 | 알림 목록 | NTF-001_notifications_Default | Design | -아이콘크기.01: 알림 유형 아이콘 16px×16px | - |
 | DS-0945 | 알림 목록 | NTF-001_notifications_Default | Design | -아이콘크기.02: 헤더 설정 아이콘 20px×20px | - |
 
-## NTF-001_notifications_Empty — 알림 목록 · 빈 상태
+## 알림 목록 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -73,7 +73,7 @@
 | DS-0958 | 알림 목록 | NTF-001_notifications_Empty | Design | -안쪽여백.01: 빈 상태 영역 좌우 24px, 상하 96px | - |
 | DS-0959 | 알림 목록 | NTF-001_notifications_Empty | Design | -바깥여백.01: 아이콘과 문구 사이 상단 여백 16px, 문구 사이 여백 4px | - |
 
-## NTF-002_notifications-settings_Default — 알림 규칙 목록 · 기본 상태
+## 알림 규칙 목록 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -124,7 +124,7 @@
 | DS-09104 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -투명도.02: 마스터 알림을 끄면 하위 그룹은 50% 투명도로 표시되고 클릭이 막힌다 | - |
 | DS-09105 | 알림 규칙 목록 | NTF-002_notifications-settings_Default | Design | -아이콘크기.01: 화살표 아이콘 16px×16px, 색상 연한 회색(#ADB5BD) | - |
 
-## NTF-002_notifications-settings_Empty — 알림 규칙 목록 · 빈 상태
+## 알림 규칙 목록 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -132,7 +132,7 @@
 | DS-09107 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Invisible | -조건.01: 등록된 규칙 수가 0건일 때 규칙 목록 영역이 조건부로 렌더링되지 않는다 | Route: /notifications/settings<br>File: src/routes/notifications.settings.index.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술근거.01: 조건식 sorted.length > 0<br>⚠️ 확인 필요.01: 규칙 0건일 때 별도 빈 상태 문구·추가 버튼 노출이 필요한지 기획 확인 필요 |
 | DS-09108 | 알림 규칙 목록 | NTF-002_notifications-settings_Empty | Invisible | -미구현.01: 규칙이 0건일 때 "등록된 알림 규칙이 없어요" 등 전용 빈 상태 안내 문구나 규칙 추가를 유도하는 버튼이 화면에 없다 | - |
 
-## NTF-003_notifications-settings-new_Default — 규칙 폼(추가) · 기본 상태
+## 규칙 폼(추가) · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -184,7 +184,7 @@
 | DS-09154 | 규칙 폼(추가) | NTF-003_notifications-settings-new_Default | Design | -너비.01: 하단 고정 바 최대 너비 430px이며 화면 중앙에 정렬된다 | - |
 | DS-09155 | 규칙 폼(추가) | NTF-003_notifications-settings-new_Default | Design | -쌓임순서.01: 하단 고정 바는 화면 최하단에 고정되며 다른 요소보다 위에 표시된다 | - |
 
-## NTF-004_notifications-settings-id_Default — 규칙 폼(수정) · 기본 상태
+## 규칙 폼(수정) · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
