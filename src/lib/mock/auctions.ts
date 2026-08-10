@@ -34,12 +34,11 @@ const ORIGINS = [
 
 const CORPORATIONS: Record<string, string[]> = {
   "seoul-garak": ["서울청과㈜", "중앙청과㈜", "동화청과㈜", "농협가락㈜"],
-  "seoul-gangseo": ["강서청과㈜", "농협강서㈜"],
+  "daejeon-ojeong": ["오정청과㈜", "대전중앙청과㈜"],
   "busan-eomgung": ["엄궁청과㈜"],
-  "busan-banyeo": ["반여청과㈜"],
   "daegu-bugbu": ["북부청과㈜", "대구농협㈜"],
-  "gwangju-seobu": ["광주원협㈜"],
-  all: ["서울청과㈜", "중앙청과㈜", "강서청과㈜"],
+  "gwangju-gakhwa": ["각화청과㈜"],
+  all: ["서울청과㈜", "중앙청과㈜", "각화청과㈜"],
 };
 
 const PACKAGES = [

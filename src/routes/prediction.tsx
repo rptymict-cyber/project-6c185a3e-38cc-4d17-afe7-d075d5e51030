@@ -104,9 +104,11 @@ function PredictionPage() {
     selectedCropId,
     selectedRangeDays,
     selectedGrade,
+    marketId,
   );
   const cropMeta = getPredictableCrop(selectedCropId);
   const marketName =
+    prediction?.marketName ??
     MARKETS.find((m) => m.id === marketId)?.name ??
     cropMeta?.marketName ??
     "서울가락";
@@ -114,7 +116,7 @@ function PredictionPage() {
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
   useEffect(() => {
     setSelectedDayIndex(null);
-  }, [selectedRangeDays, selectedCropId, selectedGrade]);
+  }, [selectedRangeDays, selectedCropId, selectedGrade, marketId]);
 
   if (!prediction || !cropMeta) {
     return (

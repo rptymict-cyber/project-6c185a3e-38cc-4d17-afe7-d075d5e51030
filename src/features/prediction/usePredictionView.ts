@@ -6,6 +6,7 @@ import type {
   PredictionViewpoint,
 } from "./types";
 import { isPredictableCropId, PREDICTABLE_CROPS } from "./mockPredictionData";
+import { MARKETS } from "@/lib/mock/markets";
 import {
   clampQuantity,
   QUANTITY_UNIT_DEFAULT,
@@ -82,7 +83,9 @@ export const usePredictionView = create<PredictionViewState>()(
         if (!state.quantityBoxes || state.quantityBoxes < 1) {
           state.quantityBoxes = QUANTITY_UNIT_DEFAULT[state.quantityUnit];
         }
-        if (!state.marketId) state.marketId = "seoul-garak";
+        if (!state.marketId || !MARKETS.some((m) => m.id === state.marketId)) {
+          state.marketId = "seoul-garak";
+        }
         if (!state.selectedGrade) state.selectedGrade = DEFAULT_GRADE;
       },
     },

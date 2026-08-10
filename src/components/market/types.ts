@@ -40,7 +40,7 @@ export const TOP_CROPS: TopCrop[] = [
     id: "greenonion",
     name: "대파",
     emoji: "🌿",
-    market: "구리시장",
+    market: "대전오정",
     grade: "상",
     spec: "1kg단",
     pricePerKg: 1980,
@@ -80,10 +80,10 @@ export const MOVERS = [
 
 export const QUICK_MARKETS = [
   { id: "garak", name: "가락시장", emoji: "🏛️" },
-  { id: "gangseo", name: "강서시장", emoji: "🏢" },
+  { id: "gwangju", name: "광주각화", emoji: "🏢" },
   { id: "daegu", name: "대구북부", emoji: "🏬" },
   { id: "busan", name: "부산엄궁", emoji: "🏯" },
-  { id: "guri", name: "구리시장", emoji: "🏛️" },
+  { id: "daejeon", name: "대전오정", emoji: "🏛️" },
 ];
 
 export const RECENT_AUCTIONS = [

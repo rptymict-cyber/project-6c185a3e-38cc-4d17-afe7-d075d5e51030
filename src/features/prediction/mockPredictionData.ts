@@ -1,3 +1,4 @@
+import { MARKETS } from "@/lib/mock/markets";
 import type {
   PredictableCrop,
   PredictionGrade,
@@ -104,6 +105,31 @@ const GRADE_ADJ: Record<PredictionGrade, number> = {
   "하": 0.9,
 };
 
+const DEFAULT_MARKET_ID = "seoul-garak";
+
+function getMarket(marketId?: string) {
+  return (
+    MARKETS.find((m) => m.id === marketId) ??
+    MARKETS.find((m) => m.id === DEFAULT_MARKET_ID) ??
+    MARKETS[0]
+  );
+}
+
+/** 시장별 가격 수준 배율: 전체 시장 평균 kg 단가 대비 해당 시장의 상대 수준 */
+function marketPriceFactor(marketId?: string) {
+  const mean =
+    MARKETS.reduce((sum, m) => sum + m.avgKg, 0) / (MARKETS.length || 1);
+  const m = getMarket(marketId);
+  return mean > 0 ? m.avgKg / mean : 1;
+}
+
+/** 시장별 전일대비 추세(%): mock 시장 데이터의 avgKg / prevAvgKg 에서 산출 */
+function marketTrendPct(marketId?: string) {
+  const m = getMarket(marketId);
+  if (!m.prevAvgKg) return 0;
+  return ((m.avgKg - m.prevAvgKg) / m.prevAvgKg) * 100;
+}
+
 function seed(n: number) {
   let s = n;
   return () => {
@@ -124,21 +150,29 @@ function labelOf(d: Date) {
   return `${d.getMonth() + 1}월 ${d.getDate()}일`;
 }
 
+/** 품목 기본 등락률 + 시장 자체 추세를 합산한 전일대비(%) */
+function cropPrevDeltaPct(cropId: string, marketId: string) {
+  return (PREV_DELTA_PCT[cropId] ?? 0) + marketTrendPct(marketId) * 0.5;
+}
+
 function buildPoints(
   cropId: string,
   rangeDays: PredictionRangeDays,
   grade: PredictionGrade,
+  marketId: string,
 ): { points: PredictionPoint[]; recommendedIdx: number } {
-  const rand = seed(hashId(cropId) + rangeDays);
+  const rand = seed(hashId(cropId) + hashId(marketId) + rangeDays);
   const gradeMul = GRADE_ADJ[grade];
-  const base = (BASE_PRICE[cropId] ?? 5000) * gradeMul;
+  const marketMul = marketPriceFactor(marketId);
+  const base = (BASE_PRICE[cropId] ?? 5000) * gradeMul * marketMul;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const pastDays = 7;
   const points: PredictionPoint[] = [];
 
-  let actual = base * (1 - PREV_DELTA_PCT[cropId] / 100 / 4);
+  const prevDelta = cropPrevDeltaPct(cropId, marketId);
+  let actual = base * (1 - prevDelta / 100 / 4);
   for (let i = 0; i < pastDays; i++) {
     actual = actual * (1 + (rand() - 0.5) * 0.03);
     const d = new Date(today);
@@ -160,7 +194,8 @@ function buildPoints(
   });
 
   const trendUp = ["apple", "garlic", "radish"].includes(cropId);
-  const targetChangePct = trendUp ? 0.05 : -0.04;
+  const marketTrend = marketTrendPct(marketId) / 100;
+  const targetChangePct = (trendUp ? 0.05 : -0.04) + marketTrend * 0.8;
   const infA = Math.max(1, Math.round(rangeDays * 0.35));
   const infB = Math.max(infA + 1, Math.round(rangeDays * 0.78));
   for (let i = 1; i <= rangeDays; i++) {
@@ -203,14 +238,24 @@ export function buildMockPrediction(
   cropId: string,
   rangeDays: PredictionRangeDays,
   grade: PredictionGrade = "특",
+  marketId: string = DEFAULT_MARKET_ID,
 ): PricePrediction | null {
   const crop = getPredictableCrop(cropId);
   if (!crop) return null;
 
+  const market = getMarket(marketId);
   const gradeMul = GRADE_ADJ[grade];
-  const { points, recommendedIdx } = buildPoints(cropId, rangeDays, grade);
-  const currentPrice = Math.round((BASE_PRICE[cropId] ?? 5000) * gradeMul);
-  const previousChangeRate = PREV_DELTA_PCT[cropId] ?? 0;
+  const marketMul = marketPriceFactor(market.id);
+  const { points, recommendedIdx } = buildPoints(
+    cropId,
+    rangeDays,
+    grade,
+    market.id,
+  );
+  const currentPrice = Math.round(
+    (BASE_PRICE[cropId] ?? 5000) * gradeMul * marketMul,
+  );
+  const previousChangeRate = cropPrevDeltaPct(cropId, market.id);
   const previousChangePrice = Math.round(
     (currentPrice * previousChangeRate) / (100 + previousChangeRate),
   );
@@ -237,8 +282,8 @@ export function buildMockPrediction(
 
   const updatedAt = (() => {
     const d = new Date();
-    const h = 8 + (hashId(cropId) % 12);
-    const m = (hashId(cropId) * 7) % 60;
+    const h = 8 + ((hashId(cropId) + hashId(market.id)) % 12);
+    const m = ((hashId(cropId) + hashId(market.id)) * 7) % 60;
     d.setHours(h, m, 0, 0);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
   })();
@@ -248,15 +293,16 @@ export function buildMockPrediction(
     cropName: crop.name,
     varietyName: crop.varietyName,
     emoji: crop.emoji,
-    marketId: crop.marketId,
-    marketName: crop.marketName,
+    marketId: market.id,
+    marketName: market.name,
     unit: crop.unit,
     currentPrice,
     currentDate: formatDate(new Date()),
     previousChangePrice,
     previousChangeRate,
     predictionRangeDays: rangeDays,
-    confidenceScore: 78 + ((hashId(cropId) % 10) as number),
+    confidenceScore:
+      78 + (((hashId(cropId) + hashId(market.id)) % 10) as number),
     predictedPoints: points,
     farmerInsight: {
       viewpoint: "farmer",

@@ -46,7 +46,7 @@ const MARKETS: MarketTop[] = [
   },
   {
     id: "guri",
-    name: "구리시장",
+    name: "대전오정",
     items: [
       { name: "오이", pct: 5.4 },
       { name: "가지", pct: 3.5 },

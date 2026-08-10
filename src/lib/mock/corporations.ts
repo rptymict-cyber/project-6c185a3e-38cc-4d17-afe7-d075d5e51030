@@ -12,27 +12,23 @@ const BY_MARKET: Record<string, Corporation[]> = {
     { id: "hanguk", label: "한국청과㈜" },
     { id: "donghwa", label: "동화청과㈜" },
   ],
-  "seoul-gangseo": [
+  "daejeon-ojeong": [
     { id: "all", label: "전체" },
-    { id: "gangseo", label: "강서청과㈜" },
-    { id: "nh-gangseo", label: "농협강서청과㈜" },
+    { id: "ojeong", label: "오정청과㈜" },
+    { id: "dj-jungang", label: "대전중앙청과㈜" },
   ],
   "busan-eomgung": [
     { id: "all", label: "전체" },
     { id: "eomgung", label: "엄궁청과㈜" },
-  ],
-  "busan-banyeo": [
-    { id: "all", label: "전체" },
-    { id: "banyeo", label: "반여청과㈜" },
   ],
   "daegu-bugbu": [
     { id: "all", label: "전체" },
     { id: "bugbu", label: "북부청과㈜" },
     { id: "nh-daegu", label: "대구농협㈜" },
   ],
-  "gwangju-seobu": [
+  "gwangju-gakhwa": [
     { id: "all", label: "전체" },
-    { id: "gj-wonhyeop", label: "광주원협㈜" },
+    { id: "gakhwa", label: "각화청과㈜" },
   ],
 };
 

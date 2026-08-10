@@ -11,9 +11,7 @@ const MARKETS = [
   "대구북부",
   "부산엄궁",
   "광주각화",
-  "인천삼산",
-  "구리시장",
-  "안동시장",
+  "대전오정",
 ];
 
 function marketFor(crop: Crop): string {

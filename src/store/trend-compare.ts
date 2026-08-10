@@ -18,7 +18,7 @@ type State = {
   reset: () => void;
 };
 
-const DEFAULT_COMPARE = ["all", "seoul-garak", "seoul-gangseo"];
+const DEFAULT_COMPARE = ["all", "seoul-garak", "daejeon-ojeong"];
 
 export const useTrendCompare = create<State>()(
   persist(
