@@ -3,6 +3,7 @@
 // combination (item/variety/market/date) so re-selection is stable.
 
 import { getItemById } from "@/lib/catalog-service";
+import { getPriceBase } from "./price-base";
 
 
 export type AuctionRecord = {
@@ -118,6 +119,8 @@ export function listAuctions(f: AuctionFilter): AuctionRecord[] {
     ? resolveVarietyPool(f.itemId, f.itemLabel)
     : [f.varietyLabel];
 
+  const basePerKg = getPriceBase(f.itemId || f.itemLabel).basePricePerKg;
+
   const out: AuctionRecord[] = [];
   const baseDate = new Date(f.date + "T23:59:00");
   for (let i = 0; i < total; i++) {
@@ -127,8 +130,8 @@ export function listAuctions(f: AuctionFilter): AuctionRecord[] {
     const corp = corps[Math.floor(r() * corps.length)];
     const varietyName = varietyPool[Math.floor(r() * varietyPool.length)];
 
-    const perKg = 700 + Math.round(r() * 400); // 700 ~ 1100 원/kg
-    const price = Math.round((perKg * pkg.kg) / 10) * 10;
+    // 경락가는 기준 kg 단가에서 환산한다. (개별 편차는 ±3% 이내, 평균은 기준값과 일치)
+    const perKgRaw = basePerKg * (1 + (r() - 0.5) * 0.06);
     const count = 1 + Math.floor(r() * 90);
 
     // spread times across the auction day, evening heavy
@@ -148,13 +151,21 @@ export function listAuctions(f: AuctionFilter): AuctionRecord[] {
       varietyName,
       packageKg: pkg.kg,
       packageLabel: pkg.label,
-      price,
-      pricePerKg: Math.round(price / pkg.kg),
+      price: 0,
+      pricePerKg: perKgRaw,
       count,
       marketName: f.marketLabel,
       corporationName: corp,
       origin,
     });
+  }
+
+  // 평균 kg당 단가가 기준값과 정확히 일치하도록 정규화한 뒤 경락가를 계산한다.
+  const rawMean = out.reduce((sum, r) => sum + r.pricePerKg, 0) / Math.max(1, out.length);
+  const scale = rawMean > 0 ? basePerKg / rawMean : 1;
+  for (const rec of out) {
+    rec.pricePerKg = Math.round(rec.pricePerKg * scale);
+    rec.price = Math.round((rec.pricePerKg * rec.packageKg) / 10) * 10;
   }
 
   // Sort by time desc by default
