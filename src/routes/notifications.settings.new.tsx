@@ -71,14 +71,13 @@ function NewRulePage() {
       itemId = filter.itemId;
     }
 
-    void itemId; // itemId는 seed에 필드 없음 (스토어 스키마에 없음)
-
     // 이미 같은 조건 규칙이 있으면 그 값들을 기본값으로 (수정 유도되나 여기선 새로 생성 모드)
     const existing = existingByKey(varietyId ?? "", marketId ?? "");
 
     return {
       varietyId: varietyId ?? "",
       varietyLabel,
+      itemId: itemId ?? "",
       itemLabel,
       categoryId,
       categoryLabel,

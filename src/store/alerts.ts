@@ -7,6 +7,7 @@ export interface PriceAlertRule {
   id: string;
   varietyId: string;
   varietyLabel: string;
+  itemId: string;
   itemLabel: string;
   categoryId: string;
   categoryLabel: string;
@@ -158,6 +159,17 @@ export const useAlerts = create<State>()(
     }),
     {
       name: "agdict:alerts",
+      version: 2,
+      migrate: (persisted: any) => {
+        if (persisted?.rules) {
+          // 이전 버전 규칙에는 품목(itemId)이 없음 → 빈 값으로 보정
+          persisted.rules = persisted.rules.map((r: any) => ({
+            ...r,
+            itemId: typeof r.itemId === "string" ? r.itemId : "",
+          }));
+        }
+        return persisted;
+      },
       partialize: (s) => ({ rules: s.rules, byKey: s.byKey }),
     },
   ),

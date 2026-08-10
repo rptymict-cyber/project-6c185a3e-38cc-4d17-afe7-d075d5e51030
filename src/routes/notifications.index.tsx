@@ -50,6 +50,8 @@ function NotificationsPage() {
     // 2) context 없으면 이동 없음 (system 등)
     if (!e.context) return;
     const c = e.context;
+    // 3) 품목/품종 정보가 없는 예전 알림은 상세로 이동하지 않고 목록에 머무름
+    if (!c.varietyId || !c.itemId) return;
     // 3) 전역 필터를 알림 조건과 완전히 일치시킴 (순서 준수)
     setItem({
       categoryId: c.categoryId,

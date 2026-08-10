@@ -30,6 +30,7 @@ function EditRulePage() {
       seed={{
         varietyId: rule.varietyId,
         varietyLabel: rule.varietyLabel,
+        itemId: rule.itemId ?? "",
         itemLabel: rule.itemLabel,
         categoryId: rule.categoryId,
         categoryLabel: rule.categoryLabel,
