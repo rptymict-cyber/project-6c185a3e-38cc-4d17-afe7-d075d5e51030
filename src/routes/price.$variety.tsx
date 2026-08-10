@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createFileRoute,
   Link,
@@ -12,6 +12,8 @@ import { AppShell } from "@/components/app-shell";
 import { PriceVolumeChart } from "@/components/market-v2/PriceVolumeChart";
 import { AuctionHistoryTable } from "@/components/market-v2/AuctionHistoryTable";
 import { getCrop } from "@/lib/mock/crops";
+import { getPriceBase } from "@/lib/mock/price-base";
+import { resolveVarietySelection } from "@/lib/variety-route";
 import { getMarketQuote, getPriceVolumeSeries } from "@/lib/mock/market-analysis";
 import {
   getCompanyBreakdown,
@@ -82,20 +84,44 @@ function VarietyDetailPage() {
   const router = useRouter();
   const navigate = useNavigate();
   const f = useMarketFilter();
-  
 
-  const emoji = EMOJI[f.itemId] ?? "🌾";
+  // 진입한 품종 파라미터를 정본으로 삼아 부류/품목/품종/기본단위를 해석한다.
+  const sel = useMemo(() => resolveVarietySelection(variety), [variety]);
+  const cropId = useMemo(() => getPriceBase(variety).cropId, [variety]);
+
+  const setItem = useMarketFilter((s) => s.setItem);
+  const setUnit = useMarketFilter((s) => s.setUnit);
+  const synced = f.itemId === sel.itemId && f.varietyId === sel.varietyId;
+
+  useEffect(() => {
+    if (synced) return;
+    setItem({
+      categoryId: sel.categoryId,
+      categoryLabel: sel.categoryLabel,
+      itemId: sel.itemId,
+      itemLabel: sel.itemLabel,
+      varietyId: sel.varietyId,
+      varietyLabel: sel.varietyLabel,
+    });
+    setUnit(sel.unit);
+  }, [synced, sel, setItem, setUnit]);
+
+  // 스토어 동기화 전 첫 렌더에서도 클릭한 품목 데이터가 보이도록 해석값을 사용한다.
+  const itemId = sel.itemId;
+  const unit = synced ? f.unit : sel.unit;
+
+  const emoji = EMOJI[cropId] ?? "🌾";
 
   const quote = useMemo(
     () =>
       getMarketQuote({
-        itemId: f.itemId,
+        itemId,
         varietyId: variety,
         marketId: f.marketId,
-        unit: f.unit,
+        unit,
         date: f.date,
       }),
-    [f.itemId, variety, f.marketId, f.unit, f.date],
+    [itemId, variety, f.marketId, unit, f.date],
   );
 
   const initialTab = TABS.some((t) => t.id === tabParam)
@@ -104,16 +130,16 @@ function VarietyDetailPage() {
   const [tab, setTab] = useState<Tab>(initialTab);
   const [period, setPeriod] = useState<DetailPeriod>("1w");
 
-  const crop = getCrop(f.itemId);
+  const crop = getCrop(cropId);
   const isPredictable = Boolean(
     crop?.isPredictable && crop.predictionStatus === "available",
   );
   const favInput = {
-    itemId: f.itemId,
-    itemName: f.itemLabel,
+    itemId,
+    itemName: sel.itemLabel,
     emoji,
     varietyId: variety,
-    varietyName: f.varietyLabel,
+    varietyName: sel.varietyLabel,
     marketId: f.marketId,
     marketName: f.marketLabel,
     corporationId: f.corpId === "all" ? undefined : f.corpId,
@@ -123,7 +149,7 @@ function VarietyDetailPage() {
     isPredictable,
   };
   const favId = favoriteKey({
-    cropId: f.itemId,
+    cropId: itemId,
     varietyId: variety,
     marketId: f.marketId,
     corporationId: f.corpId === "all" ? undefined : f.corpId,
@@ -133,6 +159,7 @@ function VarietyDetailPage() {
   const toggleFavorite = useFavoritePriceStore((s) => s.toggleFavorite);
   const hasAlert = useAlerts((s) => s.hasAnyFor(variety, f.marketId));
   const existingRule = useAlerts((s) => s.getByKey(variety, f.marketId));
+
 
 
   const up = quote.prevPct > 0;
@@ -193,10 +220,10 @@ function VarietyDetailPage() {
       <div className="px-4 pt-4">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-[19px] font-black tracking-tight text-foreground">
-            {emoji} {f.varietyLabel}
+            {emoji} {sel.varietyLabel}
           </h1>
           <span className="inline-flex items-center gap-1 rounded-full bg-[#F1F3F5] px-2 py-0.5 text-[11px] font-semibold text-[#495057]">
-            {f.itemLabel} · {f.categoryLabel}
+            {sel.itemLabel} · {sel.categoryLabel}
           </span>
           {isPredictable && (
             <span className="inline-flex items-center rounded-full border border-[#3A8A3A]/30 bg-[#F0F9F0] px-2 py-0.5 text-[11px] font-bold text-[#1F5C1F]">
@@ -221,7 +248,7 @@ function VarietyDetailPage() {
           {isPredictable && (
             <Link
               to="/prediction"
-              search={{ cropId: f.itemId, entrySource: "detail" } as never}
+              search={{ cropId, entrySource: "detail" } as never}
               className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-[#3A8A3A] px-2.5 py-1 text-[11.5px] font-bold text-[#1F5C1F] active:bg-[#F0F9F0]"
             >
               AI 가격 예측 보기
@@ -269,21 +296,23 @@ function VarietyDetailPage() {
       {tab === "chart" && (
         <ChartTab
           variety={variety}
+          itemId={itemId}
+          unit={unit}
           period={period}
           setPeriod={setPeriod}
           quote={quote}
         />
       )}
       {tab === "auctions" && <AuctionHistoryTable />}
-      {tab === "compare" && <CompareTab variety={variety} unit={f.unit} />}
+      {tab === "compare" && <CompareTab variety={variety} unit={unit} />}
       {tab === "company" && (
-        <CompanyTab variety={variety} marketId={f.marketId} unit={f.unit} />
+        <CompanyTab variety={variety} marketId={f.marketId} unit={unit} />
       )}
       {tab === "origin" && (
-        <OriginTab variety={variety} marketId={f.marketId} unit={f.unit} />
+        <OriginTab variety={variety} marketId={f.marketId} unit={unit} />
       )}
       {tab === "variety" && (
-        <VarietyTab itemLabel={f.itemLabel} currentVarietyLabel={f.varietyLabel} />
+        <VarietyTab itemLabel={sel.itemLabel} currentVarietyLabel={sel.varietyLabel} />
       )}
     </AppShell>
 
@@ -293,12 +322,18 @@ function VarietyDetailPage() {
 // -- tabs -------------------------------------------------------------------
 
 function ChartTab({
+  variety,
+  itemId,
+  unit,
   period,
   setPeriod,
   quote,
 
+
 }: {
   variety: string;
+  itemId: string;
+  unit: string;
   period: DetailPeriod;
   setPeriod: (p: DetailPeriod) => void;
   quote: ReturnType<typeof getMarketQuote>;
@@ -308,10 +343,10 @@ function ChartTab({
   const seriesPeriod = (period === "all" ? "1y" : period) as
     | "today" | "1w" | "1m" | "3m" | "1y";
   const series = getPriceVolumeSeries({
-    itemId: f.itemId,
-    varietyId: f.varietyId,
+    itemId,
+    varietyId: variety,
     marketId: f.marketId,
-    unit: f.unit,
+    unit,
     date: f.date,
     period: seriesPeriod,
   });
