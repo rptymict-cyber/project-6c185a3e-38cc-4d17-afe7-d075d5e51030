@@ -2,6 +2,7 @@
 // Uses the same deterministic seeding conventions as market-analysis.ts.
 
 import { MARKETS } from "./markets";
+import { getPriceBase } from "./price-base";
 
 function hash(str: string): number {
   let h = 2166136261;
@@ -51,7 +52,10 @@ export function getDetailSeries(p: {
   period: DetailPeriod;
 }): DetailSeries {
   const rand = seeded(hash(`detail|${p.varietyId}|${p.marketId}|${p.period}`));
-  const base = (700 + rand() * 400) * unitKg(p.unit);
+  const priceBase = getPriceBase(p.varietyId);
+  const base = priceBase.basePricePerKg * unitKg(p.unit);
+  // 최고/최저는 기준값의 등락률 폭으로 계산한다.
+  const swing = Math.max(0.04, Math.min(0.2, Math.abs(priceBase.changeRate) / 100 * 2));
   const n = PERIOD_POINTS[p.period];
   const now = new Date();
   const points: DetailSeriesPoint[] = [];
@@ -60,7 +64,7 @@ export function getDetailSeries(p: {
     if (p.period === "1y" || p.period === "all") d.setMonth(d.getMonth() - i);
     else if (p.period === "today") d.setHours(d.getHours() - i);
     else d.setDate(d.getDate() - i);
-    const price = Math.round((base * (1 + (rand() - 0.5) * 0.2)) / 10) * 10;
+    const price = Math.round((base * (1 + (rand() - 0.5) * 2 * swing)) / 10) * 10;
     const label =
       p.period === "today"
         ? `${String(d.getHours()).padStart(2, "0")}시`
@@ -98,12 +102,13 @@ export function getMarketCompare(p: { varietyId: string; unit: string }): Market
   const kg = unitKg(p.unit);
   const rows = MARKETS.map((m) => {
     const r = seeded(hash(`cmp|${p.varietyId}|${m.id}`));
-    const perKg = 700 + Math.round(r() * 400);
+    const pb = getPriceBase(p.varietyId);
+    const perKg = Math.round(pb.basePricePerKg * (1 + (r() - 0.5) * 0.16));
     return {
       marketId: m.id,
       marketName: m.name,
       price: Math.round((perKg * kg) / 10) * 10,
-      prevPct: +(r() * -14 + 3).toFixed(1),
+      prevPct: pb.changeRate,
       volumeTon: +(10 + r() * 40).toFixed(1),
       sharePct: 0,
     };
@@ -139,11 +144,12 @@ export function getCompanyBreakdown(p: {
   return list
     .map((name) => {
       const r = seeded(hash(`co|${p.varietyId}|${p.marketId}|${name}`));
-      const perKg = 700 + Math.round(r() * 400);
+      const pb = getPriceBase(p.varietyId);
+      const perKg = Math.round(pb.basePricePerKg * (1 + (r() - 0.5) * 0.12));
       return {
         name,
         avgPrice: Math.round((perKg * kg) / 10) * 10,
-        prevPct: +(r() * -14 + 3).toFixed(1),
+        prevPct: pb.changeRate,
         count: 10 + Math.floor(r() * 80),
       };
     })
@@ -166,7 +172,7 @@ export function getOriginBreakdown(p: {
   const regions = ["경기 여주시", "경기 이천시", "경기 안성시", "강원 춘천시", "전남 나주시"];
   const rows = regions.map((region) => {
     const r = seeded(hash(`or|${p.varietyId}|${p.marketId}|${region}`));
-    const perKg = 700 + Math.round(r() * 400);
+    const perKg = Math.round(getPriceBase(p.varietyId).basePricePerKg * (1 + (r() - 0.5) * 0.12));
     return {
       region,
       avgPrice: Math.round((perKg * kg) / 10) * 10,
@@ -201,8 +207,8 @@ export function getVarietyBreakdown(p: {
       const r = seeded(hash(`var|${p.itemLabel}|${name}`));
       return {
         name,
-        pricePerKg: 700 + Math.round(r() * 700),
-        prevPct: +(r() * -12 + 4).toFixed(1),
+        pricePerKg: Math.round(getPriceBase(p.itemLabel).basePricePerKg * (1 + (r() - 0.5) * 0.16)),
+        prevPct: getPriceBase(p.itemLabel).changeRate,
         volumeTon: +(1 + r() * 35).toFixed(1),
         current: name === p.currentVarietyLabel,
       };
