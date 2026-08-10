@@ -317,13 +317,20 @@ const RAW_CROPS: RawCrop[] = [
 
 export const CROPS: Crop[] = RAW_CROPS.map((c) => {
   const predictable = PREDICTABLE_IDS.has(c.id);
+  // 가격/등락률은 price-base.ts 기준값에서 환산만 한다.
+  const base = getPriceBase(c.id);
+  const currentPrice = toUnitPrice(base.basePricePerKg, c.unit);
+  const prevPrice = prevPriceFrom(currentPrice, base.changeRate);
   return {
     ...c,
+    currentPrice,
+    prevPrice,
     isPredictable: predictable,
     predictionStatus: predictable ? "available" : "unavailable",
     aiReady: predictable,
   };
 });
+
 
 export const predictableCrops: Crop[] = CROPS.filter(
   (c) => c.isPredictable && c.predictionStatus === "available",
