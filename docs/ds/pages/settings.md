@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## SET-001_settings_Default — 설정 목록 · 기본 상태
+## 설정 목록 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -44,7 +44,7 @@
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
-## DTA-001_data-guide_Default — 데이터 안내 · 기본 상태
+## 데이터 안내 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|

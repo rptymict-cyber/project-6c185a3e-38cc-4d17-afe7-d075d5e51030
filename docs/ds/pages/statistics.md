@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## STA-001_statistics_Default — 통계 대시보드 · 기본 상태
+## 통계 대시보드 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -50,7 +50,7 @@
 | DS-0540 | 통계 대시보드 | STA-001_statistics_Default | Design | -아이콘.01: 도매시장 선택 버튼 아이콘 배경 32px 원형(연회색 #F1F3F5), 펼침 화살표 아이콘 16px 색상 연회색(#ADB5BD) | - |
 | DS-0541 | 통계 대시보드 | STA-001_statistics_Default | Design | -고정위치.01: 필터 영역은 상단 헤더(52px) 바로 아래에 고정되어 스크롤 시에도 화면에 남는다 | - |
 
-## STA-002_statistics-id_Default — 품종 통계 · 기본 상태
+## 품종 통계 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -60,7 +60,7 @@
 | DS-0545 | 품종 통계 | STA-002_statistics-id_Default | Invisible | -미구현.01: 실제로 그려지는 화면 내용이 없다(신규 통계 대시보드가 상태를 통합해 대체함) | - |
 | DS-0546 | 품종 통계 | STA-002_statistics-id_Default | Invisible | -미구현.02: 이동 처리에 대한 별도 통계 수집(트래킹) 코드는 확인되지 않는다 | - |
 
-## STA-003_statistics-sheet-market_Default — 도매시장 선택 시트 · 기본 상태
+## 도매시장 선택 시트 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|

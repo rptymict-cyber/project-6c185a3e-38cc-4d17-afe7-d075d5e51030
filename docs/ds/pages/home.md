@@ -4,7 +4,7 @@
 - Registry: docs/ds/screen-registry.json
 - Baseline: 2026-08-05 코드 기준
 
-## HOM-001_root_Default — 홈 대시보드 · 기본 상태
+## 홈 대시보드 · 기본 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -60,7 +60,7 @@
 | DS-0150 | 홈 대시보드 | HOM-001_root_Default | Design | -아이콘크기.01: 품목 아이콘 24~28px(카드 24px, 실시간 목록 28px), 등락률 배지 아이콘 12px, 검색 아이콘 16px. | - |
 | DS-0151 | 홈 대시보드 | HOM-001_root_Default | Design | -화면폭.01: 화면 컨테이너 최대 너비 430px 모바일 폭 고정, 좌우 중앙 정렬. | - |
 
-## HOM-001_root_Empty — 홈 대시보드 · 빈 상태
+## 홈 대시보드 · 빈 상태
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
