@@ -46,6 +46,9 @@ const EMOJI: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/price/$variety")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab: typeof search.tab === "string" ? search.tab : undefined,
+  }),
   component: VarietyDetailPage,
   head: () => ({
     meta: [
