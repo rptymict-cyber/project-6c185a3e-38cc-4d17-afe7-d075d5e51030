@@ -322,9 +322,13 @@ function VarietyDetailPage() {
 // -- tabs -------------------------------------------------------------------
 
 function ChartTab({
+  variety,
+  itemId,
+  unit,
   period,
   setPeriod,
   quote,
+
 
 }: {
   variety: string;
