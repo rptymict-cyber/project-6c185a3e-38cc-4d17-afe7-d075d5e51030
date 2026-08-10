@@ -122,13 +122,16 @@ export function getMarketQuote(p: {
   const effective = holiday ? prevTradingDay(requested) : requested;
 
   const rand = seeded(hash(`${p.itemId}|${p.varietyId}|${p.marketId}|${effective}`));
-  const basePerKg = 700 + Math.round(rand() * 1600); // 700 ~ 2300 per kg
+  // 기준 kg 단가 SSOT에서 거래단위로 환산만 한다.
+  const base = getPriceBase(p.varietyId || p.itemId);
+  const basePerKg = base.basePricePerKg;
   const mult = unitMultiplier(p.unit);
   const price = Math.round((basePerKg * mult) / 10) * 10;
 
-  const prevPct = +(rand() * -14 + 3).toFixed(1); // often negative
-  const weekPct = +(rand() * 12 - 2).toFixed(1);
-  const yearPct = +(rand() * 24 - 4).toFixed(1);
+  const prevPct = base.changeRate; // 등락률도 기준값 하나만 사용
+  const weekPct = +(base.changeRate * 1.6).toFixed(1);
+  const yearPct = +(base.changeRate * 2.8).toFixed(1);
+
   const volumeTon = +(15 + rand() * 40).toFixed(1);
   const boxes = Math.round(2500 + rand() * 3000);
 
