@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createFileRoute,
   Link,
@@ -12,6 +12,8 @@ import { AppShell } from "@/components/app-shell";
 import { PriceVolumeChart } from "@/components/market-v2/PriceVolumeChart";
 import { AuctionHistoryTable } from "@/components/market-v2/AuctionHistoryTable";
 import { getCrop } from "@/lib/mock/crops";
+import { getPriceBase } from "@/lib/mock/price-base";
+import { resolveVarietySelection } from "@/lib/variety-route";
 import { getMarketQuote, getPriceVolumeSeries } from "@/lib/mock/market-analysis";
 import {
   getCompanyBreakdown,
@@ -218,10 +220,10 @@ function VarietyDetailPage() {
       <div className="px-4 pt-4">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-[19px] font-black tracking-tight text-foreground">
-            {emoji} {f.varietyLabel}
+            {emoji} {sel.varietyLabel}
           </h1>
           <span className="inline-flex items-center gap-1 rounded-full bg-[#F1F3F5] px-2 py-0.5 text-[11px] font-semibold text-[#495057]">
-            {f.itemLabel} · {f.categoryLabel}
+            {sel.itemLabel} · {sel.categoryLabel}
           </span>
           {isPredictable && (
             <span className="inline-flex items-center rounded-full border border-[#3A8A3A]/30 bg-[#F0F9F0] px-2 py-0.5 text-[11px] font-bold text-[#1F5C1F]">
@@ -246,7 +248,7 @@ function VarietyDetailPage() {
           {isPredictable && (
             <Link
               to="/prediction"
-              search={{ cropId: f.itemId, entrySource: "detail" } as never}
+              search={{ cropId, entrySource: "detail" } as never}
               className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-[#3A8A3A] px-2.5 py-1 text-[11.5px] font-bold text-[#1F5C1F] active:bg-[#F0F9F0]"
             >
               AI 가격 예측 보기
@@ -294,21 +296,23 @@ function VarietyDetailPage() {
       {tab === "chart" && (
         <ChartTab
           variety={variety}
+          itemId={itemId}
+          unit={unit}
           period={period}
           setPeriod={setPeriod}
           quote={quote}
         />
       )}
       {tab === "auctions" && <AuctionHistoryTable />}
-      {tab === "compare" && <CompareTab variety={variety} unit={f.unit} />}
+      {tab === "compare" && <CompareTab variety={variety} unit={unit} />}
       {tab === "company" && (
-        <CompanyTab variety={variety} marketId={f.marketId} unit={f.unit} />
+        <CompanyTab variety={variety} marketId={f.marketId} unit={unit} />
       )}
       {tab === "origin" && (
-        <OriginTab variety={variety} marketId={f.marketId} unit={f.unit} />
+        <OriginTab variety={variety} marketId={f.marketId} unit={unit} />
       )}
       {tab === "variety" && (
-        <VarietyTab itemLabel={f.itemLabel} currentVarietyLabel={f.varietyLabel} />
+        <VarietyTab itemLabel={sel.itemLabel} currentVarietyLabel={sel.varietyLabel} />
       )}
     </AppShell>
 
@@ -324,6 +328,8 @@ function ChartTab({
 
 }: {
   variety: string;
+  itemId: string;
+  unit: string;
   period: DetailPeriod;
   setPeriod: (p: DetailPeriod) => void;
   quote: ReturnType<typeof getMarketQuote>;
@@ -333,10 +339,10 @@ function ChartTab({
   const seriesPeriod = (period === "all" ? "1y" : period) as
     | "today" | "1w" | "1m" | "3m" | "1y";
   const series = getPriceVolumeSeries({
-    itemId: f.itemId,
-    varietyId: f.varietyId,
+    itemId,
+    varietyId: variety,
     marketId: f.marketId,
-    unit: f.unit,
+    unit,
     date: f.date,
     period: seriesPeriod,
   });
