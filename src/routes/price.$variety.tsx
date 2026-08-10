@@ -78,6 +78,7 @@ const PERIODS: { id: DetailPeriod; label: string }[] = [
 
 function VarietyDetailPage() {
   const { variety } = Route.useParams();
+  const { tab: tabParam } = Route.useSearch();
   const router = useRouter();
   const navigate = useNavigate();
   const f = useMarketFilter();
@@ -97,7 +98,10 @@ function VarietyDetailPage() {
     [f.itemId, variety, f.marketId, f.unit, f.date],
   );
 
-  const [tab, setTab] = useState<Tab>("chart");
+  const initialTab = TABS.some((t) => t.id === tabParam)
+    ? (tabParam as Tab)
+    : "chart";
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [period, setPeriod] = useState<DetailPeriod>("1w");
 
   const crop = getCrop(f.itemId);
