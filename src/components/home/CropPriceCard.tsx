@@ -18,8 +18,8 @@ export function CropPriceCard({ crop, grade = "특" }: { crop: Crop; grade?: str
   const id = `spark-${crop.id}`;
   return (
     <Link
-      to="/market/$crop"
-      params={{ crop: crop.id }}
+      to="/price/$variety"
+      params={{ variety: crop.id }}
       className="block w-[168px] shrink-0 rounded-2xl bg-white p-3 shadow-[0_1px_4px_rgba(0,0,0,0.06)] ring-1 ring-[#F1F3F5]"
     >
       <div className="flex items-center gap-1.5">

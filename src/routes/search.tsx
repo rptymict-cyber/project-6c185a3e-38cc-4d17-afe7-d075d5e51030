@@ -104,7 +104,7 @@ function SearchPage() {
 
   const openCrop = (c: Crop) => {
     commit(c.name);
-    navigate({ to: "/market/$crop", params: { crop: c.id } });
+    navigate({ to: "/price/$variety", params: { variety: c.id } });
   };
 
   return (
