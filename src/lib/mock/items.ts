@@ -32,7 +32,7 @@ export type Variety = {
 
 export type Item = {
   id: string; // route param, also used as detail cropId fallback
-  cropId: string; // routed to /market/$crop
+  cropId: string; // routed to /price/$variety
   name: string;
   emoji: string;
   category: ItemCategory;

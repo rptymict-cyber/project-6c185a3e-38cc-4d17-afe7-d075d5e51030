@@ -1,5 +1,5 @@
 // Varieties (품종) per crop (중분류). Leaf-level items that resolve back
-// to the same /market/$crop detail page for MVP.
+// to the same /price/$variety detail page for MVP.
 export const VARIETIES: Record<string, string[]> = {
   apple: ["부사", "홍로", "쓰가루"],
   pear: ["신고", "원황"],
