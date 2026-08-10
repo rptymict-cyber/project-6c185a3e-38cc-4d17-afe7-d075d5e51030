@@ -10,6 +10,8 @@
  * 실제 API 연동 시 이 파일만 교체하면 전 화면이 함께 바뀐다.
  */
 
+import { ITEMS } from "./catalog";
+
 export type PriceBase = {
   /** 안정적인 식별자(영문 crop id 또는 카탈로그 품목 id) */
   cropId: string;
@@ -109,30 +111,21 @@ function fallbackBase(name: string): { basePricePerKg: number; changeRate: numbe
 // -- resolution -------------------------------------------------------------
 
 /** "0601" / "060101" / "cabbage" / "배추" 어떤 키가 와도 품목명으로 정규화 */
-function normalizeName(key: string, itemNameLookup?: (itemId: string) => string | undefined): string {
+function normalizeName(key: string): string {
   if (!key) return "기타";
   if (NAME_BY_CROP_ID[key]) return NAME_BY_CROP_ID[key];
   if (BASE_TABLE[key]) return key;
   const digits = key.match(/^(\d{4})/);
-  if (digits && itemNameLookup) {
-    const name = itemNameLookup(digits[1]);
-    if (name) return name;
+  if (digits) {
+    const item = ITEMS.find((it) => it.id === digits[1]);
+    if (item) return item.name;
   }
   return key;
 }
 
-let itemNameResolver: ((itemId: string) => string | undefined) | undefined;
-
-/**
- * 카탈로그 품목 id → 품목명 해석기 등록. (순환 import 방지를 위한 주입 방식)
- */
-export function registerItemNameResolver(fn: (itemId: string) => string | undefined) {
-  itemNameResolver = fn;
-}
-
 /** 어떤 키(crop id / 품목 id / 품종 id / 품목명)로도 동일한 기준값을 반환 */
 export function getPriceBase(key: string): PriceBase {
-  const name = normalizeName(key, itemNameResolver);
+  const name = normalizeName(key);
   const entry = BASE_TABLE[name] ?? fallbackBase(name);
   return {
     cropId: CROP_ID_BY_NAME[name] ?? name,
