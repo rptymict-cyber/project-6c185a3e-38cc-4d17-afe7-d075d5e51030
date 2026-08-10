@@ -3,6 +3,7 @@
 // produces stable numbers for MVP.
 
 import { MARKETS } from "./markets";
+import { getPriceBase } from "./price-base";
 
 export type Period = "today" | "1w" | "1m" | "3m" | "1y";
 
