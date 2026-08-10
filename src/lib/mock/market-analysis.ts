@@ -174,7 +174,8 @@ export function getPriceVolumeSeries(p: {
 }): PriceVolumeSeries {
   const rand = seeded(hash(`series|${p.itemId}|${p.varietyId}|${p.marketId}|${p.period}|${p.date}`));
   const mult = unitMultiplier(p.unit);
-  const base = (700 + rand() * 1600) * mult;
+  // 시계열도 기준 kg 단가에서 환산한다.
+  const base = getPriceBase(p.varietyId || p.itemId).basePricePerKg * mult;
   const out: SeriesPoint[] = [];
   const endDate = new Date(p.date + "T00:00:00");
 
@@ -264,10 +265,12 @@ export function getMarketRankings(p: {
   const mult = unitMultiplier(p.unit);
   const rows: MarketRankingRow[] = MARKETS.map((m) => {
     const rand = seeded(hash(`${p.itemId}|${p.varietyId}|${m.id}|${p.date}`));
-    const basePerKg = 700 + Math.round(rand() * 1600);
+    const priceBase = getPriceBase(p.varietyId || p.itemId);
+    // 시장별 편차는 기준 kg 단가 대비 ±8% 이내로만 둔다.
+    const basePerKg = Math.round(priceBase.basePricePerKg * (1 + (rand() - 0.5) * 0.16));
     const price = Math.round((basePerKg * mult) / 10) * 10;
-    const prevPct = +(rand() * -14 + 3).toFixed(1);
-    const weekPct = +(rand() * 12 - 2).toFixed(1);
+    const prevPct = priceBase.changeRate;
+    const weekPct = +(priceBase.changeRate * 1.6).toFixed(1);
     const volumeTon = +(10 + rand() * 40).toFixed(1);
     // 30% chance market data is on an earlier day
     const different = rand() > 0.7 && !!p.date;
@@ -352,10 +355,11 @@ function buildGroupRankings(
   const mult = unitMultiplier(p.unit);
   const rows: GroupRankingRow[] = pool.map((m) => {
     const rand = seeded(hash(`${p.scope}|${p.itemId}|${p.varietyId}|${m.id}|${p.date}`));
-    const basePerKg = 700 + Math.round(rand() * 1600);
+    const priceBase = getPriceBase(p.varietyId || p.itemId);
+    const basePerKg = Math.round(priceBase.basePricePerKg * (1 + (rand() - 0.5) * 0.16));
     const price = Math.round((basePerKg * mult) / 10) * 10;
-    const prevPct = +(rand() * -14 + 3).toFixed(1);
-    const weekPct = +(rand() * 12 - 2).toFixed(1);
+    const prevPct = priceBase.changeRate;
+    const weekPct = +(priceBase.changeRate * 1.6).toFixed(1);
     const volumeTon = +(8 + rand() * 40).toFixed(1);
     return { id: m.id, name: m.name, subLabel: m.sub, price, prevPct, weekPct, volumeTon, sharePct: 0 };
   });
