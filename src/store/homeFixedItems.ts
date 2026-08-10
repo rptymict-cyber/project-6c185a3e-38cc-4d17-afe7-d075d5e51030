@@ -18,7 +18,7 @@ type Actions = {
   removeItem: (id: string) => void;
 };
 
-const DEFAULT_MARKETS = ["seoul-garak", "seoul-gangseo", "daegu-bugbu", "busan-eomgung"];
+const DEFAULT_MARKETS = ["seoul-garak", "daejeon-ojeong", "daegu-bugbu", "busan-eomgung"];
 const DEFAULT_ITEMS = ["cabbage", "radish", "onion", "garlic", "apple", "pear"];
 
 export const useHomeFixed = create<State & Actions>()(

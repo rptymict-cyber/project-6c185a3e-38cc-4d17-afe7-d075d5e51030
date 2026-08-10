@@ -65,7 +65,19 @@ export function TrendDirectionCard() {
 }
 
 /* ---------- 2. 경매·수급 동향 ---------- */
-export function AuctionSupplyCard() {
+export function AuctionSupplyCard({
+  marketName = "서울가락",
+  avgAuctionPrice = 14346,
+  avgChangePct = 2.1,
+  weeklyVolumeTon = 429,
+  volumeChangePct = -3.8,
+}: {
+  marketName?: string;
+  avgAuctionPrice?: number;
+  avgChangePct?: number;
+  weeklyVolumeTon?: number;
+  volumeChangePct?: number;
+}) {
   const origins = [
     { name: "경북", pct: 42 },
     { name: "충남", pct: 28 },
@@ -78,7 +90,7 @@ export function AuctionSupplyCard() {
         경매·수급 동향
       </div>
       <div className="mt-0.5 text-[11px] text-[#868E96]">
-        서울가락 · 2026년 29주차
+        {marketName} · 2026년 29주차
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
@@ -86,10 +98,13 @@ export function AuctionSupplyCard() {
           <div className="text-[10.5px] text-[#6C757D]">주간 반입량</div>
           <div className="mt-0.5 flex items-baseline gap-1">
             <span className="text-[16px] font-black text-foreground tabular-nums">
-              429t
+              {Math.round(weeklyVolumeTon).toLocaleString()}t
             </span>
-            <span className="text-[11px] font-bold text-[#1971C2] tabular-nums">
-              -3.8%
+            <span
+              className={`text-[11px] font-bold tabular-nums ${volumeChangePct >= 0 ? "text-[#E03B3B]" : "text-[#1971C2]"}`}
+            >
+              {volumeChangePct >= 0 ? "+" : ""}
+              {volumeChangePct.toFixed(1)}%
             </span>
           </div>
         </div>
@@ -97,10 +112,13 @@ export function AuctionSupplyCard() {
           <div className="text-[10.5px] text-[#6C757D]">평균 낙찰가</div>
           <div className="mt-0.5 flex items-baseline gap-1">
             <span className="text-[16px] font-black text-foreground tabular-nums">
-              14,346원
+              {Math.round(avgAuctionPrice).toLocaleString()}원
             </span>
-            <span className="text-[11px] font-bold text-[#E03B3B] tabular-nums">
-              +2.1%
+            <span
+              className={`text-[11px] font-bold tabular-nums ${avgChangePct >= 0 ? "text-[#E03B3B]" : "text-[#1971C2]"}`}
+            >
+              {avgChangePct >= 0 ? "+" : ""}
+              {avgChangePct.toFixed(1)}%
             </span>
           </div>
         </div>
@@ -134,17 +152,27 @@ export function AuctionSupplyCard() {
 }
 
 /* ---------- 5. 가격 전망 리포트 ---------- */
-export function PriceOutlookReportCard() {
+export function PriceOutlookReportCard({
+  marketName = "서울가락",
+  rangeDays = 30,
+  forecastLow = 13294,
+  forecastHigh = 15398,
+}: {
+  marketName?: string;
+  rangeDays?: number;
+  forecastLow?: number;
+  forecastHigh?: number;
+}) {
   const paragraphs = [
     {
       title: "과거 가격 추세",
       body:
-        "최근 180일간 완만한 상승세를 유지함. 저장물량 소진과 착색 지연이 겹치며 공급 제약이 커진 구간이 확인됨.",
+        `${marketName} 기준 최근 180일간 완만한 상승세를 유지함. 저장물량 소진과 착색 지연이 겹치며 공급 제약이 커진 구간이 확인됨.`,
     },
     {
       title: "예측 추세",
       body:
-        "향후 30일 예측 범위는 13,294~15,398원임. 상단 부근에서 횡보하며 고점 형성 흐름이 예상됨.",
+        `향후 ${rangeDays}일 예측 범위는 ${Math.round(forecastLow).toLocaleString()}~${Math.round(forecastHigh).toLocaleString()}원임. 상단 부근에서 횡보하며 고점 형성 흐름이 예상됨.`,
     },
     {
       title: "시장 영향",

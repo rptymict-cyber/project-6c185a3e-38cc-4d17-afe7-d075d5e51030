@@ -104,9 +104,11 @@ function PredictionPage() {
     selectedCropId,
     selectedRangeDays,
     selectedGrade,
+    marketId,
   );
   const cropMeta = getPredictableCrop(selectedCropId);
   const marketName =
+    prediction?.marketName ??
     MARKETS.find((m) => m.id === marketId)?.name ??
     cropMeta?.marketName ??
     "서울가락";
@@ -114,7 +116,7 @@ function PredictionPage() {
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
   useEffect(() => {
     setSelectedDayIndex(null);
-  }, [selectedRangeDays, selectedCropId, selectedGrade]);
+  }, [selectedRangeDays, selectedCropId, selectedGrade, marketId]);
 
   if (!prediction || !cropMeta) {
     return (
@@ -125,6 +127,22 @@ function PredictionPage() {
       </AppShell>
     );
   }
+
+  const selectedMarket = MARKETS.find((m) => m.id === prediction.marketId);
+  const marketVolumeChangePct = selectedMarket?.prevAvgKg
+    ? ((selectedMarket.avgKg - selectedMarket.prevAvgKg) /
+        selectedMarket.prevAvgKg) *
+      -100
+    : -3.8;
+  const forecastPrices = prediction.predictedPoints
+    .map((p) => p.predictedPrice)
+    .filter((v): v is number => v !== undefined);
+  const forecastLow = forecastPrices.length
+    ? Math.min(...forecastPrices)
+    : prediction.currentPrice;
+  const forecastHigh = forecastPrices.length
+    ? Math.max(...forecastPrices)
+    : prediction.currentPrice;
 
   const isFarmer = selectedViewpoint === "farmer";
   const insight = isFarmer
@@ -352,13 +370,24 @@ function PredictionPage() {
             <TrendDirectionCard />
           </div>
           <div className="mb-2">
-            <AuctionSupplyCard />
+            <AuctionSupplyCard
+              marketName={marketName}
+              avgAuctionPrice={prediction.currentPrice}
+              avgChangePct={prediction.previousChangeRate}
+              weeklyVolumeTon={selectedMarket?.volumeTon ?? 429}
+              volumeChangePct={marketVolumeChangePct}
+            />
           </div>
 
           <PredictionFactorList factors={prediction.factors} />
 
           <div className="mt-2">
-            <PriceOutlookReportCard />
+            <PriceOutlookReportCard
+              marketName={marketName}
+              rangeDays={prediction.predictionRangeDays}
+              forecastLow={forecastLow}
+              forecastHigh={forecastHigh}
+            />
           </div>
           <div className="mt-2">
             <TopicRelatedNewsCard />

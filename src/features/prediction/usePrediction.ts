@@ -22,6 +22,7 @@ export async function fetchPricePrediction(
     params.cropId,
     params.rangeDays,
     params.grade ?? "특",
+    params.marketId,
   );
 }
 
@@ -29,9 +30,10 @@ export function usePrediction(
   cropId: string,
   rangeDays: PredictionRangeDays,
   grade: PredictionGrade = "특",
+  marketId?: string,
 ) {
   return useMemo(() => {
     if (!isPredictableCropId(cropId)) return null;
-    return buildMockPrediction(cropId, rangeDays, grade);
-  }, [cropId, rangeDays, grade]);
+    return buildMockPrediction(cropId, rangeDays, grade, marketId);
+  }, [cropId, rangeDays, grade, marketId]);
 }

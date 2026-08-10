@@ -19,7 +19,7 @@ const FILTERS: { id: FilterId; label: string }[] = [
 const MARKETS = [
   "서울 가락시장 · 특 · 10kg망",
   "대구 북부시장 · 상 · 20kg박스",
-  "구리시장 · 상 · 1kg단",
+  "대전오정 · 상 · 1kg단",
   "의성·안동 · 상 · 1kg",
   "부산 엄궁시장 · 상 · 15kg망",
   "서울 강서시장 · 상 · 10kg박스",

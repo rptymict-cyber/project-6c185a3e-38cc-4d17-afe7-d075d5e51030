@@ -44,8 +44,8 @@ export const MARKET_OPTIONS = [
   { id: "전국",     label: "전국" },
   { id: "서울가락", label: "서울가락" },
   { id: "대구북부", label: "대구북부" },
-  { id: "광주서부", label: "광주서부" },
-  { id: "구리",     label: "구리" },
+  { id: "광주각화", label: "광주각화" },
+  { id: "대전오정", label: "대전오정" },
   { id: "부산엄궁", label: "부산엄궁" },
 ];
 
@@ -76,7 +76,7 @@ function labelsFor(mode: PeriodMode): string[] {
 
 function marketBias(marketId: string): number {
   const table: Record<string, number> = {
-    전국: 0, 서울가락: 0.04, 대구북부: -0.03, 광주서부: 0.02, 구리: 0.01, 부산엄궁: 0.015,
+    전국: 0, 서울가락: 0.04, 대구북부: -0.03, 광주각화: 0.02, 대전오정: 0.01, 부산엄궁: 0.015,
   };
   return 1 + (table[marketId] ?? 0);
 }
@@ -160,8 +160,8 @@ const ORIGIN_TABLE: Record<string, { name: string; value: number }[]> = {
 const MARKET_SHARE_DEFAULT = [
   { name: "서울가락", value: 42 },
   { name: "대구북부", value: 18 },
-  { name: "광주서부", value: 14 },
-  { name: "구리",     value: 12 },
+  { name: "광주각화", value: 14 },
+  { name: "대전오정", value: 12 },
   { name: "부산엄궁", value: 9 },
   { name: "기타",     value: 5 },
 ];
