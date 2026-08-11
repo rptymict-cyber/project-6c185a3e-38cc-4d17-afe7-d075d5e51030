@@ -12,6 +12,8 @@
 import { CATEGORIES, ITEMS as CATALOG_ITEMS } from "@/lib/mock/catalog";
 import { ITEMS as MARKET_ITEMS } from "@/lib/mock/items";
 import { getPriceBase } from "@/lib/mock/price-base";
+import { DEFAULT_UNIT_BY_ITEM, FALLBACK_UNIT } from "@/lib/units";
+
 
 export type VarietySelection = {
   categoryId: string;
