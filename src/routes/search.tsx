@@ -244,6 +244,11 @@ function SearchPage() {
                       </li>
                     ))}
                   </ul>
+                  {allMarketResults.length > marketResults.length && (
+                    <div className="px-4">
+                      <LoadMoreButton onClick={() => setMarketLimit((n) => n + LIST_PAGE_SIZE)} />
+                    </div>
+                  )}
                 </Section>
               )}
             </div>
