@@ -207,11 +207,17 @@ function SearchPage() {
                       </li>
                     ))}
                   </ul>
+                  {allCropResults.length > cropResults.length && (
+                    <div className="px-4">
+                      <LoadMoreButton onClick={() => setCropLimit((n) => n + LIST_PAGE_SIZE)} />
+                    </div>
+                  )}
                 </Section>
               )}
 
               {marketResults.length > 0 && (
-                <Section title={`시장 (${marketResults.length})`}>
+                <Section title={`시장 (${allMarketResults.length})`}>
+
                   <ul className="divide-y divide-border">
                     {marketResults.map((m) => (
                       <li key={m.id}>
