@@ -5,6 +5,8 @@ import { CATEGORIES, CROPS, type Crop } from "@/lib/mock/crops";
 import { MARKETS, type Market } from "@/lib/mock/markets";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
+import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButton";
+
 
 export const Route = createFileRoute("/search")({
   component: SearchPage,
@@ -56,25 +58,37 @@ function SearchPage() {
   const query = q.trim().toLowerCase();
   const hasQuery = query.length > 0;
 
-  const cropResults = useMemo<Crop[]>(() => {
+  // 검색 결과도 앱 전역 규칙(50건 단위 더보기)을 따른다.
+  const [cropLimit, setCropLimit] = useState(LIST_PAGE_SIZE);
+  const [marketLimit, setMarketLimit] = useState(LIST_PAGE_SIZE);
+  useEffect(() => {
+    setCropLimit(LIST_PAGE_SIZE);
+    setMarketLimit(LIST_PAGE_SIZE);
+  }, [query]);
+
+  const allCropResults = useMemo<Crop[]>(() => {
     if (!hasQuery) return [];
     return CROPS.filter(
       (c) =>
         c.name.toLowerCase().includes(query) ||
         CATEGORY_LABEL[c.category]?.toLowerCase().includes(query),
-    ).slice(0, 20);
+    );
   }, [query, hasQuery]);
 
-  const marketResults = useMemo<Market[]>(() => {
+  const allMarketResults = useMemo<Market[]>(() => {
     if (!hasQuery) return [];
     return MARKETS.filter(
       (m) =>
         m.name.toLowerCase().includes(query) ||
         m.region.toLowerCase().includes(query),
-    ).slice(0, 20);
+    );
   }, [query, hasQuery]);
 
-  const noResults = hasQuery && cropResults.length === 0 && marketResults.length === 0;
+  const cropResults = allCropResults.slice(0, cropLimit);
+  const marketResults = allMarketResults.slice(0, marketLimit);
+
+  const noResults = hasQuery && allCropResults.length === 0 && allMarketResults.length === 0;
+
 
   // trending: biggest absolute % change today
   const trending = useMemo(() => {
@@ -157,7 +171,7 @@ function SearchPage() {
           ) : (
             <div className="pt-2">
               {cropResults.length > 0 && (
-                <Section title={`작물 (${cropResults.length})`}>
+                <Section title={`작물 (${allCropResults.length})`}>
                   <ul className="divide-y divide-border">
                     {cropResults.map((c) => (
                       <li key={c.id}>
@@ -193,11 +207,17 @@ function SearchPage() {
                       </li>
                     ))}
                   </ul>
+                  {allCropResults.length > cropResults.length && (
+                    <div className="px-4">
+                      <LoadMoreButton onClick={() => setCropLimit((n) => n + LIST_PAGE_SIZE)} />
+                    </div>
+                  )}
                 </Section>
               )}
 
               {marketResults.length > 0 && (
-                <Section title={`시장 (${marketResults.length})`}>
+                <Section title={`시장 (${allMarketResults.length})`}>
+
                   <ul className="divide-y divide-border">
                     {marketResults.map((m) => (
                       <li key={m.id}>
@@ -224,6 +244,11 @@ function SearchPage() {
                       </li>
                     ))}
                   </ul>
+                  {allMarketResults.length > marketResults.length && (
+                    <div className="px-4">
+                      <LoadMoreButton onClick={() => setMarketLimit((n) => n + LIST_PAGE_SIZE)} />
+                    </div>
+                  )}
                 </Section>
               )}
             </div>

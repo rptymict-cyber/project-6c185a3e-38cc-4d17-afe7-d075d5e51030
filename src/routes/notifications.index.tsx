@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Bell, Info, Settings, TrendingDown, TrendingUp } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -10,6 +10,7 @@ import {
 } from "@/store/notification-events";
 import { useMarketFilter } from "@/store/market";
 import { cn } from "@/lib/utils";
+import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButton";
 
 export const Route = createFileRoute("/notifications/")({
   component: NotificationsPage,
@@ -42,7 +43,15 @@ function NotificationsPage() {
     [events],
   );
 
-  const groups = useMemo(() => groupByDay(sorted), [sorted]);
+  // 알림 목록도 앱 전역 규칙(50건 단위 더보기)을 따른다.
+  const [limit, setLimit] = useState(LIST_PAGE_SIZE);
+  useEffect(() => {
+    setLimit((n) => Math.max(n, LIST_PAGE_SIZE));
+  }, [sorted.length]);
+  const visible = sorted.slice(0, limit);
+  const hasMore = sorted.length > visible.length;
+
+  const groups = useMemo(() => groupByDay(visible), [visible]);
 
   const handleClick = (e: NotificationEvent) => {
     // 1) 읽음 처리
@@ -157,6 +166,11 @@ function NotificationsPage() {
               </ul>
             </section>
           ))}
+          {hasMore && (
+            <div className="px-4">
+              <LoadMoreButton onClick={() => setLimit((n) => n + LIST_PAGE_SIZE)} />
+            </div>
+          )}
         </div>
       )}
     </AppShell>

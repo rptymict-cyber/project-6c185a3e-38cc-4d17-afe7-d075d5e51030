@@ -40,7 +40,7 @@ function WholesaleBrowsePage() {
     MARKETS.find((x) => x.id === DEFAULT_MARKET) ??
     MARKETS[0];
 
-  // 시장별 품목 리스트 (mock) — 시장 오프셋으로 결정론적 가격
+  // 시장별 품목 리스트 (mock) — 시장 오프셋으로 결정론적 가격, 가격 높은 순 정렬(순위 표시)
   const items = useMemo(() => {
     const offset = MARKETS.findIndex((x) => x.id === market.id);
     return ITEMS.map((it, i) => {
@@ -53,8 +53,9 @@ function WholesaleBrowsePage() {
         priceKg: Math.round(base * factor),
         changePct: +(change + ((offset - 1) * 0.3)).toFixed(1),
       };
-    });
+    }).sort((a, b) => b.priceKg - a.priceKg);
   }, [market.id]);
+
 
   const grouped = useMemo(() => {
     return MARKETS.reduce<Record<string, typeof MARKETS>>((acc, x) => {
@@ -160,9 +161,14 @@ function WholesaleBrowsePage() {
 
         {/* 품목 리스트 */}
         <h3 className="mb-2 mt-6 px-1 text-[12px] font-bold text-muted-foreground">
-          {market.name} 거래 품목
+          {market.name} 거래 품목 <span className="font-semibold">(높은 가격순)</span>
         </h3>
         <ul className="overflow-hidden rounded-[10px] bg-surface">
+          <li className="grid grid-cols-[28px_1fr_auto] items-center gap-3 border-b border-[#F1F3F5] bg-[#FAFBFC] px-3 py-1.5 text-[10.5px] font-semibold text-muted-foreground">
+            <span />
+            <span>품목</span>
+            <span className="text-right">현재가</span>
+          </li>
           {items.map((it, idx) => {
             const up = it.changePct >= 0;
             return (
@@ -170,11 +176,11 @@ function WholesaleBrowsePage() {
                 <Link
                   to="/market/wholesale/$market"
                   params={{ market: market.id }}
-                  className={cn(
-                    "flex items-center gap-3 border-t border-[#F1F3F5] px-3 py-3.5",
-                    idx === 0 && "border-t-0",
-                  )}
+                  className="flex items-center gap-3 border-t border-[#F1F3F5] px-3 py-3.5"
                 >
+                  <span className="w-7 shrink-0 text-center text-[12px] font-bold tabular-nums text-[#3A8A3A]">
+                    {idx + 1}
+                  </span>
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#F0F9F0]">
                     <CropIcon name={it.name} size={24} />
                   </span>
@@ -204,6 +210,7 @@ function WholesaleBrowsePage() {
             );
           })}
         </ul>
+
       </div>
     </AppShell>
   );

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useMarketFilter } from "@/store/market";
 import { listAuctions, type AuctionRecord } from "@/lib/mock/auctions";
@@ -30,25 +30,55 @@ export function AuctionHistoryTable() {
 
   const [page, setPage] = useState(1);
 
+  // 출하지 / 규격 필터 칩 (경매내역 결과 내 2차 필터)
+  const [origin, setOrigin] = useState("전체");
+  const [pkg, setPkg] = useState("전체");
+
+  const originOptions = useMemo(
+    () => ["전체", ...Array.from(new Set(all.map((r) => r.origin)))],
+    [all],
+  );
+  const pkgOptions = useMemo(
+    () => ["전체", ...Array.from(new Set(all.map((r) => r.packageLabel)))],
+    [all],
+  );
+
+  // 조회 조건이 바뀌면 칩 선택과 페이지를 초기화한다.
+  useEffect(() => {
+    setOrigin("전체");
+    setPkg("전체");
+    setPage(1);
+  }, [f.itemId, f.varietyLabel, f.marketId, f.date]);
+
+  const rows = useMemo(
+    () =>
+      all.filter(
+        (r) =>
+          (origin === "전체" || r.origin === origin) &&
+          (pkg === "전체" || r.packageLabel === pkg),
+      ),
+    [all, origin, pkg],
+  );
+
 
   const summary = useMemo(() => {
-    if (all.length === 0) {
+    if (rows.length === 0) {
       return { avg: 0, avgPerKg: 0, volumeTon: 0 };
     }
     const avg = Math.round(
-      all.reduce((s: number, r: AuctionRecord) => s + r.price, 0) / all.length,
+      rows.reduce((s: number, r: AuctionRecord) => s + r.price, 0) / rows.length,
     );
     const avgPerKg = Math.round(
-      all.reduce((s: number, r: AuctionRecord) => s + r.pricePerKg, 0) / all.length,
+      rows.reduce((s: number, r: AuctionRecord) => s + r.pricePerKg, 0) / rows.length,
     );
     const volumeTon = +(
-      all.reduce((s: number, r: AuctionRecord) => s + r.packageKg * r.count, 0) / 1000
+      rows.reduce((s: number, r: AuctionRecord) => s + r.packageKg * r.count, 0) / 1000
     ).toFixed(1);
     return { avg, avgPerKg, volumeTon };
-  }, [all]);
+  }, [rows]);
 
-  const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
-  const visible = all.slice(0, page * PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const visible = rows.slice(0, page * PAGE_SIZE);
 
   const dateLabel = f.date.replaceAll("-", ".");
 
@@ -59,7 +89,7 @@ export function AuctionHistoryTable() {
         <div className="flex items-baseline gap-2">
           <h3 className="text-[15px] font-bold text-foreground">경매내역</h3>
           <span className="text-[15px] font-black text-[#3A8A3A]">
-            총 {all.length}건
+            총 {rows.length}건
           </span>
         </div>
         <div className="mt-1 text-[11.5px] text-[#868E96]">
@@ -75,6 +105,26 @@ export function AuctionHistoryTable() {
       </div>
 
 
+
+      {/* 필터 칩 — 출하지 / 규격 */}
+      <ChipRow
+        label="출하지"
+        options={originOptions}
+        value={origin}
+        onChange={(v) => {
+          setOrigin(v);
+          setPage(1);
+        }}
+      />
+      <ChipRow
+        label="규격"
+        options={pkgOptions}
+        value={pkg}
+        onChange={(v) => {
+          setPkg(v);
+          setPage(1);
+        }}
+      />
 
       {/* Data area — table only */}
       {visible.length === 0 ? (
@@ -94,6 +144,45 @@ export function AuctionHistoryTable() {
 
 
 
+
+function ChipRow({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: string[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  if (options.length <= 1) return null;
+  return (
+    <div className="mt-3 flex items-center gap-2">
+      <span className="shrink-0 text-[11px] font-semibold text-[#868E96]">{label}</span>
+      <div className="-mx-1 flex flex-1 gap-1.5 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {options.map((o) => {
+          const active = o === value;
+          return (
+            <button
+              key={o}
+              type="button"
+              onClick={() => onChange(o)}
+              className={cn(
+                "h-7 shrink-0 whitespace-nowrap rounded-full border px-2.5 text-[11.5px] font-semibold",
+                active
+                  ? "border-[#3A8A3A] bg-[#F0F9F0] text-[#1F5C1F]"
+                  : "border-[#E9ECEF] bg-white text-[#6C757D]",
+              )}
+            >
+              {o}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
   return (

@@ -136,12 +136,12 @@ function WholesaleDetailPage() {
       {/* 테이블 */}
       <div className="mt-3 overflow-hidden border-y border-[#E9ECEF]">
         <div className="grid grid-cols-[1.6fr_1fr_1fr_0.9fr] bg-[#F8F9FA] px-3 py-2 text-[11px] font-bold text-[#6C757D]">
-          <span>구분</span>
+          <span>품목</span>
           <span className="text-right">평균가</span>
           <span className="text-right">전일대비</span>
           <span className="text-right">거래량</span>
         </div>
-        {data.rows.map((r) => {
+        {data.rows.map((r, i) => {
           const isAll = r.key === "all";
           const isOpen = expanded === r.key;
           const up = r.changePct > 0;
@@ -157,6 +157,11 @@ function WholesaleDetailPage() {
                 )}
               >
                 <span className="flex items-center gap-1 truncate text-foreground">
+                  {!isAll && (
+                    <span className="w-4 shrink-0 text-[12px] font-bold tabular-nums text-[#3A8A3A]">
+                      {i}
+                    </span>
+                  )}
                   {r.label}
                   {!isAll && (
                     <ChevronDown
@@ -167,6 +172,7 @@ function WholesaleDetailPage() {
                     />
                   )}
                 </span>
+
                 <span className="text-right font-data font-bold tabular-nums">
                   {r.price.toLocaleString()}
                 </span>
