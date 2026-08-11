@@ -30,7 +30,6 @@ export type VarietySelection = {
 const DEFAULT_UNIT_BY_NAME = DEFAULT_UNIT_BY_ITEM;
 
 
-const FALLBACK_UNIT = "10kg 기준";
 
 function categoryLabelOf(categoryId: string): string {
   return CATEGORIES.find((c) => c.id === categoryId)?.name ?? "";
