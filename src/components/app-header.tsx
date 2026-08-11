@@ -4,7 +4,9 @@ import { Bell, RefreshCw, Search } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { AppDrawerTrigger } from "./app-drawer";
+import { UnreadBadge } from "./notifications/UnreadBadge";
 import { cn } from "@/lib/utils";
+
 
 /**
  * 1차 메뉴/GNB 화면용 공통 상단바.
