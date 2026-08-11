@@ -1,4 +1,7 @@
-export type QuantityUnit = "box" | "kg" | "ton" | "ea";
+import { convertAmount, type AmountUnit } from "@/lib/units";
+
+/** 수량 단위는 공통 단위 SSOT의 AmountUnit과 동일하다 */
+export type QuantityUnit = AmountUnit;
 
 export const QUANTITY_UNITS: QuantityUnit[] = ["box", "kg", "ton", "ea"];
 
@@ -40,4 +43,17 @@ export function clampQuantity(value: number, unit: QuantityUnit): number {
 
 export function formatQuantity(value: number, unit: QuantityUnit): string {
   return `${value.toLocaleString()}${QUANTITY_UNIT_LABEL[unit]}`;
+}
+
+/**
+ * 단위를 바꿀 때 기본값으로 리셋하지 말고 kg 기준으로 환산한다.
+ * (상자당 kg은 품목 기본 거래단위 기준 — `@/lib/units`)
+ */
+export function convertQuantity(
+  value: number,
+  from: QuantityUnit,
+  to: QuantityUnit,
+  itemName?: string,
+): number {
+  return clampQuantity(convertAmount(value, from, to, itemName), to);
 }

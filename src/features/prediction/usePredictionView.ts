@@ -9,6 +9,7 @@ import { isPredictableCropId, PREDICTABLE_CROPS } from "./mockPredictionData";
 import { MARKETS } from "@/lib/mock/markets";
 import {
   clampQuantity,
+  convertQuantity,
   QUANTITY_UNIT_DEFAULT,
   type QuantityUnit,
 } from "./quantityUnits";
@@ -57,8 +58,13 @@ export const usePredictionView = create<PredictionViewState>()(
       },
       setQuantity: (value, unit) =>
         set({ quantityUnit: unit, quantityBoxes: clampQuantity(value, unit) }),
-      setQuantityUnit: (u) =>
-        set({ quantityUnit: u, quantityBoxes: QUANTITY_UNIT_DEFAULT[u] }),
+      setQuantityUnit: (u) => {
+        const { quantityUnit, quantityBoxes } = get();
+        set({
+          quantityUnit: u,
+          quantityBoxes: convertQuantity(quantityBoxes, quantityUnit, u),
+        });
+      },
       setMarketId: (id) => set({ marketId: id }),
     }),
     {

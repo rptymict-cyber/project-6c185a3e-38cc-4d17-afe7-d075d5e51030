@@ -435,6 +435,7 @@ function PredictionPage() {
         unit={quantityUnit}
         onChange={(v, u) => setQuantity(v, u)}
         heading={isFarmer ? "출하량" : "매입량"}
+        itemName={prediction.cropName}
       />
       <MarketPickerSheet
         open={marketSheetOpen}
