@@ -4,7 +4,9 @@ import { Bell, RefreshCw, Search } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { AppDrawerTrigger } from "./app-drawer";
+import { UnreadBadge } from "./notifications/UnreadBadge";
 import { cn } from "@/lib/utils";
+
 
 /**
  * 1차 메뉴/GNB 화면용 공통 상단바.
@@ -76,11 +78,13 @@ export function AppHeader({
         <Link
           to="/notifications"
           aria-label="알림"
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+          className="relative grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
         >
           <Bell className="h-5 w-5" />
+          <UnreadBadge className="right-1 top-1" />
         </Link>
       )}
+
     </>
   );
 

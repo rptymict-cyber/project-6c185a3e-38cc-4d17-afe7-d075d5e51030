@@ -2,8 +2,15 @@ import { memo } from "react";
 import { Link } from "@tanstack/react-router";
 import { Home, LineChart, Star, BarChart3, Settings } from "lucide-react";
 import type { ComponentType } from "react";
+import { UnreadBadge } from "./notifications/UnreadBadge";
 
-const tabs: { to: string; label: string; Icon: ComponentType<{ className?: string }> }[] = [
+const tabs: {
+  to: string;
+  label: string;
+  Icon: ComponentType<{ className?: string }>;
+  /** 안 읽은 알림 배지 노출 여부 */
+  showUnread?: boolean;
+}[] = [
   { to: "/", label: "홈", Icon: Home },
   { to: "/market", label: "시세", Icon: LineChart },
   { to: "/watchlist", label: "즐겨찾기", Icon: Star },
@@ -17,14 +24,17 @@ function BottomNavBase() {
       className="fixed inset-x-0 bottom-0 z-40 mx-auto flex h-[60px] w-full max-w-[430px] items-stretch border-t border-[#E8EEE8] bg-white"
       aria-label="주요 메뉴"
     >
-      {tabs.map(({ to, label, Icon }) => (
+      {tabs.map(({ to, label, Icon, showUnread }) => (
         <Link
           key={to}
           to={to}
           activeOptions={{ exact: to === "/" }}
           className="group flex min-h-11 flex-1 flex-col items-center justify-center gap-1 text-[10px] text-[#9CA3AF] transition-colors data-[status=active]:text-primary"
         >
-          <Icon className="h-5 w-5" />
+          <span className="relative grid place-items-center">
+            <Icon className="h-5 w-5" />
+            {showUnread && <UnreadBadge className="-right-2 -top-1" />}
+          </span>
           <span className="font-medium">{label}</span>
         </Link>
       ))}
@@ -33,4 +43,3 @@ function BottomNavBase() {
 }
 
 export const BottomNav = memo(BottomNavBase);
-
