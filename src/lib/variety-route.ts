@@ -24,36 +24,9 @@ export type VarietySelection = {
   unit: string;
 };
 
-/** 품목명별 기본 거래단위 (미정의 품목은 10kg 기준) */
-const DEFAULT_UNIT_BY_NAME: Record<string, string> = {
-  배추: "10kg 기준",
-  무: "20kg 기준",
-  당근: "20kg 기준",
-  감자: "20kg 기준",
-  고구마: "10kg 기준",
-  마늘: "1kg 기준",
-  양파: "15kg 기준",
-  대파: "1kg 기준",
-  청양고추: "10kg 기준",
-  상추: "4kg 기준",
-  시금치: "4kg 기준",
-  깻잎: "2kg 기준",
-  오이: "10kg 기준",
-  토마토: "5kg 기준",
-  파프리카: "5kg 기준",
-  가지: "5kg 기준",
-  딸기: "2kg 기준",
-  참외: "10kg 기준",
-  수박: "8kg 기준",
-  복숭아: "4.5kg 기준",
-  포도: "5kg 기준",
-  배: "15kg 기준",
-  사과: "10kg 기준",
-  단감: "10kg 기준",
-  표고버섯: "4kg 기준",
-  팽이버섯: "1kg 기준",
-  쌀: "20kg 기준",
-};
+/** 품목명별 기본 거래단위 — 공통 단위 SSOT(`@/lib/units`)에서 가져온다 */
+const DEFAULT_UNIT_BY_NAME = DEFAULT_UNIT_BY_ITEM;
+
 
 const FALLBACK_UNIT = "10kg 기준";
 
