@@ -367,10 +367,7 @@ export function seriesFor(cropId: string, period: "1w" | "1m" | "1y" | "3y") {
       volume: Math.max(1, Math.round(volSeries[i] / 10)),
       change: price - prev,
       changePct: prev ? ((price - prev) / prev) * 100 : 0,
-      grade:
-        i % 3 === 0
-          ? { top: Math.round(price * 1.15), mid: price, low: Math.round(price * 0.85) }
-          : undefined,
+      // 등급은 인덱스 순환으로 배정하지 않는다. 등급별 가격은 grade-prices.ts 참조.
     };
   });
 }
