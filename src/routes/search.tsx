@@ -171,7 +171,7 @@ function SearchPage() {
           ) : (
             <div className="pt-2">
               {cropResults.length > 0 && (
-                <Section title={`작물 (${cropResults.length})`}>
+                <Section title={`작물 (${allCropResults.length})`}>
                   <ul className="divide-y divide-border">
                     {cropResults.map((c) => (
                       <li key={c.id}>
