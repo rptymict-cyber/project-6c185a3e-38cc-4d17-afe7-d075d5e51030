@@ -1,14 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { CROPS } from "@/lib/mock/crops";
 import { MARKETS } from "@/lib/mock/markets";
 import { PriceBadge } from "@/components/price-badge";
+import { FullSelectCard } from "@/components/common/ConditionSelectCard";
 import { cn } from "@/lib/utils";
+
+interface CompareSearch {
+  cropId?: string;
+}
 
 export const Route = createFileRoute("/compare")({
   component: ComparePage,
+  validateSearch: (raw: Record<string, unknown>): CompareSearch => ({
+    cropId: typeof raw.cropId === "string" ? raw.cropId : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "시장별 비교 — AGDICT" },
@@ -18,8 +26,9 @@ export const Route = createFileRoute("/compare")({
 });
 
 function ComparePage() {
-  const [cropId, setCropId] = useState(CROPS[0].id);
-  const crop = CROPS.find((c) => c.id === cropId)!;
+  const { cropId } = Route.useSearch();
+  // 작물 선택은 공통 화면(/crop-select, SEL-001)에서만 수행한다.
+  const crop = CROPS.find((c) => c.id === cropId) ?? CROPS[0];
 
   // deterministic factor per market so numbers vary but stay stable
   const rows = MARKETS.map((m) => {
@@ -39,20 +48,13 @@ function ComparePage() {
   return (
     <AppShell screenId="MKT-009_시장별가격비교" header={<AppHeader title="시장별 가격 비교" showBell={false} />}>
       <div className="px-4 pt-4 pb-8">
-        <label className="block rounded-[10px] bg-surface px-3 py-2.5">
-          <div className="text-[11px] font-semibold text-muted-foreground">작물</div>
-          <select
-            className="mt-0.5 w-full bg-transparent text-[15px] font-bold outline-none"
-            value={cropId}
-            onChange={(e) => setCropId(e.target.value)}
-          >
-            {CROPS.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <FullSelectCard
+          icon={<Sprout className="h-4 w-4" />}
+          label="작물"
+          value={crop.name}
+          to="/crop-select"
+          search={{ from: "compare", return: "/compare" }}
+        />
 
         <div className="mt-3 grid grid-cols-2 gap-2">
           <div className="rounded-[10px] bg-price-down-bg px-3 py-3">
@@ -121,7 +123,7 @@ function ComparePage() {
         <div className="mt-6 text-center">
           <Link
             to="/price/$variety"
-            params={{ variety: cropId }}
+            params={{ variety: crop.id }}
             className="text-[13px] font-semibold text-primary"
           >
             {crop.name} 상세 시세 보기 →

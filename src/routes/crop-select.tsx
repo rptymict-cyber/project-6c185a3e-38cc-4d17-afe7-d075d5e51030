@@ -12,6 +12,8 @@ import {
   type SearchResult,
 } from "@/lib/catalog-service";
 import { useCropSelection } from "@/store/cropSelection";
+import { PREDICTABLE_CROPS } from "@/features/prediction/mockPredictionData";
+import { CROPS } from "@/lib/mock/crops";
 import { useMarketFilter } from "@/store/market";
 import { CropIcon } from "@/components/crop-icon";
 import { Button } from "@/components/ui/button";
@@ -45,6 +47,7 @@ const CTA_LABEL_BY_FROM: Record<string, string> = {
   statistics: "확인",
   "statistics-detail": "확인",
   prediction: "예측 보기",
+  compare: "비교 보기",
   home: "적용하기",
 };
 const DEFAULT_CTA_LABEL = "적용하기";
@@ -180,6 +183,28 @@ function CropSelectPage() {
 
     if (!from || !SILENT_APPLY_FROM.has(from)) {
       toast.success("조건을 적용했어요");
+    }
+
+    if (from === "prediction" && item) {
+      const predictable = PREDICTABLE_CROPS.find((c) => c.name === item.name);
+      if (!predictable) {
+        toast("선택한 품목은 아직 AI 예측을 지원하지 않아요.");
+        navigate({ to: "/prediction" });
+        return;
+      }
+      navigate({ to: "/prediction", search: { cropId: predictable.id } });
+      return;
+    }
+
+    if (from === "compare" && item) {
+      const crop = CROPS.find((c) => c.name === item.name);
+      if (!crop) {
+        toast("선택한 품목은 시장별 비교 데이터가 없어요.");
+        navigate({ to: "/compare" });
+        return;
+      }
+      navigate({ to: "/compare", search: { cropId: crop.id } });
+      return;
     }
 
     if ((from === "statistics" || from === "statistics-detail") && item) {

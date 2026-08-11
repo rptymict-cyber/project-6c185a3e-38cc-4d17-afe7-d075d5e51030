@@ -5,7 +5,6 @@ import { AppHeader } from "@/components/app-header";
 import { PredictionChart } from "@/features/prediction/components/PredictionChart";
 import { PredictionCompareCards } from "@/features/prediction/components/PredictionCompareCards";
 import { PredictionConditionGrid } from "@/features/prediction/components/PredictionConditionGrid";
-import { PredictionCropSheet } from "@/features/prediction/components/PredictionCropSheet";
 import { PredictionFactorList } from "@/features/prediction/components/PredictionFactorList";
 import { PredictionInsightCard } from "@/features/prediction/components/PredictionInsightCard";
 import { PredictionGradeSegment } from "@/features/prediction/components/PredictionGradeSegment";
@@ -94,7 +93,6 @@ function PredictionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search.cropId, search.crop]);
 
-  const [cropSheetOpen, setCropSheetOpen] = useState(false);
   const [qtySheetOpen, setQtySheetOpen] = useState(false);
   const [marketSheetOpen, setMarketSheetOpen] = useState(false);
   const [viewpointSheetOpen, setViewpointSheetOpen] = useState(false);
@@ -186,7 +184,12 @@ function PredictionPage() {
           marketLabel={marketName}
           viewpointLabel={isFarmer ? "농민" : "도매상"}
           onQuantityClick={() => setQtySheetOpen(true)}
-          onCropClick={() => setCropSheetOpen(true)}
+          onCropClick={() =>
+            navigate({
+              to: "/crop-select",
+              search: { from: "prediction", return: "/prediction" },
+            })
+          }
           onMarketClick={() => setMarketSheetOpen(true)}
           onViewpointClick={() => setViewpointSheetOpen(true)}
         />
@@ -422,12 +425,6 @@ function PredictionPage() {
         </p>
       </div>
 
-      <PredictionCropSheet
-        open={cropSheetOpen}
-        onOpenChange={setCropSheetOpen}
-        selectedCropId={selectedCropId}
-        onSelect={(id) => setSelectedCropId(id)}
-      />
       <QuantityPickerSheet
         open={qtySheetOpen}
         onOpenChange={setQtySheetOpen}
