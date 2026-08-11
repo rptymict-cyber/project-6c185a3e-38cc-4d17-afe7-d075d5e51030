@@ -4,6 +4,7 @@
 
 import { MARKETS } from "./markets";
 import { getPriceBase } from "./price-base";
+import { getGradePricesPerKg, gradePricePerKgByLabel } from "./grade-prices";
 
 export type Period = "today" | "1w" | "1m" | "3m" | "1y";
 
@@ -358,7 +359,11 @@ function buildGroupRankings(
     const priceBase = getPriceBase(p.varietyId || p.itemId);
     // 등급 라벨(상품/중품/하품)은 GRD-001과 동일한 등급 데이터를 사용해서
     // 상품 > 중품 > 하품 서열이 항상 유지되도록 한다.
-    const gradePerKg = gradePricePerKgByLabel(p.varietyId || p.itemId, m.name);
+    const gradeId = p.varietyId || p.itemId;
+    const gradePerKg =
+      m.name === "혼합"
+        ? Math.round((getGradePricesPerKg(gradeId).mid + getGradePricesPerKg(gradeId).low) / 2)
+        : gradePricePerKgByLabel(gradeId, m.name);
     const basePerKg =
       gradePerKg ?? Math.round(priceBase.basePricePerKg * (1 + (rand() - 0.5) * 0.16));
     const price = Math.round((basePerKg * mult) / 10) * 10;
