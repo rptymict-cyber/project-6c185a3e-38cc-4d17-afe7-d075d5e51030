@@ -53,7 +53,8 @@ export function MarketSheet({
 
         <div className="px-4 pt-1 pb-2">
           <button
-            onClick={() => toast("위치 권한을 확인 중이에요 (준비 중)")}
+            onClick={findNearest}
+            disabled={pending}
             className="flex w-full items-center justify-center gap-2 rounded-[12px] border-[1.5px] border-[#3A8A3A] bg-[#3A8A3A0D] py-3 text-[13.5px] font-bold text-[#3A8A3A]"
           >
             <MapPin className="h-4 w-4" />
