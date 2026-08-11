@@ -76,11 +76,13 @@ export function AppHeader({
         <Link
           to="/notifications"
           aria-label="알림"
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+          className="relative grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
         >
           <Bell className="h-5 w-5" />
+          <UnreadBadge className="right-1 top-1" />
         </Link>
       )}
+
     </>
   );
 
