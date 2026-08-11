@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Check, ChevronRight, Store } from "lucide-react";
+import { Check, ChevronRight, Scale, Store } from "lucide-react";
 import { toast } from "sonner";
 import { DetailHeader } from "@/components/detail-header";
 import { AppShell } from "@/components/app-shell";
@@ -18,6 +18,7 @@ import { MARKETS } from "@/lib/mock/markets";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useFavoritePriceStore } from "@/features/favorites/favoriteStore";
 import { fromMarketQuote } from "@/features/favorites/favoriteMappers";
+import { defaultUnitFor, UNIT_OPTIONS } from "@/lib/units";
 
 const ALL_MARKET_ID = "all";
 const ALL_MARKET_NAME = "전체 시장";
@@ -49,6 +50,8 @@ function WatchlistAddPage() {
   const [marketId, setMarketId] = useState<string>(ALL_MARKET_ID);
   const [marketName, setMarketName] = useState<string>(ALL_MARKET_NAME);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [unitSheetOpen, setUnitSheetOpen] = useState(false);
+  const [unitOverride, setUnitOverride] = useState<string | null>(null);
 
   const category = committed.categoryId ? getCategoryById(committed.categoryId) : undefined;
   const item = committed.itemId ? getItemById(committed.itemId) : undefined;
@@ -59,7 +62,8 @@ function WatchlistAddPage() {
 
   const cropSelected = Boolean(item);
 
-  const unit = "8kg";
+  // 단위는 공통 SSOT 기준: 품목 기본 거래단위를 초기값으로, 사용자가 변경 가능
+  const unit = unitOverride ?? defaultUnitFor(item?.name);
   const date = todayStr();
 
   const quote = useMemo(() => {
@@ -72,7 +76,7 @@ function WatchlistAddPage() {
       unit,
       date,
     });
-  }, [item, variety, marketId]);
+  }, [item, variety, marketId, unit, date]);
 
   const handlePickCrop = () => {
     navigate({
@@ -169,6 +173,29 @@ function WatchlistAddPage() {
           </p>
         </section>
 
+        {/* 단위 선택 */}
+        <section className="rounded-2xl border border-border bg-background p-4">
+          <div className="mb-2 text-[12px] font-semibold text-muted-foreground">
+            단위
+          </div>
+          <button
+            type="button"
+            onClick={() => setUnitSheetOpen(true)}
+            className="flex w-full items-center gap-3 rounded-xl border border-input px-3 py-3 text-left active:bg-secondary/50"
+          >
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-muted">
+              <Scale className="h-5 w-5 text-muted-foreground" />
+            </div>
+            <div className="min-w-0 flex-1 text-[15px] font-bold text-foreground">
+              {unit}
+            </div>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+          </button>
+          <p className="mt-2 text-[11.5px] text-muted-foreground">
+            가격은 kg 기준 시세를 선택한 단위로 환산해 표시해요.
+          </p>
+        </section>
+
         {/* 미리보기 */}
         {cropSelected && quote && (
           <section className="rounded-2xl border border-border bg-background p-4">
@@ -221,6 +248,16 @@ function WatchlistAddPage() {
         </button>
       </div>
 
+      <UnitPickerSheet
+        open={unitSheetOpen}
+        onOpenChange={setUnitSheetOpen}
+        selected={unit}
+        onSelect={(u) => {
+          setUnitOverride(u);
+          setUnitSheetOpen(false);
+        }}
+      />
+
       <MarketPickerSheet
         open={sheetOpen}
         onOpenChange={setSheetOpen}
@@ -232,6 +269,48 @@ function WatchlistAddPage() {
         }}
       />
     </AppShell>
+  );
+}
+
+function UnitPickerSheet({
+  open,
+  onOpenChange,
+  selected,
+  onSelect,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  selected: string;
+  onSelect: (unit: string) => void;
+}) {
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="bottom" className="rounded-t-2xl p-0">
+        <SheetHeader className="px-5 pt-5">
+          <SheetTitle className="text-[16px] font-bold">단위 선택</SheetTitle>
+        </SheetHeader>
+        <ul className="px-2 pb-6 pt-2">
+          {UNIT_OPTIONS.map((u) => {
+            const active = u === selected;
+            return (
+              <li key={u}>
+                <button
+                  type="button"
+                  onClick={() => onSelect(u)}
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-[14px]",
+                    active ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
+                  )}
+                >
+                  {u}
+                  {active && <Check className="h-4 w-4 text-[#3A8A3A]" />}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </SheetContent>
+    </Sheet>
   );
 }
 

@@ -91,4 +91,5 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
-export const UNITS = ["kg 기준", "1kg", "5kg", "8kg 기준", "10kg", "15kg", "20kg"];
+// 단위 선택지는 공통 SSOT(`@/lib/units`)만 사용한다.
+export { UNIT_OPTIONS as UNITS } from "@/lib/units";

@@ -12,10 +12,10 @@ import {
   formatQuantity,
   QUANTITY_MAX,
   QUANTITY_UNITS,
-  QUANTITY_UNIT_DEFAULT,
   QUANTITY_UNIT_LABEL,
   QUANTITY_UNIT_PRESETS,
   QUANTITY_UNIT_STEP,
+  convertQuantity,
   type QuantityUnit,
 } from "../quantityUnits";
 
@@ -26,6 +26,7 @@ export function QuantityPickerSheet({
   unit,
   onChange,
   heading,
+  itemName,
 }: {
   open: boolean;
   onOpenChange: (o: boolean) => void;
@@ -33,6 +34,7 @@ export function QuantityPickerSheet({
   unit: QuantityUnit;
   onChange: (value: number, unit: QuantityUnit) => void;
   heading: "출하량" | "매입량";
+  itemName?: string;
 }) {
   const [n, setN] = useState<number>(value);
   const [u, setU] = useState<QuantityUnit>(unit);
@@ -51,7 +53,7 @@ export function QuantityPickerSheet({
   const handleUnitChange = (next: QuantityUnit) => {
     if (next === u) return;
     setU(next);
-    setN(QUANTITY_UNIT_DEFAULT[next]);
+    setN(convertQuantity(n, u, next, itemName));
   };
 
   const apply = () => {
