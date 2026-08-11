@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
@@ -123,7 +123,7 @@ function ComparePage() {
         <div className="mt-6 text-center">
           <Link
             to="/price/$variety"
-            params={{ variety: cropId }}
+            params={{ variety: crop.id }}
             className="text-[13px] font-semibold text-primary"
           >
             {crop.name} 상세 시세 보기 →
