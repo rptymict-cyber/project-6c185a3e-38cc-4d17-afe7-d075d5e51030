@@ -40,7 +40,7 @@ function WholesaleBrowsePage() {
     MARKETS.find((x) => x.id === DEFAULT_MARKET) ??
     MARKETS[0];
 
-  // 시장별 품목 리스트 (mock) — 시장 오프셋으로 결정론적 가격
+  // 시장별 품목 리스트 (mock) — 시장 오프셋으로 결정론적 가격, 가격 높은 순 정렬(순위 표시)
   const items = useMemo(() => {
     const offset = MARKETS.findIndex((x) => x.id === market.id);
     return ITEMS.map((it, i) => {
@@ -53,8 +53,9 @@ function WholesaleBrowsePage() {
         priceKg: Math.round(base * factor),
         changePct: +(change + ((offset - 1) * 0.3)).toFixed(1),
       };
-    });
+    }).sort((a, b) => b.priceKg - a.priceKg);
   }, [market.id]);
+
 
   const grouped = useMemo(() => {
     return MARKETS.reduce<Record<string, typeof MARKETS>>((acc, x) => {
