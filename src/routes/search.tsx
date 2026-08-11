@@ -5,6 +5,8 @@ import { CATEGORIES, CROPS, type Crop } from "@/lib/mock/crops";
 import { MARKETS, type Market } from "@/lib/mock/markets";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
+import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButton";
+
 
 export const Route = createFileRoute("/search")({
   component: SearchPage,
