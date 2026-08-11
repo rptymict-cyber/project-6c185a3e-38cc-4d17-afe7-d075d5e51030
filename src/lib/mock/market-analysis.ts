@@ -356,8 +356,13 @@ function buildGroupRankings(
   const rows: GroupRankingRow[] = pool.map((m) => {
     const rand = seeded(hash(`${p.scope}|${p.itemId}|${p.varietyId}|${m.id}|${p.date}`));
     const priceBase = getPriceBase(p.varietyId || p.itemId);
-    const basePerKg = Math.round(priceBase.basePricePerKg * (1 + (rand() - 0.5) * 0.16));
+    // 등급 라벨(상품/중품/하품)은 GRD-001과 동일한 등급 데이터를 사용해서
+    // 상품 > 중품 > 하품 서열이 항상 유지되도록 한다.
+    const gradePerKg = gradePricePerKgByLabel(p.varietyId || p.itemId, m.name);
+    const basePerKg =
+      gradePerKg ?? Math.round(priceBase.basePricePerKg * (1 + (rand() - 0.5) * 0.16));
     const price = Math.round((basePerKg * mult) / 10) * 10;
+
     const prevPct = priceBase.changeRate;
     const weekPct = +(priceBase.changeRate * 1.6).toFixed(1);
     const volumeTon = +(8 + rand() * 40).toFixed(1);
