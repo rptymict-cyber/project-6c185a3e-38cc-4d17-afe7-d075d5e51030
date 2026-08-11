@@ -1,17 +1,38 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronRight, MapPin } from "lucide-react";
 import { toast } from "sonner";
-import { marketsByRegion } from "@/lib/mock/markets";
+import { marketsByRegion, nearestMarket } from "@/lib/mock/markets";
+import { useLocation } from "@/store/location";
 
 export function MarketsPanel() {
   const regions = marketsByRegion();
+  const navigate = useNavigate();
+  const request = useLocation((s) => s.request);
+  const pending = useLocation((s) => s.pending);
+
+  const findNearest = async () => {
+    const ok = await request();
+    if (!ok) {
+      toast("위치 권한이 없어 가까운 시장을 찾을 수 없어요. 기기 설정에서 위치를 허용해 주세요.");
+      return;
+    }
+    const c = useLocation.getState().coords;
+    if (!c) {
+      toast("현재 위치를 확인할 수 없어요. 잠시 후 다시 시도해 주세요.");
+      return;
+    }
+    const m = nearestMarket(c.lat, c.lng);
+    toast(`가장 가까운 도매시장: ${m.name}`);
+    navigate({ to: "/market/wholesale/$market", params: { market: m.id } });
+  };
 
   return (
     <div className="pb-4">
       <div className="px-4 pt-4">
         <button
-          onClick={() => toast("위치 권한을 확인 중이에요 (준비 중)")}
-          className="flex w-full items-center justify-center gap-2 rounded-[12px] py-3 text-[13.5px] font-bold text-[#3A8A3A]"
+          onClick={findNearest}
+          disabled={pending}
+          className="flex w-full items-center justify-center gap-2 rounded-[12px] py-3 text-[13.5px] font-bold text-[#3A8A3A] disabled:opacity-60"
           style={{
             border: "1.5px solid #3A8A3A",
             backgroundColor: "#3A8A3A0D",
@@ -21,6 +42,7 @@ export function MarketsPanel() {
           가장 가까운 도매시장 찾기
         </button>
       </div>
+
 
       <div className="mt-3">
         {regions.map(([region, list]) => (

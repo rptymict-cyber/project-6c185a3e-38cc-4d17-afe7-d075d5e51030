@@ -1,8 +1,9 @@
 import { MapPin, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { MARKETS } from "@/lib/mock/markets";
+import { MARKETS, nearestMarket } from "@/lib/mock/markets";
 import { useMarketFilter } from "@/store/market";
+import { useLocation } from "@/store/location";
 import { cn } from "@/lib/utils";
 
 export function MarketSheet({
@@ -13,11 +14,30 @@ export function MarketSheet({
   onOpenChange: (v: boolean) => void;
 }) {
   const { marketId, setMarket } = useMarketFilter();
+  const request = useLocation((s) => s.request);
+  const pending = useLocation((s) => s.pending);
 
   const pick = (id: string, label: string) => {
     setMarket(id, label);
     onOpenChange(false);
   };
+
+  const findNearest = async () => {
+    const ok = await request();
+    if (!ok) {
+      toast("위치 권한이 없어 가까운 시장을 찾을 수 없어요. 기기 설정에서 위치를 허용해 주세요.");
+      return;
+    }
+    const c = useLocation.getState().coords;
+    if (!c) {
+      toast("현재 위치를 확인할 수 없어요. 잠시 후 다시 시도해 주세요.");
+      return;
+    }
+    const m = nearestMarket(c.lat, c.lng);
+    toast(`가장 가까운 도매시장: ${m.name}`);
+    pick(m.id, m.name);
+  };
+
 
   const options: { id: string; label: string }[] = [
     { id: "all", label: "전체" },
@@ -33,7 +53,8 @@ export function MarketSheet({
 
         <div className="px-4 pt-1 pb-2">
           <button
-            onClick={() => toast("위치 권한을 확인 중이에요 (준비 중)")}
+            onClick={findNearest}
+            disabled={pending}
             className="flex w-full items-center justify-center gap-2 rounded-[12px] border-[1.5px] border-[#3A8A3A] bg-[#3A8A3A0D] py-3 text-[13.5px] font-bold text-[#3A8A3A]"
           >
             <MapPin className="h-4 w-4" />

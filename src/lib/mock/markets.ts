@@ -98,6 +98,32 @@ export function marketsByRegion() {
   return Array.from(map.entries());
 }
 
+/** 확정 5개 도매시장 좌표 (가까운 시장 찾기용) */
+export const MARKET_COORDS: Record<string, { lat: number; lng: number }> = {
+  "seoul-garak": { lat: 37.4966, lng: 127.1189 },
+  "busan-eomgung": { lat: 35.1467, lng: 128.9737 },
+  "daegu-bugbu": { lat: 35.9019, lng: 128.5636 },
+  "gwangju-gakhwa": { lat: 35.1739, lng: 126.9226 },
+  "daejeon-ojeong": { lat: 36.3706, lng: 127.4132 },
+};
+
+/** 좌표 기준 가장 가까운 도매시장 */
+export function nearestMarket(lat: number, lng: number): Market {
+  let best = MARKETS[0];
+  let bestD = Number.POSITIVE_INFINITY;
+  MARKETS.forEach((m) => {
+    const c = MARKET_COORDS[m.id];
+    if (!c) return;
+    const d = (c.lat - lat) ** 2 + ((c.lng - lng) * 0.8) ** 2;
+    if (d < bestD) {
+      bestD = d;
+      best = m;
+    }
+  });
+  return best;
+}
+
+
 export type Origin = { region: string; volumeTon: number; avgKg: number };
 export const ORIGINS_BY_MONTH: Record<string, Record<number, Origin[]>> = {
   apple: {
