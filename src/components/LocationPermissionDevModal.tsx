@@ -20,7 +20,7 @@ export function LocationPermissionDevModal() {
         if (!v) resolvePrompt(false);
       }}
     >
-      <DialogContent className="w-[300px] rounded-2xl p-0" showCloseButton={false}>
+      <DialogContent className="w-[300px] rounded-2xl p-0">
         <div className="px-5 pt-5 pb-4 text-center">
           <div className="mx-auto grid h-11 w-11 place-items-center rounded-full bg-[#3A8A3A14]">
             <MapPin className="h-5 w-5 text-[#3A8A3A]" />
