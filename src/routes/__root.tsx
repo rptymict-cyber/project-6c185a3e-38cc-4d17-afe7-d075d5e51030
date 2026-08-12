@@ -13,6 +13,8 @@ import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { RatePromptModal } from "../components/RatePromptModal";
+import { LocationPermissionDevModal } from "../components/LocationPermissionDevModal";
+
 
 
 function NotFoundComponent() {
@@ -127,9 +129,9 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
-    // 앱 진입 시 OS 위치 권한 요청 (세션당 1회)
+    // 앱 진입 시 OS 위치 권한 요청 (세션당 1회) — 확인용 모달 없이 조용히 시도
     import("../store/location").then(({ useLocation }) => {
-      useLocation.getState().request();
+      useLocation.getState().request({ silent: true });
     });
   }, []);
 
@@ -138,7 +140,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <Outlet />
       <RatePromptModal />
+      {/* ⚠️ 임시 확인용 모달 (실제 사양은 OS 네이티브 권한 팝업) — 배포 검증 후 제거 */}
+      <LocationPermissionDevModal />
       <Toaster
+
         position="bottom-center"
         offset={68}
         mobileOffset={68}
