@@ -1,7 +1,7 @@
 import { MapPin, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { MARKETS, nearestMarket } from "@/lib/mock/markets";
+import { MARKETS, nearestMarket, DEFAULT_MARKET } from "@/lib/mock/markets";
 import { useMarketFilter } from "@/store/market";
 import { useLocation } from "@/store/location";
 import { cn } from "@/lib/utils";
@@ -14,8 +14,10 @@ export function MarketSheet({
   onOpenChange: (v: boolean) => void;
 }) {
   const { marketId, setMarket } = useMarketFilter();
+  const granted = useLocation((s) => s.granted);
   const request = useLocation((s) => s.request);
   const pending = useLocation((s) => s.pending);
+  const isFallback = granted !== true;
 
   const pick = (id: string, label: string) => {
     setMarket(id, label);
@@ -24,13 +26,12 @@ export function MarketSheet({
 
   const findNearest = async () => {
     const ok = await request();
-    if (!ok) {
-      toast("위치 권한이 없어 가까운 시장을 찾을 수 없어요. 기기 설정에서 위치를 허용해 주세요.");
-      return;
-    }
-    const c = useLocation.getState().coords;
+    const c = ok ? useLocation.getState().coords : null;
     if (!c) {
-      toast("현재 위치를 확인할 수 없어요. 잠시 후 다시 시도해 주세요.");
+      toast(
+        `위치 권한이 없어 기본 시장(${DEFAULT_MARKET.name}) 기준으로 보여드려요.`,
+      );
+      pick(DEFAULT_MARKET.id, DEFAULT_MARKET.name);
       return;
     }
     const m = nearestMarket(c.lat, c.lng);
@@ -60,7 +61,14 @@ export function MarketSheet({
             <MapPin className="h-4 w-4" />
             가장 가까운 도매시장 찾기
           </button>
+          {isFallback ? (
+            <p className="mt-2 text-center text-[11.5px] text-[#6C757D]">
+              위치 권한이 없어 기본 시장{" "}
+              <b className="font-semibold text-[#495057]">{DEFAULT_MARKET.name}</b> 기준으로 안내돼요.
+            </p>
+          ) : null}
         </div>
+
 
         <ul className="px-2 pb-3">
           {options.map((m) => {
