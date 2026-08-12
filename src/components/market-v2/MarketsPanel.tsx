@@ -1,24 +1,42 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronRight, MapPin } from "lucide-react";
 import { toast } from "sonner";
-import { marketsByRegion, nearestMarket } from "@/lib/mock/markets";
+import {
+  marketsByRegion,
+  nearestMarket,
+  DEFAULT_MARKET,
+} from "@/lib/mock/markets";
 import { useLocation } from "@/store/location";
 
 export function MarketsPanel() {
   const regions = marketsByRegion();
   const navigate = useNavigate();
+  const granted = useLocation((s) => s.granted);
   const request = useLocation((s) => s.request);
   const pending = useLocation((s) => s.pending);
+  const isFallback = granted !== true;
 
   const findNearest = async () => {
     const ok = await request();
     if (!ok) {
-      toast("위치 권한이 없어 가까운 시장을 찾을 수 없어요. 기기 설정에서 위치를 허용해 주세요.");
+      toast(
+        `위치 권한이 없어 기본 시장(${DEFAULT_MARKET.name}) 기준으로 보여드려요.`,
+      );
+      navigate({
+        to: "/market/wholesale/$market",
+        params: { market: DEFAULT_MARKET.id },
+      });
       return;
     }
     const c = useLocation.getState().coords;
     if (!c) {
-      toast("현재 위치를 확인할 수 없어요. 잠시 후 다시 시도해 주세요.");
+      toast(
+        `현재 위치를 확인할 수 없어 기본 시장(${DEFAULT_MARKET.name}) 기준으로 보여드려요.`,
+      );
+      navigate({
+        to: "/market/wholesale/$market",
+        params: { market: DEFAULT_MARKET.id },
+      });
       return;
     }
     const m = nearestMarket(c.lat, c.lng);
@@ -41,7 +59,14 @@ export function MarketsPanel() {
           <MapPin className="h-4 w-4" />
           가장 가까운 도매시장 찾기
         </button>
+        {isFallback ? (
+          <p className="mt-2 text-center text-[11.5px] text-[#6C757D]">
+            위치 권한이 없어 기본 시장 <b className="font-semibold text-[#495057]">{DEFAULT_MARKET.name}</b> 기준으로
+            보여드려요. 권한을 허용하면 가까운 시장으로 전환돼요.
+          </p>
+        ) : null}
       </div>
+
 
 
       <div className="mt-3">
