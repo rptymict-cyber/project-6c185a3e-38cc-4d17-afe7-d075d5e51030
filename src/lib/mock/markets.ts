@@ -78,6 +78,11 @@ export const MARKETS: Market[] = [
   },
 ];
 
+/** 위치 권한이 없을 때 사용하는 기본 도매시장 */
+export const DEFAULT_MARKET_ID = "seoul-garak";
+export const DEFAULT_MARKET: Market =
+  MARKETS.find((m) => m.id === DEFAULT_MARKET_ID) ?? MARKETS[0];
+
 export const ORIGIN_REGIONS = [
   "경북 청송",
   "경북 영주",
