@@ -77,6 +77,13 @@ export const MOCK_WEATHER: Weather = {
   },
 };
 
+/** 위치 권한이 없을 때 보여줄 기본 지역(서울) 날씨 */
+export const DEFAULT_REGION_WEATHER: Weather = {
+  ...MOCK_WEATHER,
+  region: "서울",
+  regionFull: "서울특별시",
+};
+
 /* -------------------------------------------------------------------------
  * 날짜별 날씨 (예측 그래프 연동용)
  * 실제로는 틸다 날씨 API 교체 대상. 지금은 date 문자열 기반으로 결정적으로
