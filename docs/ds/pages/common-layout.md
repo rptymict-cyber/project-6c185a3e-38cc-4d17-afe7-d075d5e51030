@@ -143,10 +143,10 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 | DS-1197 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -글자크기.01: 탭 라벨 10px, 굵기 500(font-medium) | - |
 | DS-1198 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -글자색.01: 비활성 탭 색상 #9CA3AF | - |
 | DS-1199 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -상태색.01: 활성 탭 색상 #3A8A3A (text-primary, --primary) | - |
-| DS-11100 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -아이콘크기.01: 탭 아이콘 20px×20px(h-5 w-5) | - |
-| DS-11101 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -간격.01: 아이콘-라벨 간격 4px(gap-1) | - |
-| DS-11102 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -최소크기.01: 탭 터치 영역 최소 높이 44px(min-h-11) | - |
-| DS-11103 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -레이어.01: 탭바 z-index 40, 화면 하단 고정(fixed inset-x-0 bottom-0) | - |
+| DS-11245 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -아이콘크기.01: 탭 아이콘 20px×20px(h-5 w-5) | - |
+| DS-11246 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -간격.01: 아이콘-라벨 간격 4px(gap-1) | - |
+| DS-11247 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -최소크기.01: 탭 터치 영역 최소 높이 44px(min-h-11) | - |
+| DS-11248 | 하단 탭바 | LAY-004_bottom-nav_Default | Design | -레이어.01: 탭바 z-index 40, 화면 하단 고정(fixed inset-x-0 bottom-0) | - |
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
@@ -154,12 +154,12 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-11104 | 공통 상세 상단바 | LAY-005_detail-header_Default | Visible | -정의.01: 하위/선택/상세/설정/안내 화면 공통 상단바 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/components/detail-header.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: DetailHeader |
-| DS-11105 | 공통 상세 상단바 | LAY-005_detail-header_Default | Visible | -구성.01: 좌측 뒤로가기 버튼 | - |
-| DS-11106 | 공통 상세 상단바 | LAY-005_detail-header_Default | Visible | -제목.01: 중앙 타이틀은 항상 화면 정중앙에 정렬 표시된다(center 슬롯이 있으면 title 대신 우선 사용) | - |
-| DS-11107 | 공통 상세 상단바 | LAY-005_detail-header_Default | Visible | -버튼.01: 우측 액션은 화면별로 필요할 때만 명시적으로 전달되며 기본값은 없음(빈 자리만 유지) | - |
-| DS-11108 | 공통 상세 상단바 | LAY-005_detail-header_Default | Invisible | -이동.01: 뒤로가기 버튼 클릭 시 호출부에서 전달한 onBack 함수를 실행한다 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/components/detail-header.tsx<br>Baseline: 2026-08-05 코드 기준 |
-| DS-11109 | 공통 상세 상단바 | LAY-005_detail-header_Default | Invisible | -조건.01: 선택/설정/안내류 화면(작물 선택, 날짜 선택, 도매시장 선택, 알림 설정, 데이터 기준 안내 등)에서는 우측 액션을 넣지 않는 것이 원칙이다 | - |
+| DS-11249 | 공통 상세 상단바 | LAY-005_detail-header_Default | Visible | -정의.01: 하위/선택/상세/설정/안내 화면 공통 상단바 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/components/detail-header.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: DetailHeader |
+| DS-11250 | 공통 상세 상단바 | LAY-005_detail-header_Default | Visible | -구성.01: 좌측 뒤로가기 버튼 | - |
+| DS-11251 | 공통 상세 상단바 | LAY-005_detail-header_Default | Visible | -제목.01: 중앙 타이틀은 항상 화면 정중앙에 정렬 표시된다(center 슬롯이 있으면 title 대신 우선 사용) | - |
+| DS-11252 | 공통 상세 상단바 | LAY-005_detail-header_Default | Visible | -버튼.01: 우측 액션은 화면별로 필요할 때만 명시적으로 전달되며 기본값은 없음(빈 자리만 유지) | - |
+| DS-11253 | 공통 상세 상단바 | LAY-005_detail-header_Default | Invisible | -이동.01: 뒤로가기 버튼 클릭 시 호출부에서 전달한 onBack 함수를 실행한다 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/components/detail-header.tsx<br>Baseline: 2026-08-05 코드 기준 |
+| DS-11254 | 공통 상세 상단바 | LAY-005_detail-header_Default | Invisible | -조건.01: 선택/설정/안내류 화면(작물 선택, 날짜 선택, 도매시장 선택, 알림 설정, 데이터 기준 안내 등)에서는 우측 액션을 넣지 않는 것이 원칙이다 | - |
 | DS-11110 | 공통 상세 상단바 | LAY-005_detail-header_Default | Invisible | -미구현.01: 임시 빨간 점/실시간 표시 등 의미 없는 상태 아이콘은 이 컴포넌트에서 렌더링하지 않도록 설계돼 있다(정책상 비표시) | - |
 | DS-11111 | 공통 상세 상단바 | LAY-005_detail-header_Default | Design | -배경색.01: 헤더 배경 #FFFFFF (--background) | Registry: docs/ds/screen-registry.json<br>Route: Parent=/<br>File: src/components/detail-header.tsx<br>Baseline: 2026-08-05 코드 기준<br>기술 참조: DetailHeader<br>클래스 참조: border-b border-[#E9ECEF]<br>토큰 참조: --background |
 | DS-11112 | 공통 상세 상단바 | LAY-005_detail-header_Default | Design | -높이.01: 헤더 높이 52px | - |
@@ -330,16 +330,16 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 ## 안 읽은 알림 배지 · 기본 상태
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-11100 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -구성.01: 공통 상단바 알림(종) 아이콘 우측 상단에 겹쳐 표시되는 원형 숫자 배지 | Registry: docs/ds/screen-registry.json<br>Route: 공통(모든 화면 상단바)<br>File: src/components/notifications/UnreadBadge.tsx<br>기술근거.01: UnreadBadge — src/components/notifications/UnreadBadge.tsx<br>Baseline: 2026-08-18 코드 기준 |
-| DS-11101 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -표시.01: 안 읽은 알림 건수를 숫자로 표시하고 99건을 넘으면 "99+"로 표시한다 | - |
-| DS-11102 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -안내.01: 화면 읽기 보조 도구용 설명으로 "안 읽은 알림 {n}건"을 제공한다 | - |
-| DS-11103 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -계산.01: 저장된 알림 목록에서 읽지 않은 항목 수를 합산해 건수를 산출한다 | - |
-| DS-11104 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -조건.01: 안 읽은 알림이 0건이면 배지를 표시하지 않는다 | - |
-| DS-11105 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -조건.02: 저장값 복원이 끝난 뒤에만 표시해 첫 화면 표시 시 숫자가 어긋나지 않게 한다 | - |
-| DS-11106 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -상태.01: 배지는 클릭 대상이 아니며 알림 아이콘의 클릭 동작을 가리지 않는다 | - |
-| DS-11107 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -배경색.01: 배지 배경 빨간색(#E43D3D), 글자색 흰색 | Registry: docs/ds/screen-registry.json<br>Route: 공통(모든 화면 상단바)<br>File: src/components/notifications/UnreadBadge.tsx<br>기술근거.01: UnreadBadge — src/components/notifications/UnreadBadge.tsx<br>Baseline: 2026-08-18 코드 기준 |
-| DS-11108 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -크기.01: 최소 너비 16px, 줄 높이 16px, 완전 원형, 좌우 여백 4px | - |
-| DS-11109 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -글자크기.01: 숫자 9px 굵게 | - |
+| DS-11245 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -구성.01: 공통 상단바 알림(종) 아이콘 우측 상단에 겹쳐 표시되는 원형 숫자 배지 | Registry: docs/ds/screen-registry.json<br>Route: 공통(모든 화면 상단바)<br>File: src/components/notifications/UnreadBadge.tsx<br>기술근거.01: UnreadBadge — src/components/notifications/UnreadBadge.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-11246 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -표시.01: 안 읽은 알림 건수를 숫자로 표시하고 99건을 넘으면 "99+"로 표시한다 | - |
+| DS-11247 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -안내.01: 화면 읽기 보조 도구용 설명으로 "안 읽은 알림 {n}건"을 제공한다 | - |
+| DS-11248 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -계산.01: 저장된 알림 목록에서 읽지 않은 항목 수를 합산해 건수를 산출한다 | - |
+| DS-11249 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -조건.01: 안 읽은 알림이 0건이면 배지를 표시하지 않는다 | - |
+| DS-11250 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -조건.02: 저장값 복원이 끝난 뒤에만 표시해 첫 화면 표시 시 숫자가 어긋나지 않게 한다 | - |
+| DS-11251 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -상태.01: 배지는 클릭 대상이 아니며 알림 아이콘의 클릭 동작을 가리지 않는다 | - |
+| DS-11252 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -배경색.01: 배지 배경 빨간색(#E43D3D), 글자색 흰색 | Registry: docs/ds/screen-registry.json<br>Route: 공통(모든 화면 상단바)<br>File: src/components/notifications/UnreadBadge.tsx<br>기술근거.01: UnreadBadge — src/components/notifications/UnreadBadge.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-11253 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -크기.01: 최소 너비 16px, 줄 높이 16px, 완전 원형, 좌우 여백 4px | - |
+| DS-11254 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -글자크기.01: 숫자 9px 굵게 | - |
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 

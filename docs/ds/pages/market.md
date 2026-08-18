@@ -147,11 +147,11 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 | DS-0297 | 도매시장 목록 | MKT-005_market-wholesale_Default | Invisible | -조건.01: 조회 대상 시장은 주소 검색조건 값으로 결정되며 값이 없으면 서울 가락시장을 기본값으로 사용한다 | - |
 | DS-0298 | 도매시장 목록 | MKT-005_market-wholesale_Default | Invisible | -계산식.01: 품목별 가격은 기준가에 시장 오프셋으로 만든 결정론적 배수를 곱해 산출한다(실거래 연동 아님) | - |
 | DS-0299 | 도매시장 목록 | MKT-005_market-wholesale_Default | Invisible | -액션.01: 시장을 선택하면 주소 검색조건이 갱신되며 화면이 갱신된다 | - |
-| DS-02100 | 도매시장 목록 | MKT-005_market-wholesale_Default | Invisible | -이동.01: 품목 행을 누르면 현재 선택된 시장의 상세 화면으로 이동하며, 누른 품목 정보는 다음 화면에 전달되지 않는다 | - |
-| DS-02101 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -배경색.01: 드롭다운 버튼·시트 배경 흰색(#FFFFFF) | Registry: docs/ds/screen-registry.json<br>Route: /market/wholesale<br>File: src/routes/market.wholesale.index.tsx<br>기술근거.01: AppShell(screenId="MKT-005_도매시장목록"), Drawer, CropIcon<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02102 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -모서리.01: 드롭다운 버튼 모서리 반경 12px | - |
-| DS-02103 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -테두리.01: 목록 항목 상단 구분선 1px 옅은 회색(#F1F3F5) | - |
-| DS-02104 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -상태색.01: 등락률 상승 빨간색(#DC2626), 하락 파란색(#2563EB) | - |
+| DS-02324 | 도매시장 목록 | MKT-005_market-wholesale_Default | Invisible | -이동.01: 품목 행을 누르면 현재 선택된 시장의 상세 화면으로 이동하며, 누른 품목 정보는 다음 화면에 전달되지 않는다 | - |
+| DS-02325 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -배경색.01: 드롭다운 버튼·시트 배경 흰색(#FFFFFF) | Registry: docs/ds/screen-registry.json<br>Route: /market/wholesale<br>File: src/routes/market.wholesale.index.tsx<br>기술근거.01: AppShell(screenId="MKT-005_도매시장목록"), Drawer, CropIcon<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02326 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -모서리.01: 드롭다운 버튼 모서리 반경 12px | - |
+| DS-02327 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -테두리.01: 목록 항목 상단 구분선 1px 옅은 회색(#F1F3F5) | - |
+| DS-02328 | 도매시장 목록 | MKT-005_market-wholesale_Default | Design | -상태색.01: 등락률 상승 빨간색(#DC2626), 하락 파란색(#2563EB) | - |
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
@@ -159,23 +159,23 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-02105 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -구성.01: 헤더 타이틀 "시세 상세"와 뒤로가기 버튼 | Registry: docs/ds/screen-registry.json<br>Route: /market/wholesale/$market<br>File: src/routes/market.wholesale.$market.tsx<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02106 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -표시.01: 선택 시장 칩(시장명) | - |
-| DS-02107 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -구성.02: 작물 칩 목록(상위 6개 품목, 가로 스크롤) | - |
-| DS-02108 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -표시.02: 표 컬럼 "구분/평균가/전일대비/거래량", 전체 평균 행과 품종별 행으로 구성 | - |
-| DS-02109 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -목록항목.01: 품종 행을 펼치면 법인별 가격·등락률·거래량 서브행이 표시된다 | - |
-| DS-02110 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -표시.03: 하단 고정 바에 "{품목명} 총 거래량"과 "kg당 평균" 표시 | - |
-| DS-02111 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -데이터소스.01: 도매시장 정보와 상위 6개 품목 목록을 mock 데이터에서 조회한다 | Registry: docs/ds/screen-registry.json<br>Route: /market/wholesale/$market<br>File: src/routes/market.wholesale.$market.tsx<br>기술근거.01: src/lib/mock/markets.ts(MARKETS), src/lib/mock/items.ts(ITEMS)<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02112 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -분기.01: 요청한 시장이 존재하지 않으면 경로를 찾을 수 없음으로 처리하고 "시장을 찾을 수 없어요." 안내를 표시한다 | - |
-| DS-02113 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -계산식.01: 법인별 가격은 품종 평균가에 법인 순번 기반 오프셋을 곱해 산출한다(실거래 연동 아님) | - |
-| DS-02114 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -계산식.02: 전체 평균은 품종별 거래량을 가중치로 한 가중평균으로 계산한다 | - |
-| DS-02115 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -분기.02: 등락률 절댓값이 0.05% 미만이면 보합으로 처리한다 | - |
-| DS-02116 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -자동동작.01: 작물 칩을 변경하면 펼쳐진 법인별 서브행이 자동으로 접힌다 | - |
-| DS-02117 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -상태색.01: 상승 빨간색(#E03131), 하락 파란색(#1971C2), 보합 회색(#6C757D) | Registry: docs/ds/screen-registry.json<br>Route: /market/wholesale/$market<br>File: src/routes/market.wholesale.$market.tsx<br>기술근거.01: AppShell(screenId="MKT-006_도매시장상세"), DetailHeader, CropIcon<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02118 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -배경색.01: 페이지 배경 흰색(#FFFFFF), 하단 고정 바 배경 옅은 회색(#F8F9FA) | - |
-| DS-02119 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -배경색.02: 전체 평균 행 배경 옅은 하늘색(#EBF6FD) | - |
-| DS-02120 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -테두리.01: 표 행 상하 구분선 1px 옅은 회색(#E9ECEF) | - |
-| DS-02121 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -배경색.03: 선택 시장 칩 배경 연한 초록색(#F0F9F0), 글자 진초록색(#3A8A3A) | - |
+| DS-02329 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -구성.01: 헤더 타이틀 "시세 상세"와 뒤로가기 버튼 | Registry: docs/ds/screen-registry.json<br>Route: /market/wholesale/$market<br>File: src/routes/market.wholesale.$market.tsx<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02330 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -표시.01: 선택 시장 칩(시장명) | - |
+| DS-02331 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -구성.02: 작물 칩 목록(상위 6개 품목, 가로 스크롤) | - |
+| DS-02332 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -표시.02: 표 컬럼 "구분/평균가/전일대비/거래량", 전체 평균 행과 품종별 행으로 구성 | - |
+| DS-02333 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -목록항목.01: 품종 행을 펼치면 법인별 가격·등락률·거래량 서브행이 표시된다 | - |
+| DS-02334 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Visible | -표시.03: 하단 고정 바에 "{품목명} 총 거래량"과 "kg당 평균" 표시 | - |
+| DS-02335 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -데이터소스.01: 도매시장 정보와 상위 6개 품목 목록을 mock 데이터에서 조회한다 | Registry: docs/ds/screen-registry.json<br>Route: /market/wholesale/$market<br>File: src/routes/market.wholesale.$market.tsx<br>기술근거.01: src/lib/mock/markets.ts(MARKETS), src/lib/mock/items.ts(ITEMS)<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02336 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -분기.01: 요청한 시장이 존재하지 않으면 경로를 찾을 수 없음으로 처리하고 "시장을 찾을 수 없어요." 안내를 표시한다 | - |
+| DS-02337 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -계산식.01: 법인별 가격은 품종 평균가에 법인 순번 기반 오프셋을 곱해 산출한다(실거래 연동 아님) | - |
+| DS-02338 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -계산식.02: 전체 평균은 품종별 거래량을 가중치로 한 가중평균으로 계산한다 | - |
+| DS-02339 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -분기.02: 등락률 절댓값이 0.05% 미만이면 보합으로 처리한다 | - |
+| DS-02340 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Invisible | -자동동작.01: 작물 칩을 변경하면 펼쳐진 법인별 서브행이 자동으로 접힌다 | - |
+| DS-02341 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -상태색.01: 상승 빨간색(#E03131), 하락 파란색(#1971C2), 보합 회색(#6C757D) | Registry: docs/ds/screen-registry.json<br>Route: /market/wholesale/$market<br>File: src/routes/market.wholesale.$market.tsx<br>기술근거.01: AppShell(screenId="MKT-006_도매시장상세"), DetailHeader, CropIcon<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02342 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -배경색.01: 페이지 배경 흰색(#FFFFFF), 하단 고정 바 배경 옅은 회색(#F8F9FA) | - |
+| DS-02343 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -배경색.02: 전체 평균 행 배경 옅은 하늘색(#EBF6FD) | - |
+| DS-02344 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -테두리.01: 표 행 상하 구분선 1px 옅은 회색(#E9ECEF) | - |
+| DS-02345 | 도매시장 상세 | MKT-006_market-wholesale-id_Default | Design | -배경색.03: 선택 시장 칩 배경 연한 초록색(#F0F9F0), 글자 진초록색(#3A8A3A) | - |
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
@@ -185,20 +185,20 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-02122 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -구성.01: 가격 추이 카드(가격·거래량 차트) + 기간 필터 5종 "당일/1주/1개월/3개월/1년" | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketChartView.tsx<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02123 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -문구.01: AI 예측 배너 문구 "{일자} 출하가 유리해요" | - |
-| DS-02124 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -버튼.01: "일별·시장별 시세 보기" 버튼 | - |
-| DS-02125 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -표시.01: 4열 통계 "최고 평균가/최저 평균가/거래량 합/표본 수" | - |
-| DS-02126 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -구성.02: 안내 문구 영역(DataSourceNotice) | - |
-| DS-02127 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -데이터소스.01: 품목 정보를 mock 데이터에서, 조회 날짜는 전역 시세 조건 저장소에서 가져온다 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketChartView.tsx<br>기술근거.01: src/store/market.ts, 상위 컨테이너 MarketDetailTabs<br>⚠️ 확인 필요.01: MKT-007~011 탭 세트를 /market/$crop 화면에 연결할 계획인지, 혹은 /price/$variety 화면의 탭으로 대체된 것인지 기획 확인 필요<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02128 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -계산식.01: 기간별(당일 24시간/1주/1개월/3개월 13주/1년 12개월) 가격·거래량·예측치는 결정론적 난수로 생성한다 | - |
-| DS-02129 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -조건.01: AI 예측 배너는 예측 지원 품목이고 조회일이 오늘이며 기간이 1주 또는 1개월일 때만 노출한다 | - |
-| DS-02130 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -이동.01: 예측 배너를 누르면 AI 시세 예측 화면으로 이동한다 | - |
-| DS-02131 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -액션.01: "일별·시장별 시세 보기"를 누르면 경매내역 탭으로 전환된다 | - |
-| DS-02132 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -미구현.01: 본 컴포넌트를 렌더링하는 상위 탭 컨테이너가 어느 라우트에서도 사용되지 않아 실제 화면에는 연결되어 있지 않다 | - |
-| DS-02133 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -미구현.02: 표본 수 값이 항상 "732건"으로 고정되어 실제 데이터 건수를 반영하지 않는다 | - |
-| DS-02134 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Design | -상태색.01: 가격선 진한 빨간색(#E03B3B), 거래량 막대 연한 분홍색(#F3C6C6) | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketChartView.tsx<br>기술근거.01: PriceVolumeChart(src/components/price-volume-chart.tsx), DataSourceNotice 컴포넌트로 구현됨<br>기술근거.02: 색상 토큰 src/styles.css --chart-price(#e03b3b), --chart-volume(#f3c6c6)<br>Baseline: 2026-08-05 코드 기준 |
-| DS-02135 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Design | -배경색.01: 카드 배경 흰색(#FFFFFF) | - |
+| DS-02346 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -구성.01: 가격 추이 카드(가격·거래량 차트) + 기간 필터 5종 "당일/1주/1개월/3개월/1년" | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketChartView.tsx<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02347 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -문구.01: AI 예측 배너 문구 "{일자} 출하가 유리해요" | - |
+| DS-02348 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -버튼.01: "일별·시장별 시세 보기" 버튼 | - |
+| DS-02349 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -표시.01: 4열 통계 "최고 평균가/최저 평균가/거래량 합/표본 수" | - |
+| DS-02350 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -구성.02: 안내 문구 영역(DataSourceNotice) | - |
+| DS-02351 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -데이터소스.01: 품목 정보를 mock 데이터에서, 조회 날짜는 전역 시세 조건 저장소에서 가져온다 | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketChartView.tsx<br>기술근거.01: src/store/market.ts, 상위 컨테이너 MarketDetailTabs<br>⚠️ 확인 필요.01: MKT-007~011 탭 세트를 /market/$crop 화면에 연결할 계획인지, 혹은 /price/$variety 화면의 탭으로 대체된 것인지 기획 확인 필요<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02352 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -계산식.01: 기간별(당일 24시간/1주/1개월/3개월 13주/1년 12개월) 가격·거래량·예측치는 결정론적 난수로 생성한다 | - |
+| DS-02353 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -조건.01: AI 예측 배너는 예측 지원 품목이고 조회일이 오늘이며 기간이 1주 또는 1개월일 때만 노출한다 | - |
+| DS-02354 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -이동.01: 예측 배너를 누르면 AI 시세 예측 화면으로 이동한다 | - |
+| DS-02355 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -액션.01: "일별·시장별 시세 보기"를 누르면 경매내역 탭으로 전환된다 | - |
+| DS-02356 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -미구현.01: 본 컴포넌트를 렌더링하는 상위 탭 컨테이너가 어느 라우트에서도 사용되지 않아 실제 화면에는 연결되어 있지 않다 | - |
+| DS-02357 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Invisible | -미구현.02: 표본 수 값이 항상 "732건"으로 고정되어 실제 데이터 건수를 반영하지 않는다 | - |
+| DS-02358 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Design | -상태색.01: 가격선 진한 빨간색(#E03B3B), 거래량 막대 연한 분홍색(#F3C6C6) | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketChartView.tsx<br>기술근거.01: PriceVolumeChart(src/components/price-volume-chart.tsx), DataSourceNotice 컴포넌트로 구현됨<br>기술근거.02: 색상 토큰 src/styles.css --chart-price(#e03b3b), --chart-volume(#f3c6c6)<br>Baseline: 2026-08-05 코드 기준 |
+| DS-02359 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Design | -배경색.01: 카드 배경 흰색(#FFFFFF) | - |
 | DS-02136 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Design | -테두리.01: 카드 테두리 1px 옅은 회색(#E9ECEF) | - |
 | DS-02137 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Design | -글자색.01: 안내 문구 회색(#6C757D) | - |
 
@@ -503,26 +503,26 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 ## 대표 시세 카드 · 기본 상태
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-02100 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -구성.01: 시세조회메인 상단의 대표 시세 카드로, 좌측 작물 아이콘·품목·품종명과 조회 조건 문구, 우측 즐겨찾기·알림 아이콘 버튼, 중앙 대표 가격과 전일 대비, 기준일 배지, 4칸 지표, 하단 업데이트·반입량으로 구성한다 | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/ProPriceHeadlineCard.tsx<br>기술근거.01: ProPriceHeadlineCard — src/components/market-v2/ProPriceHeadlineCard.tsx<br>Baseline: 2026-08-18 코드 기준 |
-| DS-02101 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.01: 제목에 "{품목} · {품종}" 형식으로 표시하고 그 아래 조회 조건을 "{시장} · {법인}" 형식으로 표시하며 전체 선택 시 각각 "전체시장", "전체법인"으로 표기한다 | - |
-| DS-02102 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.02: 대표 가격은 천 단위 구분 기호를 넣어 표시하고 바로 옆 단위 버튼에 "원/{단위}"를 표시한다 | - |
-| DS-02103 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.03: 전일 대비는 상승·하락 화살표와 함께 소수 첫째 자리 백분율로 표시하고 아래에 "전일 대비" 라벨을 표시한다 | - |
-| DS-02104 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.04: 기준일 배지에 시세 적용 기준 문구를 표시하고 기준일 대체 조회가 발생한 경우 안내 문구를 함께 표시한다 | - |
-| DS-02105 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.05: 4칸 지표에 전일 대비, 전주 대비, 전년 동기, 경매 건수를 표시하고 변동 없음은 "0%"로 표기한다 | - |
-| DS-02106 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.06: 카드 하단에 "{시각} 업데이트"와 "반입량 {n}상자"를 표시한다 | - |
-| DS-02107 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -버튼.01: 우측 상단에 즐겨찾기(별) 버튼과 알림 설정(종) 버튼을 배치한다 | - |
-| DS-02108 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -초기값.01: 표시 대상 품목·품종·시장·법인·기준일·단위는 시세 조회 조건 저장값을 따른다 | - |
-| DS-02109 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -데이터조회.01: 경매 건수는 현재 조회 조건(부류·품목·품종·시장·기준일) 기준 경매 건수 집계값을 사용한다 | - |
-| DS-02110 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -액션.01: 즐겨찾기 버튼을 누르면 현재 조회 조건(품목·품종·시장·법인·단위)을 키로 즐겨찾기를 추가하거나 해제하고 "즐겨찾기에 추가했어요" 또는 "즐겨찾기에서 제거했어요" 토스트를 표시한다 | - |
-| DS-02111 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -분기.01: 알림 버튼을 누를 때 해당 품종·시장 조합의 알림 규칙이 이미 있으면 그 규칙 수정 화면으로 이동하고, 없으면 새 규칙 생성 화면으로 품종·시장 값을 전달하며 이동한다 | - |
-| DS-02112 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -이동.01: 알림 규칙이 있으면 /notifications/settings/$ruleId, 없으면 /notifications/settings/new 로 이동한다 | - |
-| DS-02113 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -액션.02: 단위 버튼을 누르면 단위 선택 시트를 열고 선택한 단위 기준으로 가격을 다시 계산해 표시한다 | - |
-| DS-02114 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -상태.01: 즐겨찾기 등록 상태이면 별 아이콘이 채워지고, 알림 규칙이 있으면 종 아이콘이 브랜드 초록색으로 강조된다 | - |
-| DS-02115 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -테두리.01: 카드 테두리 1px solid 연한 회색(#E9ECEF), 모서리 반경 14px, 내부 여백 16px | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/ProPriceHeadlineCard.tsx<br>기술근거.01: ProPriceHeadlineCard — src/components/market-v2/ProPriceHeadlineCard.tsx<br>Baseline: 2026-08-18 코드 기준 |
-| DS-02116 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -글자크기.01: 품목·품종 제목 16px 매우 굵게, 조회 조건 문구 12px, 대표 가격 30px 매우 굵게 | - |
-| DS-02117 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -상태색.01: 상승 빨간색(#E03131), 하락 파란색(#1971C2), 변동 없음 회색(#6C757D) | - |
-| DS-02118 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -배경색.01: 작물 아이콘 배경 연한 초록색(#F0F9F0), 기준일 배지 배경 연한 초록색(#F0F9F0)·글자색 진한 초록색(#1F5C1F), 4칸 지표 배경 연한 회색(#F8F9FA) | - |
-| DS-02119 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -상태색.02: 즐겨찾기 활성 별 색상 노란색(#F59F00), 알림 활성 종 색상 초록색(#3A8A3A) | - |
+| DS-02324 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -구성.01: 시세조회메인 상단의 대표 시세 카드로, 좌측 작물 아이콘·품목·품종명과 조회 조건 문구, 우측 즐겨찾기·알림 아이콘 버튼, 중앙 대표 가격과 전일 대비, 기준일 배지, 4칸 지표, 하단 업데이트·반입량으로 구성한다 | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/ProPriceHeadlineCard.tsx<br>기술근거.01: ProPriceHeadlineCard — src/components/market-v2/ProPriceHeadlineCard.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-02325 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.01: 제목에 "{품목} · {품종}" 형식으로 표시하고 그 아래 조회 조건을 "{시장} · {법인}" 형식으로 표시하며 전체 선택 시 각각 "전체시장", "전체법인"으로 표기한다 | - |
+| DS-02326 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.02: 대표 가격은 천 단위 구분 기호를 넣어 표시하고 바로 옆 단위 버튼에 "원/{단위}"를 표시한다 | - |
+| DS-02327 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.03: 전일 대비는 상승·하락 화살표와 함께 소수 첫째 자리 백분율로 표시하고 아래에 "전일 대비" 라벨을 표시한다 | - |
+| DS-02328 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.04: 기준일 배지에 시세 적용 기준 문구를 표시하고 기준일 대체 조회가 발생한 경우 안내 문구를 함께 표시한다 | - |
+| DS-02329 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.05: 4칸 지표에 전일 대비, 전주 대비, 전년 동기, 경매 건수를 표시하고 변동 없음은 "0%"로 표기한다 | - |
+| DS-02330 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.06: 카드 하단에 "{시각} 업데이트"와 "반입량 {n}상자"를 표시한다 | - |
+| DS-02331 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -버튼.01: 우측 상단에 즐겨찾기(별) 버튼과 알림 설정(종) 버튼을 배치한다 | - |
+| DS-02332 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -초기값.01: 표시 대상 품목·품종·시장·법인·기준일·단위는 시세 조회 조건 저장값을 따른다 | - |
+| DS-02333 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -데이터조회.01: 경매 건수는 현재 조회 조건(부류·품목·품종·시장·기준일) 기준 경매 건수 집계값을 사용한다 | - |
+| DS-02334 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -액션.01: 즐겨찾기 버튼을 누르면 현재 조회 조건(품목·품종·시장·법인·단위)을 키로 즐겨찾기를 추가하거나 해제하고 "즐겨찾기에 추가했어요" 또는 "즐겨찾기에서 제거했어요" 토스트를 표시한다 | - |
+| DS-02335 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -분기.01: 알림 버튼을 누를 때 해당 품종·시장 조합의 알림 규칙이 이미 있으면 그 규칙 수정 화면으로 이동하고, 없으면 새 규칙 생성 화면으로 품종·시장 값을 전달하며 이동한다 | - |
+| DS-02336 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -이동.01: 알림 규칙이 있으면 /notifications/settings/$ruleId, 없으면 /notifications/settings/new 로 이동한다 | - |
+| DS-02337 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -액션.02: 단위 버튼을 누르면 단위 선택 시트를 열고 선택한 단위 기준으로 가격을 다시 계산해 표시한다 | - |
+| DS-02338 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -상태.01: 즐겨찾기 등록 상태이면 별 아이콘이 채워지고, 알림 규칙이 있으면 종 아이콘이 브랜드 초록색으로 강조된다 | - |
+| DS-02339 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -테두리.01: 카드 테두리 1px solid 연한 회색(#E9ECEF), 모서리 반경 14px, 내부 여백 16px | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/ProPriceHeadlineCard.tsx<br>기술근거.01: ProPriceHeadlineCard — src/components/market-v2/ProPriceHeadlineCard.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-02340 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -글자크기.01: 품목·품종 제목 16px 매우 굵게, 조회 조건 문구 12px, 대표 가격 30px 매우 굵게 | - |
+| DS-02341 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -상태색.01: 상승 빨간색(#E03131), 하락 파란색(#1971C2), 변동 없음 회색(#6C757D) | - |
+| DS-02342 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -배경색.01: 작물 아이콘 배경 연한 초록색(#F0F9F0), 기준일 배지 배경 연한 초록색(#F0F9F0)·글자색 진한 초록색(#1F5C1F), 4칸 지표 배경 연한 회색(#F8F9FA) | - |
+| DS-02343 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -상태색.02: 즐겨찾기 활성 별 색상 노란색(#F59F00), 알림 활성 종 색상 초록색(#3A8A3A) | - |
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
@@ -530,22 +530,22 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 ## 시세 간편 보기 · 기본 상태
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
-| DS-02120 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -구성.01: 시세조회메인 간편 보기 영역으로, 경매내역 제목과 총 건수, 조회 조건 문구, 3칸 요약, 보기 방식 전환 칩, 최근 경매 3건 목록, 전체보기 버튼으로 구성한다 | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/SimpleModeView.tsx<br>기술근거.01: SimpleModeView — src/components/market-v2/SimpleModeView.tsx<br>Baseline: 2026-08-18 코드 기준 |
-| DS-02121 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.01: 제목 "경매내역" 옆에 "총 {n}건"을 초록색으로 표시한다 | - |
-| DS-02122 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.02: 조회 조건 문구를 "{YYYY.MM.DD} 기준 · {시장} · {법인} 법인" 형식으로 표시한다 | - |
-| DS-02123 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.03: 3칸 요약에 평균가(원), 거래량(t), kg당 가격(원)을 표시한다 | - |
-| DS-02124 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.04: 최근 경매 3건 각 행에 경매일(월/일)과 시각, 낙찰가, "수량 {n}건 · {포장규격}", 산지와 법인명을 표시한다 | - |
-| DS-02125 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -버튼.01: 목록 상단에 "전체보기", 하단에 "경매내역 전체보기 ({n}건)" 버튼을 배치한다 | - |
-| DS-02126 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -데이터조회.01: 현재 조회 조건(부류·품목·품종·시장·기준일)으로 경매 목록을 조회하고 평균가와 kg당 가격은 조회 결과 요약값을 사용한다 | - |
-| DS-02127 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -계산.01: 거래량(t)은 각 경매의 포장 중량(kg)과 건수를 곱해 합산한 뒤 1,000으로 나누어 소수 첫째 자리까지 표시한다 | - |
-| DS-02128 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -조건.01: 최근 경매 목록은 조회 결과의 상위 3건만 표시한다 | - |
-| DS-02129 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -액션.01: 전체보기 버튼을 누르면 상세 보기의 경매내역 탭으로 전환하고 간편 보기를 해제한다 | - |
-| DS-02130 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -이동.01: 경매 행을 누르면 /market/auction/$id 경매 상세로 이동한다 | - |
-| DS-02131 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -액션.02: 보기 방식 전환 칩으로 간편 보기 내 표시 방식을 변경하며 선택값은 시세 조회 조건과 함께 유지된다 | - |
-| DS-02132 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -테두리.01: 요약 칸과 목록 테두리 1px solid 연한 회색(#E9ECEF), 요약 칸 모서리 반경 10px, 목록 모서리 반경 12px | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/SimpleModeView.tsx<br>기술근거.01: SimpleModeView — src/components/market-v2/SimpleModeView.tsx<br>Baseline: 2026-08-18 코드 기준 |
-| DS-02133 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -글자색.01: 총 건수 초록색(#3A8A3A), 낙찰가 빨간색(#E03131), 보조 설명 회색(#868E96) | - |
-| DS-02134 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -글자크기.01: 제목 15px 굵게, 요약 값 13px 굵게, 낙찰가 15px 굵게, 보조 문구 11.5px | - |
-| DS-02135 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -높이.01: 하단 전체보기 버튼 높이 44px, 모서리 반경 10px, 배경 흰색 | - |
+| DS-02344 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -구성.01: 시세조회메인 간편 보기 영역으로, 경매내역 제목과 총 건수, 조회 조건 문구, 3칸 요약, 보기 방식 전환 칩, 최근 경매 3건 목록, 전체보기 버튼으로 구성한다 | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/SimpleModeView.tsx<br>기술근거.01: SimpleModeView — src/components/market-v2/SimpleModeView.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-02345 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.01: 제목 "경매내역" 옆에 "총 {n}건"을 초록색으로 표시한다 | - |
+| DS-02346 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.02: 조회 조건 문구를 "{YYYY.MM.DD} 기준 · {시장} · {법인} 법인" 형식으로 표시한다 | - |
+| DS-02347 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.03: 3칸 요약에 평균가(원), 거래량(t), kg당 가격(원)을 표시한다 | - |
+| DS-02348 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.04: 최근 경매 3건 각 행에 경매일(월/일)과 시각, 낙찰가, "수량 {n}건 · {포장규격}", 산지와 법인명을 표시한다 | - |
+| DS-02349 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -버튼.01: 목록 상단에 "전체보기", 하단에 "경매내역 전체보기 ({n}건)" 버튼을 배치한다 | - |
+| DS-02350 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -데이터조회.01: 현재 조회 조건(부류·품목·품종·시장·기준일)으로 경매 목록을 조회하고 평균가와 kg당 가격은 조회 결과 요약값을 사용한다 | - |
+| DS-02351 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -계산.01: 거래량(t)은 각 경매의 포장 중량(kg)과 건수를 곱해 합산한 뒤 1,000으로 나누어 소수 첫째 자리까지 표시한다 | - |
+| DS-02352 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -조건.01: 최근 경매 목록은 조회 결과의 상위 3건만 표시한다 | - |
+| DS-02353 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -액션.01: 전체보기 버튼을 누르면 상세 보기의 경매내역 탭으로 전환하고 간편 보기를 해제한다 | - |
+| DS-02354 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -이동.01: 경매 행을 누르면 /market/auction/$id 경매 상세로 이동한다 | - |
+| DS-02355 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -액션.02: 보기 방식 전환 칩으로 간편 보기 내 표시 방식을 변경하며 선택값은 시세 조회 조건과 함께 유지된다 | - |
+| DS-02356 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -테두리.01: 요약 칸과 목록 테두리 1px solid 연한 회색(#E9ECEF), 요약 칸 모서리 반경 10px, 목록 모서리 반경 12px | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/SimpleModeView.tsx<br>기술근거.01: SimpleModeView — src/components/market-v2/SimpleModeView.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-02357 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -글자색.01: 총 건수 초록색(#3A8A3A), 낙찰가 빨간색(#E03131), 보조 설명 회색(#868E96) | - |
+| DS-02358 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -글자크기.01: 제목 15px 굵게, 요약 값 13px 굵게, 낙찰가 15px 굵게, 보조 문구 11.5px | - |
+| DS-02359 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -높이.01: 하단 전체보기 버튼 높이 44px, 모서리 반경 10px, 배경 흰색 | - |
 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
@@ -595,10 +595,10 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 
 
 ## 미구현·확인필요 요약
 
-- MKT-007~011(차트/경매내역/시장비교/산지/등급·규격 탭 컴포넌트, src/components/market/*)은 어느 라우트에서도 배선되지 않아 실제 화면에 노출되지 않는다. /market/$crop 또는 /price/$variety 화면과의 연결 계획을 기획 확인 필요(DS-0239, DS-02127, DS-02132, DS-02142, DS-02152, DS-02163, DS-02174).
+- MKT-007~011(차트/경매내역/시장비교/산지/등급·규격 탭 컴포넌트, src/components/market/*)은 어느 라우트에서도 배선되지 않아 실제 화면에 노출되지 않는다. /market/$crop 또는 /price/$variety 화면과의 연결 계획을 기획 확인 필요(DS-0239, DS-02351, DS-02356, DS-02142, DS-02152, DS-02163, DS-02174).
 - /market/$crop에는 품목 없음 처리가 컴포넌트 내부 분기와 라우트 notFoundComponent 두 곳에 중복 구현되어 있어 어느 조건에서 어느 쪽이 노출되는지 확인 필요(DS-0256, DS-0258).
-- /market/wholesale에서 품목 행을 눌러 상세로 이동할 때 선택한 품목 정보가 다음 화면에 전달되지 않아 상세 화면에서 품목이 자동 선택되지 않는 것이 의도된 동작인지 확인 필요(DS-0296, DS-02100).
-- /market/wholesale/$market의 법인별 가격은 실거래가 아닌 결정론적 mock 오프셋으로 산출된다(DS-02113).
+- /market/wholesale에서 품목 행을 눌러 상세로 이동할 때 선택한 품목 정보가 다음 화면에 전달되지 않아 상세 화면에서 품목이 자동 선택되지 않는 것이 의도된 동작인지 확인 필요(DS-0296, DS-02324).
+- /market/wholesale/$market의 법인별 가격은 실거래가 아닌 결정론적 mock 오프셋으로 산출된다(DS-02337).
 - /market, MKT-013 도매시장 선택 시트의 "가장 가까운 도매시장 찾기" 버튼(DS-0220, DS-02199)은 안내 문구만 표시하고 실제 위치 조회 기능이 없다.
 - /price/$variety/alert는 목표가 입력값이 저장되지 않고, 등락률 상승/하락 토글이 값을 공유하며, 거래량 알림 토글이 실제로는 목표가 플래그에 연결되는 등 저장 로직이 화면 문구와 일치하지 않는다. 알림 저장소에 존재하는 신규 스키마로 전환할 계획인지 확인 필요(DS-02304, DS-02307, DS-02308, DS-02309).
 - 시세 조회 메인의 조회 날짜는 세션 저장 대상에서 제외되어 있어 새로고침 시 항상 오늘 날짜로 초기화된다(DS-0212).
