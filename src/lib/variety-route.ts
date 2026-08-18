@@ -67,6 +67,7 @@ export function resolveVarietySelection(param: string): VarietySelection {
   // 품목으로 완화 매칭한다. (표시명이 내부 식별자로 새는 것을 막는다)
   const catalogItem =
     CATALOG_ITEMS.find((i) => i.name === itemName) ??
+    CATALOG_ITEMS.find((i) => i.name.startsWith(`${itemName}(`)) ??
     CATALOG_ITEMS.find((i) => i.name.startsWith(itemName)) ??
     CATALOG_ITEMS.find((i) => i.name.includes(itemName));
 
