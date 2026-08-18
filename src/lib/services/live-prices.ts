@@ -56,11 +56,19 @@ const POOL: LivePriceRow[] = POOL_SEED.map((seed) => {
   };
 });
 
+// 정렬 결과는 정렬 기준별로 1회만 계산해서 캐시한다.
+// (정렬 탭을 눌러도 목록 데이터를 새로 만들지 않고, 캐시된 정렬 결과를 재사용)
+const SORTED_CACHE = new Map<LiveSort, LivePriceRow[]>();
+
 function sortPool(sort: LiveSort): LivePriceRow[] {
+  const cached = SORTED_CACHE.get(sort);
+  if (cached) return cached;
   const arr = [...POOL];
-  if (sort === "up") return arr.sort((a, b) => b.changePct - a.changePct);
-  if (sort === "down") return arr.sort((a, b) => a.changePct - b.changePct);
-  return arr.sort((a, b) => b.volumeTon - a.volumeTon);
+  if (sort === "up") arr.sort((a, b) => b.changePct - a.changePct);
+  else if (sort === "down") arr.sort((a, b) => a.changePct - b.changePct);
+  else arr.sort((a, b) => b.volumeTon - a.volumeTon);
+  SORTED_CACHE.set(sort, arr);
+  return arr;
 }
 
 /**
