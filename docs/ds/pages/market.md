@@ -43,6 +43,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 ## 시세 상세 · 기본 상태
 
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
+
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
 | DS-0231 | 시세 상세 | MKT-002_market-id_Default | Visible | -구성.01: 헤더 타이틀 "시세 상세", 우측 즐겨찾기(별) 버튼과 공유 버튼 | Registry: docs/ds/screen-registry.json<br>Route: /market/$crop<br>File: src/routes/market.$crop.tsx<br>Baseline: 2026-08-05 코드 기준 |
@@ -73,6 +75,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## 시세 상세 · 빈 상태
+
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -177,6 +181,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 ## 차트 탭 · 기본 상태
 
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
+
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
 | DS-02122 | 차트 탭 | MKT-007_market-crop-tab-chart_Default | Visible | -구성.01: 가격 추이 카드(가격·거래량 차트) + 기간 필터 5종 "당일/1주/1개월/3개월/1년" | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketChartView.tsx<br>Baseline: 2026-08-05 코드 기준 |
@@ -200,6 +206,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 ## 경매내역 탭 · 기본 상태
 
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
+
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
 | DS-02138 | 경매내역 탭 | MKT-008_market-crop-tab-auction_Default | Visible | -필터.01: 필터 칩 6종 "오늘/도매시장/법인/등급/규격/더보기" | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketAuctionView.tsx<br>Baseline: 2026-08-05 코드 기준 |
@@ -216,6 +224,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## 시장비교 탭 · 기본 상태
+
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -235,6 +245,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 ## 산지 탭 · 기본 상태
 
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
+
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
 | DS-02159 | 산지 탭 | MKT-010_market-crop-tab-origin_Default | Visible | -필터.01: 필터 칩 4종 "이번 주/주산지/출하지/거래량순" | Registry: docs/ds/screen-registry.json<br>Route: Parent=/market/$crop<br>File: src/components/market/MarketOriginView.tsx<br>Baseline: 2026-08-05 코드 기준 |
@@ -252,6 +264,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## 등급·규격 탭 · 기본 상태
+
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
@@ -415,6 +429,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 
 ## 품종 상세 · 기본 상태
 
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
+
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
 | DS-02269 | 품종 상세 | PRC-001_price-id_Default | Visible | -구성.01: 헤더 타이틀 "시세 상세"와 뒤로가기 버튼, 우측 즐겨찾기(별)·가격 알림(종) 버튼 | Registry: docs/ds/screen-registry.json<br>Route: /price/$variety<br>File: src/routes/price.$variety.tsx<br>Baseline: 2026-08-05 코드 기준 |
@@ -449,6 +465,8 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 ## 알림 설정 · 기본 상태
+
+> ⚠️ 삭제된 화면(deprecated): 현재 코드에서 제거되었으며 아래 사양은 이력 보존용이다. 대체 화면은 시세조회메인(/market)이다.
 
 | DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
 |---|---|---|---|---|---|
