@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { CropIcon } from "@/components/crop-icon";
 import { PriceBadge } from "@/components/price-badge";
 import type { LivePriceRow } from "@/lib/services/live-prices";
@@ -10,7 +11,7 @@ const GRID =
  * 순위 · 아이콘 · 품목명(+시장·단위) · 현재가 · 등락률 · 거래량
  * 헤더(LivePriceHeader)와 행(LivePriceRowItem)이 동일 GRID를 공유.
  */
-export function LivePriceRowItem({
+export const LivePriceRowItem = memo(function LivePriceRowItem({
   rank,
   row,
   onClick,
@@ -52,7 +53,7 @@ export function LivePriceRowItem({
       </button>
     </li>
   );
-}
+});
 
 export function LivePriceHeader() {
   return (
