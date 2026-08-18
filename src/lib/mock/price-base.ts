@@ -38,7 +38,6 @@ const NAME_BY_CROP_ID: Record<string, string> = {
   mandarin: "감귤",
   peach: "복숭아",
   watermelon: "수박",
-  lettuce: "상추",
   pepper: "피망",
   paprika: "파프리카",
   radish: "무",
