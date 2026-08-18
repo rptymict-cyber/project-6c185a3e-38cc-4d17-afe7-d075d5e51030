@@ -1,3 +1,4 @@
+import { applyMarketSelection } from "@/lib/goto-market";
 import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, Newspaper, Share2, Star } from "lucide-react";
@@ -226,10 +227,10 @@ function NewsDetailView({
               <button
                 type="button"
                 onClick={() =>
-                  navigate({
-                    to: "/price/$variety",
-                    params: { variety: cropRouteId },
-                  })
+                  {
+                    applyMarketSelection(cropRouteId);
+                    navigate({ to: "/market" });
+                  }
                 }
                 className="mt-3 flex w-full items-center justify-between rounded-lg border border-[#CDE5D8] bg-white px-3 py-2.5 text-[12px] font-bold text-[#1F7A50] active:bg-[#F3FAF6]"
               >

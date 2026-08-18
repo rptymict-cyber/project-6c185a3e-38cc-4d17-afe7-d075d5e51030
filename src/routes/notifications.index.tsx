@@ -74,7 +74,7 @@ function NotificationsPage() {
     setCorp(c.corpId, c.corpLabel);
     setUnit(c.unit);
     // 4) 상세로 이동
-    navigate({ to: "/price/$variety", params: { variety: c.varietyId } });
+    navigate({ to: "/market" });
   };
 
   return (

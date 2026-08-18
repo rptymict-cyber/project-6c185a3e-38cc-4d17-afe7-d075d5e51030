@@ -388,10 +388,7 @@ function FavoriteCardBody({
     setMarket(item.marketId, item.marketName);
     setCorp(item.corporationId ?? "all", item.corporationName ?? "전체");
     setUnit(item.unit);
-    navigate({
-      to: "/price/$variety",
-      params: { variety: item.varietyId ?? item.cropId },
-    });
+    navigate({ to: "/market" });
   };
 
   const kgPrice = item.kgPrice ?? item.price ?? 0;

@@ -1,3 +1,4 @@
+import { applyMarketSelection } from "@/lib/goto-market";
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
@@ -229,7 +230,7 @@ export function MainCropCard({ crop }: { crop: Crop }) {
       {/* CTAs */}
       <div className="mt-3 grid grid-cols-2 gap-2">
         <Link
-          to="/price/$variety"
+          to="/market"
           params={{ variety: crop.id }}
           className="grid h-10 place-items-center rounded-lg border border-[#3A8A3A] text-[13px] font-semibold text-[#3A8A3A]"
         >

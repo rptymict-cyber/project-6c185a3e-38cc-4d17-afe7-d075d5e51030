@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { applyMarketSelection } from "@/lib/goto-market";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { PredictionChart } from "@/features/prediction/components/PredictionChart";
@@ -215,10 +216,10 @@ function PredictionPage() {
             isPositiveForUser={isPositiveForUser}
             cropName={prediction.cropName}
             onDetailClick={() =>
-              navigate({
-                to: "/price/$variety",
-                params: { variety: prediction.cropId },
-              })
+              {
+                applyMarketSelection(prediction.cropId);
+                navigate({ to: "/market" });
+              }
             }
           />
         </div>
