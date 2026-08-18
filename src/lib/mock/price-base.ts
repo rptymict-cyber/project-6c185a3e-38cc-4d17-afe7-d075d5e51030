@@ -31,6 +31,16 @@ const NAME_BY_CROP_ID: Record<string, string> = {
   garlic: "마늘",
   onion: "양파",
   chili: "청양고추",
+  greenonion: "대파",
+  cucumber: "오이",
+  tomato: "토마토",
+  spinach: "시금치",
+  mandarin: "감귤",
+  peach: "복숭아",
+  watermelon: "수박",
+  lettuce: "상추",
+  pepper: "피망",
+  paprika: "파프리카",
   radish: "무",
   carrot: "당근",
   potato: "감자",
@@ -79,6 +89,8 @@ const BASE_TABLE: Record<string, { basePricePerKg: number; changeRate: number }>
   단감: { basePricePerKg: 3120, changeRate: 1.1 },
   시금치: { basePricePerKg: 4180, changeRate: 6.2 },
   깻잎: { basePricePerKg: 7240, changeRate: -2.4 },
+  피망: { basePricePerKg: 5320, changeRate: -3.6 },
+  감귤: { basePricePerKg: 3080, changeRate: -0.8 },
 };
 
 // -- deterministic fallback --------------------------------------------------
