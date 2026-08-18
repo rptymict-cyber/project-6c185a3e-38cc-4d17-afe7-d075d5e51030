@@ -1,3 +1,4 @@
+import { applyMarketSelection } from "@/lib/goto-market";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import type { Item } from "@/lib/mock/items";
@@ -14,15 +15,19 @@ export function ItemRow({ item }: { item: Item }) {
   const urgent = Math.abs(top.changePct) >= 5;
   const color = flat ? "#6C757D" : up ? "#E03131" : "#1971C2";
 
-  // Route: if single variety, go straight to price detail. Otherwise variety list.
+  // 품종이 1개면 조회 조건을 반영해 시세조회메인으로, 여러 개면 품종 목록으로 이동.
   const single = item.varieties.length === 1;
-  const to = single ? "/price/$variety" : "/market/item/$item";
-  const params = single
-    ? { variety: item.varieties[0].id }
-    : { item: item.id };
 
   return (
-    <Link to={to} params={params} className="block">
+    <Link
+      {...(single
+        ? {
+            to: "/market" as const,
+            onClick: () => applyMarketSelection(item.varieties[0].id),
+          }
+        : { to: "/market/item/$item" as const, params: { item: item.id } })}
+      className="block"
+    >
       <div
         className={cn(
           "relative flex items-center gap-3 px-4 py-3.5 transition-colors active:bg-[#F8F9FA]",

@@ -231,7 +231,7 @@ export function MainCropCard({ crop }: { crop: Crop }) {
       <div className="mt-3 grid grid-cols-2 gap-2">
         <Link
           to="/market"
-          params={{ variety: crop.id }}
+          onClick={() => applyMarketSelection(crop.id)}
           className="grid h-10 place-items-center rounded-lg border border-[#3A8A3A] text-[13px] font-semibold text-[#3A8A3A]"
         >
           경락가 조회
