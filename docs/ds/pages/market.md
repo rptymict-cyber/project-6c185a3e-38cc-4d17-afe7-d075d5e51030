@@ -500,6 +500,54 @@ Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen 
 Confluence 등록 시 같은 Screen ID의 연속 행에서 Section명 · Screen ID 셀만 세로 병합할 수 있다. DS No. · 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
 
+## 대표 시세 카드 · 기본 상태
+| DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
+|---|---|---|---|---|---|
+| DS-02324 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -구성.01: 시세조회메인 상단의 대표 시세 카드로, 좌측 작물 아이콘·품목·품종명과 조회 조건 문구, 우측 즐겨찾기·알림 아이콘 버튼, 중앙 대표 가격과 전일 대비, 기준일 배지, 4칸 지표, 하단 업데이트·반입량으로 구성한다 | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/ProPriceHeadlineCard.tsx<br>기술근거.01: ProPriceHeadlineCard — src/components/market-v2/ProPriceHeadlineCard.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-02325 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.01: 제목에 "{품목} · {품종}" 형식으로 표시하고 그 아래 조회 조건을 "{시장} · {법인}" 형식으로 표시하며 전체 선택 시 각각 "전체시장", "전체법인"으로 표기한다 | - |
+| DS-02326 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.02: 대표 가격은 천 단위 구분 기호를 넣어 표시하고 바로 옆 단위 버튼에 "원/{단위}"를 표시한다 | - |
+| DS-02327 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.03: 전일 대비는 상승·하락 화살표와 함께 소수 첫째 자리 백분율로 표시하고 아래에 "전일 대비" 라벨을 표시한다 | - |
+| DS-02328 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.04: 기준일 배지에 시세 적용 기준 문구를 표시하고 기준일 대체 조회가 발생한 경우 안내 문구를 함께 표시한다 | - |
+| DS-02329 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.05: 4칸 지표에 전일 대비, 전주 대비, 전년 동기, 경매 건수를 표시하고 변동 없음은 "0%"로 표기한다 | - |
+| DS-02330 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -표시.06: 카드 하단에 "{시각} 업데이트"와 "반입량 {n}상자"를 표시한다 | - |
+| DS-02331 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Visible | -버튼.01: 우측 상단에 즐겨찾기(별) 버튼과 알림 설정(종) 버튼을 배치한다 | - |
+| DS-02332 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -초기값.01: 표시 대상 품목·품종·시장·법인·기준일·단위는 시세 조회 조건 저장값을 따른다 | - |
+| DS-02333 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -데이터조회.01: 경매 건수는 현재 조회 조건(부류·품목·품종·시장·기준일) 기준 경매 건수 집계값을 사용한다 | - |
+| DS-02334 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -액션.01: 즐겨찾기 버튼을 누르면 현재 조회 조건(품목·품종·시장·법인·단위)을 키로 즐겨찾기를 추가하거나 해제하고 "즐겨찾기에 추가했어요" 또는 "즐겨찾기에서 제거했어요" 토스트를 표시한다 | - |
+| DS-02335 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -분기.01: 알림 버튼을 누를 때 해당 품종·시장 조합의 알림 규칙이 이미 있으면 그 규칙 수정 화면으로 이동하고, 없으면 새 규칙 생성 화면으로 품종·시장 값을 전달하며 이동한다 | - |
+| DS-02336 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -이동.01: 알림 규칙이 있으면 /notifications/settings/$ruleId, 없으면 /notifications/settings/new 로 이동한다 | - |
+| DS-02337 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -액션.02: 단위 버튼을 누르면 단위 선택 시트를 열고 선택한 단위 기준으로 가격을 다시 계산해 표시한다 | - |
+| DS-02338 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Invisible | -상태.01: 즐겨찾기 등록 상태이면 별 아이콘이 채워지고, 알림 규칙이 있으면 종 아이콘이 브랜드 초록색으로 강조된다 | - |
+| DS-02339 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -테두리.01: 카드 테두리 1px solid 연한 회색(#E9ECEF), 모서리 반경 14px, 내부 여백 16px | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/ProPriceHeadlineCard.tsx<br>기술근거.01: ProPriceHeadlineCard — src/components/market-v2/ProPriceHeadlineCard.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-02340 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -글자크기.01: 품목·품종 제목 16px 매우 굵게, 조회 조건 문구 12px, 대표 가격 30px 매우 굵게 | - |
+| DS-02341 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -상태색.01: 상승 빨간색(#E03131), 하락 파란색(#1971C2), 변동 없음 회색(#6C757D) | - |
+| DS-02342 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -배경색.01: 작물 아이콘 배경 연한 초록색(#F0F9F0), 기준일 배지 배경 연한 초록색(#F0F9F0)·글자색 진한 초록색(#1F5C1F), 4칸 지표 배경 연한 회색(#F8F9FA) | - |
+| DS-02343 | 대표 시세 카드 | MKT-015_market-headline-card_Default | Design | -상태색.02: 즐겨찾기 활성 별 색상 노란색(#F59F00), 알림 활성 종 색상 초록색(#3A8A3A) | - |
+
+Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+
+## 시세 간편 보기 · 기본 상태
+| DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
+|---|---|---|---|---|---|
+| DS-02344 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -구성.01: 시세조회메인 간편 보기 영역으로, 경매내역 제목과 총 건수, 조회 조건 문구, 3칸 요약, 보기 방식 전환 칩, 최근 경매 3건 목록, 전체보기 버튼으로 구성한다 | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/SimpleModeView.tsx<br>기술근거.01: SimpleModeView — src/components/market-v2/SimpleModeView.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-02345 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.01: 제목 "경매내역" 옆에 "총 {n}건"을 초록색으로 표시한다 | - |
+| DS-02346 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.02: 조회 조건 문구를 "{YYYY.MM.DD} 기준 · {시장} · {법인} 법인" 형식으로 표시한다 | - |
+| DS-02347 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.03: 3칸 요약에 평균가(원), 거래량(t), kg당 가격(원)을 표시한다 | - |
+| DS-02348 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -표시.04: 최근 경매 3건 각 행에 경매일(월/일)과 시각, 낙찰가, "수량 {n}건 · {포장규격}", 산지와 법인명을 표시한다 | - |
+| DS-02349 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Visible | -버튼.01: 목록 상단에 "전체보기", 하단에 "경매내역 전체보기 ({n}건)" 버튼을 배치한다 | - |
+| DS-02350 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -데이터조회.01: 현재 조회 조건(부류·품목·품종·시장·기준일)으로 경매 목록을 조회하고 평균가와 kg당 가격은 조회 결과 요약값을 사용한다 | - |
+| DS-02351 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -계산.01: 거래량(t)은 각 경매의 포장 중량(kg)과 건수를 곱해 합산한 뒤 1,000으로 나누어 소수 첫째 자리까지 표시한다 | - |
+| DS-02352 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -조건.01: 최근 경매 목록은 조회 결과의 상위 3건만 표시한다 | - |
+| DS-02353 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -액션.01: 전체보기 버튼을 누르면 상세 보기의 경매내역 탭으로 전환하고 간편 보기를 해제한다 | - |
+| DS-02354 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -이동.01: 경매 행을 누르면 /market/auction/$id 경매 상세로 이동한다 | - |
+| DS-02355 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Invisible | -액션.02: 보기 방식 전환 칩으로 간편 보기 내 표시 방식을 변경하며 선택값은 시세 조회 조건과 함께 유지된다 | - |
+| DS-02356 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -테두리.01: 요약 칸과 목록 테두리 1px solid 연한 회색(#E9ECEF), 요약 칸 모서리 반경 10px, 목록 모서리 반경 12px | Registry: docs/ds/screen-registry.json<br>Route: /market<br>File: src/components/market-v2/SimpleModeView.tsx<br>기술근거.01: SimpleModeView — src/components/market-v2/SimpleModeView.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-02357 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -글자색.01: 총 건수 초록색(#3A8A3A), 낙찰가 빨간색(#E03131), 보조 설명 회색(#868E96) | - |
+| DS-02358 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -글자크기.01: 제목 15px 굵게, 요약 값 13px 굵게, 낙찰가 15px 굵게, 보조 문구 11.5px | - |
+| DS-02359 | 시세 간편 보기 | MKT-016_market-simple-mode_Default | Design | -높이.01: 하단 전체보기 버튼 높이 44px, 모서리 반경 10px, 배경 흰색 | - |
+
+Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+
 ## 분석 파일
 
 - src/routes/market.index.tsx
