@@ -90,7 +90,10 @@ function LivePage() {
                 row={row}
                 onClick={() =>
                   {
-                    applyMarketSelection(row.id, { tab: "chart" });
+                    applyMarketSelection(row.id, {
+                      tab: "chart",
+                      marketLabel: row.market,
+                    });
                     navigate({ to: "/market" });
                   }
                 }

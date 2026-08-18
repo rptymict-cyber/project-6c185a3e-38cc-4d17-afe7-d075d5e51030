@@ -41,8 +41,8 @@ function Home() {
       }
     >
       <MarketListHome
-        onSelectCrop={(id) => {
-          applyMarketSelection(id, { tab: "chart" });
+        onSelectCrop={(row) => {
+          applyMarketSelection(row.id, { tab: "chart", marketLabel: row.market });
           router.navigate({ to: "/market" });
         }}
       />

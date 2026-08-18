@@ -5,6 +5,7 @@
  * 단위(필요하면 도매시장·탭)를 먼저 반영한 뒤 `/market`으로 이동시켜,
  * 클릭한 품목이 선택된 상태로 시세조회메인이 열리게 한다.
  */
+import { MARKETS } from "@/lib/mock/markets";
 import { resolveVarietySelection } from "@/lib/variety-route";
 import { useMarketFilter, type ProTab } from "@/store/market";
 
@@ -29,8 +30,17 @@ export function applyMarketSelection(param: string, opts?: MarketSelectionOption
     varietyId: sel.varietyId,
     varietyLabel: sel.varietyLabel,
   });
-  if (opts?.marketId) {
-    s.setMarket(opts.marketId, opts.marketLabel ?? opts.marketId);
+  // 도매시장은 id가 없으면 시장명으로 조회해서 함께 반영한다.
+  const marketId =
+    opts?.marketId ??
+    (opts?.marketLabel
+      ? MARKETS.find((m) => m.name === opts.marketLabel)?.id
+      : undefined);
+  if (marketId) {
+    s.setMarket(
+      marketId,
+      opts?.marketLabel ?? MARKETS.find((m) => m.id === marketId)?.name ?? marketId,
+    );
   }
   s.setUnit(opts?.unit ?? sel.unit);
   if (opts?.tab) s.setProTab(opts.tab);

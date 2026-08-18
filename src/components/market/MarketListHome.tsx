@@ -18,7 +18,7 @@ const HOME_LIMIT = 5;
 export function MarketListHome({
   onSelectCrop,
 }: {
-  onSelectCrop: (id: string) => void;
+  onSelectCrop: (row: { id: string; market: string }) => void;
 }) {
   const navigate = useNavigate();
   const [sort, setSort] = useState<LiveSort>("up");
