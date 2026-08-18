@@ -173,7 +173,7 @@
       "route": "/market/$crop",
       "state": "Default",
       "file": "src/routes/market.$crop.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -195,7 +195,7 @@
       "route": "/market/$crop",
       "state": "Empty",
       "file": "src/routes/market.$crop.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -341,7 +341,7 @@
       "route": "Parent=/market/$crop",
       "state": "Default",
       "file": "src/components/market/MarketChartView.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -365,7 +365,7 @@
       "route": "Parent=/market/$crop",
       "state": "Default",
       "file": "src/components/market/MarketAuctionView.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -390,7 +390,7 @@
       "route": "Parent=/market/$crop",
       "state": "Default",
       "file": "src/components/market/MarketCompareView.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -415,7 +415,7 @@
       "route": "Parent=/market/$crop",
       "state": "Default",
       "file": "src/components/market/MarketOriginView.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -439,7 +439,7 @@
       "route": "Parent=/market/$crop",
       "state": "Default",
       "file": "src/components/market/MarketGradeSpecView.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -682,7 +682,7 @@
       "route": "/price/$variety",
       "state": "Default",
       "file": "src/routes/price.$variety.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -722,7 +722,7 @@
       "route": "/price/$variety/alert",
       "state": "Default",
       "file": "src/routes/price.$variety.alert.tsx",
-      "deprecated": false
+      "deprecated": true
     },
     {
       "dsNos": [
@@ -2375,6 +2375,122 @@
       "route": "Parent=/live",
       "state": "Default",
       "file": "src/components/common/LoadMoreButton.tsx",
+      "deprecated": false
+    },
+    {
+      "dsNos": [
+        "DS-02324",
+        "DS-02325",
+        "DS-02326",
+        "DS-02327",
+        "DS-02328",
+        "DS-02329",
+        "DS-02330",
+        "DS-02331",
+        "DS-02332",
+        "DS-02333",
+        "DS-02334",
+        "DS-02335",
+        "DS-02336",
+        "DS-02337",
+        "DS-02338",
+        "DS-02339",
+        "DS-02340",
+        "DS-02341",
+        "DS-02342",
+        "DS-02343"
+      ],
+      "screenId": "MKT-015_market-headline-card_Default",
+      "menuId": "market",
+      "menuName": "시세",
+      "dsFile": "docs/ds/pages/market.md",
+      "sectionId": "market-headline-card",
+      "sectionName": "대표 시세 카드",
+      "route": "Parent=/market",
+      "state": "Default",
+      "file": "src/components/market-v2/ProPriceHeadlineCard.tsx",
+      "deprecated": false
+    },
+    {
+      "dsNos": [
+        "DS-02344",
+        "DS-02345",
+        "DS-02346",
+        "DS-02347",
+        "DS-02348",
+        "DS-02349",
+        "DS-02350",
+        "DS-02351",
+        "DS-02352",
+        "DS-02353",
+        "DS-02354",
+        "DS-02355",
+        "DS-02356",
+        "DS-02357",
+        "DS-02358",
+        "DS-02359"
+      ],
+      "screenId": "MKT-016_market-simple-mode_Default",
+      "menuId": "market",
+      "menuName": "시세",
+      "dsFile": "docs/ds/pages/market.md",
+      "sectionId": "market-simple-mode",
+      "sectionName": "시세 간편 보기",
+      "route": "Parent=/market",
+      "state": "Default",
+      "file": "src/components/market-v2/SimpleModeView.tsx",
+      "deprecated": false
+    },
+    {
+      "dsNos": [
+        "DS-11245",
+        "DS-11246",
+        "DS-11247",
+        "DS-11248",
+        "DS-11249",
+        "DS-11250",
+        "DS-11251",
+        "DS-11252",
+        "DS-11253",
+        "DS-11254"
+      ],
+      "screenId": "LAY-006_unread-badge_Default",
+      "menuId": "common-layout",
+      "menuName": "공통 레이아웃",
+      "dsFile": "docs/ds/pages/common-layout.md",
+      "sectionId": "unread-badge",
+      "sectionName": "안 읽은 알림 배지",
+      "route": "Parent=/",
+      "state": "Default",
+      "file": "src/components/notifications/UnreadBadge.tsx",
+      "deprecated": false
+    },
+    {
+      "dsNos": [
+        "DS-1389",
+        "DS-1390",
+        "DS-1391",
+        "DS-1392",
+        "DS-1393",
+        "DS-1394",
+        "DS-1395",
+        "DS-1396",
+        "DS-1397",
+        "DS-1398",
+        "DS-1399",
+        "DS-1400",
+        "DS-1401",
+        "DS-1402"
+      ],
+      "screenId": "CMN-005_location-permission-modal_Default",
+      "menuId": "common-modal",
+      "menuName": "공통 모달·바텀시트",
+      "dsFile": "docs/ds/pages/common-modal.md",
+      "sectionId": "location-permission-modal",
+      "sectionName": "위치 권한 임시 확인 모달",
+      "route": "Parent=/",
+      "state": "Default",
+      "file": "src/components/LocationPermissionDevModal.tsx",
       "deprecated": false
     }
   ]
