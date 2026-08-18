@@ -114,6 +114,27 @@
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
+
+## 위치 권한 임시 확인 모달 · 기본 상태
+| DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
+|---|---|---|---|---|---|
+| DS-13100 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Visible | -구성.01: 중앙 정렬 모달로 원형 위치 아이콘, 제목, 설명 문구, 임시 화면 안내 박스, 하단 좌우 2분할 버튼(거부·허용)으로 구성한다 | Registry: docs/ds/screen-registry.json<br>Route: 공통(전역 오버레이)<br>File: src/components/LocationPermissionDevModal.tsx<br>기술근거.01: LocationPermissionDevModal — src/components/LocationPermissionDevModal.tsx<br>Baseline: 2026-08-18 코드 기준<br>⚠️ 확인 필요.01: 실제 사양은 브라우저(OS) 네이티브 위치 권한 팝업이며 이 모달은 미리보기 환경 확인용 임시 화면으로 배포 검증 후 제거 대상이다 |
+| DS-13101 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Visible | -제목.01: 제목 문구 "현재 위치 정보를 사용할까요?" | - |
+| DS-13102 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Visible | -문구.01: 설명 문구 "가까운 도매시장과 현재 위치 날씨를 안내하는 데 사용됩니다." | - |
+| DS-13103 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Visible | -문구.02: 안내 박스 문구 "이것은 임시 확인용 화면이며, 실제 배포 환경에서는 브라우저(OS)의 네이티브 위치 권한 팝업이 대신 표시됩니다." | - |
+| DS-13104 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Visible | -버튼.01: 하단 버튼 라벨 좌측 "거부", 우측 "허용" | - |
+| DS-13105 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Invisible | -진입조건.01: 미리보기(iframe) 환경에서 위치 권한 요청이 발생하면 이 모달을 표시한다 | - |
+| DS-13106 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Invisible | -액션.01: "허용"을 누르면 위치 권한 허용으로 처리하고 기본 좌표를 주입해 위치 기반 화면(날씨 배너·가까운 도매시장)을 갱신한다 | - |
+| DS-13107 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Invisible | -액션.02: "거부"를 누르거나 모달을 닫으면 권한 미허용으로 처리하고 기본 지역 기준 정보를 유지한다 | - |
+| DS-13108 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Invisible | -미구현.01: 실제 위치 권한 팝업 및 좌표 기반 실시간 조회는 아직 연결되지 않았다 | - |
+| DS-13109 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Design | -크기.01: 모달 너비 300px, 모서리 반경 16px | Registry: docs/ds/screen-registry.json<br>Route: 공통(전역 오버레이)<br>File: src/components/LocationPermissionDevModal.tsx<br>기술근거.01: LocationPermissionDevModal — src/components/LocationPermissionDevModal.tsx<br>Baseline: 2026-08-18 코드 기준<br>⚠️ 확인 필요.01: 실제 사양은 브라우저(OS) 네이티브 위치 권한 팝업이며 이 모달은 미리보기 환경 확인용 임시 화면으로 배포 검증 후 제거 대상이다 |
+| DS-13110 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Design | -배경색.01: 아이콘 배경 연한 초록(#3A8A3A 8% 투명도), 아이콘 색 초록색(#3A8A3A), 안내 박스 배경 연한 회색(#F8F9FA)·글자색 회색(#6C757D) | - |
+| DS-13111 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Design | -글자크기.01: 제목 15.5px 굵게, 설명 12.5px, 안내 박스 11.5px, 버튼 14px | - |
+| DS-13112 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Design | -테두리.01: 버튼 영역 상단 및 버튼 사이 구분선 1px solid 연한 회색(#F1F3F5) | - |
+| DS-13113 | 위치 권한 임시 확인 모달 | CMN-005_location-permission-modal_Default | Design | -글자색.01: 거부 버튼 회색(#6C757D), 허용 버튼 초록색(#3A8A3A) | - |
+
+Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+
 ## 분석 파일
 
 - src/components/market-v2/UnitSheet.tsx

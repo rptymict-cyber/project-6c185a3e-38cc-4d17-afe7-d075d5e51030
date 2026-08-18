@@ -29,7 +29,6 @@
       "menuName": "시세",
       "routes": [
         "/market",
-        "/market/$crop",
         "/market/item",
         "/market/item/$item",
         "/market/wholesale",
@@ -37,24 +36,15 @@
         "/market/auction/$id",
         "/market-compare",
         "/compare",
-        "/grades",
-        "/price/$variety",
-        "/price/$variety/alert"
+        "/grades"
       ],
       "dsFile": "docs/ds/pages/market.md",
       "screenIds": [
         "MKT-001_market_Default",
-        "MKT-002_market-id_Default",
-        "MKT-002_market-id_Empty",
         "MKT-003_market-item_Default",
         "MKT-004_market-item-id_Default",
         "MKT-005_market-wholesale_Default",
         "MKT-006_market-wholesale-id_Default",
-        "MKT-007_market-crop-tab-chart_Default",
-        "MKT-008_market-crop-tab-auction_Default",
-        "MKT-009_market-crop-tab-compare_Default",
-        "MKT-010_market-crop-tab-origin_Default",
-        "MKT-011_market-crop-tab-grade_Default",
         "MKT-012_market-sheet-date_Default",
         "MKT-013_market-sheet-market_Default",
         "MKT-014_market-sheet-corporation_Default",
@@ -63,10 +53,21 @@
         "CMP-001_market-compare_Default",
         "CMP-002_compare_Default",
         "GRD-001_grades_Default",
+        "MKT-015_market-headline-card_Default",
+        "MKT-016_market-simple-mode_Default"
+      ],
+      "common": false,
+      "deprecatedScreenIds": [
+        "MKT-002_market-id_Default",
+        "MKT-002_market-id_Empty",
+        "MKT-007_market-crop-tab-chart_Default",
+        "MKT-008_market-crop-tab-auction_Default",
+        "MKT-009_market-crop-tab-compare_Default",
+        "MKT-010_market-crop-tab-origin_Default",
+        "MKT-011_market-crop-tab-grade_Default",
         "PRC-001_price-id_Default",
         "PRC-002_price-id-alert_Default"
-      ],
-      "common": false
+      ]
     },
     {
       "order": 3,
@@ -204,11 +205,12 @@
       "menuName": "공통 레이아웃",
       "routes": [],
       "components": [
-        "src/components/app-shell.tsx",
-        "src/components/app-header.tsx",
-        "src/components/bottom-nav.tsx",
         "src/components/app-drawer.tsx",
+        "src/components/app-header.tsx",
+        "src/components/app-shell.tsx",
+        "src/components/bottom-nav.tsx",
         "src/components/detail-header.tsx",
+        "src/components/notifications/UnreadBadge.tsx",
         "src/routes/__root.tsx"
       ],
       "dsFile": "docs/ds/pages/common-layout.md",
@@ -220,10 +222,11 @@
         "LAY-003_app-header_Default",
         "LAY-004_bottom-nav_Default",
         "LAY-005_detail-header_Default",
+        "LAY-006_unread-badge_Default",
         "NAV-001_app-drawer_Default",
+        "SEL-001_crop-select_Default",
         "SRC-001_search_Default",
-        "SRC-001_search_Empty",
-        "SEL-001_crop-select_Default"
+        "SRC-001_search_Empty"
       ],
       "common": true
     },
@@ -253,21 +256,23 @@
       "menuName": "공통 모달·바텀시트",
       "routes": [],
       "components": [
-        "src/components/date-picker-sheet.tsx",
-        "src/components/market-v2/MarketSheet.tsx",
-        "src/components/market-v2/CorporationSheet.tsx",
-        "src/components/market-v2/UnitSheet.tsx",
-        "src/components/market-v2/SortSheet.tsx",
-        "src/components/statistics/StatsMarketSheet.tsx",
+        "src/components/LocationPermissionDevModal.tsx",
         "src/components/RatePromptModal.tsx",
-        "src/components/empty-state.tsx"
+        "src/components/date-picker-sheet.tsx",
+        "src/components/empty-state.tsx",
+        "src/components/market-v2/CorporationSheet.tsx",
+        "src/components/market-v2/MarketSheet.tsx",
+        "src/components/market-v2/SortSheet.tsx",
+        "src/components/market-v2/UnitSheet.tsx",
+        "src/components/statistics/StatsMarketSheet.tsx"
       ],
       "dsFile": "docs/ds/pages/common-modal.md",
       "screenIds": [
         "CMN-001_unit-sheet_Default",
         "CMN-002_sort-sheet_Default",
         "CMN-003_rate-prompt-modal_Default",
-        "CMN-004_load-more-button_Default"
+        "CMN-004_load-more-button_Default",
+        "CMN-005_location-permission-modal_Default"
       ],
       "common": true
     },
@@ -314,5 +319,6 @@
         "market"
       ]
     }
-  ]
+  ],
+  "baseline": "2026-08-18 코드 기준"
 }

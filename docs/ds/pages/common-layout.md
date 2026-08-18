@@ -326,6 +326,23 @@ Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section
 
 Confluence 등록 시 같은 Screen ID의 연속 행에 있는 DS No. · Section명 · Screen ID 셀은 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
 
+
+## 안 읽은 알림 배지 · 기본 상태
+| DS No. | Section명 | Screen ID | 구분 | 상세 사양 | 비고 |
+|---|---|---|---|---|---|
+| DS-11100 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -구성.01: 공통 상단바 알림(종) 아이콘 우측 상단에 겹쳐 표시되는 원형 숫자 배지 | Registry: docs/ds/screen-registry.json<br>Route: 공통(모든 화면 상단바)<br>File: src/components/notifications/UnreadBadge.tsx<br>기술근거.01: UnreadBadge — src/components/notifications/UnreadBadge.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-11101 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -표시.01: 안 읽은 알림 건수를 숫자로 표시하고 99건을 넘으면 "99+"로 표시한다 | - |
+| DS-11102 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Visible | -안내.01: 화면 읽기 보조 도구용 설명으로 "안 읽은 알림 {n}건"을 제공한다 | - |
+| DS-11103 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -계산.01: 저장된 알림 목록에서 읽지 않은 항목 수를 합산해 건수를 산출한다 | - |
+| DS-11104 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -조건.01: 안 읽은 알림이 0건이면 배지를 표시하지 않는다 | - |
+| DS-11105 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -조건.02: 저장값 복원이 끝난 뒤에만 표시해 첫 화면 표시 시 숫자가 어긋나지 않게 한다 | - |
+| DS-11106 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Invisible | -상태.01: 배지는 클릭 대상이 아니며 알림 아이콘의 클릭 동작을 가리지 않는다 | - |
+| DS-11107 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -배경색.01: 배지 배경 빨간색(#E43D3D), 글자색 흰색 | Registry: docs/ds/screen-registry.json<br>Route: 공통(모든 화면 상단바)<br>File: src/components/notifications/UnreadBadge.tsx<br>기술근거.01: UnreadBadge — src/components/notifications/UnreadBadge.tsx<br>Baseline: 2026-08-18 코드 기준 |
+| DS-11108 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -크기.01: 최소 너비 16px, 줄 높이 16px, 완전 원형, 좌우 여백 4px | - |
+| DS-11109 | 안 읽은 알림 배지 | LAY-006_unread-badge_Default | Design | -글자크기.01: 숫자 9px 굵게 | - |
+
+Confluence 등록 시 같은 Screen ID의 연속 행에서 DS No. · Section명 · Screen ID 셀만 세로 병합할 수 있다. 구분 · 상세 사양 · 비고는 병합 대상이 아니다.
+
 ## 분석 파일
 
 - src/routes/__root.tsx
