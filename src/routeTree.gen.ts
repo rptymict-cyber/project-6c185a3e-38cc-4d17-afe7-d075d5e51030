@@ -29,7 +29,6 @@ import { Route as NotificationsIndexRouteImport } from './routes/notifications.i
 import { Route as MarketIndexRouteImport } from './routes/market.index'
 import { Route as WatchlistAddRouteImport } from './routes/watchlist.add'
 import { Route as StatisticsVarietyRouteImport } from './routes/statistics.$variety'
-import { Route as PriceVarietyRouteImport } from './routes/price.$variety'
 import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
 import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
@@ -141,11 +140,6 @@ const StatisticsVarietyRoute = StatisticsVarietyRouteImport.update({
   path: '/statistics/$variety',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PriceVarietyRoute = PriceVarietyRouteImport.update({
-  id: '/price/$variety',
-  path: '/price/$variety',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const NotificationsSettingsRoute = NotificationsSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -217,7 +211,6 @@ export interface FileRoutesByFullPath {
   '/weather': typeof WeatherRoute
   '/news/$id': typeof NewsIdRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
-  '/price/$variety': typeof PriceVarietyRoute
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market/': typeof MarketIndexRoute
@@ -247,7 +240,6 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/weather': typeof WeatherRoute
   '/news/$id': typeof NewsIdRoute
-  '/price/$variety': typeof PriceVarietyRoute
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market': typeof MarketIndexRoute
@@ -281,7 +273,6 @@ export interface FileRoutesById {
   '/weather': typeof WeatherRoute
   '/news/$id': typeof NewsIdRoute
   '/notifications/settings': typeof NotificationsSettingsRouteWithChildren
-  '/price/$variety': typeof PriceVarietyRoute
   '/statistics/$variety': typeof StatisticsVarietyRoute
   '/watchlist/add': typeof WatchlistAddRoute
   '/market/': typeof MarketIndexRoute
@@ -316,7 +307,6 @@ export interface FileRouteTypes {
     | '/weather'
     | '/news/$id'
     | '/notifications/settings'
-    | '/price/$variety'
     | '/statistics/$variety'
     | '/watchlist/add'
     | '/market/'
@@ -346,7 +336,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/weather'
     | '/news/$id'
-    | '/price/$variety'
     | '/statistics/$variety'
     | '/watchlist/add'
     | '/market'
@@ -379,7 +368,6 @@ export interface FileRouteTypes {
     | '/weather'
     | '/news/$id'
     | '/notifications/settings'
-    | '/price/$variety'
     | '/statistics/$variety'
     | '/watchlist/add'
     | '/market/'
@@ -411,7 +399,6 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
   WeatherRoute: typeof WeatherRoute
-  PriceVarietyRoute: typeof PriceVarietyRoute
   StatisticsVarietyRoute: typeof StatisticsVarietyRoute
   WatchlistAddRoute: typeof WatchlistAddRoute
   StatisticsIndexRoute: typeof StatisticsIndexRoute
@@ -558,13 +545,6 @@ declare module '@tanstack/react-router' {
       path: '/statistics/$variety'
       fullPath: '/statistics/$variety'
       preLoaderRoute: typeof StatisticsVarietyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/price/$variety': {
-      id: '/price/$variety'
-      path: '/price/$variety'
-      fullPath: '/price/$variety'
-      preLoaderRoute: typeof PriceVarietyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications/settings': {
@@ -717,7 +697,6 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
   WeatherRoute: WeatherRoute,
-  PriceVarietyRoute: PriceVarietyRoute,
   StatisticsVarietyRoute: StatisticsVarietyRoute,
   WatchlistAddRoute: WatchlistAddRoute,
   StatisticsIndexRoute: StatisticsIndexRoute,
