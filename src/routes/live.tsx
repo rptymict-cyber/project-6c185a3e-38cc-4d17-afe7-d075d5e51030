@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { applyMarketSelection } from "@/lib/goto-market";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
@@ -38,11 +38,26 @@ import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButt
 const PAGE_SIZE = LIST_PAGE_SIZE;
 
 function LivePage() {
-  const { sort } = Route.useSearch();
+  const initialSort = Route.useSearch().sort;
   const navigate = useNavigate({ from: "/live" });
   const [offset, setOffset] = useState(0);
+  // 정렬 상태는 화면이 직접 소유한다. URL은 공유/복원용으로만 동기화(replace)하며,
+  // 라우터 재검증 타이밍에 정렬이 기본값으로 되돌아가지 않도록 화면 상태를 우선한다.
+  const [sort, setSort] = useState<LiveSort>(initialSort);
   const pageSize = PAGE_SIZE + offset;
-  const { rows, total } = getLivePrices({ sort, limit: pageSize });
+  // 정렬 기준이 바뀔 때 목록을 새로 만들지 않고, 캐시된 정렬 결과만 다시 읽는다.
+  const { rows, total } = useMemo(
+    () => getLivePrices({ sort, limit: pageSize }),
+    [sort, pageSize],
+  );
+
+  const handleSelect = useCallback(
+    (row: (typeof rows)[number]) => {
+      applyMarketSelection(row.id, { tab: "chart", marketLabel: row.market });
+      navigate({ to: "/market" });
+    },
+    [navigate],
+  );
 
   return (
     <AppShell screenId="LIVE-001_실시간시세"
@@ -63,8 +78,10 @@ function LivePage() {
               <button
                 key={s}
                 onClick={() => {
+                  if (s === sort) return;
                   setOffset(0);
-                  navigate({ search: { sort: s } });
+                  setSort(s);
+                  navigate({ search: { sort: s }, replace: true });
                 }}
                 className={
                   "shrink-0 rounded-full px-3 py-1 text-[12px] font-semibold " +
@@ -88,15 +105,7 @@ function LivePage() {
                 key={row.id}
                 rank={i + 1}
                 row={row}
-                onClick={() =>
-                  {
-                    applyMarketSelection(row.id, {
-                      tab: "chart",
-                      marketLabel: row.market,
-                    });
-                    navigate({ to: "/market" });
-                  }
-                }
+                onClick={() => handleSelect(row)}
               />
             ))}
           </ul>
