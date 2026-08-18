@@ -51,7 +51,7 @@ export function RealtimeSection({
         {showHeaderRow && <LivePriceHeader />}
         <ul>
           {rows.map((row, i) => (
-            <LivePriceRowItem key={row.id} rank={i + 1} row={row} onClick={() => onSelect(row)} />
+            <LivePriceRowItem key={row.id} rank={i + 1} row={row} onClick={onSelect} />
           ))}
         </ul>
       </div>

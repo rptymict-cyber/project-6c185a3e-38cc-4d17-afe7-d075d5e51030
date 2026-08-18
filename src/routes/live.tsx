@@ -105,7 +105,7 @@ function LivePage() {
                 key={row.id}
                 rank={i + 1}
                 row={row}
-                onClick={() => handleSelect(row)}
+                onClick={handleSelect}
               />
             ))}
           </ul>

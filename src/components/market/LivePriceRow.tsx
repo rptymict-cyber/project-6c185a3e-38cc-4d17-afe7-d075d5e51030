@@ -18,12 +18,13 @@ export const LivePriceRowItem = memo(function LivePriceRowItem({
 }: {
   rank: number;
   row: LivePriceRow;
-  onClick: () => void;
+  /** 안정적인 참조를 넘겨야 memo가 동작한다(행마다 새 클로저 생성 금지). */
+  onClick: (row: LivePriceRow) => void;
 }) {
   return (
     <li className="border-t border-[#F1F3F5] first:border-t-0">
       <button
-        onClick={onClick}
+        onClick={() => onClick(row)}
         className={`${GRID} w-full py-2.5 text-left active:bg-secondary`}
       >
         <span className="text-center text-[12px] font-bold tabular-nums text-[#3A8A3A]">
