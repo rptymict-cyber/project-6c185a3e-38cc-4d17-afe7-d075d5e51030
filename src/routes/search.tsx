@@ -1,3 +1,4 @@
+import { applyMarketSelection } from "@/lib/goto-market";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Search as SearchIcon, X, TrendingUp } from "lucide-react";
@@ -118,7 +119,8 @@ function SearchPage() {
 
   const openCrop = (c: Crop) => {
     commit(c.name);
-    navigate({ to: "/price/$variety", params: { variety: c.id } });
+    applyMarketSelection(c.id);
+    navigate({ to: "/market" });
   };
 
   return (

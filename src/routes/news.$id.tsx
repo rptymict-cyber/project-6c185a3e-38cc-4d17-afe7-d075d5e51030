@@ -1,3 +1,4 @@
+import { applyMarketSelection } from "@/lib/goto-market";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { ChevronLeft, Share2, Star } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -137,8 +138,8 @@ function NewsDetailPage() {
             </div>
             {cropRouteId && (
               <Link
-                to="/price/$variety"
-                params={{ variety: cropRouteId }}
+                to="/market"
+                onClick={() => applyMarketSelection(cropRouteId)}
                 className="mt-3 flex h-10 items-center justify-center rounded-lg bg-[#2E9E6B] text-[13px] font-bold text-white active:bg-[#1F7A50]"
               >
                 {primaryCrop} 실시간 시세 보러가기 ›

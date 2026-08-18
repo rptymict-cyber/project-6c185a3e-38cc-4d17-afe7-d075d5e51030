@@ -1,3 +1,4 @@
+import { applyMarketSelection } from "@/lib/goto-market";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import type { Variety } from "@/lib/mock/items";
@@ -21,7 +22,11 @@ export function VarietyRow({
   const color = flat ? "#6C757D" : up ? "#E03131" : "#1971C2";
 
   return (
-    <Link to="/price/$variety" params={{ variety: variety.id }} className="block">
+    <Link
+      to="/market"
+      onClick={() => applyMarketSelection(variety.id)}
+      className="block"
+    >
       <div
         className={cn("relative flex items-center gap-3 px-4 py-3.5 active:bg-[#F8F9FA]")}
         style={

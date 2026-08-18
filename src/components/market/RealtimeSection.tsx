@@ -1,6 +1,11 @@
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
-import { getLivePrices, LIVE_SORT_META, type LiveSort } from "@/lib/services/live-prices";
+import {
+  getLivePrices,
+  LIVE_SORT_META,
+  type LiveSort,
+  type LivePriceRow,
+} from "@/lib/services/live-prices";
 import { LivePriceHeader, LivePriceRowItem } from "./LivePriceRow";
 
 const SORT_ORDER: LiveSort[] = ["up", "down", "vol"];
@@ -14,7 +19,7 @@ export function RealtimeSection({
 }: {
   sort: LiveSort;
   onSortChange: (s: LiveSort) => void;
-  onSelect: (id: string) => void;
+  onSelect: (row: LivePriceRow) => void;
   limit: number;
   showHeaderRow?: boolean;
 }) {
@@ -46,7 +51,7 @@ export function RealtimeSection({
         {showHeaderRow && <LivePriceHeader />}
         <ul>
           {rows.map((row, i) => (
-            <LivePriceRowItem key={row.id} rank={i + 1} row={row} onClick={() => onSelect(row.id)} />
+            <LivePriceRowItem key={row.id} rank={i + 1} row={row} onClick={() => onSelect(row)} />
           ))}
         </ul>
       </div>

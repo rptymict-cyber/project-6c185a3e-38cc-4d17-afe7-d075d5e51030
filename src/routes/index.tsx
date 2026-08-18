@@ -1,4 +1,5 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { applyMarketSelection } from "@/lib/goto-market";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { MarketListHome } from "@/components/market/MarketListHome";
@@ -40,12 +41,9 @@ function Home() {
       }
     >
       <MarketListHome
-        onSelectCrop={(id) => {
-          router.navigate({
-            to: "/price/$variety",
-            params: { variety: id },
-            search: { tab: "chart" },
-          });
+        onSelectCrop={(row) => {
+          applyMarketSelection(row.id, { tab: "chart", marketLabel: row.market });
+          router.navigate({ to: "/market" });
         }}
       />
     </AppShell>

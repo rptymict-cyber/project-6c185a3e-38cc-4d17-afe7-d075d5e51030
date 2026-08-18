@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { applyMarketSelection } from "@/lib/goto-market";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 // RealtimeSection reused only on home; /live renders its own list.
@@ -88,11 +89,13 @@ function LivePage() {
                 rank={i + 1}
                 row={row}
                 onClick={() =>
-                  navigate({
-                    to: "/price/$variety",
-                    params: { variety: row.id },
-                    search: { tab: "chart" },
-                  })
+                  {
+                    applyMarketSelection(row.id, {
+                      tab: "chart",
+                      marketLabel: row.market,
+                    });
+                    navigate({ to: "/market" });
+                  }
                 }
               />
             ))}

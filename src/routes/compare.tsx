@@ -1,3 +1,4 @@
+import { applyMarketSelection } from "@/lib/goto-market";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -126,8 +127,8 @@ function ComparePage() {
 
         <div className="mt-6 text-center">
           <Link
-            to="/price/$variety"
-            params={{ variety: crop.id }}
+            to="/market"
+            onClick={() => applyMarketSelection(crop.id)}
             className="text-[13px] font-semibold text-primary"
           >
             {crop.name} 상세 시세 보기 →

@@ -1,3 +1,4 @@
+import { applyMarketSelection } from "@/lib/goto-market";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import type { Crop } from "@/lib/mock/crops";
@@ -38,8 +39,8 @@ export function CropCard({ crop }: { crop: Crop }) {
 
   return (
     <Link
-      to="/price/$variety"
-      params={{ variety: crop.id }}
+      to="/market"
+      onClick={() => applyMarketSelection(crop.id)}
       className={cn(
         "block overflow-hidden rounded-[12px] bg-white px-4 py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-colors active:bg-secondary",
         urgentUp && "bg-[#FFFAFA]",
