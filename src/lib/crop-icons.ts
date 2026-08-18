@@ -54,7 +54,7 @@ const ENTRIES: Entry[] = [
   { key: "onion", koreanName: "양파", tokens: ["양파", "깐양파", "저장양파", "햇양파"] },
   { key: "garlic", koreanName: "마늘", tokens: ["마늘", "깐마늘", "난지마늘", "한지마늘"] },
   { key: "ginger", koreanName: "생강", tokens: ["생강", "햇생강", "구생강"] },
-  { key: "chili-pepper", koreanName: "고추", tokens: ["고추", "풋고추", "홍고추", "꽈리고추", "청양"] },
+  { key: "chili-pepper", koreanName: "고추", tokens: ["고추", "풋고추", "홍고추", "꽈리고추", "청양", "피망", "단고추", "파프리카"] },
   { key: "tomato", koreanName: "토마토", tokens: ["토마토", "방울토마토", "대추방울토마토"] },
   { key: "cucumber", koreanName: "오이", tokens: ["오이", "백다다기", "취청", "가시오이"] },
   { key: "pumpkin", koreanName: "호박", tokens: ["호박", "애호박", "단호박", "늙은호박"] },

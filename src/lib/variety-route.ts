@@ -63,7 +63,13 @@ function namesFromParam(param: string): { itemName: string; varietyName?: string
 
 export function resolveVarietySelection(param: string): VarietySelection {
   const { itemName, varietyName } = namesFromParam(param);
-  const catalogItem = CATALOG_ITEMS.find((i) => i.name === itemName);
+  // 정확히 일치하는 카탈로그 품목이 없으면 "피망" → "피망(단고추)"처럼 이름을 포함하는
+  // 품목으로 완화 매칭한다. (표시명이 내부 식별자로 새는 것을 막는다)
+  const catalogItem =
+    CATALOG_ITEMS.find((i) => i.name === itemName) ??
+    CATALOG_ITEMS.find((i) => i.name.startsWith(`${itemName}(`)) ??
+    CATALOG_ITEMS.find((i) => i.name.startsWith(itemName)) ??
+    CATALOG_ITEMS.find((i) => i.name.includes(itemName));
 
   const itemId = catalogItem?.id ?? param;
   const categoryId = catalogItem?.categoryId ?? "";
@@ -75,7 +81,7 @@ export function resolveVarietySelection(param: string): VarietySelection {
     categoryId,
     categoryLabel: categoryLabelOf(categoryId),
     itemId,
-    itemLabel: itemName,
+    itemLabel: catalogItem?.name ?? itemName,
     varietyId: matchedVariety?.id ?? param,
     varietyLabel: matchedVariety?.name ?? varietyName ?? "전체 품종",
     unit: DEFAULT_UNIT_BY_NAME[itemName] ?? FALLBACK_UNIT,
