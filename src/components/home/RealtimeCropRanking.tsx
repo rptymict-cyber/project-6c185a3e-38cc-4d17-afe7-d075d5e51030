@@ -3,6 +3,7 @@ import { HelpCircle, RefreshCw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CROPS } from "@/lib/mock/crops";
+import { MARKETS } from "@/lib/mock/markets";
 import { CropRankingRow, type RankingItem } from "./CropRankingRow";
 import { cn } from "@/lib/utils";
 
@@ -16,16 +17,8 @@ const FILTERS: { id: FilterId; label: string }[] = [
   { id: "change", label: "가격변동" },
 ];
 
-const MARKETS = [
-  "서울 가락시장 · 특 · 10kg망",
-  "대구 북부시장 · 상 · 20kg박스",
-  "대전오정 · 상 · 1kg단",
-  "의성·안동 · 상 · 1kg",
-  "부산 엄궁시장 · 상 · 15kg망",
-  "서울 강서시장 · 상 · 10kg박스",
-  "광주 각화시장 · 상 · 5kg박스",
-  "인천 삼산시장 · 상 · 10kg망",
-];
+// 도매시장은 공통 SSOT(MARKETS)만 사용한다. 임의 시장명 금지.
+const ROW_MARKETS = MARKETS.map((m) => ({ id: m.id, name: m.name }));
 
 export function RealtimeCropRanking() {
   const [filter, setFilter] = useState<FilterId>("up");
@@ -41,7 +34,9 @@ export function RealtimeCropRanking() {
         unit: c.unit,
         changePct: pct,
         volume: c.volumeTon,
-        meta: MARKETS[i % MARKETS.length],
+        marketId: ROW_MARKETS[i % ROW_MARKETS.length].id,
+        marketName: ROW_MARKETS[i % ROW_MARKETS.length].name,
+        meta: `${ROW_MARKETS[i % ROW_MARKETS.length].name} · 상 · ${c.unit}`,
       };
     });
     const sorted = [...rows];

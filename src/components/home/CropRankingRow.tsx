@@ -11,7 +11,10 @@ export type RankingItem = {
   cropId: string;
   name: string;
   emoji: string;
-  meta: string; // "서울 가락시장 · 특 · 10kg망"
+  meta: string; // "서울가락 · 상 · 10kg 기준"
+  /** 이동 시 함께 반영할 도매시장 */
+  marketId?: string;
+  marketName?: string;
   price: number;
   unit: string; // "원/kg"
   changePct: number;
@@ -31,7 +34,12 @@ export function CropRankingRow({ item }: { item: RankingItem }) {
       </span>
       <Link
         to="/market"
-        onClick={() => applyMarketSelection(item.cropId)}
+        onClick={() =>
+          applyMarketSelection(item.cropId, {
+            marketId: item.marketId,
+            marketLabel: item.marketName,
+          })
+        }
         className="flex flex-1 items-center gap-3 min-w-0"
       >
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F1F3F5]">
