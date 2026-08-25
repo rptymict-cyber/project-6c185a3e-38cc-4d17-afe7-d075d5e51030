@@ -2,7 +2,8 @@ import { applyMarketSelection } from "@/lib/goto-market";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { AppHeader } from "@/components/app-header";
+import { DetailHeader } from "@/components/detail-header";
+import { useBackTo } from "@/hooks/useBackTo";
 import { CROPS } from "@/lib/mock/crops";
 import { MARKETS } from "@/lib/mock/markets";
 import { PriceBadge } from "@/components/price-badge";
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/compare")({
 });
 
 function ComparePage() {
+  const goBack = useBackTo("/market");
   const { cropId } = Route.useSearch();
   // 작물 선택은 공통 화면(/crop-select, SEL-001)에서만 수행한다.
   const crop = CROPS.find((c) => c.id === cropId) ?? CROPS[0];
@@ -49,7 +51,7 @@ function ComparePage() {
   const lastIdx = rows.length - 1;
 
   return (
-    <AppShell screenId="MKT-009_시장별가격비교" header={<AppHeader title="시장별 가격 비교" showBell={false} />}>
+    <AppShell screenId="MKT-009_시장별가격비교" header={<DetailHeader title="시장별 가격 비교" onBack={goBack} />}>
       <div className="px-4 pt-4 pb-8">
         <FullSelectCard
           icon={<Sprout className="h-4 w-4" />}

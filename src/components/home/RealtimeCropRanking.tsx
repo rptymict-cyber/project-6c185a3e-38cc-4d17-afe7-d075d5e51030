@@ -6,6 +6,7 @@ import { CROPS } from "@/lib/mock/crops";
 import { MARKETS } from "@/lib/mock/markets";
 import { CropRankingRow, type RankingItem } from "./CropRankingRow";
 import { cn } from "@/lib/utils";
+import { basisShortLabel } from "@/lib/data-basis";
 
 type FilterId = "popular" | "up" | "down" | "volume" | "change";
 
@@ -56,7 +57,7 @@ export function RealtimeCropRanking() {
           <HelpCircle className="h-3.5 w-3.5 text-[#ADB5BD]" />
         </h2>
         <div className="flex items-center gap-1 text-meta text-[#868E96]">
-          <span>2026.07.03 14:30 기준</span>
+          <span>{basisShortLabel()}</span>
           <button
             aria-label="새로고침"
             onClick={() => toast("최신 시세로 업데이트했어요")}

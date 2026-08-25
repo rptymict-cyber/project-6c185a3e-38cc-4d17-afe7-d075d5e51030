@@ -25,16 +25,16 @@ export function PredictionCompareCards({
   const isFarmer = viewpoint === "farmer";
   const title = isFarmer ? "출하 시점 비교" : "매입 시점 비교";
   const qtyLabel = isFarmer ? "출하량" : "매입량";
-  const totalLabel = isFarmer ? "예상 매출" : "예상 금액";
+  const totalLabel = isFarmer ? "예상 판매금액" : "예상 금액";
 
   const currentTotal = currentPrice * quantityBoxes;
   const recTotal = expectedPrice * quantityBoxes;
   const diff = recTotal - currentTotal;
 
-  // 농민=매출↑, 도매상=비용↓
+  // 농민=판매금액↑, 도매상=매입비용↓ (물류비·수수료 미반영)
   const gain = isFarmer ? diff : -diff;
   const isPositive = gain >= 0;
-  const gainLabel = isFarmer ? "예상 추가 수익" : "예상 절감";
+  const gainLabel = isFarmer ? "예상 금액 차이" : "예상 절감";
   const tagText = isRecommendedSelection ? "추천" : "선택";
   const rightTitle = isRecommendedSelection
     ? `${recommendationDate} ${isFarmer ? "출하 추천" : "매입 추천"}`
@@ -48,7 +48,7 @@ export function PredictionCompareCards({
     <section>
       <h2 className="mb-2 text-body font-bold text-foreground">{title}</h2>
 
-      {/* 강조 배너 — 추가 수익 / 예상 절감 */}
+      {/* 강조 배너 — 예상 금액 차이 / 예상 절감 (비용 미반영) */}
       <div
         className="flex items-center justify-between rounded-2xl px-4 py-3 text-white shadow-[0_10px_28px_-14px_rgba(46,158,107,0.6)]"
         style={{ background: bannerGrad }}

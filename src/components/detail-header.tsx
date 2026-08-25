@@ -19,12 +19,16 @@ export function DetailHeader({
   title,
   center,
   onBack,
+  left,
   right = null,
   className,
 }: {
   title?: ReactNode;
   center?: ReactNode;
-  onBack: () => void;
+  /** 뒤로가기 동작. `left`를 직접 넘기는 경우 생략 가능. */
+  onBack?: () => void;
+  /** 좌측 영역을 뒤로가기 버튼 대신 직접 지정 (예: "취소") */
+  left?: ReactNode;
   right?: ReactNode;
   className?: string;
 }) {
@@ -35,14 +39,17 @@ export function DetailHeader({
         className,
       )}
     >
-      <button
-        type="button"
-        aria-label="뒤로 가기"
-        onClick={onBack}
-        className="grid h-10 w-10 place-items-center rounded-full text-foreground hover:bg-secondary active:bg-gray-100"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
+      {left ?? (
+        <button
+          type="button"
+          aria-label="뒤로 가기"
+          onClick={onBack}
+          className="grid h-11 w-11 place-items-center rounded-full text-foreground hover:bg-secondary active:bg-gray-100"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+      )}
+
 
       <div className="pointer-events-none absolute inset-x-14 top-0 flex h-[52px] items-center justify-center">
         {center ??
@@ -56,7 +63,7 @@ export function DetailHeader({
       {right ? (
         <div className="flex items-center gap-0.5">{right}</div>
       ) : (
-        <div className="h-10 w-10" aria-hidden />
+        <div className="h-11 w-11" aria-hidden />
       )}
     </header>
   );

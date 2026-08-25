@@ -9,6 +9,7 @@ import { SwipeReorderList } from "@/components/swipe-reorder-list";
 import { GeneralNotiSettings } from "@/components/notifications/GeneralNotiSettings";
 import { useAlerts, type PriceAlertRule } from "@/store/alerts";
 import { cn } from "@/lib/utils";
+import { useBackTo } from "@/hooks/useBackTo";
 
 export const Route = createFileRoute("/notifications/settings/")({
   component: NotificationSettingsPage,
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/notifications/settings/")({
 
 function NotificationSettingsPage() {
   const router = useRouter();
+  const goBack = useBackTo("/notifications");
   const navigate = useNavigate();
 
   const rules = useAlerts((s) => s.rules);
@@ -63,7 +65,7 @@ function NotificationSettingsPage() {
       header={
         <DetailHeader
           title="알림 설정"
-          onBack={() => router.history.back()}
+          onBack={() => goBack()}
         />
       }
     >

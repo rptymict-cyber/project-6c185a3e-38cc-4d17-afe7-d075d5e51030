@@ -1,9 +1,11 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { ChevronLeft, Droplets, Info, MapPin, Sun, Umbrella, Wind } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Droplets, Info, MapPin, Sun, Umbrella, Wind } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { WeatherIllustration } from "@/components/weather/WeatherIllustration";
 import { MOCK_WEATHER } from "@/lib/mock/weather";
 import { cn } from "@/lib/utils";
+import { useBackTo } from "@/hooks/useBackTo";
+import { DetailHeader } from "@/components/detail-header";
 
 export const Route = createFileRoute("/weather")({
   head: () => ({
@@ -26,37 +28,13 @@ export const Route = createFileRoute("/weather")({
 });
 
 function WeatherDetailPage() {
-  const router = useRouter();
+  const goBack = useBackTo("/");
   const w = MOCK_WEATHER;
-
-  const goBack = () => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      router.history.back();
-    } else {
-      router.navigate({ to: "/" });
-    }
-  };
 
   return (
     <AppShell screenId="WTR-001_날씨상세"
-      header={
-        <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-[#E9ECEF] bg-background px-2">
-          <button
-            type="button"
-            onClick={goBack}
-            aria-label="뒤로가기"
-            className="grid h-10 w-10 place-items-center rounded-full text-foreground hover:bg-secondary"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center">
-            <span className="text-body-lg font-black tracking-tight text-foreground">
-              날씨 상세
-            </span>
-          </div>
-          <div className="w-10" />
-        </header>
-      }
+      header={<DetailHeader title="날씨 상세" onBack={goBack} />}
+
     >
       <div className="bg-[#F8FAFC] pb-6">
         {/* Hero */}

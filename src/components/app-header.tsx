@@ -53,7 +53,7 @@ export function AppHeader({
         <Link
           to="/search"
           aria-label="검색"
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+          className="grid h-11 w-11 place-items-center rounded-full text-foreground hover:bg-secondary"
         >
           <Search className="h-5 w-5" />
         </Link>
@@ -67,7 +67,7 @@ export function AppHeader({
             setTimeout(() => setSpinning(false), 700);
             toast("최신 시세로 업데이트했어요");
           }}
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+          className="grid h-11 w-11 place-items-center rounded-full text-foreground hover:bg-secondary"
         >
           <RefreshCw
             className={cn("h-5 w-5 transition-transform", spinning && "animate-spin")}
@@ -78,7 +78,7 @@ export function AppHeader({
         <Link
           to="/notifications"
           aria-label="알림"
-          className="relative grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+          className="relative grid h-11 w-11 place-items-center rounded-full text-foreground hover:bg-secondary"
         >
           <Bell className="h-5 w-5" />
           <UnreadBadge className="right-1 top-1" />

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
+import { basisShortLabel } from "@/lib/data-basis";
 
 export function TodayMarketBanner() {
   return (
@@ -17,7 +18,7 @@ export function TodayMarketBanner() {
             <span className="text-[#E03131]">14%</span> 증가
           </span>
         </div>
-        <div className="mt-1 text-meta text-[#6C757D]">2026.07.03 14:30 기준</div>
+        <div className="mt-1 text-meta text-[#6C757D]">{basisShortLabel()}</div>
       </div>
       <span className="text-heading leading-none">🥬</span>
       <ChevronRight className="h-5 w-5 text-[#ADB5BD]" />

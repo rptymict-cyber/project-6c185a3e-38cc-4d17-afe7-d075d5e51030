@@ -6,18 +6,24 @@ import { openStoreReview } from "@/lib/store-review";
 import { cn } from "@/lib/utils";
 
 /**
- * 앱 진입 시 뜨는 별점 유도 팝업.
+ * 별점 유도 팝업.
  *
- * - 매 앱 진입(마운트)마다 1회 노출한다. 라우트 이동에는 반응하지 않는다.
+ * - 첫 진입에는 절대 노출하지 않는다. 앱 방문 3회 이상 + 진입 후 20초 경과 시에만 1회 노출한다.
+ *   (첫 과업을 가로막지 않기 위한 정책)
  * - "다시 보지 않기" → hidden 저장 → 이후 미노출.
- * - "나중에" / 딤 클릭 → 이번 세션만 닫힘, 다음 접속 시 다시 노출.
+ * - "나중에" / 딤 클릭 → 이번 세션만 닫힘, 이후 방문 시 다시 판단.
  * - 4~5점 → 스토어 리뷰 페이지로 이동 시도 후 hidden 저장.
- * - 1~3점 → 내부 피드백 입력을 받아 Supabase feedback 테이블에 저장 후 hidden.
+ * - 1~3점 → 내부 피드백 입력을 받아 feedback 테이블에 저장 후 hidden.
  */
 
 const STORAGE_KEY = "agdict:ratePrompt";
+/** 노출 최소 방문 횟수 */
+const MIN_VISITS = 3;
+/** 진입 후 노출 지연(ms) */
+const SHOW_DELAY_MS = 20_000;
 
-type Persist = { hidden: boolean; lastShownAt: string };
+type Persist = { hidden: boolean; lastShownAt: string; visits: number };
+
 
 function loadPersist(): Persist | null {
   if (typeof window === "undefined") return null;
@@ -28,6 +34,7 @@ function loadPersist(): Persist | null {
     return {
       hidden: Boolean(parsed.hidden),
       lastShownAt: typeof parsed.lastShownAt === "string" ? parsed.lastShownAt : "",
+      visits: typeof parsed.visits === "number" ? parsed.visits : 0,
     };
   } catch {
     return null;
@@ -51,12 +58,23 @@ export function RatePromptModal() {
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // 앱 진입 시 1회만 판단
+  // 앱 진입 시 1회만 판단 — 첫 과업을 가로막지 않도록 방문 3회 + 20초 후에만 노출
   useEffect(() => {
     const p = loadPersist();
     if (p?.hidden) return;
-    setOpen(true);
-    savePersist({ hidden: false, lastShownAt: new Date().toISOString() });
+    const visits = (p?.visits ?? 0) + 1;
+    savePersist({
+      hidden: false,
+      lastShownAt: p?.lastShownAt ?? "",
+      visits,
+    });
+    if (visits < MIN_VISITS) return;
+
+    const t = setTimeout(() => {
+      setOpen(true);
+      savePersist({ hidden: false, lastShownAt: new Date().toISOString(), visits });
+    }, SHOW_DELAY_MS);
+    return () => clearTimeout(t);
   }, []);
 
   const closeLater = () => {
@@ -66,7 +84,11 @@ export function RatePromptModal() {
   };
 
   const closeForever = () => {
-    savePersist({ hidden: true, lastShownAt: new Date().toISOString() });
+    savePersist({
+      hidden: true,
+      lastShownAt: new Date().toISOString(),
+      visits: loadPersist()?.visits ?? MIN_VISITS,
+    });
     setOpen(false);
     setTimeout(reset, 200);
   };

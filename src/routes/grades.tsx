@@ -4,6 +4,7 @@ import { DetailHeader } from "@/components/detail-header";
 import { CROPS } from "@/lib/mock/crops";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
+import { useBackTo } from "@/hooks/useBackTo";
 
 export const Route = createFileRoute("/grades")({
   component: GradesPage,
@@ -17,9 +18,10 @@ export const Route = createFileRoute("/grades")({
 
 function GradesPage() {
   const router = useRouter();
+  const goBack = useBackTo("/market");
   const withGrades = CROPS.filter((c) => c.grades);
   return (
-    <AppShell screenId="MKT-010_등급별가격" header={<DetailHeader title="등급별 가격 정보" onBack={() => router.history.back()} />}>
+    <AppShell screenId="MKT-010_등급별가격" header={<DetailHeader title="등급별 가격 정보" onBack={() => goBack()} />}>
       <div className="px-4 pt-4 pb-8">
         <div className="rounded-[10px] bg-accent px-4 py-3 text-caption leading-relaxed text-accent-foreground">
           KAMIS 기준 <strong>상·중·하</strong> 3등급 시세입니다. 등급 구분이

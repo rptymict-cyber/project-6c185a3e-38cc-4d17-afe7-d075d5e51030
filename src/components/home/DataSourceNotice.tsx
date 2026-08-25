@@ -1,21 +1,28 @@
+import {
+  BASIS_PRICE_UNIT,
+  BASIS_SOURCE,
+  BASIS_UPDATED_TIME,
+  basisDateLabel,
+} from "@/lib/data-basis";
+
 export function DataSourceNotice() {
   return (
     <section className="mt-6 border-t border-[#F1F3F5] px-4 py-4 text-meta leading-relaxed text-[#868E96]">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span>
-          기준일 <span className="font-semibold text-[#495057]">2026.07.03</span>
+          기준일 <span className="font-semibold text-[#495057]">{basisDateLabel()}</span>
         </span>
         <span className="text-[#DEE2E6]">|</span>
         <span>
-          단위 <span className="font-semibold text-[#495057]">원/kg</span>
+          단위 <span className="font-semibold text-[#495057]">{BASIS_PRICE_UNIT}</span>
         </span>
         <span className="text-[#DEE2E6]">|</span>
         <span>
-          출처 <span className="font-semibold text-[#495057]">KAMIS / aT</span>
+          출처 <span className="font-semibold text-[#495057]">{BASIS_SOURCE}</span>
         </span>
         <span className="text-[#DEE2E6]">|</span>
         <span>
-          <span className="font-semibold text-[#495057]">14:30</span> 업데이트
+          <span className="font-semibold text-[#495057]">{BASIS_UPDATED_TIME}</span> 업데이트
         </span>
       </div>
       <p className="mt-2">

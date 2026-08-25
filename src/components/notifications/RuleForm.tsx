@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { getMarketQuote } from "@/lib/mock/market-analysis";
 import { useAlerts, type PriceAlertRule } from "@/store/alerts";
 import { cn } from "@/lib/utils";
+import { useBackTo } from "@/hooks/useBackTo";
 
 /**
  * 알림 규칙 생성/수정 통합 화면.
@@ -23,6 +24,7 @@ export function RuleForm({
   seed: RuleFormSeed;
 }) {
   const router = useRouter();
+  const goBack = useBackTo("/notifications/settings");
   const navigate = useNavigate();
   const upsert = useAlerts((s) => s.upsert);
   const remove = useAlerts((s) => s.remove);
@@ -87,7 +89,7 @@ export function RuleForm({
       header={
         <DetailHeader
           title={isEdit ? "알림 수정" : "알림 추가"}
-          onBack={() => router.history.back()}
+          onBack={() => goBack()}
         />
       }
     >
