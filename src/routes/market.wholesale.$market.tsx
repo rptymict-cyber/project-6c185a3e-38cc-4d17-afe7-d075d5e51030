@@ -7,6 +7,7 @@ import { MARKETS } from "@/lib/mock/markets";
 import { ITEMS } from "@/lib/mock/items";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
+import { useBackTo } from "@/hooks/useBackTo";
 
 export const Route = createFileRoute("/market/wholesale/$market")({
   loader: ({ params }) => {
@@ -71,6 +72,7 @@ function buildRows(cropId: string, market: (typeof MARKETS)[number]) {
 function WholesaleDetailPage() {
   const { market } = Route.useLoaderData();
   const router = useRouter();
+  const goBack = useBackTo("/market/wholesale");
   const [selected, setSelected] = useState(CROP_POOL[0].id);
   const [expanded, setExpanded] = useState<string | null>(null);
   const data = buildRows(selected, market);
@@ -80,7 +82,7 @@ function WholesaleDetailPage() {
       header={
         <DetailHeader
           title="시세 상세"
-          onBack={() => router.history.back()}
+          onBack={() => goBack()}
         />
       }
       bottom={

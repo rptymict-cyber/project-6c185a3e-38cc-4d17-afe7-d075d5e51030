@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { AppHeader } from "@/components/app-header";
+import { DetailHeader } from "@/components/detail-header";
+import { useBackTo } from "@/hooks/useBackTo";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { MARKETS } from "@/lib/mock/markets";
 import { ITEMS } from "@/lib/mock/items";
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/market/wholesale/")({
 
 function WholesaleBrowsePage() {
   const { m } = Route.useSearch();
+  const goBack = useBackTo("/market");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -76,12 +78,7 @@ function WholesaleBrowsePage() {
   return (
     <AppShell screenId="MKT-005_도매시장목록"
       header={
-        <AppHeader
-          title="도매시장별 조회"
-          showRefresh={false}
-          showBell={false}
-          showSearch
-        />
+        <DetailHeader title="도매시장별 조회" onBack={goBack} />
       }
     >
       <div className="px-4 pb-8 pt-3">

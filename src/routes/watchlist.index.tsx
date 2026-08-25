@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Check, Plus, Search, Star, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { AppShell, TopHeader } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { DetailHeader } from "@/components/detail-header";
 import { AppHeader } from "@/components/app-header";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
@@ -139,12 +140,12 @@ function WatchlistPage() {
   }));
 
   const editHeader = (
-    <TopHeader
+    <DetailHeader
       left={
         <button
           type="button"
           onClick={exitEditMode}
-          className="min-h-[44px] px-1 text-body-lg font-medium text-foreground"
+          className="min-h-11 min-w-11 px-2 text-body-lg font-medium text-foreground"
         >
           취소
         </button>
@@ -154,7 +155,7 @@ function WatchlistPage() {
         <button
           type="button"
           onClick={toggleSelectAllVisible}
-          className="min-h-[44px] px-1 text-body-lg font-bold text-[#E03131]"
+          className="min-h-11 px-2 text-body-lg font-bold text-[#E03131]"
         >
           {allVisibleSelected ? "전체 해제" : "전체 선택"}
         </button>

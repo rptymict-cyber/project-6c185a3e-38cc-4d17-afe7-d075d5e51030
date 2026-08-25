@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { applyMarketSelection } from "@/lib/goto-market";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
+import { ErrorState } from "@/components/common/ErrorState";
 import { PredictionChart } from "@/features/prediction/components/PredictionChart";
 import { PredictionCompareCards } from "@/features/prediction/components/PredictionCompareCards";
 import { PredictionConditionGrid } from "@/features/prediction/components/PredictionConditionGrid";
@@ -120,9 +121,12 @@ function PredictionPage() {
   if (!prediction || !cropMeta) {
     return (
       <AppShell screenId="PRED-001_AI시세예측" screenState="Empty" header={<AppHeader title="AI 시세 예측" />}>
-        <div className="grid min-h-[60vh] place-items-center px-6 text-center text-body text-[#6C757D]">
-          예측 정보를 불러올 수 없어요.
-        </div>
+        <ErrorState
+          title="예측 정보를 불러오지 못했어요"
+          description="선택한 작물의 예측 데이터가 없거나 조회에 실패했습니다. 다른 작물을 선택하거나 다시 시도해 주세요."
+          onRetry={() => window.location.reload()}
+          secondary={{ label: "작물 다시 선택", to: "/crop-select" }}
+        />
       </AppShell>
     );
   }
@@ -421,8 +425,9 @@ function PredictionPage() {
 
         {/* 고지문 */}
         <p className="mt-4 px-2 text-center text-meta leading-snug text-[#adb5bd]">
-          본 예측은 데이터 기반 AI의 참고용 세컨드 오피니언입니다. 실제 시세와
-          다를 수 있으니 최종 판단은 사용자에게 있습니다.
+          본 예측은 데이터 기반 AI의 참고용 세컨드 오피니언입니다. 표시되는
+          금액은 물류비·수수료 등 비용이 반영되지 않은 예상 시세 기준이며,
+          실제 시세와 다를 수 있으니 최종 판단은 사용자에게 있습니다.
         </p>
       </div>
 

@@ -3,6 +3,7 @@ import { AppShell } from "@/components/app-shell";
 import { DetailHeader } from "@/components/detail-header";
 import { getAuctionById } from "@/lib/mock/auctions";
 import { useMarketFilter } from "@/store/market";
+import { useBackTo } from "@/hooks/useBackTo";
 
 export const Route = createFileRoute("/market/auction/$id")({
   component: AuctionDetail,
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/market/auction/$id")({
 function AuctionDetail() {
   const { id } = Route.useParams();
   const router = useRouter();
+  const goBack = useBackTo("/market");
   const f = useMarketFilter();
 
   const record = getAuctionById(id, {
@@ -32,7 +34,7 @@ function AuctionDetail() {
       header={
         <DetailHeader
           title="경매 상세 결과"
-          onBack={() => router.history.back()}
+          onBack={() => goBack()}
         />
       }
     >

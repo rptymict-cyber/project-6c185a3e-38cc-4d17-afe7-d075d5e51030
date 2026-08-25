@@ -7,6 +7,7 @@
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { basisShortLabel } from "@/lib/data-basis";
 
 export type NotificationKind =
   | "target"
@@ -104,7 +105,7 @@ const SEED_EVENTS: NotificationEvent[] = [
     id: "seed_system_update",
     kind: "system",
     title: "시세 데이터 업데이트",
-    body: "2026.07.03 14:30 기준 최신 시세가 반영되었습니다.",
+    body: `${basisShortLabel()} 최신 시세가 반영되었습니다.`,
     createdAt: nowIso(),
     read: false,
   },

@@ -11,6 +11,7 @@ import {
 import { useMarketFilter } from "@/store/market";
 import { cn } from "@/lib/utils";
 import { LoadMoreButton, LIST_PAGE_SIZE } from "@/components/common/LoadMoreButton";
+import { useBackTo } from "@/hooks/useBackTo";
 
 export const Route = createFileRoute("/notifications/")({
   component: NotificationsPage,
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/notifications/")({
 
 function NotificationsPage() {
   const router = useRouter();
+  const goBack = useBackTo("/");
   const navigate = useNavigate();
 
   const events = useNotificationEvents((s) => s.events);
@@ -82,7 +84,7 @@ function NotificationsPage() {
       header={
         <DetailHeader
           title="알림"
-          onBack={() => router.history.back()}
+          onBack={() => goBack()}
           right={
             <Link
               to="/notifications/settings"

@@ -3,6 +3,7 @@ import { Database, Clock, Scale, Gavel, Info } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DetailHeader } from "@/components/detail-header";
 import type { ComponentType } from "react";
+import { useBackTo } from "@/hooks/useBackTo";
 
 export const Route = createFileRoute("/data-guide")({
   component: DataGuidePage,
@@ -54,12 +55,13 @@ const items: GuideItem[] = [
 
 function DataGuidePage() {
   const router = useRouter();
+  const goBack = useBackTo("/settings");
   return (
     <AppShell screenId="SET-002_데이터안내"
       header={
         <DetailHeader
           title="데이터 기준 안내"
-          onBack={() => router.history.back()}
+          onBack={() => goBack()}
         />
       }
     >

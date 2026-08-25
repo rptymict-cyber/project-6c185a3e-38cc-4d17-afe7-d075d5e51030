@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { AppHeader } from "@/components/app-header";
+import { DetailHeader } from "@/components/detail-header";
+import { useBackTo } from "@/hooks/useBackTo";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { ITEMS, ITEM_CATEGORIES } from "@/lib/mock/items";
 import { MARKETS } from "@/lib/mock/markets";
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/market/item/")({
 
 function ItemBrowsePage() {
   const { item: itemParam } = Route.useSearch();
+  const goBack = useBackTo("/market");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -75,7 +77,7 @@ function ItemBrowsePage() {
 
   return (
     <AppShell screenId="MKT-003_품목별시세"
-      header={<AppHeader title="품목별 조회" showRefresh={false} showBell={false} showSearch />}
+      header={<DetailHeader title="품목별 조회" onBack={goBack} />}
     >
       <div className="px-4 pb-8 pt-3">
         {/* 선택 품목 드롭다운 */}

@@ -54,8 +54,8 @@ export function PredictionInsightCard({
       ? `${action} 시점을 검토하세요`
       : `${action} 참고`;
 
-  const gainLabel = isFarmer ? "예상 추가 수익" : "예상 절감액";
-  const revenueLabel = isFarmer ? "예상 매출" : "예상 매입액";
+  const gainLabel = isFarmer ? "예상 금액 차이" : "예상 절감액";
+  const revenueLabel = isFarmer ? "예상 판매금액" : "예상 매입액";
 
   return (
     <section
@@ -187,6 +187,11 @@ export function PredictionInsightCard({
             </div>
           </div>
         </div>
+        {/* 비용 미반영 고지 */}
+        <p className="mt-2.5 text-meta font-medium text-white/70">
+          예상 시세 기준 금액이며 물류비·수수료 등 비용은 반영되지 않았습니다.
+        </p>
+
 
         {/* 결합 CTA */}
         <button

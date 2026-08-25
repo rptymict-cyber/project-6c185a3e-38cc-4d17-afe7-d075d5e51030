@@ -7,7 +7,8 @@ import {
 } from "@tanstack/react-router";
 import { Calendar as CalendarIcon, ChevronRight, Sprout } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { AppHeader } from "@/components/app-header";
+import { DetailHeader } from "@/components/detail-header";
+import { useBackTo } from "@/hooks/useBackTo";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
 import { FullSelectCard } from "@/components/common/ConditionSelectCard";
 import { useCropSelection } from "@/store/cropSelection";
@@ -30,6 +31,7 @@ export const Route = createFileRoute("/market-compare")({
 
 function MarketComparePage() {
   const router = useRouter();
+  const goBack = useBackTo("/market");
   const navigate = useNavigate();
   const committed = useCropSelection((s) => s.committed);
 
@@ -73,7 +75,7 @@ function MarketComparePage() {
 
   return (
     <AppShell screenId="MKT-008_시장비교"
-      header={<AppHeader title="시장별 가격 비교" showBell={false} />}
+      header={<DetailHeader title="시장별 가격 비교" onBack={goBack} />}
     >
       <div className="px-4 pb-24 pt-4">
         {/* 작물 + 조회 날짜 Full 선택 카드 */}

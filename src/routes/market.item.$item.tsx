@@ -9,6 +9,7 @@ import {
   ITEM_CATEGORIES,
 } from "@/lib/mock/items";
 import { CropIcon } from "@/components/crop-icon";
+import { useBackTo } from "@/hooks/useBackTo";
 
 export const Route = createFileRoute("/market/item/$item")({
   loader: ({ params }) => {
@@ -39,6 +40,7 @@ export const Route = createFileRoute("/market/item/$item")({
 function ItemVarietiesPage() {
   const { item } = Route.useLoaderData();
   const router = useRouter();
+  const goBack = useBackTo("/market/item");
   const total = itemTotalVolume(item);
   const avg = itemAvgKg(item);
   const catLabel = ITEM_CATEGORIES.find((c) => c.id === item.category)?.label ?? "";
@@ -49,7 +51,7 @@ function ItemVarietiesPage() {
       header={
         <DetailHeader
           title="시세 상세"
-          onBack={() => router.history.back()}
+          onBack={() => goBack()}
         />
       }
     >

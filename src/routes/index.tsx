@@ -3,6 +3,7 @@ import { applyMarketSelection } from "@/lib/goto-market";
 import { AppShell } from "@/components/app-shell";
 import { AppHeader } from "@/components/app-header";
 import { MarketListHome } from "@/components/market/MarketListHome";
+import { basisLineLabel } from "@/lib/data-basis";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,7 +36,7 @@ function Home() {
         <>
           <AppHeader title="농산물 시세 조회" />
           <div className="border-b border-[#E8EEE8] bg-white px-4 py-1.5 text-meta text-[#6B7280]">
-            기준일 2026.07.03 14:30 업데이트
+            {basisLineLabel()}
           </div>
         </>
       }
