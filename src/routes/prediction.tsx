@@ -120,7 +120,7 @@ function PredictionPage() {
   if (!prediction || !cropMeta) {
     return (
       <AppShell screenId="PRED-001_AI시세예측" screenState="Empty" header={<AppHeader title="AI 시세 예측" />}>
-        <div className="grid min-h-[60vh] place-items-center px-6 text-center text-[13px] text-[#6C757D]">
+        <div className="grid min-h-[60vh] place-items-center px-6 text-center text-body text-[#6C757D]">
           예측 정보를 불러올 수 없어요.
         </div>
       </AppShell>
@@ -227,10 +227,10 @@ function PredictionPage() {
         {/* 4. 가격 예측 차트 */}
         <section className="mt-4">
           <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-[13px] font-bold text-foreground">
+            <h2 className="text-body font-bold text-foreground">
               가격 예측 차트
             </h2>
-            <span className="text-[11px] text-[#868E96]">
+            <span className="text-meta text-[#868E96]">
               최근 업데이트 {prediction.updatedAt}
             </span>
           </div>
@@ -243,7 +243,7 @@ function PredictionPage() {
                   type="button"
                   onClick={() => setSelectedRangeDays(d)}
                   className={cn(
-                    "flex-1 rounded-full py-1.5 text-[12px] font-semibold transition-colors",
+                    "flex-1 rounded-full py-1.5 text-caption font-semibold transition-colors",
                     active
                       ? "bg-white text-[#1F5C1F] shadow-sm"
                       : "text-[#6C757D]",
@@ -268,7 +268,7 @@ function PredictionPage() {
           </div>
 
           {/* 범례 */}
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[11px] text-[#495057]">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-meta text-[#495057]">
             <span className="inline-flex items-center gap-1.5">
               <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03B3B]" />
               실제 평균가
@@ -323,24 +323,24 @@ function PredictionPage() {
 
         {/* 7. 예측 근거 */}
         <section className="mt-4">
-          <h2 className="mb-2 text-[13px] font-bold text-foreground">
+          <h2 className="mb-2 text-body font-bold text-foreground">
             예측 근거
           </h2>
 
           {/* 날씨 근거 카드 (요약) */}
           <div className="mb-2 rounded-xl border border-[#E9ECEF] bg-white p-3">
             <div className="flex items-start gap-2">
-              <span className="text-[20px] leading-none">🌧️</span>
+              <span className="text-heading leading-none">🌧️</span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[13px] font-bold text-foreground">
+                  <span className="text-body font-bold text-foreground">
                     날씨 영향
                   </span>
-                  <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-[10px] font-extrabold text-[#E03B3B]">
+                  <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-meta font-extrabold text-[#E03B3B]">
                     출하 주의
                   </span>
                 </div>
-                <p className="mt-1 text-[11.5px] leading-snug text-[#495057]">
+                <p className="mt-1 text-meta leading-snug text-[#495057]">
                   {MOCK_WEATHER.regionFull} · {selectedDate} ·{" "}
                   {MOCK_WEATHER.current.temp}° {MOCK_WEATHER.current.desc} —
                   강수 20~35mm로 수확·출하 차질 가능, 공급 감소가 추천가에
@@ -348,20 +348,20 @@ function PredictionPage() {
                 </p>
                 <div className="mt-2 grid grid-cols-3 gap-1.5">
                   <div className="rounded-lg bg-[#F8F9FA] px-2 py-1.5 text-center">
-                    <div className="text-[10px] text-[#6C757D]">강수</div>
-                    <div className="text-[11.5px] font-bold text-[#212529]">
+                    <div className="text-meta text-[#6C757D]">강수</div>
+                    <div className="text-meta font-bold text-[#212529]">
                       20~35mm
                     </div>
                   </div>
                   <div className="rounded-lg bg-[#FEF3F3] px-2 py-1.5 text-center">
-                    <div className="text-[10px] text-[#E03B3B]">수확 지연</div>
-                    <div className="text-[11.5px] font-bold text-[#E03B3B]">
+                    <div className="text-meta text-[#E03B3B]">수확 지연</div>
+                    <div className="text-meta font-bold text-[#E03B3B]">
                       우려
                     </div>
                   </div>
                   <div className="rounded-lg bg-[#FEF3F3] px-2 py-1.5 text-center">
-                    <div className="text-[10px] text-[#E03B3B]">반입</div>
-                    <div className="text-[11.5px] font-bold text-[#E03B3B]">
+                    <div className="text-meta text-[#E03B3B]">반입</div>
+                    <div className="text-meta font-bold text-[#E03B3B]">
                       ↓
                     </div>
                   </div>
@@ -401,10 +401,10 @@ function PredictionPage() {
         {/* 8. AI 상세 예측 리포트 (프리미엄) */}
         <section className="mt-4">
           <div className="rounded-2xl border border-dashed border-[#2E9E6B] bg-white p-4 text-center">
-            <div className="text-[13px] font-bold text-foreground">
+            <div className="text-body font-bold text-foreground">
               📑 AI 상세 예측 리포트
             </div>
-            <p className="mt-1.5 text-[11.5px] leading-snug text-[#6C757D]">
+            <p className="mt-1.5 text-meta leading-snug text-[#6C757D]">
               방향성 지수 · 리스크 팩터 · 과거 vs 예측 추세 · 토픽별 뉴스 정리
               <br />
               (틸다 ArgMax 기반 · 프리미엄)
@@ -412,7 +412,7 @@ function PredictionPage() {
             <button
               type="button"
               onClick={() => toast("리포트 미리보기는 준비 중입니다.")}
-              className="mt-3 inline-flex h-9 items-center justify-center rounded-lg bg-[#2E9E6B] px-4 text-[12.5px] font-bold text-white active:bg-[#1F7A50]"
+              className="mt-3 inline-flex h-9 items-center justify-center rounded-lg bg-[#2E9E6B] px-4 text-caption font-bold text-white active:bg-[#1F7A50]"
             >
               리포트 미리보기 ›
             </button>
@@ -420,7 +420,7 @@ function PredictionPage() {
         </section>
 
         {/* 고지문 */}
-        <p className="mt-4 px-2 text-center text-[10.5px] leading-snug text-[#adb5bd]">
+        <p className="mt-4 px-2 text-center text-meta leading-snug text-[#adb5bd]">
           본 예측은 데이터 기반 AI의 참고용 세컨드 오피니언입니다. 실제 시세와
           다를 수 있으니 최종 판단은 사용자에게 있습니다.
         </p>

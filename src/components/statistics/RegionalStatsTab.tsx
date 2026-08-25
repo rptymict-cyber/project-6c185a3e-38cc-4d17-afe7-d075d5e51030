@@ -70,7 +70,7 @@ export function RegionalStatsTab({
           onClick={() => setDateOpen(true)}
         />
         {data.differentFromRequest && (
-          <div className="mt-2 rounded-[8px] bg-[#F0F9F0] px-3 py-2 text-[11.5px] font-semibold text-[#1F5C1F]">
+          <div className="mt-2 rounded-[8px] bg-[#F0F9F0] px-3 py-2 text-meta font-semibold text-[#1F5C1F]">
             {data.requestedDateLabel} 휴장으로 직전 거래일({data.effectiveDateLabel}) 표시
           </div>
         )}
@@ -98,13 +98,13 @@ export function RegionalStatsTab({
           value={`${kpi.volumeTon.toFixed(1)}t`}
         />
       </div>
-      <p className="mt-2 px-4 text-[11px] text-[#868E96]">
+      <p className="mt-2 px-4 text-meta text-[#868E96]">
         ⓘ 지역 대표값은 도매시장 거래량 가중 평균입니다.
       </p>
 
       {/* Section header + view toggle */}
       <div className="mt-4 flex items-center justify-between px-4">
-        <div className="text-[15px] font-bold">
+        <div className="text-body-lg font-bold">
           {view === "map" ? "전국 지역별 평균가" : "지역별 평균가 목록"}
         </div>
         <div className="inline-flex rounded-[10px] border border-[#E9ECEF] bg-white p-1">
@@ -140,20 +140,20 @@ export function RegionalStatsTab({
       {view === "map" && selectedStats && (
         <div className="mt-3 mx-4 rounded-[12px] border border-[#E9ECEF] bg-white p-3">
           <div className="flex items-center justify-between">
-            <div className="text-[14px] font-bold">{selectedStats.region} 도매시장 통계</div>
+            <div className="text-body font-bold">{selectedStats.region} 도매시장 통계</div>
             <button
               type="button"
               onClick={() => onSelectRegion(null)}
-              className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#868E96]"
+              className="inline-flex items-center gap-1 text-caption font-semibold text-[#868E96]"
             >
               지역 해제 <X className="h-3.5 w-3.5" />
             </button>
           </div>
-          <div className="mt-2 text-[11.5px] text-[#868E96]">
+          <div className="mt-2 text-meta text-[#868E96]">
             도매시장 {selectedStats.marketCount}곳 · 높은 평균가순
           </div>
           {/* Column headers */}
-          <div className="mt-2 flex items-center gap-2 rounded-t-[8px] bg-[#F8F9FA] px-2 py-1.5 text-[10.5px] font-bold text-[#6C757D]">
+          <div className="mt-2 flex items-center gap-2 rounded-t-[8px] bg-[#F8F9FA] px-2 py-1.5 text-meta font-bold text-[#6C757D]">
             <span className="h-4 w-4" />
             <span className="flex-1">시장</span>
             <span className="text-right">평균가</span>
@@ -174,20 +174,20 @@ export function RegionalStatsTab({
                       className="flex w-full items-center gap-2 px-2 py-2.5 text-left"
                       aria-expanded={open}
                     >
-                      <span className="grid h-4 w-4 place-items-center rounded bg-[#EAF7EA] text-[10px] text-[#3A8A3A]">🏪</span>
-                      <span className="flex-1 text-[13.5px] font-semibold">{m.name}</span>
-                      <span className="text-[13.5px] font-bold tabular-nums">
-                        {m.avgKg.toLocaleString()}<span className="text-[10.5px] font-semibold text-[#868E96]">원</span>
+                      <span className="grid h-4 w-4 place-items-center rounded bg-[#EAF7EA] text-meta text-[#3A8A3A]">🏪</span>
+                      <span className="flex-1 text-body font-semibold">{m.name}</span>
+                      <span className="text-body font-bold tabular-nums">
+                        {m.avgKg.toLocaleString()}<span className="text-meta font-semibold text-[#868E96]">원</span>
                       </span>
                       <span
                         className={cn(
-                          "w-14 text-right text-[11.5px] font-bold tabular-nums",
+                          "w-14 text-right text-meta font-bold tabular-nums",
                           m.deltaAmount > 0 ? "text-[#E03131]" : m.deltaAmount < 0 ? "text-[#1971C2]" : "text-[#868E96]",
                         )}
                       >
                         {m.deltaAmount > 0 ? "▲" : m.deltaAmount < 0 ? "▼" : ""}{Math.abs(m.deltaPct).toFixed(1)}%
                       </span>
-                      <span className="w-12 text-right text-[11.5px] text-[#868E96] tabular-nums">
+                      <span className="w-12 text-right text-meta text-[#868E96] tabular-nums">
                         {m.volumeTon.toFixed(1)}t
                       </span>
                       {open ? (
@@ -198,7 +198,7 @@ export function RegionalStatsTab({
                     </button>
                     {open && m.companies.length > 0 && (
                       <div className="border-t border-[#F1F3F5] bg-[#FBFDFB] px-2 pb-2">
-                        <div className="flex items-center gap-2 pt-2 pb-1 text-[10.5px] font-bold text-[#868E96]">
+                        <div className="flex items-center gap-2 pt-2 pb-1 text-meta font-bold text-[#868E96]">
                           <span className="h-3 w-3" />
                           <span className="flex-1">법인</span>
                           <span className="text-right">평균가</span>
@@ -209,19 +209,19 @@ export function RegionalStatsTab({
                           {m.companies.map((co) => (
                             <li key={co.name} className="flex items-center gap-2 py-1.5">
                               <span className="h-3 w-3 rounded-full bg-[#DEE7DE]" />
-                              <span className="flex-1 text-[12.5px] text-[#495057]">{co.name}</span>
-                              <span className="text-[12.5px] font-bold tabular-nums">
-                                {co.avgKg.toLocaleString()}<span className="text-[10px] text-[#868E96]">원</span>
+                              <span className="flex-1 text-caption text-[#495057]">{co.name}</span>
+                              <span className="text-caption font-bold tabular-nums">
+                                {co.avgKg.toLocaleString()}<span className="text-meta text-[#868E96]">원</span>
                               </span>
                               <span
                                 className={cn(
-                                  "w-12 text-right text-[11px] font-bold tabular-nums",
+                                  "w-12 text-right text-meta font-bold tabular-nums",
                                   co.deltaAmount > 0 ? "text-[#E03131]" : co.deltaAmount < 0 ? "text-[#1971C2]" : "text-[#868E96]",
                                 )}
                               >
                                 {co.deltaAmount > 0 ? "▲" : co.deltaAmount < 0 ? "▼" : ""}{Math.abs(co.deltaPct).toFixed(1)}%
                               </span>
-                              <span className="w-12 text-right text-[11px] text-[#868E96] tabular-nums">
+                              <span className="w-12 text-right text-meta text-[#868E96] tabular-nums">
                                 {co.volumeTon.toFixed(1)}t
                               </span>
                             </li>
@@ -236,7 +236,7 @@ export function RegionalStatsTab({
           <button
             type="button"
             onClick={() => onOpenTrend(selectedStats.region)}
-            className="mt-2 flex w-full items-center justify-center gap-1 rounded-[10px] border border-[#3A8A3A] py-3 text-[13px] font-bold text-[#3A8A3A]"
+            className="mt-2 flex w-full items-center justify-center gap-1 rounded-[10px] border border-[#3A8A3A] py-3 text-body font-bold text-[#3A8A3A]"
           >
             {selectedStats.region} 가격 추이 보기
             <ChevronRight className="h-4 w-4" />
@@ -247,15 +247,15 @@ export function RegionalStatsTab({
       {/* Empty-data selection */}
       {selectedRegion && !selectedStats && (
         <div className="mt-3 mx-4 rounded-[12px] border border-dashed border-[#E9ECEF] bg-[#F8F9FA] p-4 text-center">
-          <div className="text-[13.5px] font-bold">{selectedRegion}</div>
-          <p className="mt-1 text-[12px] text-[#6C757D]">
+          <div className="text-body font-bold">{selectedRegion}</div>
+          <p className="mt-1 text-caption text-[#6C757D]">
             선택한 날짜에 제공되는 도매시장 데이터가 없어요.
             <br />다른 지역 또는 날짜를 선택해주세요.
           </p>
           <button
             type="button"
             onClick={() => onSelectRegion(null)}
-            className="mt-3 text-[12px] font-semibold text-[#3A8A3A]"
+            className="mt-3 text-caption font-semibold text-[#3A8A3A]"
           >
             선택 해제
           </button>
@@ -288,11 +288,11 @@ function KpiCard({
     tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-[#1F5C1F]";
   return (
     <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2">
-      <div className="text-[10.5px] font-semibold text-[#6C757D]">{label}</div>
-      <div className={cn("mt-1 text-[13px] font-black tabular-nums leading-tight", color)}>
+      <div className="text-meta font-semibold text-[#6C757D]">{label}</div>
+      <div className={cn("mt-1 text-body font-black tabular-nums leading-tight", color)}>
         {value}
       </div>
-      {sub && <div className="mt-0.5 text-[10px] text-[#868E96]">{sub}</div>}
+      {sub && <div className="mt-0.5 text-meta text-[#868E96]">{sub}</div>}
     </div>
   );
 }
@@ -311,7 +311,7 @@ function ToggleBtn({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-1 rounded-[8px] px-2.5 py-1 text-[12px] font-bold",
+        "inline-flex items-center gap-1 rounded-[8px] px-2.5 py-1 text-caption font-bold",
         active ? "bg-[#EAF7EA] text-[#1F5C1F] border border-[#3A8A3A]" : "text-[#868E96]",
       )}
     >

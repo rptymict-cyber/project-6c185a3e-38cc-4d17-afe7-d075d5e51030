@@ -49,7 +49,7 @@ export function DateSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="rounded-t-2xl p-0">
         <SheetHeader className="px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">조회 기준일 선택</SheetTitle>
+          <SheetTitle className="text-subtitle font-bold">조회 기준일 선택</SheetTitle>
         </SheetHeader>
 
         {/* Quick buttons */}
@@ -73,10 +73,10 @@ export function DateSheet({
                 )}
               >
                 <div className={cn(
-                  "text-[12px] font-semibold",
+                  "text-caption font-semibold",
                   active ? "text-[#1F5C1F]" : "text-[#6C757D]",
                 )}>{q.title}</div>
-                <div className="mt-0.5 text-[13px] font-bold text-foreground">{q.sub}</div>
+                <div className="mt-0.5 text-body font-bold text-foreground">{q.sub}</div>
               </button>
             );
           })}
@@ -84,7 +84,7 @@ export function DateSheet({
 
         {/* Weekly calendar */}
         <div className="px-5 pt-5">
-          <div className="mb-2 text-[12px] font-semibold text-[#6C757D]">이번 주</div>
+          <div className="mb-2 text-caption font-semibold text-[#6C757D]">이번 주</div>
           <div className="grid grid-cols-7 gap-1.5">
             {WEEK.map((d) => {
               const isSelected = d.iso === selected;
@@ -94,14 +94,14 @@ export function DateSheet({
                   disabled={d.disabled}
                   onClick={() => commit(d.iso, `${d.label.replace("/", "월 ").replace(/^(\d+)월 (\d+)/, "$1월 $2일")} (${d.weekday})`)}
                   className={cn(
-                    "flex flex-col items-center justify-center rounded-[8px] py-2 text-[12px]",
+                    "flex flex-col items-center justify-center rounded-[8px] py-2 text-caption",
                     d.disabled && "opacity-40",
                     isSelected
                       ? "bg-[#3A8A3A] text-white"
                       : "bg-[#F8F9FA] text-foreground",
                   )}
                 >
-                  <span className="text-[10px] opacity-80">{d.weekday}</span>
+                  <span className="text-meta opacity-80">{d.weekday}</span>
                   <span className="mt-0.5 font-bold">{d.label.split("/")[1]}</span>
                   <span
                     className={cn(
@@ -119,7 +119,7 @@ export function DateSheet({
           </div>
         </div>
 
-        <p className="px-5 pb-6 pt-4 text-[11.5px] leading-relaxed text-[#868E96]">
+        <p className="px-5 pb-6 pt-4 text-meta leading-relaxed text-[#868E96]">
           점 표시는 경매 데이터가 있는 날입니다. 휴장일은 선택할 수 없습니다.
         </p>
       </SheetContent>

@@ -22,7 +22,7 @@ export function UnreadBadge({ className }: { className?: string }) {
     <span
       aria-label={`안 읽은 알림 ${count}건`}
       className={cn(
-        "pointer-events-none absolute -right-0.5 -top-0.5 grid min-w-[16px] place-items-center rounded-full bg-[#E43D3D] px-1 text-[9px] font-bold leading-[16px] text-white",
+        "pointer-events-none absolute -right-0.5 -top-0.5 grid min-w-[16px] place-items-center rounded-full bg-[#E43D3D] px-1 text-meta font-bold leading-[16px] text-white",
         className,
       )}
     >

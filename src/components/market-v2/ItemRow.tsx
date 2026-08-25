@@ -45,22 +45,22 @@ export function ItemRow({ item }: { item: Item }) {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <span className="truncate text-[15.5px] font-bold text-foreground">
+            <span className="truncate text-body-lg font-bold text-foreground">
               {item.name}
             </span>
-            <span className="shrink-0 rounded-md bg-[#F8F9FA] px-1.5 py-0.5 text-[11px] font-semibold text-[#6C757D]">
+            <span className="shrink-0 rounded-md bg-[#F8F9FA] px-1.5 py-0.5 text-meta font-semibold text-[#6C757D]">
               품종 {item.varieties.length}
             </span>
             {urgent && (
               <span
-                className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                className="shrink-0 rounded-md px-1.5 py-0.5 text-meta font-bold"
                 style={{ color, backgroundColor: `${color}14` }}
               >
                 {up ? "급등" : "급락"}
               </span>
             )}
           </div>
-          <div className="mt-0.5 truncate text-[11.5px] text-[#6C757D]">
+          <div className="mt-0.5 truncate text-meta text-[#6C757D]">
             오늘 {totalVol.toLocaleString()}톤 거래 · {varietyInsight(top)}
           </div>
         </div>
@@ -70,12 +70,12 @@ export function ItemRow({ item }: { item: Item }) {
         </div>
 
         <div className="min-w-0 shrink-0 text-right">
-          <div className="truncate text-[10px] text-[#ADB5BD]">대표 · {top.name}</div>
-          <div className="font-data text-[15px] font-bold tabular-nums text-foreground">
+          <div className="truncate text-meta text-[#ADB5BD]">대표 · {top.name}</div>
+          <div className="font-data text-body-lg font-bold tabular-nums text-foreground">
             {top.pricePerKg.toLocaleString()}
           </div>
           <div
-            className="text-[11.5px] font-bold tabular-nums"
+            className="text-meta font-bold tabular-nums"
             style={{ color }}
           >
             {flat ? "— 0.0%" : `${up ? "▲ +" : "▼ "}${top.changePct.toFixed(1)}%`}

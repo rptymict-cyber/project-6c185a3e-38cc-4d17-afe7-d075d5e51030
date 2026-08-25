@@ -15,8 +15,8 @@ export function HomeFeatureCard({ eyebrow, title, image, to }: HomeFeatureCardPr
       className="flex h-[88px] items-center gap-3 rounded-[20px] border border-[#E8EEE8] bg-white px-4 py-3 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:bg-[#F8F9FA]"
     >
       <div className="min-w-0 flex-1">
-        <div className="text-[12px] text-[#6B7280]">{eyebrow}</div>
-        <div className="mt-1 truncate text-[18px] font-extrabold text-[#111827]">
+        <div className="text-caption text-[#6B7280]">{eyebrow}</div>
+        <div className="mt-1 truncate text-title font-extrabold text-[#111827]">
           {title}
         </div>
       </div>

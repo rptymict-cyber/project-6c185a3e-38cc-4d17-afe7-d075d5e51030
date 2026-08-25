@@ -23,7 +23,7 @@ export function PeriodChips({
             key={o.id}
             onClick={() => onChange(o.id)}
             className={cn(
-              "shrink-0 rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors",
+              "shrink-0 rounded-full px-4 py-1.5 text-body font-semibold transition-colors",
               active
                 ? "bg-[#D6F0D6] text-[#1F5C1F]"
                 : "bg-[#F1F3F5] text-muted-foreground",

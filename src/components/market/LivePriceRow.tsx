@@ -27,28 +27,28 @@ export const LivePriceRowItem = memo(function LivePriceRowItem({
         onClick={() => onClick(row)}
         className={`${GRID} w-full py-2.5 text-left active:bg-secondary`}
       >
-        <span className="text-center text-[12px] font-bold tabular-nums text-[#3A8A3A]">
+        <span className="text-center text-caption font-bold tabular-nums text-[#3A8A3A]">
           {rank}
         </span>
         <CropIcon name={row.name} size={28} />
         <div className="min-w-0">
-          <div className="truncate text-[14px] font-semibold text-foreground">
+          <div className="truncate text-body font-semibold text-foreground">
             {row.name}
           </div>
-          <div className="mt-0.5 truncate text-[10.5px] text-muted-foreground">
+          <div className="mt-0.5 truncate text-meta text-muted-foreground">
             {row.market} · {row.unit}
           </div>
         </div>
-        <div className="text-right font-data text-[14px] font-bold tabular-nums text-foreground">
+        <div className="text-right font-data text-body font-bold tabular-nums text-foreground">
           {row.pricePerKg.toLocaleString()}
-          <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">
+          <span className="ml-0.5 text-meta font-medium text-muted-foreground">
             원/kg
           </span>
         </div>
         <div className="text-right">
           <PriceBadge changePct={row.changePct} />
         </div>
-        <div className="text-right text-[11px] tabular-nums text-muted-foreground">
+        <div className="text-right text-meta tabular-nums text-muted-foreground">
           {row.volumeTon.toFixed(1)}t
         </div>
       </button>
@@ -59,7 +59,7 @@ export const LivePriceRowItem = memo(function LivePriceRowItem({
 export function LivePriceHeader() {
   return (
     <div
-      className={`${GRID} border-b border-[#F1F3F5] bg-[#FAFBFC] py-1.5 text-[10.5px] font-semibold text-muted-foreground`}
+      className={`${GRID} border-b border-[#F1F3F5] bg-[#FAFBFC] py-1.5 text-meta font-semibold text-muted-foreground`}
     >
       <span></span>
       <span className="col-span-2">품목</span>

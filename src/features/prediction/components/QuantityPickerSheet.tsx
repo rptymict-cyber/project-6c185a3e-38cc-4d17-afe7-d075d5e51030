@@ -68,7 +68,7 @@ export function QuantityPickerSheet({
         className="mx-auto max-w-[430px] rounded-t-2xl p-0"
       >
         <SheetHeader className="border-b border-[#E9ECEF] px-4 py-3.5 text-left">
-          <SheetTitle className="text-[15px] font-bold text-foreground">
+          <SheetTitle className="text-body-lg font-bold text-foreground">
             {heading} 선택
           </SheetTitle>
         </SheetHeader>
@@ -83,7 +83,7 @@ export function QuantityPickerSheet({
                   type="button"
                   onClick={() => handleUnitChange(opt)}
                   className={cn(
-                    "h-8 rounded-full text-[12px] font-semibold transition-colors",
+                    "h-8 rounded-full text-caption font-semibold transition-colors",
                     active
                       ? "bg-white text-[#1F5C1F] shadow-sm"
                       : "text-[#6C757D]",
@@ -116,9 +116,9 @@ export function QuantityPickerSheet({
                   setN(isNaN(v) ? step : Math.max(1, Math.min(QUANTITY_MAX, v)));
                 }}
                 onBlur={() => setN((v) => clampQuantity(v, u))}
-                className="w-28 border-0 bg-transparent text-center text-[30px] font-black tabular-nums text-foreground outline-none"
+                className="w-28 border-0 bg-transparent text-center text-[32px] font-black tabular-nums text-foreground outline-none"
               />
-              <span className="text-[14px] font-semibold text-[#495057]">
+              <span className="text-body font-semibold text-[#495057]">
                 {unitLabel}
               </span>
             </div>
@@ -140,7 +140,7 @@ export function QuantityPickerSheet({
                 type="button"
                 onClick={() => setN(p)}
                 className={cn(
-                  "h-9 rounded-full border text-[12px] font-semibold",
+                  "h-9 rounded-full border text-caption font-semibold",
                   n === p
                     ? "border-[#3A8A3A] bg-[#F0F9F0] text-[#1F5C1F]"
                     : "border-[#E9ECEF] bg-white text-[#495057]",
@@ -151,7 +151,7 @@ export function QuantityPickerSheet({
             ))}
           </div>
 
-          <div className="mt-5 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-[11px] leading-snug text-[#2c6444]">
+          <div className="mt-5 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-meta leading-snug text-[#2c6444]">
             ⚖️ <b>단위 환산 안내</b> · aT 경락 데이터는 상자·망·포대 등 규격이
             혼재하고 kg이 미표기된 경우가 많아, 1kg 기준으로 환산해 시세를
             계산해요. (선택 단위 기준 총액도 함께 표시)
@@ -160,7 +160,7 @@ export function QuantityPickerSheet({
           <button
             type="button"
             onClick={apply}
-            className="mt-3 grid h-11 w-full place-items-center rounded-xl bg-[#3A8A3A] text-[14px] font-bold text-white active:bg-[#2F6F2F]"
+            className="mt-3 grid h-11 w-full place-items-center rounded-xl bg-[#3A8A3A] text-body font-bold text-white active:bg-[#2F6F2F]"
           >
             적용
           </button>

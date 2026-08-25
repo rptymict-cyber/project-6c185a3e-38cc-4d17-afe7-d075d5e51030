@@ -65,7 +65,7 @@ export function AppDrawerTrigger() {
         className="flex w-[300px] max-w-[85vw] flex-col bg-background p-0"
       >
         <SheetHeader className="flex-row items-center justify-between space-y-0 border-b border-border px-4 py-3">
-          <SheetTitle className="text-[15px] font-black text-foreground">
+          <SheetTitle className="text-body-lg font-black text-foreground">
             더보기
           </SheetTitle>
         </SheetHeader>
@@ -83,11 +83,11 @@ export function AppDrawerTrigger() {
                       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-[#495057]">
                         <Icon className="h-4 w-4" />
                       </span>
-                      <span className="min-w-0 flex-1 truncate text-[14px] font-semibold text-foreground">
+                      <span className="min-w-0 flex-1 truncate text-body font-semibold text-foreground">
                         {item.label}
                       </span>
                       {item.badge && (
-                        <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">
+                        <span className="rounded bg-primary/10 px-1.5 py-0.5 text-meta font-bold text-primary">
                           {item.badge}
                         </span>
                       )}
@@ -99,7 +99,7 @@ export function AppDrawerTrigger() {
             })}
           </ul>
         </nav>
-        <div className="border-t border-border px-4 py-3 text-[11px] text-muted-foreground">
+        <div className="border-t border-border px-4 py-3 text-meta text-muted-foreground">
           데이터 제공: KAMIS 농산물유통정보
         </div>
       </SheetContent>

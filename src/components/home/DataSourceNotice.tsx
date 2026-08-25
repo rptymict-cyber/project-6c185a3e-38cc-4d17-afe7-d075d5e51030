@@ -1,6 +1,6 @@
 export function DataSourceNotice() {
   return (
-    <section className="mt-6 border-t border-[#F1F3F5] px-4 py-4 text-[11px] leading-relaxed text-[#868E96]">
+    <section className="mt-6 border-t border-[#F1F3F5] px-4 py-4 text-meta leading-relaxed text-[#868E96]">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span>
           기준일 <span className="font-semibold text-[#495057]">2026.07.03</span>

@@ -60,19 +60,19 @@ export function CropCard({ crop }: { crop: Crop }) {
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="truncate text-[15px] font-bold text-foreground">
+              <span className="truncate text-body-lg font-bold text-foreground">
                 {crop.name}
               </span>
-              <span className="shrink-0 rounded-md bg-secondary px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
+              <span className="shrink-0 rounded-md bg-secondary px-1.5 py-0.5 text-meta font-semibold text-muted-foreground">
                 {catLabel}
               </span>
               {crop.aiReady && (
-                <span className="shrink-0 rounded-md bg-[#F0F9F0] px-1.5 py-0.5 text-[10px] font-semibold text-[#3A8A3A]">
+                <span className="shrink-0 rounded-md bg-[#F0F9F0] px-1.5 py-0.5 text-meta font-semibold text-[#3A8A3A]">
                   예측 가능
                 </span>
               )}
             </div>
-            <div className="mt-0.5 text-[11px] text-[#ADB5BD]">
+            <div className="mt-0.5 text-meta text-[#ADB5BD]">
               업데이트 {crop.updatedAt}
             </div>
           </div>
@@ -88,9 +88,9 @@ export function CropCard({ crop }: { crop: Crop }) {
 
       <div className="mt-2.5 flex items-end justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-data text-[24px] font-bold leading-none tabular-nums text-foreground">
+          <div className="font-data text-display font-bold leading-none tabular-nums text-foreground">
             {crop.currentPrice.toLocaleString()}
-            <span className="ml-1 text-[12px] font-medium text-muted-foreground">
+            <span className="ml-1 text-caption font-medium text-muted-foreground">
               {crop.unit}
             </span>
           </div>
@@ -103,11 +103,11 @@ export function CropCard({ crop }: { crop: Crop }) {
       <div className="mt-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <PriceBadge changePct={changePct} />
-          <span className="text-[11px] text-[#6C757D]">
+          <span className="text-meta text-[#6C757D]">
             거래량 {crop.volumeTon.toLocaleString()}t
           </span>
         </div>
-        <span className="text-[11px] font-medium" style={{ color: insight.color }}>
+        <span className="text-meta font-medium" style={{ color: insight.color }}>
           {insight.text}
         </span>
       </div>

@@ -21,7 +21,7 @@ function ChangeBadge({ changePct }: { changePct: number }) {
   return (
     <span
       className={cn(
-        "inline-flex whitespace-nowrap rounded-[6px] px-[7px] py-[2px] text-[11px] font-extrabold tabular-nums",
+        "inline-flex whitespace-nowrap rounded-[6px] px-[7px] py-[2px] text-meta font-extrabold tabular-nums",
         up ? "bg-[#FDECEC] text-[#E03B3B]" : "bg-[#EAF0FE] text-[#2563EB]",
       )}
     >
@@ -37,18 +37,18 @@ export function PredictableCropCards() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-1.5">
-            <h3 className="text-[18px] font-bold text-[#111827]">AI 시세 예측</h3>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">
+            <h3 className="text-title font-bold text-[#111827]">AI 시세 예측</h3>
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-meta font-bold text-primary">
               Beta
             </span>
           </div>
-          <p className="mt-0.5 text-[13px] text-[#6B7280]">
+          <p className="mt-0.5 text-body text-[#6B7280]">
             5개 품목의 예상 시세와 유리한 시점을 확인해보세요
           </p>
         </div>
         <Link
           to="/prediction"
-          className="flex shrink-0 items-center gap-0.5 text-[13px] font-medium text-[#4B5563]"
+          className="flex shrink-0 items-center gap-0.5 text-body font-medium text-[#4B5563]"
         >
           더보기
           <ChevronRight className="h-3.5 w-3.5" />
@@ -71,10 +71,10 @@ export function PredictableCropCards() {
               className="flex w-[112px] min-w-[112px] flex-col items-start gap-1 rounded-[10px] bg-[#F5FAF6] px-2 py-2.5 transition-colors active:bg-[#E8F1E8]"
             >
               <CropIcon name={crop.name} size={24} />
-              <div className="text-[12px] font-bold leading-tight text-[#111827]">
+              <div className="text-caption font-bold leading-tight text-[#111827]">
                 {crop.name}
               </div>
-              <div className="whitespace-nowrap text-[10px] font-semibold tabular-nums leading-tight text-[#6B7280]">
+              <div className="whitespace-nowrap text-meta font-semibold tabular-nums leading-tight text-[#6B7280]">
                 {h.price.toLocaleString()}원/{h.unitLabel}
               </div>
               <ChangeBadge changePct={h.changePct} />

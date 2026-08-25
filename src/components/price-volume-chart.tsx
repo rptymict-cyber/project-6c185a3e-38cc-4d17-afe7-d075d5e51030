@@ -253,23 +253,23 @@ function CustomTooltip({ active, payload }: any) {
     <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-2 shadow-md">
       {isForecast ? (
         <>
-          <div className="text-[12px] font-bold text-[#2E9E6B]">
+          <div className="text-caption font-bold text-[#2E9E6B]">
             {p.label} · AI 예측
           </div>
-          <div className="mt-0.5 text-[12px] font-bold text-[#2E9E6B]">
+          <div className="mt-0.5 text-caption font-bold text-[#2E9E6B]">
             예상 평균가 {p.forecast!.toLocaleString()}원
           </div>
         </>
       ) : (
         <>
-          <div className="text-[12px] font-bold text-foreground">{p.label}</div>
+          <div className="text-caption font-bold text-foreground">{p.label}</div>
           {p.price != null && (
-            <div className="mt-0.5 text-[12px] font-bold text-[#E03B3B]">
+            <div className="mt-0.5 text-caption font-bold text-[#E03B3B]">
               평균가 {p.price.toLocaleString()}원
             </div>
           )}
           {p.volume != null && (
-            <div className="text-[11.5px] text-[#495057]">
+            <div className="text-meta text-[#495057]">
               거래량 {p.volume.toLocaleString()}t
             </div>
           )}

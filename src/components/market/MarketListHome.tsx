@@ -34,7 +34,7 @@ export function MarketListHome({
       <div className="px-4 pt-2">
         <Link
           to="/search"
-          className="flex w-full items-center gap-2 rounded-[12px] border border-[#E8EEE8] bg-white px-4 py-3 text-left text-[13px] text-muted-foreground"
+          className="flex w-full items-center gap-2 rounded-[12px] border border-[#E8EEE8] bg-white px-4 py-3 text-left text-body text-muted-foreground"
         >
           <Search className="h-4 w-4" />
           품목, 시장, 산지, 등급을 검색하세요
@@ -47,10 +47,10 @@ export function MarketListHome({
       {/* 실시간 시세 */}
       <section className="mt-5 px-4">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-[18px] font-bold text-[#111827]">실시간 시세</h3>
+          <h3 className="text-title font-bold text-[#111827]">실시간 시세</h3>
           <button
             onClick={() => navigate({ to: "/live", search: { sort } })}
-            className="text-[13px] font-medium text-[#4B5563]"
+            className="text-body font-medium text-[#4B5563]"
           >
             더보기 ›
           </button>
@@ -68,7 +68,7 @@ export function MarketListHome({
 
       {/* 주요 진입 카드 */}
       <section className="mt-5 px-4">
-        <h3 className="mb-3 text-[18px] font-bold text-[#111827]">빠른 조회</h3>
+        <h3 className="mb-3 text-title font-bold text-[#111827]">빠른 조회</h3>
         <div className="flex flex-col gap-3">
           <HomeFeatureCard
             eyebrow="원하는 품목의 가격을 확인하세요"

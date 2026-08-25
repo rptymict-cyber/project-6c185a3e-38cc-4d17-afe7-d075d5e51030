@@ -33,7 +33,7 @@ export function HomeCategoryTabs({
             key={c.id}
             onClick={() => onChange(c.id)}
             className={cn(
-              "relative shrink-0 px-3 py-3 text-[14px] transition-colors",
+              "relative shrink-0 px-3 py-3 text-body transition-colors",
               active ? "font-bold text-foreground" : "font-medium text-[#6C757D]",
             )}
           >

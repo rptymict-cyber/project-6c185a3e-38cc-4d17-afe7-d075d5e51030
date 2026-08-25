@@ -17,24 +17,24 @@ export function MarketCropRow({
         onClick={onClick}
         className="flex w-full items-center gap-3 px-3 py-3 text-left active:bg-secondary"
       >
-        <span className="w-5 text-center text-[13px] font-bold text-[#3A8A3A] tabular-nums">
+        <span className="w-5 text-center text-body font-bold text-[#3A8A3A] tabular-nums">
           {rank}
         </span>
         <CropIcon name={crop.name} size={28} />
         <div className="min-w-0 flex-1">
-          <div className="text-[15px] font-semibold text-foreground">{crop.name}</div>
-          <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
+          <div className="text-body-lg font-semibold text-foreground">{crop.name}</div>
+          <div className="mt-0.5 truncate text-meta text-muted-foreground">
             {crop.market} · {crop.grade} · {crop.spec}
           </div>
         </div>
         <div className="text-right">
-          <div className="font-data text-[15px] font-bold tabular-nums text-foreground">
+          <div className="font-data text-body-lg font-bold tabular-nums text-foreground">
             {crop.pricePerKg.toLocaleString()}
-            <span className="ml-0.5 text-[11px] font-medium text-muted-foreground">원/kg</span>
+            <span className="ml-0.5 text-meta font-medium text-muted-foreground">원/kg</span>
           </div>
           <div className="mt-0.5 flex items-center justify-end gap-1.5">
             <PriceBadge changePct={crop.changePct} />
-            <span className="text-[11px] text-muted-foreground">
+            <span className="text-meta text-muted-foreground">
               {crop.volumeTon.toFixed(1)}t
             </span>
           </div>

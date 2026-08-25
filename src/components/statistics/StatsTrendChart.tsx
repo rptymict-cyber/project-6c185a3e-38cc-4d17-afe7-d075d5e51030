@@ -35,12 +35,12 @@ export function StatsTrendChart({
         </ResponsiveContainer>
       </div>
       <ul className="mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 px-2">
-        <li className="inline-flex items-center gap-1.5 text-[11px] text-[#495057]">
+        <li className="inline-flex items-center gap-1.5 text-meta text-[#495057]">
           <span className="h-2.5 w-2.5 rounded-[2px]" style={{ background: VOLUME_BAR }} />
           거래량
         </li>
         {series.map((s) => (
-          <li key={s.id} className="inline-flex items-center gap-1.5 text-[11px] text-[#495057]">
+          <li key={s.id} className="inline-flex items-center gap-1.5 text-meta text-[#495057]">
             <span className="h-[2.5px] w-3.5 rounded-full" style={{ background: s.color }} />
             {s.id}
           </li>
@@ -60,8 +60,8 @@ function TrendTooltip({ active, payload, label, series }: TooltipProps<number, s
     .filter((r): r is { s: { id: string; color: string }; v: number } => typeof r.v === "number")
     .sort((a, b) => b.v - a.v);
   return (
-    <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-2 text-[11.5px] shadow-lg">
-      <div className="mb-1 text-[10.5px] font-semibold text-[#868E96]">{label}</div>
+    <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-2 text-meta shadow-lg">
+      <div className="mb-1 text-meta font-semibold text-[#868E96]">{label}</div>
       <ul className="space-y-0.5">
         {rows.map(({ s, v }) => (
           <li key={s.id} className="flex items-center justify-between gap-3">
@@ -69,12 +69,12 @@ function TrendTooltip({ active, payload, label, series }: TooltipProps<number, s
               <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
               <span className="font-semibold">{s.id}</span>
             </span>
-            <span className="tabular-nums font-bold">{v.toLocaleString()}<span className="ml-0.5 text-[10px] font-medium text-[#868E96]">원/kg</span></span>
+            <span className="tabular-nums font-bold">{v.toLocaleString()}<span className="ml-0.5 text-meta font-medium text-[#868E96]">원/kg</span></span>
           </li>
         ))}
       </ul>
       {typeof vol === "number" && (
-        <div className="mt-1.5 border-t border-[#F1F3F5] pt-1 text-[10.5px]">
+        <div className="mt-1.5 border-t border-[#F1F3F5] pt-1 text-meta">
           <span className="inline-flex items-center gap-1.5 font-medium" style={{ color: VOLUME_BAR }}>
             <span className="h-2 w-2 rounded-sm" style={{ background: VOLUME_BAR }} />
             거래량 {vol}t

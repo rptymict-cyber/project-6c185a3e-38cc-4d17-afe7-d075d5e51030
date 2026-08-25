@@ -46,11 +46,11 @@ export function ItemSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-2xl p-0">
         <SheetHeader className="px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">품목 선택</SheetTitle>
+          <SheetTitle className="text-subtitle font-bold">품목 선택</SheetTitle>
         </SheetHeader>
 
         {/* Step indicator */}
-        <div className="flex items-center gap-1.5 px-5 pt-3 text-[12px]">
+        <div className="flex items-center gap-1.5 px-5 pt-3 text-caption">
           <StepDot n={1} label="부류" active={step === 1} done={step > 1} onClick={() => setStep(1)} />
           <ChevronRight className="h-3 w-3 text-[#ADB5BD]" />
           <StepDot n={2} label="품목" active={step === 2} done={step > 2} onClick={() => step > 1 && setStep(2)} />
@@ -59,7 +59,7 @@ export function ItemSheet({
         </div>
 
         {/* Current path breadcrumb */}
-        <div className="mx-5 mt-3 rounded-[10px] bg-[#F0F9F0] px-3 py-2 text-[12.5px] text-[#1F5C1F]">
+        <div className="mx-5 mt-3 rounded-[10px] bg-[#F0F9F0] px-3 py-2 text-caption text-[#1F5C1F]">
           {category.label}
           {step >= 2 && <> {" › "} <b>{item.label}</b></>}
           {step >= 3 && <> {" › "} <span className="font-bold">{filter.varietyLabel}</span> <Check className="ml-1 inline h-3.5 w-3.5" /></>}
@@ -78,7 +78,7 @@ export function ItemSheet({
                       setStep(2);
                     }}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-[14px]",
+                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-body",
                       c.id === catId ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
                     )}
                   >
@@ -100,7 +100,7 @@ export function ItemSheet({
                       setStep(3);
                     }}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-[14px]",
+                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-body",
                       it.id === itemId ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
                     )}
                   >
@@ -119,7 +119,7 @@ export function ItemSheet({
                   <button
                     onClick={() => commit(v.id, v.label)}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-[14px]",
+                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-body",
                       v.id === filter.varietyId ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
                     )}
                   >
@@ -148,10 +148,10 @@ function StepDot({
       )}
     >
       <span className={cn(
-        "grid h-5 w-5 place-items-center rounded-full text-[10px] font-bold",
+        "grid h-5 w-5 place-items-center rounded-full text-meta font-bold",
         active ? "bg-[#3A8A3A] text-white" : done ? "bg-[#D6F0D6] text-[#1F5C1F]" : "bg-[#F1F3F5]",
       )}>{n}</span>
-      <span className="text-[12px] font-semibold">{label}</span>
+      <span className="text-caption font-semibold">{label}</span>
     </button>
   );
 }

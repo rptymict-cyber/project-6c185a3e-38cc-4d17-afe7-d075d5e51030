@@ -79,11 +79,11 @@ export function PredictionInsightCard({
 
       <div className="relative">
         <div className="flex items-center justify-between">
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold backdrop-blur">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-meta font-bold backdrop-blur">
             <Sparkles className="h-3 w-3" />
             {badge}
           </span>
-          <span className="text-[10.5px] font-semibold uppercase tracking-wider text-white/70">
+          <span className="text-meta font-semibold uppercase tracking-wider text-white/70">
             {"\n"}
           </span>
         </div>
@@ -101,7 +101,7 @@ export function PredictionInsightCard({
           >
             {recommendationDate}
           </span>
-          <span className="pb-1 text-[15px] font-extrabold leading-tight text-white">
+          <span className="pb-1 text-body-lg font-extrabold leading-tight text-white">
             {headline}
           </span>
         </div>
@@ -109,7 +109,7 @@ export function PredictionInsightCard({
         <div className="mt-1 flex items-center gap-1.5">
           <span
             className={cn(
-              "inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11.5px] font-bold tabular-nums",
+              "inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-meta font-bold tabular-nums",
               priceHigher
                 ? "text-[#E03131]"
                 : priceLower
@@ -130,7 +130,7 @@ export function PredictionInsightCard({
         {/* KPI 3개 */}
         <div className="mt-4 grid grid-cols-3 gap-2">
           <div className="rounded-xl bg-white/12 px-2.5 py-2 backdrop-blur-sm">
-            <div className="text-[10px] font-semibold text-white/75">
+            <div className="text-meta font-semibold text-white/75">
               예상 평균가
             </div>
             <div className="mt-1 flex items-baseline whitespace-nowrap">
@@ -141,13 +141,13 @@ export function PredictionInsightCard({
                 {formatFullWon(expectedPrice)}
               </span>
             </div>
-            <div className="mt-0.5 text-[9.5px] text-white/60">
+            <div className="mt-0.5 text-meta text-white/60">
               / {baseUnitLabel}
             </div>
           </div>
 
           <div className="rounded-xl bg-white/12 px-2.5 py-2 backdrop-blur-sm">
-            <div className="text-[10px] font-semibold text-white/75">
+            <div className="text-meta font-semibold text-white/75">
               {revenueLabel}
             </div>
             <div className="mt-1 flex items-baseline whitespace-nowrap">
@@ -158,7 +158,7 @@ export function PredictionInsightCard({
                 {formatFullWon(totalRevenue)}
               </span>
             </div>
-            <div className="mt-0.5 text-[9.5px] text-white/60">
+            <div className="mt-0.5 text-meta text-white/60">
               {quantityBoxes.toLocaleString()}{quantityUnitLabel}
             </div>
           </div>
@@ -171,7 +171,7 @@ export function PredictionInsightCard({
                 : "bg-white text-[#B02525]",
             )}
           >
-            <div className="text-[10px] font-bold opacity-80">{gainLabel}</div>
+            <div className="text-meta font-bold opacity-80">{gainLabel}</div>
             <div className="mt-1 flex items-baseline whitespace-nowrap">
               <span
                 className="font-black tabular-nums leading-none"
@@ -182,7 +182,7 @@ export function PredictionInsightCard({
                   : `${gain > 0 ? "+" : "-"}${formatFullWon(gainAbs)}`}
               </span>
             </div>
-            <div className="mt-0.5 text-[9.5px] opacity-70">
+            <div className="mt-0.5 text-meta opacity-70">
               오늘 대비
             </div>
           </div>
@@ -192,7 +192,7 @@ export function PredictionInsightCard({
         <button
           type="button"
           onClick={onDetailClick}
-          className="mt-4 flex w-full items-center justify-between rounded-2xl bg-white/15 px-3.5 py-2.5 text-[12.5px] font-bold text-white backdrop-blur-sm transition-colors active:bg-white/25"
+          className="mt-4 flex w-full items-center justify-between rounded-2xl bg-white/15 px-3.5 py-2.5 text-caption font-bold text-white backdrop-blur-sm transition-colors active:bg-white/25"
         >
           <span>시세 상세 보기</span>
           <ChevronRight className="h-4 w-4" />

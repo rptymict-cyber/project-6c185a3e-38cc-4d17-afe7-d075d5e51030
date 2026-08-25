@@ -35,10 +35,10 @@ export function ItemsPanel() {
       <CategoryChips value={category} onChange={setCategory} />
 
       <div className="flex items-center justify-between px-4 pb-1.5 pt-2.5">
-        <span className="text-[12px] text-[#6C757D]">품목 {filtered.length}개</span>
+        <span className="text-caption text-[#6C757D]">품목 {filtered.length}개</span>
         <button
           onClick={() => setSheetOpen(true)}
-          className="inline-flex items-center gap-0.5 text-[12.5px] font-semibold text-foreground"
+          className="inline-flex items-center gap-0.5 text-caption font-semibold text-foreground"
         >
           {SORT_LABEL[sort]}
           <ChevronDown className="h-3.5 w-3.5" />
@@ -48,7 +48,7 @@ export function ItemsPanel() {
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center gap-2 py-16 text-center">
           <span className="text-4xl">🌾</span>
-          <span className="text-[13px] text-[#6C757D]">해당 분류의 거래 품목이 없어요</span>
+          <span className="text-body text-[#6C757D]">해당 분류의 거래 품목이 없어요</span>
         </div>
       ) : (
         <ul className="divide-y divide-[#F1F3F5] border-y border-[#F1F3F5]">

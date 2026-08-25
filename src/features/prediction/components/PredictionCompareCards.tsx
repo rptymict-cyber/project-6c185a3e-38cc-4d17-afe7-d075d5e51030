@@ -46,7 +46,7 @@ export function PredictionCompareCards({
 
   return (
     <section>
-      <h2 className="mb-2 text-[13px] font-bold text-foreground">{title}</h2>
+      <h2 className="mb-2 text-body font-bold text-foreground">{title}</h2>
 
       {/* 강조 배너 — 추가 수익 / 예상 절감 */}
       <div
@@ -54,10 +54,10 @@ export function PredictionCompareCards({
         style={{ background: bannerGrad }}
       >
         <div>
-          <div className="text-[11px] font-semibold opacity-90">
+          <div className="text-meta font-semibold opacity-90">
             {recommendationDate} {isFarmer ? "출하 시" : "매입 시"}
           </div>
-          <div className="mt-0.5 text-[12px] font-bold opacity-95">
+          <div className="mt-0.5 text-caption font-bold opacity-95">
             {gainLabel}
           </div>
         </div>
@@ -69,26 +69,26 @@ export function PredictionCompareCards({
             {isPositive ? "+" : "-"}
             {Math.abs(gain).toLocaleString()}
           </span>
-          <span className="text-[13px] font-extrabold">원</span>
+          <span className="text-body font-extrabold">원</span>
         </div>
       </div>
 
       <div className="mt-2 grid grid-cols-2 gap-2">
         {/* 현재 시점 */}
         <div className="rounded-2xl border border-[#E9ECEF] bg-white p-3">
-          <div className="text-[11px] font-semibold text-[#868E96]">
+          <div className="text-meta font-semibold text-[#868E96]">
             현재 시점 {isFarmer ? "출하" : "매입"}
           </div>
           <div className="mt-1.5 flex items-baseline gap-1">
-            <span className="text-[18px] font-black tabular-nums text-foreground">
+            <span className="text-title font-black tabular-nums text-foreground">
               {currentPrice.toLocaleString()}
             </span>
-            <span className="text-[11px] text-[#6C757D]">원/{baseUnitLabel}</span>
+            <span className="text-meta text-[#6C757D]">원/{baseUnitLabel}</span>
           </div>
-          <div className="mt-2 text-[11.5px] text-[#495057]">
+          <div className="mt-2 text-meta text-[#495057]">
             {qtyLabel} {quantityBoxes.toLocaleString()}{quantityUnitLabel}
           </div>
-          <div className="mt-0.5 text-[11.5px] text-[#495057]">
+          <div className="mt-0.5 text-meta text-[#495057]">
             {totalLabel}{" "}
             <span className="font-bold tabular-nums text-foreground">
               {currentTotal.toLocaleString()}원
@@ -100,27 +100,27 @@ export function PredictionCompareCards({
         <div className="relative rounded-2xl border-2 border-[#2E9E6B] bg-[#EAF7F0] p-3">
           <span
             className={cn(
-              "absolute right-2 top-2 rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white",
+              "absolute right-2 top-2 rounded-full px-1.5 py-0.5 text-meta font-bold text-white",
               isRecommendedSelection ? "bg-[#2E9E6B]" : "bg-[#1F7A50]",
             )}
           >
             {tagText}
           </span>
-          <div className="text-[11px] font-semibold text-[#145A3A]">
+          <div className="text-meta font-semibold text-[#145A3A]">
             {rightTitle}
           </div>
           <div className="mt-1.5 flex items-baseline gap-1">
-            <span className="text-[18px] font-black tabular-nums text-[#145A3A]">
+            <span className="text-title font-black tabular-nums text-[#145A3A]">
               {expectedPrice.toLocaleString()}
             </span>
-            <span className="text-[11px] text-[#145A3A]/80">
+            <span className="text-meta text-[#145A3A]/80">
               원/{baseUnitLabel}
             </span>
           </div>
-          <div className="mt-2 text-[11.5px] text-[#145A3A]">
+          <div className="mt-2 text-meta text-[#145A3A]">
             {qtyLabel} {quantityBoxes.toLocaleString()}{quantityUnitLabel}
           </div>
-          <div className="mt-0.5 text-[11.5px] text-[#145A3A]">
+          <div className="mt-0.5 text-meta text-[#145A3A]">
             {totalLabel}{" "}
             <span className="font-bold tabular-nums">
               {recTotal.toLocaleString()}원

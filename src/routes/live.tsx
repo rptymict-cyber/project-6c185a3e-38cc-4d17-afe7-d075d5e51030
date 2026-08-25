@@ -84,7 +84,7 @@ function LivePage() {
                   navigate({ search: { sort: s }, replace: true });
                 }}
                 className={
-                  "shrink-0 rounded-full px-3 py-1 text-[12px] font-semibold " +
+                  "shrink-0 rounded-full px-3 py-1 text-caption font-semibold " +
                   (active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-muted-foreground")
                 }
               >
@@ -93,7 +93,7 @@ function LivePage() {
             );
           })}
         </div>
-        <p className="mt-1.5 text-[10.5px] text-muted-foreground">
+        <p className="mt-1.5 text-meta text-muted-foreground">
           {sort === "vol" ? "전국 거래량 합계" : "전국 평균가 기준 등락률"}
         </p>
 
@@ -113,7 +113,7 @@ function LivePage() {
         {rows.length < total && (
           <LoadMoreButton onClick={() => setOffset((o) => o + PAGE_SIZE)} />
         )}
-        <p className="mt-4 text-center text-[10.5px] text-muted-foreground">
+        <p className="mt-4 text-center text-meta text-muted-foreground">
           정렬/집계는 서버 기준입니다. 클라이언트에서 순서를 바꾸지 않습니다.
         </p>
       </div>

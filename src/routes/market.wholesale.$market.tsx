@@ -85,7 +85,7 @@ function WholesaleDetailPage() {
       }
       bottom={
         <div className="fixed inset-x-0 bottom-[60px] z-30 mx-auto w-full max-w-[430px] border-t border-[#E9ECEF] bg-[#F8F9FA] px-4 py-2.5">
-          <div className="flex items-center justify-between text-[12.5px]">
+          <div className="flex items-center justify-between text-caption">
             <span className="text-[#6C757D]">
               {data.item.name} 총 거래량{" "}
               <span className="font-data font-bold tabular-nums text-foreground">
@@ -104,7 +104,7 @@ function WholesaleDetailPage() {
     >
       {/* 선택 시장 칩 */}
       <div className="px-4 pb-1 pt-3">
-        <span className="inline-flex items-center rounded-full bg-[#F0F9F0] px-3 py-1 text-[12px] font-semibold text-[#3A8A3A]">
+        <span className="inline-flex items-center rounded-full bg-[#F0F9F0] px-3 py-1 text-caption font-semibold text-[#3A8A3A]">
           {market.name}
         </span>
       </div>
@@ -120,7 +120,7 @@ function WholesaleDetailPage() {
                 setExpanded(null);
               }}
               className={cn(
-                "shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold",
+                "shrink-0 rounded-full px-3.5 py-1.5 text-caption font-semibold",
                 active ? "bg-[#3A8A3A] text-white" : "bg-[#F8F9FA] text-[#6C757D]",
               )}
             >
@@ -135,7 +135,7 @@ function WholesaleDetailPage() {
 
       {/* 테이블 */}
       <div className="mt-3 overflow-hidden border-y border-[#E9ECEF]">
-        <div className="grid grid-cols-[1.6fr_1fr_1fr_0.9fr] bg-[#F8F9FA] px-3 py-2 text-[11px] font-bold text-[#6C757D]">
+        <div className="grid grid-cols-[1.6fr_1fr_1fr_0.9fr] bg-[#F8F9FA] px-3 py-2 text-meta font-bold text-[#6C757D]">
           <span>품목</span>
           <span className="text-right">평균가</span>
           <span className="text-right">전일대비</span>
@@ -152,13 +152,13 @@ function WholesaleDetailPage() {
               <button
                 onClick={() => !isAll && setExpanded(isOpen ? null : r.key)}
                 className={cn(
-                  "grid w-full grid-cols-[1.6fr_1fr_1fr_0.9fr] items-center gap-1 px-3 py-3 text-left text-[13px] active:bg-[#F1F3F5]",
+                  "grid w-full grid-cols-[1.6fr_1fr_1fr_0.9fr] items-center gap-1 px-3 py-3 text-left text-body active:bg-[#F1F3F5]",
                   isAll && "bg-[#EBF6FD] font-bold",
                 )}
               >
                 <span className="flex items-center gap-1 truncate text-foreground">
                   {!isAll && (
-                    <span className="w-4 shrink-0 text-[12px] font-bold tabular-nums text-[#3A8A3A]">
+                    <span className="w-4 shrink-0 text-caption font-bold tabular-nums text-[#3A8A3A]">
                       {i}
                     </span>
                   )}
@@ -195,7 +195,7 @@ function WholesaleDetailPage() {
                     return (
                       <div
                         key={c.name}
-                        className="grid grid-cols-[1.6fr_1fr_1fr_0.9fr] items-center gap-1 border-t border-[#E9ECEF] px-3 py-2.5 pl-6 text-[12.5px]"
+                        className="grid grid-cols-[1.6fr_1fr_1fr_0.9fr] items-center gap-1 border-t border-[#E9ECEF] px-3 py-2.5 pl-6 text-caption"
                       >
                         <span className="truncate text-[#495057]">{c.name}</span>
                         <span className="text-right font-data font-bold tabular-nums">

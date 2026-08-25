@@ -144,7 +144,7 @@ function WatchlistPage() {
         <button
           type="button"
           onClick={exitEditMode}
-          className="min-h-[44px] px-1 text-[15px] font-medium text-foreground"
+          className="min-h-[44px] px-1 text-body-lg font-medium text-foreground"
         >
           취소
         </button>
@@ -154,7 +154,7 @@ function WatchlistPage() {
         <button
           type="button"
           onClick={toggleSelectAllVisible}
-          className="min-h-[44px] px-1 text-[15px] font-bold text-[#E03131]"
+          className="min-h-[44px] px-1 text-body-lg font-bold text-[#E03131]"
         >
           {allVisibleSelected ? "전체 해제" : "전체 선택"}
         </button>
@@ -172,7 +172,7 @@ function WatchlistPage() {
           <button
             type="button"
             onClick={() => setEditMode(true)}
-            className="min-h-[44px] px-3 text-[15px] font-bold text-[#3A8A3A]"
+            className="min-h-[44px] px-3 text-body-lg font-bold text-[#3A8A3A]"
           >
             편집
           </button>
@@ -190,7 +190,7 @@ function WatchlistPage() {
         <button
           type="button"
           onClick={exitEditMode}
-          className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-muted text-[15px] font-bold text-foreground active:opacity-90"
+          className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-muted text-body-lg font-bold text-foreground active:opacity-90"
         >
           취소
         </button>
@@ -199,7 +199,7 @@ function WatchlistPage() {
           disabled={selectedIds.size === 0 || isDeleting}
           onClick={() => setConfirmOpen(true)}
           className={cn(
-            "inline-flex min-h-[48px] items-center justify-center rounded-xl px-4 text-[15px] font-bold",
+            "inline-flex min-h-[48px] items-center justify-center rounded-xl px-4 text-body-lg font-bold",
             selectedIds.size === 0 || isDeleting
               ? "cursor-not-allowed bg-muted text-muted-foreground"
               : "bg-[#E03131] text-white active:opacity-90",
@@ -216,8 +216,8 @@ function WatchlistPage() {
     <AppShell screenId="FAV-001_즐겨찾기" screenState={items.length === 0 || filtered.length === 0 ? "Empty" : "Default"} header={editMode ? editHeader : normalHeader} bottom={bottomBar}>
       {items.length > 0 && (
         <div className="px-4 pt-4">
-          <h1 className="text-[22px] font-black tracking-tight text-foreground">즐겨찾기</h1>
-          <p className="mt-1 text-[13px] text-muted-foreground">
+          <h1 className="text-display font-black tracking-tight text-foreground">즐겨찾기</h1>
+          <p className="mt-1 text-body text-muted-foreground">
             총 <span className="font-semibold text-foreground">{items.length}</span>
             개의 저장한 시세 조건
           </p>
@@ -236,7 +236,7 @@ function WatchlistPage() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="품목, 품종, 시장명으로 검색하세요"
-                  className="min-w-0 flex-1 bg-transparent text-[13.5px] outline-none placeholder:text-muted-foreground"
+                  className="min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground"
                 />
                 {query && (
                   <button
@@ -250,7 +250,7 @@ function WatchlistPage() {
                 )}
               </label>
               {!isSearching && filtered.length > 1 && (
-                <p className="mt-2 text-center text-[12px] text-muted-foreground">
+                <p className="mt-2 text-center text-caption text-muted-foreground">
                   <span className="mr-1 tracking-tighter">⋮⋮</span>를 드래그해 순서를 바꿀 수 있어요
                 </p>
               )}
@@ -259,7 +259,7 @@ function WatchlistPage() {
 
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center px-6 pb-16 pt-16 text-center">
-              <p className="text-[13px] text-muted-foreground">조건에 맞는 저장된 시세가 없어요</p>
+              <p className="text-body text-muted-foreground">조건에 맞는 저장된 시세가 없어요</p>
             </div>
           ) : editMode ? (
             <ul className="grid gap-2.5 px-4 pb-32 pt-3">
@@ -406,7 +406,7 @@ function FavoriteCardBody({
         <div className={cn("min-w-0 flex-1", disableLink && "pr-9")}>
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
-              <div className="truncate text-[15px] font-bold text-foreground">
+              <div className="truncate text-body-lg font-bold text-foreground">
                 {item.cropName}
                 {item.varietyName ? ` · ${item.varietyName}` : ""}
               </div>
@@ -420,10 +420,10 @@ function FavoriteCardBody({
               />
             )}
           </div>
-          <div className="mt-0.5 truncate text-[12px] text-muted-foreground">
+          <div className="mt-0.5 truncate text-caption text-muted-foreground">
             {item.marketName} · {item.corporationName ?? "전체 법인"}
           </div>
-          <div className="truncate text-[12px] text-muted-foreground">
+          <div className="truncate text-caption text-muted-foreground">
             {item.originName ?? "전체 산지"} · {unitLabel} 기준
             {item.grade ? ` · ${item.grade}` : ""}
           </div>
@@ -435,12 +435,12 @@ function FavoriteCardBody({
       <div className="flex items-end justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-baseline gap-1">
-            <span className="font-data text-[26px] font-black leading-none tabular-nums text-foreground">
+            <span className="font-data text-display font-black leading-none tabular-nums text-foreground">
               {kgPrice.toLocaleString()}
             </span>
-            <span className="text-[12px] font-medium text-muted-foreground">원/kg</span>
+            <span className="text-caption font-medium text-muted-foreground">원/kg</span>
           </div>
-          <div className="mt-1.5 text-[11.5px] text-muted-foreground">
+          <div className="mt-1.5 text-meta text-muted-foreground">
             {unitLabel} 기준 {unitPrice.toLocaleString()}원
             {item.totalVolume != null ? ` · 거래량 ${item.totalVolume.toLocaleString()}t` : ""}
           </div>
@@ -448,13 +448,13 @@ function FavoriteCardBody({
         <div className="flex shrink-0 flex-col items-end gap-1">
           <span
             className={cn(
-              "inline-flex items-center whitespace-nowrap text-[15px] font-bold tabular-nums",
+              "inline-flex items-center whitespace-nowrap text-body-lg font-bold tabular-nums",
               flat ? "text-muted-foreground" : rising ? "text-[#E03131]" : "text-[#1971C2]",
             )}
           >
             {flat ? "— 0.0%" : `${rising ? "▲ +" : "▼ "}${(item.changeRate ?? 0).toFixed(1)}%`}
           </span>
-          <span className="text-[11px] text-muted-foreground">전일 대비</span>
+          <span className="text-meta text-muted-foreground">전일 대비</span>
         </div>
       </div>
     </>
@@ -480,8 +480,8 @@ function EmptyState() {
       style={{ minHeight: "calc(100dvh - 52px - 60px - env(safe-area-inset-bottom))" }}
     >
       <Star className="mb-5 text-[#B2DFB2]" size={48} strokeWidth={1.5} />
-      <h3 className="text-[16px] font-bold text-foreground">저장한 시세 조건이 아직 없어요</h3>
-      <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+      <h3 className="text-subtitle font-bold text-foreground">저장한 시세 조건이 아직 없어요</h3>
+      <p className="mt-2 text-body leading-relaxed text-muted-foreground">
         아래 + 버튼으로 관심 있는 품목과 시장을
         <br />
         추가해 보세요.

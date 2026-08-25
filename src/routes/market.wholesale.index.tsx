@@ -93,13 +93,13 @@ function WholesaleBrowsePage() {
               className="flex w-full items-center justify-between rounded-[12px] border border-[#E9ECEF] bg-white px-4 py-3.5 text-left active:bg-[#F8F9FA]"
             >
               <div className="min-w-0">
-                <div className="text-[11px] font-semibold text-[#3A8A3A]">
+                <div className="text-meta font-semibold text-[#3A8A3A]">
                   도매시장
                 </div>
-                <div className="mt-0.5 text-[16px] font-bold text-foreground">
+                <div className="mt-0.5 text-subtitle font-bold text-foreground">
                   {market.name}
                 </div>
-                <div className="text-[11px] text-muted-foreground">
+                <div className="text-meta text-muted-foreground">
                   {market.region}
                 </div>
               </div>
@@ -109,14 +109,14 @@ function WholesaleBrowsePage() {
           <DrawerContent className="mx-auto max-h-[80vh] max-w-[430px] bg-background">
             <div className="mx-auto mt-2 h-1 w-8 rounded-full bg-[#E9ECEF]" />
             <div className="px-4 pb-3 pt-3">
-              <h3 className="text-center text-[15px] font-bold text-foreground">
+              <h3 className="text-center text-body-lg font-bold text-foreground">
                 도매시장 선택
               </h3>
             </div>
             <div className="overflow-y-auto px-4 pb-6">
               {Object.entries(grouped).map(([region, list]) => (
                 <section key={region} className="mb-4">
-                  <h4 className="mb-1.5 px-1 text-[12px] font-bold text-muted-foreground">
+                  <h4 className="mb-1.5 px-1 text-caption font-bold text-muted-foreground">
                     {region}
                   </h4>
                   <ul className="overflow-hidden rounded-[10px] bg-surface">
@@ -135,13 +135,13 @@ function WholesaleBrowsePage() {
                             <div>
                               <div
                                 className={cn(
-                                  "text-[14px] font-semibold text-foreground",
+                                  "text-body font-semibold text-foreground",
                                   active && "text-[#3A8A3A]",
                                 )}
                               >
                                 {x.name}
                               </div>
-                              <div className="text-[11px] text-muted-foreground">
+                              <div className="text-meta text-muted-foreground">
                                 {x.region}
                               </div>
                             </div>
@@ -160,11 +160,11 @@ function WholesaleBrowsePage() {
         </Drawer>
 
         {/* 품목 리스트 */}
-        <h3 className="mb-2 mt-6 px-1 text-[12px] font-bold text-muted-foreground">
+        <h3 className="mb-2 mt-6 px-1 text-caption font-bold text-muted-foreground">
           {market.name} 거래 품목 <span className="font-semibold">(높은 가격순)</span>
         </h3>
         <ul className="overflow-hidden rounded-[10px] bg-surface">
-          <li className="grid grid-cols-[28px_1fr_auto] items-center gap-3 border-b border-[#F1F3F5] bg-[#FAFBFC] px-3 py-1.5 text-[10.5px] font-semibold text-muted-foreground">
+          <li className="grid grid-cols-[28px_1fr_auto] items-center gap-3 border-b border-[#F1F3F5] bg-[#FAFBFC] px-3 py-1.5 text-meta font-semibold text-muted-foreground">
             <span />
             <span>품목</span>
             <span className="text-right">현재가</span>
@@ -178,27 +178,27 @@ function WholesaleBrowsePage() {
                   params={{ market: market.id }}
                   className="flex items-center gap-3 border-t border-[#F1F3F5] px-3 py-3.5"
                 >
-                  <span className="w-7 shrink-0 text-center text-[12px] font-bold tabular-nums text-[#3A8A3A]">
+                  <span className="w-7 shrink-0 text-center text-caption font-bold tabular-nums text-[#3A8A3A]">
                     {idx + 1}
                   </span>
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#F0F9F0]">
                     <CropIcon name={it.name} size={24} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[14px] font-semibold text-foreground">
+                    <div className="text-body font-semibold text-foreground">
                       {it.name}
                     </div>
-                    <div className="text-[11px] text-muted-foreground">
+                    <div className="text-meta text-muted-foreground">
                       kg당 평균
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-data text-[14px] font-bold tabular-nums text-foreground">
+                    <div className="font-data text-body font-bold tabular-nums text-foreground">
                       {it.priceKg.toLocaleString()}원
                     </div>
                     <div
                       className={cn(
-                        "text-[11px] font-semibold tabular-nums",
+                        "text-meta font-semibold tabular-nums",
                         up ? "text-[#DC2626]" : "text-[#2563EB]",
                       )}
                     >

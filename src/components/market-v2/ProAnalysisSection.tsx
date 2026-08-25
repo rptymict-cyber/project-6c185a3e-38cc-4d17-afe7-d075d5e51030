@@ -166,7 +166,7 @@ export function ProAnalysisSection() {
                 key={t.id}
                 onClick={() => setTab(t.id)}
                 className={cn(
-                  "relative flex-1 py-3 text-center text-[13.5px] font-semibold",
+                  "relative flex-1 py-3 text-center text-body font-semibold",
                   active ? "text-foreground" : "text-[#868E96]",
                 )}
               >
@@ -191,7 +191,7 @@ export function ProAnalysisSection() {
                   key={p.id}
                   onClick={() => setPeriod(p.id)}
                   className={cn(
-                    "shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors",
+                    "shrink-0 rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors",
                     active
                       ? "bg-[#1F5C1F] text-white"
                       : "bg-[#F1F3F5] text-[#6C757D]",
@@ -215,7 +215,7 @@ export function ProAnalysisSection() {
           </div>
 
           {/* Legend */}
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[11px] text-[#495057]">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-meta text-[#495057]">
             <span className="flex items-center gap-1">
               <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03131]" />
               평균가(원/{unitLabel})
@@ -239,7 +239,7 @@ export function ProAnalysisSection() {
           </div>
 
 
-          <p className="mt-3 px-1 text-[11px] text-[#868E96]">
+          <p className="mt-3 px-1 text-meta text-[#868E96]">
             {showForecast ? (
               <>
                 차트는 경매일 기준 ·{" "}
@@ -266,10 +266,10 @@ export function ProAnalysisSection() {
               <div className="flex items-start gap-3">
                 <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-[#FFE9A3]" />
                 <div className="min-w-0 flex-1">
-                  <div className="text-[14px] font-extrabold leading-tight">
+                  <div className="text-body font-extrabold leading-tight">
                     {recommendedDateText} 출하를 추천해요
                   </div>
-                  <div className="mt-1 text-[11.5px] leading-snug text-white/90">
+                  <div className="mt-1 text-meta leading-snug text-white/90">
                     예상가 {recommended.price.toLocaleString()}원/{unitLabel} ·{" "}
                     {recommendedDelta > 0
                       ? `오늘보다 ${recommendedDelta.toLocaleString()}원 높아요`
@@ -281,7 +281,7 @@ export function ProAnalysisSection() {
               </div>
               <Link
                 to="/prediction"
-                className="mt-3 flex w-full items-center justify-center gap-0.5 whitespace-nowrap rounded-[10px] bg-white px-[13px] py-[9px] text-[12.5px] font-extrabold text-[#1F7A50]"
+                className="mt-3 flex w-full items-center justify-center gap-0.5 whitespace-nowrap rounded-[10px] bg-white px-[13px] py-[9px] text-caption font-extrabold text-[#1F7A50]"
               >
                 AI 예측 보기
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -314,8 +314,8 @@ function PeriodStat({
     tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
   return (
     <div className="flex flex-col items-center gap-0.5 rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2.5">
-      <span className="text-[10.5px] text-[#868E96]">{label}</span>
-      <span className={cn("text-[13px] font-bold", color)}>{value}</span>
+      <span className="text-meta text-[#868E96]">{label}</span>
+      <span className={cn("text-body font-bold", color)}>{value}</span>
     </div>
   );
 }

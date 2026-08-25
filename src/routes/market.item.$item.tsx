@@ -55,12 +55,12 @@ function ItemVarietiesPage() {
     >
       {/* 선택 품목 칩 */}
       <div className="flex items-center gap-1.5 px-4 pt-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F0F9F0] px-3 py-1 text-[12px] font-semibold text-[#3A8A3A]">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F0F9F0] px-3 py-1 text-caption font-semibold text-[#3A8A3A]">
           <CropIcon name={item.name} size={16} />
           {item.name}
         </span>
         <span
-          className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+          className="rounded-md px-1.5 py-0.5 text-meta font-bold"
           style={{ color: "#3A8A3A", backgroundColor: "#3A8A3A1A" }}
         >
           {catLabel}
@@ -77,8 +77,8 @@ function ItemVarietiesPage() {
               key={k.label}
               className={i > 0 ? "border-l border-[#E9ECEF] px-2 text-center" : "px-2 text-center"}
             >
-              <div className="text-[10.5px] font-semibold text-[#6C757D]">{k.label}</div>
-              <div className="mt-1 font-data text-[14px] font-bold tabular-nums text-foreground">
+              <div className="text-meta font-semibold text-[#6C757D]">{k.label}</div>
+              <div className="mt-1 font-data text-body font-bold tabular-nums text-foreground">
                 {k.value}
               </div>
             </div>
@@ -87,7 +87,7 @@ function ItemVarietiesPage() {
       </div>
 
       <div className="mt-4 px-4 pb-1">
-        <span className="text-[12px] text-[#6C757D]">
+        <span className="text-caption text-[#6C757D]">
           품종 {item.varieties.length} · 거래량순
         </span>
       </div>

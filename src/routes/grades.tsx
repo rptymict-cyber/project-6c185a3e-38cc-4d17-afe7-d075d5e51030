@@ -21,7 +21,7 @@ function GradesPage() {
   return (
     <AppShell screenId="MKT-010_등급별가격" header={<DetailHeader title="등급별 가격 정보" onBack={() => router.history.back()} />}>
       <div className="px-4 pt-4 pb-8">
-        <div className="rounded-[10px] bg-accent px-4 py-3 text-[12px] leading-relaxed text-accent-foreground">
+        <div className="rounded-[10px] bg-accent px-4 py-3 text-caption leading-relaxed text-accent-foreground">
           KAMIS 기준 <strong>상·중·하</strong> 3등급 시세입니다. 등급 구분이
           가능한 품목만 표시됩니다.
         </div>
@@ -34,8 +34,8 @@ function GradesPage() {
               <li key={c.id} className="rounded-[10px] bg-surface p-4">
                 <div className="flex items-center gap-2">
                   <CropIcon name={c.name} size={22} />
-                  <span className="text-[15px] font-bold">{c.name}</span>
-                  <span className="ml-auto text-[11px] text-muted-foreground">
+                  <span className="text-body-lg font-bold">{c.name}</span>
+                  <span className="ml-auto text-meta text-muted-foreground">
                     {c.updatedAt}
                   </span>
                 </div>
@@ -48,7 +48,7 @@ function GradesPage() {
                     ] as const
                   ).map((row) => (
                     <div key={row.k} className="grid grid-cols-[24px_1fr_auto] items-center gap-3">
-                      <span className="text-center text-[12px] font-bold text-foreground">
+                      <span className="text-center text-caption font-bold text-foreground">
                         {row.k}
                       </span>
                       <div className="h-2 overflow-hidden rounded-full bg-secondary">
@@ -57,9 +57,9 @@ function GradesPage() {
                           style={{ width: `${(row.v / max) * 100}%` }}
                         />
                       </div>
-                      <span className="font-data text-[13px] font-bold tabular-nums">
+                      <span className="font-data text-body font-bold tabular-nums">
                         {row.v.toLocaleString()}
-                        <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">
+                        <span className="ml-0.5 text-meta font-medium text-muted-foreground">
                           원/kg
                         </span>
                       </span>

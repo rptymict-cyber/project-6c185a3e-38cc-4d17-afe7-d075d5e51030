@@ -87,12 +87,12 @@ export function AuctionHistoryTable() {
       {/* Common header */}
       <div>
         <div className="flex items-baseline gap-2">
-          <h3 className="text-[15px] font-bold text-foreground">경매내역</h3>
-          <span className="text-[15px] font-black text-[#3A8A3A]">
+          <h3 className="text-body-lg font-bold text-foreground">경매내역</h3>
+          <span className="text-body-lg font-black text-[#3A8A3A]">
             총 {rows.length}건
           </span>
         </div>
-        <div className="mt-1 text-[11.5px] text-[#868E96]">
+        <div className="mt-1 text-meta text-[#868E96]">
           {dateLabel} 기준 · {f.marketLabel} · {f.corpLabel} 법인
         </div>
       </div>
@@ -159,7 +159,7 @@ function ChipRow({
   if (options.length <= 1) return null;
   return (
     <div className="mt-3 flex items-center gap-2">
-      <span className="shrink-0 text-[11px] font-semibold text-[#868E96]">{label}</span>
+      <span className="shrink-0 text-meta font-semibold text-[#868E96]">{label}</span>
       <div className="-mx-1 flex flex-1 gap-1.5 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {options.map((o) => {
           const active = o === value;
@@ -169,7 +169,7 @@ function ChipRow({
               type="button"
               onClick={() => onChange(o)}
               className={cn(
-                "h-7 shrink-0 whitespace-nowrap rounded-full border px-2.5 text-[11.5px] font-semibold",
+                "h-7 shrink-0 whitespace-nowrap rounded-full border px-2.5 text-meta font-semibold",
                 active
                   ? "border-[#3A8A3A] bg-[#F0F9F0] text-[#1F5C1F]"
                   : "border-[#E9ECEF] bg-white text-[#6C757D]",
@@ -187,7 +187,7 @@ function ChipRow({
 function AuctionTable({ rows }: { rows: AuctionRecord[] }) {
   return (
     <div className="mt-3 overflow-x-auto rounded-[12px] border border-[#E9ECEF] bg-white">
-      <table className="w-full min-w-[600px] border-collapse text-[11.5px]">
+      <table className="w-full min-w-[600px] border-collapse text-meta">
         <thead>
           <tr className="bg-[#F8F9FA] text-[#495057]">
             <Th>번호</Th>
@@ -238,7 +238,7 @@ function Th({ children, className }: { children: React.ReactNode; className?: st
   return (
     <th
       className={cn(
-        "whitespace-nowrap px-2.5 py-2 text-left text-[11px] font-semibold",
+        "whitespace-nowrap px-2.5 py-2 text-left text-meta font-semibold",
         className,
       )}
     >
@@ -263,8 +263,8 @@ function SummaryCell({
     tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
   return (
     <div className="flex flex-col items-center gap-0.5 rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2.5">
-      <span className="text-[10.5px] text-[#868E96]">{label}</span>
-      <span className={cn("text-[13px] font-bold", color)}>{value}</span>
+      <span className="text-meta text-[#868E96]">{label}</span>
+      <span className={cn("text-body font-bold", color)}>{value}</span>
     </div>
   );
 }
@@ -272,8 +272,8 @@ function SummaryCell({
 function EmptyRow() {
   return (
     <div className="mt-4 flex flex-col items-center gap-2 py-14 text-center">
-      <span className="text-3xl">📭</span>
-      <span className="text-[13px] text-[#6C757D]">해당 조건의 경매 결과가 없어요</span>
+      <span className="text-display">📭</span>
+      <span className="text-body text-[#6C757D]">해당 조건의 경매 결과가 없어요</span>
     </div>
   );
 }

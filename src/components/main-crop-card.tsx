@@ -81,20 +81,20 @@ export function MainCropCard({ crop }: { crop: Crop }) {
         <div className="flex min-w-0 items-center gap-2">
           <CropIcon name={crop.name} size={28} />
           <div className="min-w-0">
-            <div className="truncate text-[16px] font-bold text-foreground">
+            <div className="truncate text-subtitle font-bold text-foreground">
               {crop.name}
-              <span className="ml-1 text-[12px] font-medium text-muted-foreground">
+              <span className="ml-1 text-caption font-medium text-muted-foreground">
                 후지 · 특
               </span>
             </div>
-            <div className="text-[11px] text-muted-foreground">
+            <div className="text-meta text-muted-foreground">
               업데이트 {crop.updatedAt}
             </div>
           </div>
         </div>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <button className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F8F9FA] px-2.5 py-1.5 text-[12px] font-semibold text-foreground">
+            <button className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F8F9FA] px-2.5 py-1.5 text-caption font-semibold text-foreground">
               {market.name}
               <ChevronDown className="h-3.5 w-3.5" />
             </button>
@@ -109,14 +109,14 @@ export function MainCropCard({ crop }: { crop: Crop }) {
                     setOpen(false);
                   }}
                   className={cn(
-                    "block w-full rounded-md px-2 py-1.5 text-left text-[13px]",
+                    "block w-full rounded-md px-2 py-1.5 text-left text-body",
                     m.id === marketId
                       ? "bg-[#F0F9F0] font-semibold text-[#3A8A3A]"
                       : "hover:bg-secondary",
                   )}
                 >
                   <div>{m.name}</div>
-                  <div className="text-[11px] text-muted-foreground">{m.region}</div>
+                  <div className="text-meta text-muted-foreground">{m.region}</div>
                 </button>
               ))}
             </div>
@@ -127,13 +127,13 @@ export function MainCropCard({ crop }: { crop: Crop }) {
       {/* Price */}
       <div className="mt-3 flex items-end justify-between gap-2">
         <div className="min-w-0">
-          <div className="font-data text-[28px] font-bold leading-none tabular-nums text-[#212529]">
+          <div className="font-data text-[30px] font-bold leading-none tabular-nums text-[#212529]">
             {crop.currentPrice.toLocaleString()}
-            <span className="ml-1 text-[13px] font-medium text-muted-foreground">
+            <span className="ml-1 text-body font-medium text-muted-foreground">
               {crop.unit}
             </span>
           </div>
-          <div className="mt-1.5 text-[12px] text-muted-foreground">
+          <div className="mt-1.5 text-caption text-muted-foreground">
             실거래가{" "}
             <span className="font-semibold text-foreground">
               {boxPrice.toLocaleString()}원
@@ -232,14 +232,14 @@ export function MainCropCard({ crop }: { crop: Crop }) {
         <Link
           to="/market"
           onClick={() => applyMarketSelection(crop.id)}
-          className="grid h-10 place-items-center rounded-lg border border-[#3A8A3A] text-[13px] font-semibold text-[#3A8A3A]"
+          className="grid h-10 place-items-center rounded-lg border border-[#3A8A3A] text-body font-semibold text-[#3A8A3A]"
         >
           경락가 조회
         </Link>
         <Link
           to="/prediction"
           search={{ cropId: crop.id, entrySource: "home" } as never}
-          className="grid h-10 place-items-center rounded-lg bg-[#3A8A3A] text-[13px] font-semibold text-white"
+          className="grid h-10 place-items-center rounded-lg bg-[#3A8A3A] text-body font-semibold text-white"
         >
           AI 가격 예측 보기
         </Link>
@@ -270,9 +270,9 @@ function DeltaCell({
         divider && "border-x border-[#E9ECEF]",
       )}
     >
-      <span className="text-[11px] text-muted-foreground">{label}</span>
+      <span className="text-meta text-muted-foreground">{label}</span>
       <span
-        className="mt-0.5 font-data text-[13px] font-bold tabular-nums"
+        className="mt-0.5 font-data text-body font-bold tabular-nums"
         style={{ color }}
       >
         {sign}

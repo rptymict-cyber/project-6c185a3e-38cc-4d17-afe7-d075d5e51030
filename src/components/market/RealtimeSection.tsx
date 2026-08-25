@@ -36,7 +36,7 @@ export function RealtimeSection({
               key={s}
               onClick={() => onSortChange(s)}
               className={cn(
-                "shrink-0 rounded-full px-3 py-1 text-[12px] font-semibold",
+                "shrink-0 rounded-full px-3 py-1 text-caption font-semibold",
                 active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-muted-foreground",
               )}
             >
@@ -45,7 +45,7 @@ export function RealtimeSection({
           );
         })}
       </div>
-      <p className="mt-1.5 text-[10.5px] text-muted-foreground">{hint}</p>
+      <p className="mt-1.5 text-meta text-muted-foreground">{hint}</p>
 
       <div className="mt-2 overflow-hidden rounded-[10px] bg-[#FAFBFA]">
         {showHeaderRow && <LivePriceHeader />}

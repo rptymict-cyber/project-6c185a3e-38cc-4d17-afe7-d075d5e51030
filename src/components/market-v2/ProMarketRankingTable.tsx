@@ -27,10 +27,10 @@ export function ProMarketRankingTable() {
   return (
     <section className="mt-3 bg-white px-4 pb-6 pt-4">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-[15px] font-bold text-foreground">시장별 시세</h3>
+        <h3 className="text-body-lg font-bold text-foreground">시장별 시세</h3>
         <button
           onClick={() => setOpen(true)}
-          className="inline-flex items-center gap-0.5 rounded-md text-[12.5px] font-semibold text-foreground"
+          className="inline-flex items-center gap-0.5 rounded-md text-caption font-semibold text-foreground"
         >
           {RANKING_SORT_LABEL[sort]}
           <ChevronDown className="h-3.5 w-3.5" />
@@ -38,7 +38,7 @@ export function ProMarketRankingTable() {
       </div>
 
       <div className="overflow-hidden rounded-[10px] border border-[#E9ECEF]">
-        <table className="w-full table-fixed text-[11.5px]">
+        <table className="w-full table-fixed text-meta">
           <colgroup>
             <col className="w-[22%]" />
             <col className="w-[20%]" />
@@ -63,7 +63,7 @@ export function ProMarketRankingTable() {
                 <td className="py-2.5 pl-2 align-top">
                   <div className="font-semibold text-foreground">{r.marketName}</div>
                   {r.differentDate && (
-                    <div className="mt-0.5 text-[10px] text-[#ADB5BD]">
+                    <div className="mt-0.5 text-meta text-[#ADB5BD]">
                       {r.differentDateLabel}
                     </div>
                   )}
@@ -88,7 +88,7 @@ export function ProMarketRankingTable() {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="bottom" className="rounded-t-2xl p-0">
           <SheetHeader className="px-5 pt-5">
-            <SheetTitle className="text-[16px] font-bold">정렬</SheetTitle>
+            <SheetTitle className="text-subtitle font-bold">정렬</SheetTitle>
           </SheetHeader>
           <ul className="px-2 pb-6 pt-2">
             {SORTS.map((s) => {
@@ -101,7 +101,7 @@ export function ProMarketRankingTable() {
                       setOpen(false);
                     }}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-[14px]",
+                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-body",
                       active ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
                     )}
                   >

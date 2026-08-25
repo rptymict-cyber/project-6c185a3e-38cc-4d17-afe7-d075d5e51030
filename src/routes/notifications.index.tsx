@@ -100,10 +100,10 @@ function NotificationsPage() {
           <div className="grid h-16 w-16 place-items-center rounded-full bg-[#F1F3F5]">
             <Bell className="h-7 w-7 text-[#ADB5BD]" />
           </div>
-          <p className="mt-4 text-[15px] font-bold text-foreground">
+          <p className="mt-4 text-body-lg font-bold text-foreground">
             새 알림이 없어요
           </p>
-          <p className="mt-1 text-[12px] text-muted-foreground">
+          <p className="mt-1 text-caption text-muted-foreground">
             관심 작물을 등록하면 가격 변동 알림을 받을 수 있어요
           </p>
         </div>
@@ -111,7 +111,7 @@ function NotificationsPage() {
         <div className="pb-8">
           {groups.map((g) => (
             <section key={g.label}>
-              <h2 className="px-4 pb-1.5 pt-4 text-[12px] font-bold text-[#868E96]">
+              <h2 className="px-4 pb-1.5 pt-4 text-caption font-bold text-[#868E96]">
                 {g.label}
               </h2>
               <ul className="divide-y divide-border bg-white">
@@ -145,17 +145,17 @@ function NotificationsPage() {
                           <div className="flex items-center justify-between gap-2">
                             <span
                               className={cn(
-                                "truncate text-[14px] text-foreground",
+                                "truncate text-body text-foreground",
                                 n.read ? "font-semibold" : "font-bold",
                               )}
                             >
                               {n.title}
                             </span>
-                            <span className="shrink-0 text-[11px] text-muted-foreground">
+                            <span className="shrink-0 text-meta text-muted-foreground">
                               {formatRelative(n.createdAt)}
                             </span>
                           </div>
-                          <p className="mt-1 text-[13px] text-muted-foreground">
+                          <p className="mt-1 text-body text-muted-foreground">
                             {n.body}
                           </p>
                         </div>

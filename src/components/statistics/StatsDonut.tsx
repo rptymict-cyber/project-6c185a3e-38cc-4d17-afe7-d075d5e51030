@@ -25,7 +25,7 @@ export function StatsDonut({
 
   return (
     <div className="rounded-[12px] border border-[#E9ECEF] bg-white p-3">
-      <h4 className="text-[13px] font-bold text-foreground">{title}</h4>
+      <h4 className="text-body font-bold text-foreground">{title}</h4>
       <div className="mt-2 flex items-center gap-3">
         <div className="relative h-[130px] w-[130px] shrink-0">
           <ResponsiveContainer width="100%" height="100%">
@@ -77,17 +77,17 @@ export function StatsDonut({
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
             {active != null ? (
               <>
-                <div className="max-w-[80px] truncate text-[11px] font-semibold text-[#495057]">
+                <div className="max-w-[80px] truncate text-meta font-semibold text-[#495057]">
                   {items[active].name}
                 </div>
-                <div className="text-[15px] font-black tabular-nums text-foreground">
+                <div className="text-body-lg font-black tabular-nums text-foreground">
                   {Math.round((items[active].value / total) * 1000) / 10}%
                 </div>
               </>
             ) : (
               <>
-                <div className="text-[10px] text-[#868E96]">합계</div>
-                <div className="text-[13px] font-bold text-[#495057]">100%</div>
+                <div className="text-meta text-[#868E96]">합계</div>
+                <div className="text-body font-bold text-[#495057]">100%</div>
               </>
             )}
           </div>
@@ -98,7 +98,7 @@ export function StatsDonut({
               key={d.name}
               onMouseEnter={() => setActive(i)}
               onMouseLeave={() => setActive(null)}
-              className="flex items-center justify-between gap-2 text-[12px]"
+              className="flex items-center justify-between gap-2 text-caption"
               style={{ opacity: active == null || active === i ? 1 : 0.5 }}
             >
               <span className="inline-flex min-w-0 items-center gap-1.5">

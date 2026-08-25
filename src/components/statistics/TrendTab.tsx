@@ -127,7 +127,7 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
               <span
                 key={id}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px] font-semibold",
+                  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-caption font-semibold",
                   dim
                     ? "border-[#E9ECEF] bg-[#F8F9FA] text-[#ADB5BD]"
                     : "border-[#E9ECEF] bg-white text-[#495057]",
@@ -156,7 +156,7 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
             onClick={() => setPickerOpen(true)}
             disabled={yearMode}
             className={cn(
-              "inline-flex items-center gap-1 rounded-full border border-dashed px-2.5 py-1 text-[12px] font-semibold",
+              "inline-flex items-center gap-1 rounded-full border border-dashed px-2.5 py-1 text-caption font-semibold",
               yearMode
                 ? "border-[#E9ECEF] text-[#ADB5BD]"
                 : "border-[#3A8A3A] text-[#3A8A3A]",
@@ -168,7 +168,7 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
         </div>
 
         {yearMode && (
-          <p className="mt-2 text-[11.5px] text-[#868E96]">
+          <p className="mt-2 text-meta text-[#868E96]">
             연도 비교 중에는 시장 1개({decodeSeriesId(anchorSeriesId).label}) 기준으로 표시돼요
           </p>
         )}
@@ -185,7 +185,7 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
                 type="button"
                 onClick={() => setPeriod(p.id)}
                 className={cn(
-                  "shrink-0 rounded-full px-3 py-1 text-[12.5px] font-semibold",
+                  "shrink-0 rounded-full px-3 py-1 text-caption font-semibold",
                   active ? "bg-[#D6F0D6] text-[#1F5C1F]" : "bg-[#F1F3F5] text-[#6C757D]",
                 )}
               >
@@ -208,7 +208,7 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
                 type="button"
                 onClick={() => setChartView(opt.id)}
                 className={cn(
-                  "flex-1 rounded-[8px] px-2 py-1.5 text-[12px] font-semibold transition-colors",
+                  "flex-1 rounded-[8px] px-2 py-1.5 text-caption font-semibold transition-colors",
                   active
                     ? "bg-white text-foreground shadow-sm"
                     : "text-[#868E96] hover:text-[#495057]",
@@ -234,14 +234,14 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
           </div>
 
           {/* Hint */}
-          <p className="mt-2 px-4 text-[11px] text-[#868E96]">
+          <p className="mt-2 px-4 text-meta text-[#868E96]">
             그래프를 누르면 날짜별 상세 정보가 나옵니다
           </p>
 
           {/* Period summary */}
           <div className="mt-4 px-4">
             <div className="rounded-[12px] border border-[#E9ECEF] bg-white p-3">
-              <div className="mb-2 text-[12px] font-bold text-foreground">선택 기간 요약</div>
+              <div className="mb-2 text-caption font-bold text-foreground">선택 기간 요약</div>
               <div className="grid grid-cols-4 gap-2">
                 <SummaryStat label="최고가" value={`${periodSummary.high.toLocaleString()}원`} tone="up" />
                 <SummaryStat label="최저가" value={`${periodSummary.low.toLocaleString()}원`} tone="down" />
@@ -253,10 +253,10 @@ export function TrendTab({ varietyId }: { varietyId: string }) {
         </>
       ) : (
         <div className="mx-4 mt-4 rounded-[12px] border border-dashed border-[#E9ECEF] bg-[#F8F9FA] px-4 py-10 text-center">
-          <div className="text-[13.5px] font-bold text-foreground">
+          <div className="text-body font-bold text-foreground">
             선택한 조건의 가격 추이 데이터가 없습니다
           </div>
-          <p className="mt-2 text-[12px] leading-relaxed text-[#6C757D]">
+          <p className="mt-2 text-caption leading-relaxed text-[#6C757D]">
             데이터가 제공되는 품목부터 순차적으로 확인할 수 있습니다.
           </p>
         </div>
@@ -280,8 +280,8 @@ function SummaryStat({
     tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
   return (
     <div>
-      <div className="text-[10.5px] font-semibold text-[#6C757D]">{label}</div>
-      <div className={cn("mt-0.5 text-[12.5px] font-black tabular-nums leading-tight", color)}>
+      <div className="text-meta font-semibold text-[#6C757D]">{label}</div>
+      <div className={cn("mt-0.5 text-caption font-black tabular-nums leading-tight", color)}>
         {value}
       </div>
     </div>
@@ -306,10 +306,10 @@ function ChartRangeHeader({
   if (!firstLabel || !lastLabel) return null;
   return (
     <div className="mb-1 flex items-baseline justify-between px-2">
-      <span className="text-[11.5px] font-semibold text-[#495057]">
+      <span className="text-meta font-semibold text-[#495057]">
         {firstLabel} ~ {lastLabel}
       </span>
-      <span className="text-[11px] text-[#868E96]">평균가({unitLabel})</span>
+      <span className="text-meta text-[#868E96]">평균가({unitLabel})</span>
     </div>
   );
 }

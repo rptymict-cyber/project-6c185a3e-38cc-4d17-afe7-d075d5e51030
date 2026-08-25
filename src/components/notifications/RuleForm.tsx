@@ -95,20 +95,20 @@ export function RuleForm({
       <section className="mx-4 mt-4 rounded-[12px] border border-[#E9ECEF] bg-white p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="truncate text-[15px] font-bold text-foreground">
+            <div className="truncate text-body-lg font-bold text-foreground">
               {seed.varietyLabel}{" "}
-              <span className="text-[12px] font-medium text-[#868E96]">
+              <span className="text-caption font-medium text-[#868E96]">
                 · {seed.itemLabel}
               </span>
             </div>
-            <div className="mt-0.5 truncate text-[12px] text-[#6C757D]">
+            <div className="mt-0.5 truncate text-caption text-[#6C757D]">
               {seed.marketLabel}
               {corpLabel} · {seed.unit.replace(" 기준", "")}
             </div>
           </div>
           <div className="shrink-0 text-right">
-            <div className="text-[10.5px] text-[#868E96]">현재가</div>
-            <div className="font-data text-[16px] font-bold text-[#E03131]">
+            <div className="text-meta text-[#868E96]">현재가</div>
+            <div className="font-data text-subtitle font-bold text-[#E03131]">
               {quote.price.toLocaleString()}원
             </div>
           </div>
@@ -171,14 +171,14 @@ export function RuleForm({
           {isEdit && (
             <button
               onClick={handleDelete}
-              className="rounded-[10px] border border-[#E03131] bg-background px-5 py-3 text-[14px] font-bold text-[#E03131] active:bg-[#FFF5F5]"
+              className="rounded-[10px] border border-[#E03131] bg-background px-5 py-3 text-body font-bold text-[#E03131] active:bg-[#FFF5F5]"
             >
               삭제
             </button>
           )}
           <button
             onClick={handleSave}
-            className="flex-1 rounded-[10px] bg-[#3A8A3A] py-3 text-[14px] font-bold text-white active:bg-[#2F6F2F]"
+            className="flex-1 rounded-[10px] bg-[#3A8A3A] py-3 text-body font-bold text-white active:bg-[#2F6F2F]"
           >
             {isEdit ? "저장" : "알림 추가"}
           </button>
@@ -190,7 +190,7 @@ export function RuleForm({
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mx-4 mb-2 mt-5 text-[13.5px] font-bold text-foreground">
+    <h2 className="mx-4 mb-2 mt-5 text-body font-bold text-foreground">
       {children}
     </h2>
   );
@@ -217,15 +217,15 @@ function NumField({
 }) {
   return (
     <label className="flex items-center gap-3 px-4 py-3.5">
-      <span className="w-[80px] shrink-0 text-[13px] text-[#495057]">{label}</span>
+      <span className="w-[80px] shrink-0 text-body text-[#495057]">{label}</span>
       <input
         inputMode="numeric"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value.replace(/[^0-9]/g, ""))}
-        className="min-w-0 flex-1 bg-transparent text-right text-[13.5px] tabular-nums outline-none placeholder:text-[#ADB5BD]"
+        className="min-w-0 flex-1 bg-transparent text-right text-body tabular-nums outline-none placeholder:text-[#ADB5BD]"
       />
-      <span className="shrink-0 text-[12px] text-[#868E96]">원</span>
+      <span className="shrink-0 text-caption text-[#868E96]">원</span>
     </label>
   );
 }
@@ -244,8 +244,8 @@ function ToggleRow({
   return (
     <div className={cn("flex items-start justify-between gap-3 px-4 py-3.5")}>
       <div className="min-w-0 flex-1">
-        <div className="text-[13.5px] font-medium text-foreground">{label}</div>
-        {desc && <div className="mt-0.5 text-[12px] text-[#868E96]">{desc}</div>}
+        <div className="text-body font-medium text-foreground">{label}</div>
+        {desc && <div className="mt-0.5 text-caption text-[#868E96]">{desc}</div>}
       </div>
       <Switch
         checked={value}

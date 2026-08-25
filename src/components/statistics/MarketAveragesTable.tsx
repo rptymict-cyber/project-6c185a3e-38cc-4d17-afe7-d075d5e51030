@@ -14,7 +14,7 @@ export function MarketAveragesTable({
 
   return (
     <div className="mx-4 mt-3 overflow-hidden rounded-[10px] border border-[#E9ECEF] bg-white">
-      <table className="w-full table-fixed text-[11.5px]">
+      <table className="w-full table-fixed text-meta">
         <colgroup>
           <col className="w-[30%]" />
           <col className="w-[19%]" />
@@ -81,7 +81,7 @@ function RegionRows({
       <tr className="border-t border-[#E9ECEF] bg-[#F8F9FA]">
         <td
           colSpan={5}
-          className="px-2 py-1.5 text-[11px] font-semibold text-[#6C757D]"
+          className="px-2 py-1.5 text-meta font-semibold text-[#6C757D]"
         >
           {region}
         </td>
@@ -147,19 +147,19 @@ function MarketRowGroup({
       {open &&
         market.companies.map((c) => (
           <tr key={c.name} className="border-t border-[#F8F9FA] bg-[#FBFCFD]">
-            <td className="py-2 pl-8 text-[11px] text-[#6C757D]">
+            <td className="py-2 pl-8 text-meta text-[#6C757D]">
               └ {c.name}
             </td>
-            <td className="py-2 text-right text-[11px] text-[#495057]">
+            <td className="py-2 text-right text-meta text-[#495057]">
               {c.avgKg.toLocaleString()}
             </td>
-            <td className={cn("py-2 text-right text-[11px] font-semibold", amountColor(c.deltaAmount))}>
+            <td className={cn("py-2 text-right text-meta font-semibold", amountColor(c.deltaAmount))}>
               {fmtAmount(c.deltaAmount)}
             </td>
-            <td className={cn("py-2 text-right text-[11px] font-semibold", amountColor(c.deltaAmount))}>
+            <td className={cn("py-2 text-right text-meta font-semibold", amountColor(c.deltaAmount))}>
               {fmtPct(c.deltaPct)}
             </td>
-            <td className="py-2 pr-2 text-right text-[11px] text-[#6C757D]">
+            <td className="py-2 pr-2 text-right text-meta text-[#6C757D]">
               {c.volumeTon.toFixed(1)}
             </td>
           </tr>

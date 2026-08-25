@@ -96,17 +96,17 @@ export function AppHeader({
 
       <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] flex-col items-center justify-center">
         {title ? (
-          <span className="text-[15px] font-black tracking-tight text-foreground">{title}</span>
+          <span className="text-body-lg font-black tracking-tight text-foreground">{title}</span>
         ) : (
           <>
             <div className="flex items-center gap-1.5 leading-none">
-              <span className="text-[16px] font-black tracking-tight text-foreground">AGDICT</span>
-              <span className="rounded-md bg-[#F0F9F0] px-1 py-0.5 text-[10px] font-bold leading-none text-[#3A8A3A]">
+              <span className="text-subtitle font-black tracking-tight text-foreground">AGDICT</span>
+              <span className="rounded-md bg-[#F0F9F0] px-1 py-0.5 text-meta font-bold leading-none text-[#3A8A3A]">
                 β
               </span>
             </div>
             {showDate && (
-              <span className="mt-0.5 text-[10px] font-medium leading-none text-muted-foreground">
+              <span className="mt-0.5 text-meta font-medium leading-none text-muted-foreground">
                 {dateLabel}
               </span>
             )}

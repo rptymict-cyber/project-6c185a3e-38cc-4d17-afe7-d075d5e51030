@@ -83,7 +83,7 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
   return (
     <div className="relative">
       {selectedStats && (
-        <div className="pointer-events-none absolute left-1/2 top-1 z-10 -translate-x-1/2 rounded-full bg-[#1F5C1F] px-3 py-1 text-[11.5px] font-bold text-white shadow-sm">
+        <div className="pointer-events-none absolute left-1/2 top-1 z-10 -translate-x-1/2 rounded-full bg-[#1F5C1F] px-3 py-1 text-meta font-bold text-white shadow-sm">
           {selectedStats.region} {selectedStats.avgKg.toLocaleString()}원/kg
         </div>
       )}
@@ -238,7 +238,7 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
 
       <p
         className={cn(
-          "mt-2 px-4 text-[11.5px]",
+          "mt-2 px-4 text-meta",
           selected ? "text-[#3A8A3A]" : "text-[#868E96]",
         )}
       >

@@ -264,10 +264,10 @@ function CropSelectPage() {
 
       {/* Title */}
       <div className="px-5 pt-2 pb-4">
-        <h1 className="text-[26px] font-extrabold leading-tight text-gray-900">
+        <h1 className="text-display font-extrabold leading-tight text-gray-900">
           <span className="text-[#2E9E6B]">작물</span>을 선택해 주세요
         </h1>
-        <p className="mt-2 text-[14px] text-gray-500">{SUBTITLE[step]}</p>
+        <p className="mt-2 text-body text-gray-500">{SUBTITLE[step]}</p>
       </div>
 
       <main className="flex-1 overflow-y-auto px-5 pb-40">
@@ -339,7 +339,7 @@ function Stepper({
             <div
               key={`c-${s}`}
               className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-full text-[13px] font-bold",
+                "flex h-8 w-8 items-center justify-center rounded-full text-body font-bold",
                 active && "bg-[#2E9E6B] text-white",
                 done && !active && "border-2 border-[#2E9E6B] bg-white text-[#2E9E6B]",
                 !active && !done && "bg-gray-200 text-gray-400",
@@ -371,7 +371,7 @@ function Stepper({
             <div
               key={`t-${s}`}
               className={cn(
-                "w-8 text-center text-[11px] leading-[1.25]",
+                "w-8 text-center text-meta leading-[1.25]",
                 active && "font-bold text-[#2E9E6B]",
                 done && !active && "font-medium text-[#2E9E6B]",
                 !active && !done && "text-gray-400",
@@ -412,7 +412,7 @@ function Step1Category({
       {q.trim() ? (
         <div className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white">
           {results.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-gray-500">
+            <div className="px-4 py-8 text-center text-body text-gray-500">
               검색 결과가 없어요.
             </div>
           ) : (
@@ -424,7 +424,7 @@ function Step1Category({
                     onClick={() => onSearchJump(r)}
                     className="flex w-full items-center justify-between gap-2 border-b border-gray-100 px-4 py-3 text-left last:border-b-0 active:bg-gray-50"
                   >
-                    <span className="text-sm text-gray-800">
+                    <span className="text-body text-gray-800">
                       {r.category.name}
                       <span className="mx-1 text-gray-400">›</span>
                       {r.item.name}
@@ -446,7 +446,7 @@ function Step1Category({
         </div>
       ) : (
         <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-4">
-          <div className="mb-3 text-[14px] font-bold text-gray-900">부류 선택</div>
+          <div className="mb-3 text-body font-bold text-gray-900">부류 선택</div>
           <div className="grid grid-cols-2 gap-2.5">
             {categories.map((c) => {
               const count = getItemsByCategory(c.id).length;
@@ -468,14 +468,14 @@ function Step1Category({
                     <CropIcon iconKey={c.iconKey} size={26} />
                     <span
                       className={cn(
-                        "truncate text-[14px] font-semibold",
+                        "truncate text-body font-semibold",
                         selected ? "text-[#2E9E6B]" : "text-gray-900",
                       )}
                     >
                       {c.name}
                     </span>
                   </span>
-                  <span className="ml-2 inline-flex h-5 min-w-[22px] items-center justify-center rounded-full bg-gray-100 px-1.5 text-[11px] font-medium text-gray-500">
+                  <span className="ml-2 inline-flex h-5 min-w-[22px] items-center justify-center rounded-full bg-gray-100 px-1.5 text-meta font-medium text-gray-500">
                     {count}
                   </span>
                 </button>
@@ -521,9 +521,9 @@ function Step2Item({
       )}
 
       <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4">
-        <div className="mb-3 text-[14px] font-bold text-gray-900">품목 선택</div>
+        <div className="mb-3 text-body font-bold text-gray-900">품목 선택</div>
         {filtered.length === 0 ? (
-          <div className="px-4 py-8 text-center text-sm text-gray-500">
+          <div className="px-4 py-8 text-center text-body text-gray-500">
             해당하는 품목이 없어요.
           </div>
         ) : (
@@ -545,7 +545,7 @@ function Step2Item({
                   >
                     <span
                       className={cn(
-                        "text-[14px] font-semibold",
+                        "text-body font-semibold",
                         selected ? "text-[#2E9E6B]" : "text-gray-900",
                       )}
                     >
@@ -607,7 +607,7 @@ function Step3Variety({
       </div>
 
       <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4">
-        <div className="mb-3 text-[14px] font-bold text-gray-900">품종 선택</div>
+        <div className="mb-3 text-body font-bold text-gray-900">품종 선택</div>
         <ul className="flex flex-col gap-2">
           {rows.map((r) => {
             const selected = selectedVarietyId === r.id;
@@ -627,7 +627,7 @@ function Step3Variety({
                 >
                   <span
                     className={cn(
-                      "text-[14px] font-semibold",
+                      "text-body font-semibold",
                       selected ? "text-[#2E9E6B]" : "text-gray-900",
                     )}
                   >
@@ -687,8 +687,8 @@ function BottomBar({
     <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] bg-[#F7F8FA] px-5 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
       {parts.length > 0 && (
         <div className="mb-3 rounded-xl border border-gray-200 bg-white px-4 py-3">
-          <div className="text-[12px] font-medium text-gray-500">선택한 조건</div>
-          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[15px] font-bold">
+          <div className="text-caption font-medium text-gray-500">선택한 조건</div>
+          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-body-lg font-bold">
             {parts.map((p, i) => (
               <span key={i} className="flex items-center gap-1.5">
                 {i > 0 && <span className="text-gray-300">›</span>}
@@ -734,7 +734,7 @@ function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-full flex-1 bg-transparent text-[14px] text-gray-900 outline-none placeholder:text-gray-400"
+        className="h-full flex-1 bg-transparent text-body text-gray-900 outline-none placeholder:text-gray-400"
         aria-label={placeholder}
       />
       {value && (
@@ -753,7 +753,7 @@ function SearchInput({
 
 function UpperChip({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#EAF6EF] pl-3 pr-2 text-[13px] font-semibold text-[#2E9E6B]">
+    <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#EAF6EF] pl-3 pr-2 text-body font-semibold text-[#2E9E6B]">
       {label}
       <button
         type="button"

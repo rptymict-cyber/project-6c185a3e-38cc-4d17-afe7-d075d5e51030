@@ -18,8 +18,8 @@ export function PredictionGradeSegment({
   return (
     <section>
       <div className="mb-1.5 flex items-center gap-1.5">
-        <span className="text-[12px] font-bold text-foreground">등급</span>
-        <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-[9.5px] font-extrabold text-[#D33]">
+        <span className="text-caption font-bold text-foreground">등급</span>
+        <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-meta font-extrabold text-[#D33]">
           NEW
         </span>
       </div>
@@ -32,7 +32,7 @@ export function PredictionGradeSegment({
               type="button"
               onClick={() => onChange(o.value)}
               className={cn(
-                "h-8 rounded-lg text-[12px] font-semibold transition-colors",
+                "h-8 rounded-lg text-caption font-semibold transition-colors",
                 active
                   ? "bg-white text-[#1F5C1F] shadow-sm"
                   : "text-[#868E96]",
@@ -43,7 +43,7 @@ export function PredictionGradeSegment({
           );
         })}
       </div>
-      <p className="mt-1.5 text-[11px] leading-snug text-[#adb5bd]">
+      <p className="mt-1.5 text-meta leading-snug text-[#adb5bd]">
         ※ 시세는 출하량 단위(10kg) 기준 표시 · aT 규격 혼재분은 kg 환산 처리.
         등급은 연동 확정 시 활성화(베타).
       </p>

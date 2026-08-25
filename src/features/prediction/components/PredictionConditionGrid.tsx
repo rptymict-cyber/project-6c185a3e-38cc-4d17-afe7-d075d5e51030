@@ -21,10 +21,10 @@ function ConditionCell({ label, value, onClick, accent = "default" }: ConditionC
       )}
     >
       <div className="min-w-0 flex-1">
-        <div className="text-[11px] font-medium text-[#868E96]">{label}</div>
+        <div className="text-meta font-medium text-[#868E96]">{label}</div>
         <div
           className={cn(
-            "mt-0.5 truncate text-[14px] font-bold",
+            "mt-0.5 truncate text-body font-bold",
             accent === "green" ? "text-[#1F5C1F]" : "text-foreground",
           )}
         >

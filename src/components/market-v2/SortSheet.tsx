@@ -20,7 +20,7 @@ export function SortSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="rounded-t-2xl">
         <SheetHeader>
-          <SheetTitle className="text-left text-[15px]">정렬</SheetTitle>
+          <SheetTitle className="text-left text-body-lg">정렬</SheetTitle>
         </SheetHeader>
         <ul className="mt-2 divide-y divide-[#F1F3F5]">
           {opts.map((k) => {
@@ -33,7 +33,7 @@ export function SortSheet({
                     onOpenChange(false);
                   }}
                   className={cn(
-                    "flex w-full items-center justify-between py-3.5 text-[14px]",
+                    "flex w-full items-center justify-between py-3.5 text-body",
                     active ? "font-semibold text-[#3A8A3A]" : "text-foreground",
                   )}
                 >

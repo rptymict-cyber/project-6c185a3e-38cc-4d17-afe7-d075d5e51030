@@ -50,7 +50,7 @@ export function MarketsPanel() {
         <button
           onClick={findNearest}
           disabled={pending}
-          className="flex w-full items-center justify-center gap-2 rounded-[12px] py-3 text-[13.5px] font-bold text-[#3A8A3A] disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-[12px] py-3 text-body font-bold text-[#3A8A3A] disabled:opacity-60"
           style={{
             border: "1.5px solid #3A8A3A",
             backgroundColor: "#3A8A3A0D",
@@ -60,7 +60,7 @@ export function MarketsPanel() {
           가장 가까운 도매시장 찾기
         </button>
         {isFallback ? (
-          <p className="mt-2 text-center text-[11.5px] text-[#6C757D]">
+          <p className="mt-2 text-center text-meta text-[#6C757D]">
             위치 권한이 없어 기본 시장 <b className="font-semibold text-[#495057]">{DEFAULT_MARKET.name}</b> 기준으로
             보여드려요. 권한을 허용하면 가까운 시장으로 전환돼요.
           </p>
@@ -72,7 +72,7 @@ export function MarketsPanel() {
       <div className="mt-3">
         {regions.map(([region, list]) => (
           <section key={region}>
-            <h3 className="bg-[#F8F9FA] px-4 py-2 text-[12px] font-bold text-[#6C757D]">
+            <h3 className="bg-[#F8F9FA] px-4 py-2 text-caption font-bold text-[#6C757D]">
               {region}
             </h3>
             <ul>
@@ -86,10 +86,10 @@ export function MarketsPanel() {
                       className="flex items-center gap-3 px-4 py-3.5 active:bg-[#F8F9FA]"
                     >
                       <div className="min-w-0 flex-1">
-                        <div className="text-[15.5px] font-bold text-foreground">
+                        <div className="text-body-lg font-bold text-foreground">
                           {m.name}
                         </div>
-                        <div className="mt-0.5 text-[12px] text-[#6C757D]">
+                        <div className="mt-0.5 text-caption text-[#6C757D]">
                           오늘 거래 {itemCount}개 품목 · {m.volumeTon.toLocaleString()}톤
                         </div>
                       </div>

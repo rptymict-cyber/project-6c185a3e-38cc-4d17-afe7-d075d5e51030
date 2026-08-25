@@ -142,7 +142,7 @@ function StatisticsPage() {
       <div className="sticky top-[52px] z-20 space-y-2.5 border-b border-[#E9ECEF] bg-white px-4 pb-3 pt-3">
         <div className="grid grid-cols-2 gap-2">
           <FullSelectCard
-            icon={<span className="text-[16px] leading-none">{cropDef.emoji}</span>}
+            icon={<span className="text-subtitle leading-none">{cropDef.emoji}</span>}
             label="작물"
             value={cropCardLabel}
             placeholder="작물 선택"
@@ -154,14 +154,14 @@ function StatisticsPage() {
             onClick={() => setMarketOpen(true)}
             className="flex w-full items-center gap-3 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-3 text-left active:bg-[#F8F9FA]"
           >
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-[14px]">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#F1F3F5] text-body">
               🏬
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-[11px] font-medium text-[#868E96]">
+              <span className="block text-meta font-medium text-[#868E96]">
                 도매시장
               </span>
-              <span className="block truncate text-[14px] font-bold text-foreground">
+              <span className="block truncate text-body font-bold text-foreground">
                 {marketLabel}
               </span>
             </span>
@@ -179,7 +179,7 @@ function StatisticsPage() {
                 type="button"
                 onClick={() => setPeriod(t.id)}
                 className={cn(
-                  "flex-1 rounded-full py-1.5 text-[12.5px] font-semibold transition-colors",
+                  "flex-1 rounded-full py-1.5 text-caption font-semibold transition-colors",
                   active
                     ? "bg-white text-[#1F5C1F] shadow-sm"
                     : "text-[#6C757D]",
@@ -197,16 +197,16 @@ function StatisticsPage() {
         {/* 3-2 추이 카드 (헤드라인 + 타이틀 + 콤보 차트 + 범례를 하나의 카드로 통합) */}
         <section className="rounded-[16px] border border-[#EAECEF] bg-white p-4">
           {/* 1) 현재값 헤드라인 */}
-          <div className="text-[12px] font-medium text-[#868E96]">
+          <div className="text-caption font-medium text-[#868E96]">
             2026년 7월 중순 기준
           </div>
-          <div className="mt-1 text-[14px] font-bold leading-snug text-foreground">
+          <div className="mt-1 text-body font-bold leading-snug text-foreground">
             <span className="text-[#3A8A3A]">
               {cropDef.name}
               {varietyName ? ` ${varietyName}` : ""}
             </span>{" "}
             평균 가격은{" "}
-            <span className="text-[16px] font-black text-foreground tabular-nums">
+            <span className="text-subtitle font-black text-foreground tabular-nums">
               {headlinePrice.toLocaleString()}
             </span>
             원 (kg당)
@@ -214,10 +214,10 @@ function StatisticsPage() {
 
           {/* 2) 차트 타이틀 */}
           <div className="mt-3 flex items-center justify-between">
-            <h4 className="text-[14px] font-extrabold text-[#212529]">
+            <h4 className="text-body font-extrabold text-[#212529]">
               가격 · 거래량 추이
             </h4>
-            <span className="text-[11px] text-[#ADB5BD]">원/kg · 거래량 t</span>
+            <span className="text-meta text-[#ADB5BD]">원/kg · 거래량 t</span>
           </div>
 
           {/* 3) 콤보 차트 + 4) 범례 (StatsTrendChart 내부에서 렌더) */}

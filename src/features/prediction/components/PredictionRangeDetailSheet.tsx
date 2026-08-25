@@ -33,12 +33,12 @@ export function PredictionRangeDetailSheet({
         className="mx-auto max-w-[430px] rounded-t-2xl p-0"
       >
         <SheetHeader className="border-b border-[#E9ECEF] px-4 py-3.5 text-left">
-          <SheetTitle className="text-[15px] font-bold text-foreground">
+          <SheetTitle className="text-body-lg font-bold text-foreground">
             예측 범위 자세히
           </SheetTitle>
         </SheetHeader>
         <div className="px-4 py-4">
-          <p className="text-[12px] leading-snug text-[#495057]">
+          <p className="text-caption leading-snug text-[#495057]">
             AI는 하나의 값이 아니라 가격이 들어올 <b>범위</b>를 예측합니다.
             확신하는 정도에 따라 범위의 넓이가 달라집니다.
           </p>
@@ -48,16 +48,16 @@ export function PredictionRangeDetailSheet({
               <div className="flex items-center gap-3 rounded-xl border border-[#E9ECEF] bg-white p-3">
                 <span className="inline-block h-6 w-2 rounded-full bg-[#2E9E6B]" />
                 <div className="flex-1">
-                  <div className="text-[12.5px] font-bold text-foreground">
+                  <div className="text-caption font-bold text-foreground">
                     유력 범위
                   </div>
-                  <div className="text-[11px] text-[#6C757D]">
+                  <div className="text-meta text-[#6C757D]">
                     가격이 이 안에 들 가능성 60%
                   </div>
                 </div>
-                <div className="text-right text-[12.5px] font-extrabold tabular-nums text-foreground">
+                <div className="text-right text-caption font-extrabold tabular-nums text-foreground">
                   {likelyLow.toLocaleString()} ~ {likelyHigh.toLocaleString()}
-                  <div className="text-[10px] font-medium text-[#6C757D]">
+                  <div className="text-meta font-medium text-[#6C757D]">
                     원 / {baseUnitLabel}
                   </div>
                 </div>
@@ -66,16 +66,16 @@ export function PredictionRangeDetailSheet({
               <div className="flex items-center gap-3 rounded-xl border border-[#E9ECEF] bg-white p-3">
                 <span className="inline-block h-6 w-2 rounded-full bg-[#2E9E6B]/40" />
                 <div className="flex-1">
-                  <div className="text-[12.5px] font-bold text-foreground">
+                  <div className="text-caption font-bold text-foreground">
                     최대 범위
                   </div>
-                  <div className="text-[11px] text-[#6C757D]">
+                  <div className="text-meta text-[#6C757D]">
                     거의 대부분(90%)이 이 안에 듭니다
                   </div>
                 </div>
-                <div className="text-right text-[12.5px] font-extrabold tabular-nums text-foreground">
+                <div className="text-right text-caption font-extrabold tabular-nums text-foreground">
                   {pess!.toLocaleString()} ~ {opt!.toLocaleString()}
-                  <div className="text-[10px] font-medium text-[#6C757D]">
+                  <div className="text-meta font-medium text-[#6C757D]">
                     원 / {baseUnitLabel}
                   </div>
                 </div>
@@ -83,7 +83,7 @@ export function PredictionRangeDetailSheet({
             </div>
           )}
 
-          <div className="mt-3 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-[11.5px] leading-snug text-[#2c6444]">
+          <div className="mt-3 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-meta leading-snug text-[#2c6444]">
             📌 화면의 낙관·중립·비관은 이 범위에서 각각 위쪽·가운데·아래쪽
             값입니다. 중립이 가장 가능성이 높습니다.
           </div>
@@ -91,7 +91,7 @@ export function PredictionRangeDetailSheet({
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="mt-4 grid h-11 w-full place-items-center rounded-xl bg-[#2E9E6B] text-[14px] font-bold text-white active:bg-[#1F7A50]"
+            className="mt-4 grid h-11 w-full place-items-center rounded-xl bg-[#2E9E6B] text-body font-bold text-white active:bg-[#1F7A50]"
           >
             확인
           </button>

@@ -37,10 +37,10 @@ export function MarketComparisonSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="flex max-h-[85dvh] flex-col rounded-t-2xl p-0">
         <SheetHeader className="shrink-0 px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">시장 추가</SheetTitle>
+          <SheetTitle className="text-subtitle font-bold">시장 추가</SheetTitle>
         </SheetHeader>
 
-        <div className="shrink-0 mt-2 px-5 text-[11.5px] text-[#6C757D]">
+        <div className="shrink-0 mt-2 px-5 text-meta text-[#6C757D]">
           현재 {compareIds.length}/{MAX_COMPARE}개 선택됨
         </div>
 
@@ -50,13 +50,13 @@ export function MarketComparisonSheet({
           {/* 전국 always-on row */}
           <li className="flex items-center gap-3 rounded-[10px] px-3 py-3">
             <Checkbox checked disabled />
-            <span className="flex-1 text-[14px] font-bold text-foreground">전국</span>
-            <span className="text-[11px] text-[#ADB5BD]">기본</span>
+            <span className="flex-1 text-body font-bold text-foreground">전국</span>
+            <span className="text-meta text-[#ADB5BD]">기본</span>
           </li>
 
           {regions.map(([region, markets]) => (
             <li key={region} className="mt-1">
-              <div className="rounded bg-[#F8F9FA] px-3 py-1.5 text-[11px] font-semibold text-[#6C757D]">
+              <div className="rounded bg-[#F8F9FA] px-3 py-1.5 text-meta font-semibold text-[#6C757D]">
                 {region}
               </div>
               <ul>
@@ -89,13 +89,13 @@ export function MarketComparisonSheet({
                         >
                           <span
                             className={cn(
-                              "text-[14px]",
+                              "text-body",
                               marketChecked ? "font-bold text-[#1F5C1F]" : "font-semibold text-foreground",
                             )}
                           >
                             {m.name}
                           </span>
-                          <span className="text-[11.5px] text-[#868E96] tabular-nums">
+                          <span className="text-meta text-[#868E96] tabular-nums">
                             {m.volumeTon.toLocaleString()}t
                           </span>
                         </button>
@@ -122,13 +122,13 @@ export function MarketComparisonSheet({
                                 >
                                   <span
                                     className={cn(
-                                      "text-[13px]",
+                                      "text-body",
                                       checked ? "font-bold text-[#1F5C1F]" : "text-[#495057]",
                                     )}
                                   >
                                     {co.name}
                                   </span>
-                                  <span className="text-[11px] text-[#ADB5BD] tabular-nums">
+                                  <span className="text-meta text-[#ADB5BD] tabular-nums">
                                     {co.volumeTon.toLocaleString()}t
                                   </span>
                                 </button>
@@ -145,7 +145,7 @@ export function MarketComparisonSheet({
           ))}
         </ul>
 
-          <p className="px-5 pb-6 text-[11px] text-[#868E96]">
+          <p className="px-5 pb-6 text-meta text-[#868E96]">
             전국은 모든 시장의 평균입니다.
           </p>
         </div>
@@ -154,7 +154,7 @@ export function MarketComparisonSheet({
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="flex w-full items-center justify-center rounded-[12px] bg-[#3A8A3A] py-3 text-[14px] font-black text-white active:bg-[#2F6F2F]"
+            className="flex w-full items-center justify-center rounded-[12px] bg-[#3A8A3A] py-3 text-body font-black text-white active:bg-[#2F6F2F]"
           >
             완료
           </button>
