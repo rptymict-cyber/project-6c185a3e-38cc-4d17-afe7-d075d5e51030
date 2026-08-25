@@ -6,18 +6,24 @@ import { openStoreReview } from "@/lib/store-review";
 import { cn } from "@/lib/utils";
 
 /**
- * 앱 진입 시 뜨는 별점 유도 팝업.
+ * 별점 유도 팝업.
  *
- * - 매 앱 진입(마운트)마다 1회 노출한다. 라우트 이동에는 반응하지 않는다.
+ * - 첫 진입에는 절대 노출하지 않는다. 앱 방문 3회 이상 + 진입 후 20초 경과 시에만 1회 노출한다.
+ *   (첫 과업을 가로막지 않기 위한 정책)
  * - "다시 보지 않기" → hidden 저장 → 이후 미노출.
- * - "나중에" / 딤 클릭 → 이번 세션만 닫힘, 다음 접속 시 다시 노출.
+ * - "나중에" / 딤 클릭 → 이번 세션만 닫힘, 이후 방문 시 다시 판단.
  * - 4~5점 → 스토어 리뷰 페이지로 이동 시도 후 hidden 저장.
- * - 1~3점 → 내부 피드백 입력을 받아 Supabase feedback 테이블에 저장 후 hidden.
+ * - 1~3점 → 내부 피드백 입력을 받아 feedback 테이블에 저장 후 hidden.
  */
 
 const STORAGE_KEY = "agdict:ratePrompt";
+/** 노출 최소 방문 횟수 */
+const MIN_VISITS = 3;
+/** 진입 후 노출 지연(ms) */
+const SHOW_DELAY_MS = 20_000;
 
-type Persist = { hidden: boolean; lastShownAt: string };
+type Persist = { hidden: boolean; lastShownAt: string; visits: number };
+
 
 function loadPersist(): Persist | null {
   if (typeof window === "undefined") return null;
