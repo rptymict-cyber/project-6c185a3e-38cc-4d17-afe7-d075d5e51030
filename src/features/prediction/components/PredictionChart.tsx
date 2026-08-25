@@ -153,7 +153,7 @@ function XLabelsOverlay({
             x={c.x}
             y={y}
             textAnchor="middle"
-            fontSize={9}
+            fontSize={12}
             fontWeight={emphasized ? 700 : 400}
             fill={emphasized ? "#495057" : "#ADB5BD"}
           >
@@ -218,7 +218,7 @@ function LabelsOverlay({
   ) => {
     const padX = 8;
     const padY = 4;
-    const fontSize = 10.5;
+    const fontSize = 12;
     const w = Math.round(text.length * 6.6 + padX * 2);
     const h = fontSize + padY * 2;
     const GAP = 10;
@@ -389,7 +389,7 @@ function SelectedMarker({
           x={0}
           y={-h / 2 + 4}
           textAnchor="middle"
-          fontSize={11}
+          fontSize={12}
           fontWeight={800}
           fill="#fff"
         >
@@ -581,7 +581,7 @@ function PredictionChartBase({
 
             <YAxis
               yAxisId="price"
-              tick={{ fontSize: 10, fill: "#868E96" }}
+              tick={{ fontSize: 12, fill: "#868E96" }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(v) => v.toLocaleString()}
@@ -591,7 +591,7 @@ function PredictionChartBase({
             <YAxis
               yAxisId="vol"
               orientation="right"
-              tick={{ fontSize: 10, fill: "#868E96" }}
+              tick={{ fontSize: 12, fill: "#868E96" }}
               axisLine={false}
               tickLine={false}
               width={28}

@@ -323,7 +323,7 @@ function NewsHeroIllustration() {
         y="34"
         textAnchor="middle"
         fontFamily="'Inter', sans-serif"
-        fontSize="11"
+        fontSize="12"
         fontWeight="800"
         fill="#3A8A3A"
       >

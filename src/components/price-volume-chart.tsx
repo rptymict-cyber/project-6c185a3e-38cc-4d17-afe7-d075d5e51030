@@ -96,7 +96,7 @@ export function PriceVolumeChart({
               label={{
                 value: "오늘",
                 position: "top",
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: 700,
                 fill: "#64748B",
               }}
@@ -105,7 +105,7 @@ export function PriceVolumeChart({
 
           <XAxis
             dataKey="label"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             interval="preserveStartEnd"
@@ -114,7 +114,7 @@ export function PriceVolumeChart({
           <YAxis
             yAxisId="price"
             orientation="left"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             width={48}
@@ -124,7 +124,7 @@ export function PriceVolumeChart({
           <YAxis
             yAxisId="vol"
             orientation="right"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             width={30}
@@ -235,7 +235,7 @@ function RecommendBadge({
         x={cx}
         y={by + h / 2 + 3.6}
         textAnchor="middle"
-        fontSize={11}
+        fontSize={12}
         fontWeight={800}
         fill="#fff"
       >

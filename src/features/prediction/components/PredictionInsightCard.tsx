@@ -136,7 +136,7 @@ export function PredictionInsightCard({
             <div className="mt-1 flex items-baseline whitespace-nowrap">
               <span
                 className="font-black tabular-nums leading-none"
-                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+                style={{ fontSize: "clamp(15px, 4vw, 17px)" }}
               >
                 {formatFullWon(expectedPrice)}
               </span>
@@ -153,7 +153,7 @@ export function PredictionInsightCard({
             <div className="mt-1 flex items-baseline whitespace-nowrap">
               <span
                 className="font-black tabular-nums leading-none"
-                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+                style={{ fontSize: "clamp(15px, 4vw, 17px)" }}
               >
                 {formatFullWon(totalRevenue)}
               </span>
@@ -175,7 +175,7 @@ export function PredictionInsightCard({
             <div className="mt-1 flex items-baseline whitespace-nowrap">
               <span
                 className="font-black tabular-nums leading-none"
-                style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
+                style={{ fontSize: "clamp(15px, 4vw, 17px)" }}
               >
                 {gain === 0
                   ? "0원"

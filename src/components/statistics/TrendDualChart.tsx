@@ -55,14 +55,14 @@ export function TrendDualChart({
             <CartesianGrid stroke={GRID} vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 11, fill: AXIS_LABEL }}
+              tick={{ fontSize: 12, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               interval="preserveStartEnd"
               minTickGap={20}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: AXIS_LABEL }}
+              tick={{ fontSize: 12, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               width={44}
@@ -96,14 +96,14 @@ export function TrendDualChart({
           <BarChart data={points} margin={{ top: 4, right: 10, left: 0, bottom: 4 }}>
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 10, fill: AXIS_LABEL }}
+              tick={{ fontSize: 12, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               interval="preserveStartEnd"
               minTickGap={20}
             />
             <YAxis
-              tick={{ fontSize: 10, fill: AXIS_LABEL }}
+              tick={{ fontSize: 12, fill: AXIS_LABEL }}
               axisLine={false}
               tickLine={false}
               width={44}
@@ -111,7 +111,7 @@ export function TrendDualChart({
             />
             <Tooltip
               cursor={{ fill: GRID }}
-              contentStyle={{ borderRadius: 8, border: "1px solid #E9ECEF", fontSize: 11 }}
+              contentStyle={{ borderRadius: 8, border: "1px solid #E9ECEF", fontSize: 12 }}
               itemStyle={{ color: VOLUME_BAR }}
               formatter={(value: number) => [`${value}t`, "물량"]}
               labelFormatter={(l) => `${l}`}

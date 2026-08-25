@@ -156,13 +156,13 @@ export function MainCropCard({ crop }: { crop: Crop }) {
             </defs>
             <XAxis
               dataKey="time"
-              tick={{ fontSize: 10, fill: "#ADB5BD" }}
+              tick={{ fontSize: 12, fill: "#ADB5BD" }}
               axisLine={false}
               tickLine={false}
               interval={1}
             />
             <YAxis
-              tick={{ fontSize: 10, fill: "#ADB5BD" }}
+              tick={{ fontSize: 12, fill: "#ADB5BD" }}
               axisLine={false}
               tickLine={false}
               width={40}

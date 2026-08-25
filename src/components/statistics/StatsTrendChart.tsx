@@ -20,10 +20,10 @@ export function StatsTrendChart({
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={points} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
             <CartesianGrid stroke={GRID} vertical={false} />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: AXIS_LABEL }} axisLine={false} tickLine={false} interval="preserveStartEnd" minTickGap={16} />
-            <YAxis yAxisId="p" tick={{ fontSize: 10, fill: AXIS_LABEL }} axisLine={false} tickLine={false} width={44}
+            <XAxis dataKey="label" tick={{ fontSize: 12, fill: AXIS_LABEL }} axisLine={false} tickLine={false} interval="preserveStartEnd" minTickGap={16} />
+            <YAxis yAxisId="p" tick={{ fontSize: 12, fill: AXIS_LABEL }} axisLine={false} tickLine={false} width={44}
                    tickFormatter={(v: number) => v >= 1000 ? `${Math.round(v / 100) / 10}k` : String(v)} />
-            <YAxis yAxisId="v" orientation="right" tick={{ fontSize: 10, fill: AXIS_LABEL }} axisLine={false} tickLine={false} width={30}
+            <YAxis yAxisId="v" orientation="right" tick={{ fontSize: 12, fill: AXIS_LABEL }} axisLine={false} tickLine={false} width={30}
                    tickFormatter={(v: number) => `${v}t`} />
             <Tooltip content={<TrendTooltip series={series} />} cursor={{ stroke: "#3A8A3A", strokeDasharray: "3 3" }} />
             <Bar yAxisId="v" dataKey="volume" fill={VOLUME_BAR} barSize={10} radius={[2, 2, 0, 0]} name="거래량" />

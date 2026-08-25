@@ -117,7 +117,7 @@ function MinMaxPills({
           x={cx}
           y={cy + 3.5}
           textAnchor="middle"
-          fontSize={9.5}
+          fontSize={12}
           fontWeight={800}
           fill={color}
         >
@@ -234,7 +234,7 @@ export function PriceVolumeChart({
             domain={[0, Math.max(0, lastIndex)]}
             ticks={tickIndices}
             tickFormatter={(index: number) => data[index]?.label ?? ""}
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             interval={0}
@@ -244,7 +244,7 @@ export function PriceVolumeChart({
           <YAxis
             yAxisId="price"
             orientation="left"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             width={48}
@@ -254,7 +254,7 @@ export function PriceVolumeChart({
           <YAxis
             yAxisId="vol"
             orientation="right"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             width={30}
@@ -284,7 +284,7 @@ export function PriceVolumeChart({
                 value: "오늘",
                 position: "top",
                 fill: "#64748B",
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: 800,
               }}
             />
@@ -356,7 +356,7 @@ export function PriceVolumeChart({
                         x={props.cx}
                         y={by + h / 2 + 3.5}
                         textAnchor="middle"
-                        fontSize={10.5}
+                        fontSize={12}
                         fontWeight={800}
                         fill="#fff"
                       >

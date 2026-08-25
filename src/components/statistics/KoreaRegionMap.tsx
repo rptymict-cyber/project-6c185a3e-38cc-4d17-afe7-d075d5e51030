@@ -174,7 +174,7 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
                   x={0}
                   y={-1}
                   textAnchor="middle"
-                  fontSize={9}
+                  fontSize={12}
                   fontWeight={700}
                   fill="#495057"
                 >
@@ -184,7 +184,7 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
                   x={0}
                   y={9}
                   textAnchor="middle"
-                  fontSize={9}
+                  fontSize={12}
                   fontWeight={800}
                   fill={isSelected ? SELECTED_STROKE : "#1F3D1F"}
                 >
@@ -206,7 +206,7 @@ export function KoreaRegionMap({ regions, selected, onSelect }: Props) {
               x={lx}
               y={ly}
               textAnchor="middle"
-              fontSize={8}
+              fontSize={12}
               fill="#ADB5BD"
               pointerEvents="none"
             >
