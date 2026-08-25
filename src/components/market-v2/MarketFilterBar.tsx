@@ -124,12 +124,12 @@ function CardInner({
 }) {
   return (
     <>
-      <span className="flex items-center gap-1 text-[11px] font-medium text-[#868E96]">
+      <span className="flex items-center gap-1 text-meta font-medium text-[#868E96]">
         {icon}
         {label}
       </span>
       <span className="flex w-full items-center justify-between">
-        <span className="truncate text-[14px] font-bold text-foreground">{value}</span>
+        <span className="truncate text-body font-bold text-foreground">{value}</span>
         <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#ADB5BD]" />
       </span>
     </>

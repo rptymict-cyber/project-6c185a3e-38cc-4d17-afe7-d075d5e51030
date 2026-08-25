@@ -117,7 +117,7 @@ function MinMaxPills({
           x={cx}
           y={cy + 3.5}
           textAnchor="middle"
-          fontSize={9.5}
+          fontSize={12}
           fontWeight={800}
           fill={color}
         >
@@ -234,7 +234,7 @@ export function PriceVolumeChart({
             domain={[0, Math.max(0, lastIndex)]}
             ticks={tickIndices}
             tickFormatter={(index: number) => data[index]?.label ?? ""}
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             interval={0}
@@ -244,7 +244,7 @@ export function PriceVolumeChart({
           <YAxis
             yAxisId="price"
             orientation="left"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             width={48}
@@ -254,7 +254,7 @@ export function PriceVolumeChart({
           <YAxis
             yAxisId="vol"
             orientation="right"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             width={30}
@@ -284,7 +284,7 @@ export function PriceVolumeChart({
                 value: "오늘",
                 position: "top",
                 fill: "#64748B",
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: 800,
               }}
             />
@@ -356,7 +356,7 @@ export function PriceVolumeChart({
                         x={props.cx}
                         y={by + h / 2 + 3.5}
                         textAnchor="middle"
-                        fontSize={10.5}
+                        fontSize={12}
                         fontWeight={800}
                         fill="#fff"
                       >
@@ -407,20 +407,20 @@ function CustomTooltip({ active, payload }: any) {
     <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-2 shadow-md">
       {isForecast ? (
         <>
-          <div className="text-[12px] font-bold text-[#2E9E6B]">
+          <div className="text-caption font-bold text-[#2E9E6B]">
             {pt.tooltipLabel} · AI 예측
           </div>
-          <div className="mt-0.5 text-[12px] font-bold text-[#2E9E6B]">
+          <div className="mt-0.5 text-caption font-bold text-[#2E9E6B]">
             예상 평균가 {pt.forecast?.toLocaleString()}원
           </div>
         </>
       ) : (
         <>
-          <div className="text-[12px] font-bold text-foreground">{pt.tooltipLabel}</div>
-          <div className="mt-0.5 text-[12px] font-bold text-[#E03131]">
+          <div className="text-caption font-bold text-foreground">{pt.tooltipLabel}</div>
+          <div className="mt-0.5 text-caption font-bold text-[#E03131]">
             평균가 {pt.price.toLocaleString()}원
           </div>
-          <div className="text-[11.5px] text-[#495057]">
+          <div className="text-meta text-[#495057]">
             거래량 {pt.volume.toLocaleString()}t
           </div>
         </>

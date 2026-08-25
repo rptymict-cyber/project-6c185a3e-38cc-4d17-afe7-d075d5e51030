@@ -60,7 +60,7 @@ export function MarketHotSection() {
   const current = MARKETS.find((m) => m.id === active) ?? MARKETS[0];
   return (
     <section className="mt-6">
-      <h2 className="px-4 text-[15px] font-bold text-foreground">도매시장별 오늘의 품목</h2>
+      <h2 className="px-4 text-body-lg font-bold text-foreground">도매시장별 오늘의 품목</h2>
 
       <div className="no-scrollbar mt-2 flex gap-1.5 overflow-x-auto px-4 pb-1">
         {MARKETS.map((m) => {
@@ -70,7 +70,7 @@ export function MarketHotSection() {
               key={m.id}
               onClick={() => setActive(m.id)}
               className={cn(
-                "shrink-0 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors",
+                "shrink-0 rounded-full px-3 py-1.5 text-caption font-semibold transition-colors",
                 on
                   ? "bg-[#EAF7EA] text-[#2F6E2F] ring-1 ring-[#3A8A3A]"
                   : "bg-[#F1F3F5] text-[#495057]",
@@ -84,10 +84,10 @@ export function MarketHotSection() {
 
       <div className="mt-2 px-4">
         <div className="rounded-2xl bg-white p-3 shadow-[0_1px_4px_rgba(0,0,0,0.05)] ring-1 ring-[#F1F3F5]">
-          <div className="mb-1.5 text-[12px] font-semibold text-[#495057]">{current.name}</div>
+          <div className="mb-1.5 text-caption font-semibold text-[#495057]">{current.name}</div>
           <ul className="space-y-1.5">
             {current.items.map((it, i) => (
-              <li key={it.name} className="flex items-center gap-3 text-[13px]">
+              <li key={it.name} className="flex items-center gap-3 text-body">
                 <span className="w-4 text-center font-bold text-[#3A8A3A] tabular-nums">
                   {i + 1}
                 </span>

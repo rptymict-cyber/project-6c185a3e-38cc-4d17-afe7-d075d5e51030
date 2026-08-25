@@ -33,15 +33,15 @@ function KpiCell({ kpi }: { kpi: Kpi }) {
 
   return (
     <div className="flex flex-col items-center justify-center px-2 py-3 text-center">
-      <span className="text-[11px] font-semibold text-[#868E96]">{kpi.label}</span>
+      <span className="text-meta font-semibold text-[#868E96]">{kpi.label}</span>
       <span
-        className="mt-1 text-[18px] font-black leading-tight tabular-nums"
+        className="mt-1 text-title font-black leading-tight tabular-nums"
         style={{ color: textColor }}
       >
         {amountText}
       </span>
       <span
-        className="mt-1.5 inline-flex items-center rounded-[7px] px-2 py-0.5 text-[11px] font-extrabold"
+        className="mt-1.5 inline-flex items-center rounded-[7px] px-2 py-0.5 text-meta font-extrabold"
         style={{ backgroundColor: badgeBg, color: textColor }}
       >
         {pctText}

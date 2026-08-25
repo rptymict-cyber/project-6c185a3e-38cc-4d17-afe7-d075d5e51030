@@ -33,8 +33,8 @@ export function PredictionSummaryCard({
           key={it.label}
           className="rounded-xl border border-[#E9ECEF] bg-white px-3 py-2.5"
         >
-          <div className="text-[11px] text-[#868E96]">{it.label}</div>
-          <div className={`mt-1 text-[15px] font-bold tabular-nums ${it.color}`}>
+          <div className="text-meta text-[#868E96]">{it.label}</div>
+          <div className={`mt-1 text-body-lg font-bold tabular-nums ${it.color}`}>
             {it.value}
           </div>
         </div>

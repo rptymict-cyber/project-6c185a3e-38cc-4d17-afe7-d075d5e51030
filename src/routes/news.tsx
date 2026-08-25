@@ -39,10 +39,10 @@ function NewsPage() {
       <section className="bg-[#EAF5EA] px-5 pb-7 pt-6">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <h2 className="text-[26px] font-black leading-[1.2] text-foreground">
+            <h2 className="text-display font-black leading-[1.2] text-foreground">
               농업 뉴스
             </h2>
-            <p className="mt-2 text-[13px] leading-[1.55] text-[#495057]">
+            <p className="mt-2 text-body leading-[1.55] text-[#495057]">
               매일 업데이트되는 농업 뉴스를
               <br />
               확인해보세요.
@@ -62,24 +62,24 @@ function NewsPage() {
               <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
                 <div className="min-w-0">
                   {isAi && (
-                    <span className="mb-1 inline-flex items-center gap-0.5 rounded-md bg-[#F0EBFF] px-2 py-0.5 text-[9.5px] font-bold text-[#6741D9]">
+                    <span className="mb-1 inline-flex items-center gap-0.5 rounded-md bg-[#F0EBFF] px-2 py-0.5 text-meta font-bold text-[#6741D9]">
                       ✨ AI를 통해 작성된 기사
                     </span>
                   )}
                   <div
-                    className="text-[12px] font-bold"
+                    className="text-caption font-bold"
                     style={{ color: AGRI_NEWS_TYPE_COLOR[n.type] }}
                   >
                     {n.typeLabel}
                   </div>
-                  <div className="mt-1 line-clamp-2 text-[14.5px] font-bold leading-snug text-foreground">
+                  <div className="mt-1 line-clamp-2 text-body font-bold leading-snug text-foreground">
                     {n.title}
                   </div>
-                  <p className="mt-1 line-clamp-2 text-[12px] leading-[1.5] text-[#6C757D]">
+                  <p className="mt-1 line-clamp-2 text-caption leading-[1.5] text-[#6C757D]">
                     {n.description}
                   </p>
                 </div>
-                <div className="mt-1.5 text-[11px] text-[#868E96]">
+                <div className="mt-1.5 text-meta text-[#868E96]">
                   {n.source} · {n.publishedAt}
                 </div>
               </div>
@@ -135,7 +135,7 @@ function NewsDetailView({
           >
             <ChevronLeft className="h-5 w-5 text-foreground" />
           </button>
-          <div className="text-[14px] font-bold text-foreground">
+          <div className="text-body font-bold text-foreground">
             농업 뉴스
           </div>
           <div className="flex items-center">
@@ -158,15 +158,15 @@ function NewsDetailView({
       }
     >
       <article className="px-5 pb-24 pt-4">
-        <span className="inline-flex items-center gap-0.5 rounded-md bg-[#F0EBFF] px-2 py-1 text-[11px] font-bold text-[#6741D9]">
+        <span className="inline-flex items-center gap-0.5 rounded-md bg-[#F0EBFF] px-2 py-1 text-meta font-bold text-[#6741D9]">
           ✨ AI를 통해 작성된 기사
         </span>
 
-        <h1 className="mt-2.5 text-[20px] font-black leading-[1.4] text-foreground">
+        <h1 className="mt-2.5 text-heading font-black leading-[1.4] text-foreground">
           {item.title}
         </h1>
 
-        <div className="mt-2 text-[12px] text-[#868E96]">
+        <div className="mt-2 text-caption text-[#868E96]">
           {item.source} · {item.generatedAt ?? item.publishedAt} 생성
         </div>
 
@@ -183,7 +183,7 @@ function NewsDetailView({
           {item.body?.map((p, i) => (
             <p
               key={i}
-              className="text-[13.5px] leading-[1.85] text-[#343A40]"
+              className="text-body leading-[1.85] text-[#343A40]"
             >
               {p}
             </p>
@@ -192,33 +192,33 @@ function NewsDetailView({
 
         {basis && (
           <section className="mt-4 rounded-2xl border border-[#D8E9E0] bg-[#F3FAF6] p-4">
-            <div className="text-[12px] font-bold text-[#1F7A50]">
+            <div className="text-caption font-bold text-[#1F7A50]">
               📊 이 기사의 근거 데이터
             </div>
-            <p className="mt-1 text-[12px] leading-snug text-[#3f5a4c]">
+            <p className="mt-1 text-caption leading-snug text-[#3f5a4c]">
               이 기사는 아래 실제 시세 데이터를 기반으로 AI가 작성했습니다.
             </p>
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {basis.crops.map((c) => (
                 <span
                   key={c}
-                  className="rounded-lg border border-[#CDE5D8] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#1F7A50]"
+                  className="rounded-lg border border-[#CDE5D8] bg-white px-2.5 py-1 text-meta font-semibold text-[#1F7A50]"
                 >
                   🧅 {c}
                 </span>
               ))}
               {basis.market && (
-                <span className="rounded-lg border border-[#CDE5D8] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#1F7A50]">
+                <span className="rounded-lg border border-[#CDE5D8] bg-white px-2.5 py-1 text-meta font-semibold text-[#1F7A50]">
                   {basis.market}
                 </span>
               )}
               {basis.period && (
-                <span className="rounded-lg border border-[#CDE5D8] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#1F7A50]">
+                <span className="rounded-lg border border-[#CDE5D8] bg-white px-2.5 py-1 text-meta font-semibold text-[#1F7A50]">
                   {basis.period}
                 </span>
               )}
               {basis.sourceName && (
-                <span className="rounded-lg border border-[#CDE5D8] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#1F7A50]">
+                <span className="rounded-lg border border-[#CDE5D8] bg-white px-2.5 py-1 text-meta font-semibold text-[#1F7A50]">
                   출처 {basis.sourceName}
                 </span>
               )}
@@ -232,7 +232,7 @@ function NewsDetailView({
                     navigate({ to: "/market" });
                   }
                 }
-                className="mt-3 flex w-full items-center justify-between rounded-lg border border-[#CDE5D8] bg-white px-3 py-2.5 text-[12px] font-bold text-[#1F7A50] active:bg-[#F3FAF6]"
+                className="mt-3 flex w-full items-center justify-between rounded-lg border border-[#CDE5D8] bg-white px-3 py-2.5 text-caption font-bold text-[#1F7A50] active:bg-[#F3FAF6]"
               >
                 <span>{primaryCrop} 실시간 시세 보러가기</span>
                 <ChevronRight className="h-4 w-4" />
@@ -241,7 +241,7 @@ function NewsDetailView({
           </section>
         )}
 
-        <div className="mt-3 rounded-lg bg-[#F8F9FA] p-3 text-[11px] leading-snug text-[#868E96]">
+        <div className="mt-3 rounded-lg bg-[#F8F9FA] p-3 text-meta leading-snug text-[#868E96]">
           ℹ️ 본 기사는 데이터 기반 AI가 자동 작성한 참고용 콘텐츠입니다. 실제
           시세·정책과 차이가 있을 수 있습니다.
         </div>
@@ -323,7 +323,7 @@ function NewsHeroIllustration() {
         y="34"
         textAnchor="middle"
         fontFamily="'Inter', sans-serif"
-        fontSize="11"
+        fontSize="12"
         fontWeight="800"
         fill="#3A8A3A"
       >

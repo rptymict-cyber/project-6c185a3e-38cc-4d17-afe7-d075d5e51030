@@ -49,20 +49,20 @@ export function MarketSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto rounded-t-2xl p-0">
         <div className="flex items-center justify-center px-4 pt-4 pb-2">
-          <h3 className="text-[16px] font-black">도매시장 선택</h3>
+          <h3 className="text-subtitle font-black">도매시장 선택</h3>
         </div>
 
         <div className="px-4 pt-1 pb-2">
           <button
             onClick={findNearest}
             disabled={pending}
-            className="flex w-full items-center justify-center gap-2 rounded-[12px] border-[1.5px] border-[#3A8A3A] bg-[#3A8A3A0D] py-3 text-[13.5px] font-bold text-[#3A8A3A]"
+            className="flex w-full items-center justify-center gap-2 rounded-[12px] border-[1.5px] border-[#3A8A3A] bg-[#3A8A3A0D] py-3 text-body font-bold text-[#3A8A3A]"
           >
             <MapPin className="h-4 w-4" />
             가장 가까운 도매시장 찾기
           </button>
           {isFallback ? (
-            <p className="mt-2 text-center text-[11.5px] text-[#6C757D]">
+            <p className="mt-2 text-center text-meta text-[#6C757D]">
               위치 권한이 없어 기본 시장{" "}
               <b className="font-semibold text-[#495057]">{DEFAULT_MARKET.name}</b> 기준으로 안내돼요.
             </p>
@@ -80,7 +80,7 @@ export function MarketSheet({
                   onClick={() => pick(m.id, m.label)}
                   className="flex w-full items-center justify-between px-3 py-3 text-left active:bg-[#F8F9FA]"
                 >
-                  <span className="text-[14px] font-semibold text-foreground">{m.label}</span>
+                  <span className="text-body font-semibold text-foreground">{m.label}</span>
                   <span
                     className={cn(
                       "grid h-5 w-5 place-items-center rounded-[6px] border",

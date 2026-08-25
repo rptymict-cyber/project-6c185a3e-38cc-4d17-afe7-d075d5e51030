@@ -15,8 +15,8 @@ export function AgricultureThemeSection() {
   return (
     <section className="mt-6">
       <div className="flex items-center justify-between px-4">
-        <h2 className="text-[15px] font-bold text-foreground">지금 뜨는 농산물 테마</h2>
-        <button className="flex items-center gap-0.5 text-[12px] text-[#868E96]">
+        <h2 className="text-body-lg font-bold text-foreground">지금 뜨는 농산물 테마</h2>
+        <button className="flex items-center gap-0.5 text-caption text-[#868E96]">
           더보기 <ChevronRight className="h-3.5 w-3.5" />
         </button>
       </div>
@@ -30,9 +30,9 @@ export function AgricultureThemeSection() {
               key={t.id}
               className="flex w-[104px] shrink-0 flex-col items-center gap-1 rounded-2xl bg-white p-3 shadow-[0_1px_4px_rgba(0,0,0,0.05)] ring-1 ring-[#F1F3F5]"
             >
-              <span className="text-[26px] leading-none">{t.emoji}</span>
-              <span className="text-[12px] font-semibold text-foreground">{t.label}</span>
-              <span className={cn("text-[12px] font-bold tabular-nums", color)}>
+              <span className="text-display leading-none">{t.emoji}</span>
+              <span className="text-caption font-semibold text-foreground">{t.label}</span>
+              <span className={cn("text-caption font-bold tabular-nums", color)}>
                 {sign}
                 {t.pct.toFixed(1)}%
               </span>

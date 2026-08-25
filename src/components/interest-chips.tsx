@@ -23,12 +23,12 @@ export function InterestChips() {
   return (
     <>
       <div className="flex items-center justify-between px-4 pt-3">
-        <span className="text-[11px] font-semibold text-muted-foreground">
+        <span className="text-meta font-semibold text-muted-foreground">
           관심 작물 {items.length}
         </span>
         <button
           onClick={() => setEditing((v) => !v)}
-          className="text-[11px] font-semibold text-[#3A8A3A]"
+          className="text-meta font-semibold text-[#3A8A3A]"
         >
           {editing ? "완료" : "편집"}
         </button>
@@ -41,7 +41,7 @@ export function InterestChips() {
               key={c.id}
               onClick={() => select(c.id)}
               className={cn(
-                "group inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors",
+                "group inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-caption font-semibold transition-colors",
                 active
                   ? "border-[#3A8A3A] bg-[#3A8A3A] text-white"
                   : "border-[#3A8A3A] bg-[#F0F9F0] text-[#1F5C1F]",
@@ -72,7 +72,7 @@ export function InterestChips() {
         <Link
           to="/crop-select"
           search={{ from: "home", return: "/" }}
-          className="inline-flex shrink-0 items-center gap-1 rounded-full border border-dashed border-[#ADB5BD] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#6C757D]"
+          className="inline-flex shrink-0 items-center gap-1 rounded-full border border-dashed border-[#ADB5BD] bg-white px-3 py-1.5 text-caption font-semibold text-[#6C757D]"
         >
           <Plus className="h-3.5 w-3.5" />
           추가

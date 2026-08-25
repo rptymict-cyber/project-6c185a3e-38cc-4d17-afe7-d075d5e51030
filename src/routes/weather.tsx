@@ -50,7 +50,7 @@ function WeatherDetailPage() {
             <ChevronLeft className="h-6 w-6" />
           </button>
           <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center">
-            <span className="text-[15px] font-black tracking-tight text-foreground">
+            <span className="text-body-lg font-black tracking-tight text-foreground">
               날씨 상세
             </span>
           </div>
@@ -71,7 +71,7 @@ function WeatherDetailPage() {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <div className="flex items-center gap-1 text-[13px] font-semibold text-white/95">
+                <div className="flex items-center gap-1 text-body font-semibold text-white/95">
                   <MapPin className="h-3.5 w-3.5" />
                   <span>{w.region}</span>
                 </div>
@@ -79,20 +79,20 @@ function WeatherDetailPage() {
                   <span className="text-[64px] font-bold leading-none tracking-tight">
                     {w.current.temp}
                   </span>
-                  <span className="ml-1 text-[24px] font-semibold">°C</span>
+                  <span className="ml-1 text-display font-semibold">°C</span>
                 </div>
-                <div className="mt-2 text-[20px] font-semibold text-white">
+                <div className="mt-2 text-heading font-semibold text-white">
                   {w.current.desc}
                 </div>
                 {w.tip ? (
-                  <div className="mt-1.5 text-[14px] font-medium text-white/90">
+                  <div className="mt-1.5 text-body font-medium text-white/90">
                     {w.tip}
                   </div>
                 ) : null}
-                <div className="mt-2 text-[13px] text-white/85">
+                <div className="mt-2 text-body text-white/85">
                   {w.today.dateLabel}
                 </div>
-                <div className="mt-3 flex items-center gap-4 text-[14px] font-semibold text-white/95">
+                <div className="mt-3 flex items-center gap-4 text-body font-semibold text-white/95">
                   <span>
                     최고 <span className="text-white">{w.today.high}°</span>
                   </span>
@@ -137,7 +137,7 @@ function WeatherDetailPage() {
 
         {/* Hourly */}
         <section className="pt-5">
-          <h2 className="px-4 text-[17px] font-bold text-[#111827]">
+          <h2 className="px-4 text-title font-bold text-[#111827]">
             시간대별 예보
           </h2>
           <div className="mt-2 overflow-x-auto no-scrollbar">
@@ -147,14 +147,14 @@ function WeatherDetailPage() {
                   key={h.time}
                   className="flex w-[84px] shrink-0 flex-col items-center gap-1.5 rounded-[16px] border border-[#EEF1F5] bg-white py-3"
                 >
-                  <div className="text-[13px] font-semibold text-[#4B5563]">
+                  <div className="text-body font-semibold text-[#4B5563]">
                     {h.time}
                   </div>
-                  <div className="text-[26px] leading-none">{h.icon}</div>
-                  <div className="text-[17px] font-bold tabular-nums text-[#111827]">
+                  <div className="text-display leading-none">{h.icon}</div>
+                  <div className="text-title font-bold tabular-nums text-[#111827]">
                     {h.temp}°
                   </div>
-                  <div className="flex items-center gap-0.5 text-[11.5px] font-semibold text-[#2878E8]">
+                  <div className="flex items-center gap-0.5 text-meta font-semibold text-[#2878E8]">
                     <Droplets className="h-3 w-3" />
                     {h.pop}%
                   </div>
@@ -166,7 +166,7 @@ function WeatherDetailPage() {
 
         {/* Weekly */}
         <section className="px-4 pt-5">
-          <h2 className="text-[17px] font-bold text-[#111827]">주간 예보</h2>
+          <h2 className="text-title font-bold text-[#111827]">주간 예보</h2>
           <ul className="mt-2 divide-y divide-[#F1F3F5] rounded-[16px] border border-[#EEF1F5] bg-white">
             {w.daily.map((d) => (
               <li
@@ -175,7 +175,7 @@ function WeatherDetailPage() {
               >
                 <span
                   className={cn(
-                    "text-[14px] font-bold",
+                    "text-body font-bold",
                     d.tone === "today" && "text-[#46933F]",
                     d.tone === "sat" && "text-[#2878E8]",
                     d.tone === "sun" && "text-[#E43D3D]",
@@ -184,16 +184,16 @@ function WeatherDetailPage() {
                 >
                   {d.dayLabel}
                 </span>
-                <span className="text-[12.5px] text-[#6B7280]">{d.date}</span>
-                <span className="text-[20px] leading-none">{d.icon}</span>
-                <span className="truncate text-[13.5px] text-[#374151]">
+                <span className="text-caption text-[#6B7280]">{d.date}</span>
+                <span className="text-heading leading-none">{d.icon}</span>
+                <span className="truncate text-body text-[#374151]">
                   {d.condition}
                 </span>
-                <span className="flex items-center justify-end gap-0.5 text-[12.5px] font-semibold text-[#2878E8]">
+                <span className="flex items-center justify-end gap-0.5 text-caption font-semibold text-[#2878E8]">
                   <Umbrella className="h-3 w-3" />
                   {d.pop}%
                 </span>
-                <span className="flex items-center justify-end gap-1 text-[13.5px] font-bold tabular-nums">
+                <span className="flex items-center justify-end gap-1 text-body font-bold tabular-nums">
                   <span className="text-[#2878E8]">{d.min}°</span>
                   <span className="text-[#C4C9D0]">/</span>
                   <span className="text-[#E43D3D]">{d.max}°</span>
@@ -208,7 +208,7 @@ function WeatherDetailPage() {
           <section className="px-4 pt-4">
             <div className="flex items-start gap-2 rounded-[14px] bg-[#EAF3FB] px-3 py-3">
               <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#2878E8]" />
-              <p className="text-[13px] leading-relaxed text-[#1F3B5B]">
+              <p className="text-body leading-relaxed text-[#1F3B5B]">
                 {w.advisory}
               </p>
             </div>
@@ -233,8 +233,8 @@ function Metric({
   return (
     <div className="flex flex-col items-center justify-center gap-1 px-1">
       <div>{icon}</div>
-      <div className="text-[11.5px] font-medium text-[#6B7280]">{label}</div>
-      <div className={cn("text-[14px] font-bold text-[#111827]", valueClass)}>
+      <div className="text-meta font-medium text-[#6B7280]">{label}</div>
+      <div className={cn("text-body font-bold text-[#111827]", valueClass)}>
         {value}
       </div>
     </div>

@@ -40,7 +40,7 @@ export function AddCropSheet({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="mx-auto max-w-[430px] px-0">
         <DrawerHeader className="pb-2">
-          <DrawerTitle className="text-left text-[16px] font-bold">작물 추가</DrawerTitle>
+          <DrawerTitle className="text-left text-subtitle font-bold">작물 추가</DrawerTitle>
         </DrawerHeader>
 
         <div className="px-4">
@@ -50,7 +50,7 @@ export function AddCropSheet({
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="작물명으로 검색"
-              className="h-10 w-full rounded-lg bg-[#F8F9FA] pl-9 pr-9 text-[14px] outline-none focus:ring-2 focus:ring-[#3A8A3A]/30"
+              className="h-10 w-full rounded-lg bg-[#F8F9FA] pl-9 pr-9 text-body outline-none focus:ring-2 focus:ring-[#3A8A3A]/30"
             />
             {q && (
               <button
@@ -69,7 +69,7 @@ export function AddCropSheet({
               key={c.id}
               onClick={() => setCat(c.id)}
               className={cn(
-                "shrink-0 rounded-full px-3 py-1 text-[12px] font-semibold",
+                "shrink-0 rounded-full px-3 py-1 text-caption font-semibold",
                 cat === c.id
                   ? "bg-[#3A8A3A] text-white"
                   : "bg-secondary text-[#6C757D]",
@@ -82,7 +82,7 @@ export function AddCropSheet({
 
         <div className="max-h-[55vh] overflow-y-auto px-2 pb-6">
           {list.length === 0 && (
-            <div className="px-4 py-10 text-center text-[13px] text-muted-foreground">
+            <div className="px-4 py-10 text-center text-body text-muted-foreground">
               검색 결과가 없어요
             </div>
           )}
@@ -95,14 +95,14 @@ export function AddCropSheet({
                 className="flex items-center justify-between rounded-lg px-2 py-2.5 active:bg-secondary"
               >
                 <div className="flex min-w-0 items-center gap-2.5">
-                  <span className="text-xl" aria-hidden>
+                  <span className="text-title" aria-hidden>
                     {c.emoji}
                   </span>
                   <div className="min-w-0">
-                    <div className="truncate text-[14px] font-semibold text-foreground">
+                    <div className="truncate text-body font-semibold text-foreground">
                       {c.name}
                     </div>
-                    <div className="text-[11px] text-muted-foreground">{catLabel}</div>
+                    <div className="text-meta text-muted-foreground">{catLabel}</div>
                   </div>
                 </div>
                 <button

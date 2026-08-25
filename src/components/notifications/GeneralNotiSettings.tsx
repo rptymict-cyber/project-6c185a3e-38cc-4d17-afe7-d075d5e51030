@@ -60,10 +60,10 @@ export function GeneralNotiSettings() {
       <div className="rounded-[10px] bg-surface">
         <div className="flex items-center justify-between px-4 py-4">
           <div className="min-w-0">
-            <div className="text-[14px] font-semibold text-foreground">
+            <div className="text-body font-semibold text-foreground">
               전체 알림
             </div>
-            <div className="text-[11px] text-muted-foreground">
+            <div className="text-meta text-muted-foreground">
               모든 알림을 한 번에 켜고 끕니다
             </div>
           </div>
@@ -76,7 +76,7 @@ export function GeneralNotiSettings() {
       </div>
 
       {/* 시세 알림 그룹 */}
-      <h3 className="mb-2 mt-6 px-1 text-[12px] font-bold text-muted-foreground">
+      <h3 className="mb-2 mt-6 px-1 text-caption font-bold text-muted-foreground">
         시세 알림
       </h3>
       <div
@@ -88,10 +88,10 @@ export function GeneralNotiSettings() {
         <div className="px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="min-w-0">
-              <div className="text-[14px] font-semibold text-foreground">
+              <div className="text-body font-semibold text-foreground">
                 급등락 알림
               </div>
-              <div className="text-[11px] text-muted-foreground">
+              <div className="text-meta text-muted-foreground">
                 설정 변동폭 이상일 때 알려드려요
               </div>
             </div>
@@ -107,7 +107,7 @@ export function GeneralNotiSettings() {
               !s.priceSwing && "pointer-events-none opacity-50",
             )}
           >
-            <div className="mb-2 flex items-center justify-between text-[12px]">
+            <div className="mb-2 flex items-center justify-between text-caption">
               <span className="text-muted-foreground">변동폭 임계값</span>
               <span className="font-data font-semibold text-foreground">
                 ±{s.swingThreshold}%
@@ -142,7 +142,7 @@ export function GeneralNotiSettings() {
       </div>
 
       {/* 앱 알림 그룹 */}
-      <h3 className="mb-2 mt-6 px-1 text-[12px] font-bold text-muted-foreground">
+      <h3 className="mb-2 mt-6 px-1 text-caption font-bold text-muted-foreground">
         앱 알림
       </h3>
       <div
@@ -159,7 +159,7 @@ export function GeneralNotiSettings() {
         />
       </div>
 
-      <p className="mt-4 px-1 text-[11px] leading-relaxed text-muted-foreground">
+      <p className="mt-4 px-1 text-meta leading-relaxed text-muted-foreground">
         알림은 즐겨찾기에 등록한 품목·시장 기준으로 발송됩니다. 기기 OS 알림
         권한이 꺼져 있으면 표시되지 않을 수 있어요.
       </p>
@@ -181,9 +181,9 @@ function RowToggle({
   return (
     <div className="flex items-center justify-between px-4 py-4">
       <div className="min-w-0">
-        <div className="text-[14px] font-semibold text-foreground">{title}</div>
+        <div className="text-body font-semibold text-foreground">{title}</div>
         {subtitle && (
-          <div className="text-[11px] text-muted-foreground">{subtitle}</div>
+          <div className="text-meta text-muted-foreground">{subtitle}</div>
         )}
       </div>
       <Switch

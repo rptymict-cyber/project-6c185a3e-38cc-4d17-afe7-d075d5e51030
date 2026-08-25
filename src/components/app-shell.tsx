@@ -43,7 +43,7 @@ export function TopHeader({
       <div className="flex min-w-0 items-center gap-2">{left}</div>
       {title ? (
         <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] items-center justify-center">
-          <span className="truncate text-[15px] font-semibold text-foreground">{title}</span>
+          <span className="truncate text-body-lg font-semibold text-foreground">{title}</span>
         </div>
       ) : null}
       <div className="flex items-center gap-2">{right}</div>

@@ -22,7 +22,7 @@ export function PriceBadge({
       className={cn(
         "inline-flex items-center gap-0.5 rounded-full font-semibold tabular-nums",
         cls,
-        size === "sm" ? "px-1.5 py-0.5 text-[11px]" : "px-2 py-1 text-[13px]",
+        size === "sm" ? "px-1.5 py-0.5 text-meta" : "px-2 py-1 text-body",
       )}
     >
       <Icon className={size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5"} />

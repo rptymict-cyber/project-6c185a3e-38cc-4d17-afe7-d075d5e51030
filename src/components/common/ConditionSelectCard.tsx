@@ -52,14 +52,14 @@ export function CompactSelectCard({
         accent === "green" ? "border-[#3A8A3A]/40 bg-[#F0F9F0]" : "border-[#E9ECEF]",
       )}
     >
-      <span className="flex items-center gap-1 text-[11px] font-medium text-[#868E96]">
+      <span className="flex items-center gap-1 text-meta font-medium text-[#868E96]">
         {icon}
         {label}
       </span>
       <span className="flex w-full items-center justify-between">
         <span
           className={cn(
-            "truncate text-[14px] font-bold",
+            "truncate text-body font-bold",
             accent === "green" ? "text-[#1F5C1F]" : "text-foreground",
           )}
         >
@@ -106,10 +106,10 @@ function FullInner({
         {icon}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[11px] font-medium text-[#868E96]">{label}</span>
+        <span className="block text-meta font-medium text-[#868E96]">{label}</span>
         <span
           className={cn(
-            "block truncate text-[14px] font-bold",
+            "block truncate text-body font-bold",
             value ? "text-foreground" : "text-[#ADB5BD]",
           )}
         >

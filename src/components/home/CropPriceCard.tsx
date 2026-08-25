@@ -25,20 +25,20 @@ export function CropPriceCard({ crop, grade = "특" }: { crop: Crop; grade?: str
     >
       <div className="flex items-center gap-1.5">
         <CropIcon name={crop.name} size={22} />
-        <span className="text-[14px] font-bold text-foreground">{crop.name}</span>
-        <span className="rounded bg-[#F1F3F5] px-1 py-0.5 text-[10px] font-medium text-[#6C757D]">
+        <span className="text-body font-bold text-foreground">{crop.name}</span>
+        <span className="rounded bg-[#F1F3F5] px-1 py-0.5 text-meta font-medium text-[#6C757D]">
           {grade}
         </span>
       </div>
-      <div className="mt-1 text-[18px] font-bold tabular-nums leading-tight text-foreground">
+      <div className="mt-1 text-title font-bold tabular-nums leading-tight text-foreground">
         {crop.currentPrice.toLocaleString()}
-        <span className="ml-0.5 text-[11px] font-medium text-[#6C757D]">원/kg</span>
+        <span className="ml-0.5 text-meta font-medium text-[#6C757D]">원/kg</span>
       </div>
-      <div className="mt-0.5 text-[12px] font-semibold tabular-nums" style={{ color }}>
+      <div className="mt-0.5 text-caption font-semibold tabular-nums" style={{ color }}>
         {sign} {Math.abs(pct).toFixed(1)}%
-        <span className="ml-1 text-[10px] font-normal text-[#868E96]">(전일대비)</span>
+        <span className="ml-1 text-meta font-normal text-[#868E96]">(전일대비)</span>
       </div>
-      <div className="mt-1 text-[11px] text-[#868E96]">
+      <div className="mt-1 text-meta text-[#868E96]">
         거래량 {Math.round(crop.volumeTon).toLocaleString()}톤
       </div>
       <div className="mt-1 h-[40px]">

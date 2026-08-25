@@ -54,20 +54,20 @@ function SettingsPage() {
           <div className="mx-4 h-px bg-border" />
           <div className="flex items-center justify-between px-4 py-4">
             <div>
-              <div className="text-[14px] font-semibold text-foreground">
+              <div className="text-body font-semibold text-foreground">
                 버전 정보
               </div>
-              <div className="text-[11px] text-muted-foreground">
+              <div className="text-meta text-muted-foreground">
                 최신 버전을 사용 중입니다
               </div>
             </div>
-            <span className="font-data text-[13px] text-muted-foreground">
+            <span className="font-data text-body text-muted-foreground">
               v0.1.0 Beta
             </span>
           </div>
         </div>
 
-        <div className="mt-8 text-center text-[11px] text-muted-foreground">
+        <div className="mt-8 text-center text-meta text-muted-foreground">
           AGDICT · 농산물 시세 조회
         </div>
       </div>
@@ -95,9 +95,9 @@ function LinkRow({
         {icon}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-[14px] font-semibold text-foreground">{title}</div>
+        <div className="text-body font-semibold text-foreground">{title}</div>
         {subtitle && (
-          <div className="text-[11px] text-muted-foreground">{subtitle}</div>
+          <div className="text-meta text-muted-foreground">{subtitle}</div>
         )}
       </div>
       <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -115,7 +115,7 @@ function SectionLabel({
   return (
     <h2
       className={cn(
-        "mb-2 px-1 text-[12px] font-bold text-muted-foreground",
+        "mb-2 px-1 text-caption font-bold text-muted-foreground",
         className,
       )}
     >
@@ -206,10 +206,10 @@ function FeedbackRow() {
             <MessageSquare className="h-5 w-5" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-[14px] font-semibold text-foreground">
+            <div className="text-body font-semibold text-foreground">
               의견 보내기
             </div>
-            <div className="text-[11px] text-muted-foreground">
+            <div className="text-meta text-muted-foreground">
               평가와 개선 의견을 한 번에 남겨주세요
             </div>
           </div>
@@ -318,10 +318,10 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
   return (
     <div className="px-5 pb-8 pt-2">
       <div className="mx-auto h-1 w-8 rounded-full bg-[#E9ECEF]" />
-      <h3 className="mt-4 text-center text-[17px] font-bold text-foreground">
+      <h3 className="mt-4 text-center text-title font-bold text-foreground">
         AGDICT 어떠셨나요?
       </h3>
-      <p className="mt-1 text-center text-[12.5px] text-muted-foreground">
+      <p className="mt-1 text-center text-caption text-muted-foreground">
         여러분의 평가가 앱 개선에 큰 힘이 됩니다
       </p>
 
@@ -340,7 +340,7 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
             >
               <span
                 className={cn(
-                  "text-[30px] leading-none transition-transform duration-150",
+                  "text-[32px] leading-none transition-transform duration-150",
                   active
                     ? "scale-110"
                     : "scale-100 opacity-50 grayscale",
@@ -351,7 +351,7 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
               </span>
               <span
                 className={cn(
-                  "text-[11px]",
+                  "text-meta",
                   active
                     ? "font-bold text-foreground"
                     : "font-medium text-muted-foreground",
@@ -368,7 +368,7 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
       {chipConfig && (
         <>
           <div className="mt-6">
-            <div className="text-[13.5px] font-bold text-foreground">
+            <div className="text-body font-bold text-foreground">
               {chipConfig.title}
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -381,7 +381,7 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
                     onClick={() => toggleChip(opt)}
                     aria-pressed={on}
                     className={cn(
-                      "inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13px] transition-colors",
+                      "inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 py-2 text-body transition-colors",
                       on
                         ? "border-[#3A8A3A] bg-[#F0F9F0] font-semibold text-[#2E6E2E]"
                         : "border-border bg-background font-medium text-foreground",
@@ -396,10 +396,10 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="mt-5">
-            <div className="text-[13.5px] font-bold text-foreground">
+            <div className="text-body font-bold text-foreground">
               {freeformTitle}
             </div>
-            <div className="mt-1 text-[11.5px] text-muted-foreground">
+            <div className="mt-1 text-meta text-muted-foreground">
               {freeformSubtitle}
             </div>
             <div className="relative mt-2">
@@ -407,10 +407,10 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
                 value={text}
                 onChange={(e) => setText(e.target.value.slice(0, 200))}
                 placeholder={placeholder}
-                className="h-[110px] w-full resize-none rounded-[10px] bg-[#F8F9FA] px-3 py-3 text-[14px] outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-[#3A8A3A]/30"
+                className="h-[110px] w-full resize-none rounded-[10px] bg-[#F8F9FA] px-3 py-3 text-body outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-[#3A8A3A]/30"
                 maxLength={200}
               />
-              <div className="pointer-events-none absolute bottom-2 right-3 text-[11px] text-muted-foreground">
+              <div className="pointer-events-none absolute bottom-2 right-3 text-meta text-muted-foreground">
                 {text.length}/200
               </div>
             </div>
@@ -423,7 +423,7 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
         onClick={submit}
         disabled={!canSubmit}
         className={cn(
-          "mt-6 w-full rounded-lg py-3.5 text-[14px] font-bold text-white transition-colors",
+          "mt-6 w-full rounded-lg py-3.5 text-body font-bold text-white transition-colors",
           canSubmit ? "bg-[#3A8A3A]" : "bg-[#ADB5BD]",
         )}
       >
@@ -444,11 +444,11 @@ function StoreReviewPrompt({
   return (
     <div className="px-5 pb-8 pt-2">
       <div className="mx-auto h-1 w-8 rounded-full bg-[#E9ECEF]" />
-      <div className="mt-5 text-center text-[40px] leading-none">{heart}</div>
-      <h3 className="mt-3 text-center text-[17px] font-bold text-foreground">
+      <div className="mt-5 text-center text-[42px] leading-none">{heart}</div>
+      <h3 className="mt-3 text-center text-title font-bold text-foreground">
         소중한 의견 감사합니다!
       </h3>
-      <p className="mt-2 text-center text-[13px] leading-relaxed text-muted-foreground">
+      <p className="mt-2 text-center text-body leading-relaxed text-muted-foreground">
         스토어에도 한 줄 남겨주시면
         <br />
         다른 농업인들에게 큰 힘이 됩니다.
@@ -461,14 +461,14 @@ function StoreReviewPrompt({
             if (opened) toast("스토어로 이동합니다");
             onClose();
           }}
-          className="w-full rounded-lg bg-[#3A8A3A] py-3.5 text-[14px] font-bold text-white"
+          className="w-full rounded-lg bg-[#3A8A3A] py-3.5 text-body font-bold text-white"
         >
           스토어에 리뷰 쓰기
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="w-full rounded-lg bg-[#F1F3F5] py-3.5 text-[14px] font-semibold text-foreground"
+          className="w-full rounded-lg bg-[#F1F3F5] py-3.5 text-body font-semibold text-foreground"
         >
           다음에 할게요
         </button>

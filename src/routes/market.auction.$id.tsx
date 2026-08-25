@@ -37,7 +37,7 @@ function AuctionDetail() {
       }
     >
       {!record ? (
-        <div className="p-8 text-center text-[13px] text-[#6C757D]">
+        <div className="p-8 text-center text-body text-[#6C757D]">
           경매 정보를 찾을 수 없어요.
           <div className="mt-3">
             <Link to="/market" className="text-[#3A8A3A] underline">
@@ -80,12 +80,12 @@ function Row({
 }) {
   return (
     <div className="flex items-center justify-between px-4 py-3">
-      <dt className="text-[12.5px] text-[#868E96]">{label}</dt>
+      <dt className="text-caption text-[#868E96]">{label}</dt>
       <dd
         className={
           highlight
-            ? "text-[15px] font-bold text-[#E03131]"
-            : "text-[13.5px] font-semibold text-foreground"
+            ? "text-body-lg font-bold text-[#E03131]"
+            : "text-body font-semibold text-foreground"
         }
       >
         {value}

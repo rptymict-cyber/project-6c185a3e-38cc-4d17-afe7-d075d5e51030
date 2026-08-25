@@ -109,14 +109,14 @@ function RuleRow({
       >
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <span className="truncate text-[14.5px] font-bold text-foreground">
+            <span className="truncate text-body font-bold text-foreground">
               {rule.varietyLabel}
             </span>
-            <span className="truncate text-[12px] text-[#868E96]">
+            <span className="truncate text-caption text-[#868E96]">
               {rule.itemLabel}
             </span>
           </div>
-          <div className="mt-0.5 truncate text-[12px] text-[#6C757D]">
+          <div className="mt-0.5 truncate text-caption text-[#6C757D]">
             {subParts.join(" · ")} · {rule.unit.replace(" 기준", "")}
           </div>
           {badges.length > 0 && (
@@ -124,7 +124,7 @@ function RuleRow({
               {badges.map((b) => (
                 <span
                   key={b}
-                  className="rounded-full bg-[#F0F9F0] px-2 py-0.5 text-[10.5px] font-semibold text-[#1F5C1F]"
+                  className="rounded-full bg-[#F0F9F0] px-2 py-0.5 text-meta font-semibold text-[#1F5C1F]"
                 >
                   {b}
                 </span>

@@ -18,7 +18,7 @@ export function ProAnalysisChart({ data }: { data: SeriesPoint[] }) {
           <CartesianGrid stroke="#F1F3F5" vertical={false} />
           <XAxis
             dataKey="label"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             interval="preserveStartEnd"
@@ -27,7 +27,7 @@ export function ProAnalysisChart({ data }: { data: SeriesPoint[] }) {
           <YAxis
             yAxisId="price"
             orientation="left"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             width={48}
@@ -36,7 +36,7 @@ export function ProAnalysisChart({ data }: { data: SeriesPoint[] }) {
           <YAxis
             yAxisId="vol"
             orientation="right"
-            tick={{ fontSize: 11, fill: "#868E96" }}
+            tick={{ fontSize: 12, fill: "#868E96" }}
             axisLine={false}
             tickLine={false}
             width={30}

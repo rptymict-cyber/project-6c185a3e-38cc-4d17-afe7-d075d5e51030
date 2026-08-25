@@ -17,7 +17,7 @@ export function CategoryChips({
             key={c.id}
             onClick={() => onChange(c.id)}
             className={cn(
-              "shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors",
+              "shrink-0 rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors",
               active ? "bg-[#3A8A3A] text-white" : "bg-[#F8F9FA] text-[#6C757D]",
             )}
           >

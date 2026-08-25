@@ -74,10 +74,10 @@ export function ProPriceHeadlineCard({
               <CropIcon name={itemLabel} size={28} />
             </div>
             <div className="min-w-0">
-              <div className="truncate text-[16px] font-black leading-tight text-foreground">
+              <div className="truncate text-subtitle font-black leading-tight text-foreground">
                 {itemLabel} · {varietyLabel}
               </div>
-              <div className="mt-1 truncate text-[12px] font-medium text-[#868E96]">
+              <div className="mt-1 truncate text-caption font-medium text-[#868E96]">
                 {marketCondLabel} · {corpCondLabel}
               </div>
             </div>
@@ -139,7 +139,7 @@ export function ProPriceHeadlineCard({
 
         <div className="mt-3 flex items-end justify-between">
           <div className="flex items-baseline gap-1">
-            <span className="text-[30px] font-black leading-none tracking-tight text-foreground">
+            <span className="text-[32px] font-black leading-none tracking-tight text-foreground">
               {quote.price.toLocaleString()}
             </span>
             <button
@@ -148,7 +148,7 @@ export function ProPriceHeadlineCard({
                 e.stopPropagation();
                 setUnitOpen(true);
               }}
-              className="ml-0.5 flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[13px] font-semibold text-[#495057] active:bg-[#F1F3F5]"
+              className="ml-0.5 flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-body font-semibold text-[#495057] active:bg-[#F1F3F5]"
               aria-label="단위 변경"
             >
               원/{quote.unit.replace(" 기준", "")}
@@ -156,17 +156,17 @@ export function ProPriceHeadlineCard({
             </button>
           </div>
           <div className={cn("flex flex-col items-end leading-tight", changeColor)}>
-            <span className="flex items-center gap-0.5 text-[15px] font-bold">
+            <span className="flex items-center gap-0.5 text-body-lg font-bold">
               {up ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
               {up ? "+" : ""}{quote.prevPct.toFixed(1)}%
             </span>
-            <span className="mt-0.5 text-[11px] font-medium text-[#868E96]">전일 대비</span>
+            <span className="mt-0.5 text-meta font-medium text-[#868E96]">전일 대비</span>
           </div>
         </div>
 
 
         {/* Effective date badge */}
-        <div className="mt-3 flex items-center gap-1 rounded-[8px] bg-[#F0F9F0] px-2.5 py-1.5 text-[11.5px] font-medium text-[#1F5C1F]">
+        <div className="mt-3 flex items-center gap-1 rounded-[8px] bg-[#F0F9F0] px-2.5 py-1.5 text-meta font-medium text-[#1F5C1F]">
           <Clock className="h-3 w-3" />
           {quote.effectiveLabel}
           {quote.fallbackNote && <span className="opacity-80"> · {quote.fallbackNote}</span>}
@@ -181,7 +181,7 @@ export function ProPriceHeadlineCard({
         </div>
 
         {/* Footer */}
-        <div className="mt-3 flex items-center justify-between border-t border-[#F1F3F5] pt-2.5 text-[11px] text-[#868E96]">
+        <div className="mt-3 flex items-center justify-between border-t border-[#F1F3F5] pt-2.5 text-meta text-[#868E96]">
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
             {quote.updatedAt} 업데이트
@@ -199,8 +199,8 @@ function Stat({ label, value, tone }: { label: string; value: string; tone: "up"
   const color = tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
   return (
     <div className="flex flex-col items-center gap-0.5">
-      <span className="text-[10.5px] text-[#868E96]">{label}</span>
-      <span className={cn("text-[13px] font-bold", color)}>{value}</span>
+      <span className="text-meta text-[#868E96]">{label}</span>
+      <span className={cn("text-body font-bold", color)}>{value}</span>
     </div>
   );
 }

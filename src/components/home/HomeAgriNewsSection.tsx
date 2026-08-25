@@ -30,12 +30,12 @@ export function HomeAgriNewsSection() {
     <div className="mx-4 mt-5">
       {/* section title */}
       <div className="flex items-center justify-between">
-        <h3 className="text-[18px] font-bold text-[#111827]">
+        <h3 className="text-title font-bold text-[#111827]">
           농업 뉴스
         </h3>
         <Link
           to="/news"
-          className="flex items-center gap-0.5 text-[13px] font-medium text-[#4B5563]"
+          className="flex items-center gap-0.5 text-body font-medium text-[#4B5563]"
         >
           더보기
           <ChevronRight className="h-3.5 w-3.5" />
@@ -78,7 +78,7 @@ function NewsCard({ item }: { item: AgriNewsItem }) {
       <NewsThumb item={item} />
       <div className="min-w-0 flex-1">
         <span
-          className="inline-block rounded-md px-2 py-0.5 text-[11px] font-bold"
+          className="inline-block rounded-md px-2 py-0.5 text-meta font-bold"
           style={{
             color: AGRI_NEWS_TYPE_COLOR[item.type],
             backgroundColor: `${AGRI_NEWS_TYPE_COLOR[item.type]}1A`,
@@ -86,13 +86,13 @@ function NewsCard({ item }: { item: AgriNewsItem }) {
         >
           {item.typeLabel}
         </span>
-        <div className="mt-1.5 line-clamp-2 text-[15px] font-bold leading-snug text-[#111827]">
+        <div className="mt-1.5 line-clamp-2 text-body-lg font-bold leading-snug text-[#111827]">
           {item.title}
         </div>
-        <p className="mt-1 line-clamp-2 text-[13px] leading-[1.5] text-[#6B7280]">
+        <p className="mt-1 line-clamp-2 text-body leading-[1.5] text-[#6B7280]">
           {item.description}
         </p>
-        <div className="mt-1.5 text-[11px] text-[#9CA3AF]">
+        <div className="mt-1.5 text-meta text-[#9CA3AF]">
           {formatRelative(item.publishedAt)} · {item.source}
         </div>
       </div>

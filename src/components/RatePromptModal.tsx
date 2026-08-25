@@ -142,10 +142,10 @@ export function RatePromptModal() {
 
         {step === "rate" ? (
           <>
-            <h2 className="mt-4 text-center text-[17px] font-bold text-foreground">
+            <h2 className="mt-4 text-center text-title font-bold text-foreground">
               앱이 마음에 드시나요?
             </h2>
-            <p className="mt-1 text-center text-[12.5px] text-[#868E96]">
+            <p className="mt-1 text-center text-caption text-[#868E96]">
               별점을 남겨주시면 큰 힘이 됩니다!
             </p>
 
@@ -181,14 +181,14 @@ export function RatePromptModal() {
               <button
                 type="button"
                 onClick={closeLater}
-                className="px-2 py-2 text-[13px] font-semibold text-[#868E96]"
+                className="px-2 py-2 text-body font-semibold text-[#868E96]"
               >
                 나중에
               </button>
               <button
                 type="button"
                 onClick={closeForever}
-                className="px-2 py-2 text-[13px] font-semibold text-[#495057]"
+                className="px-2 py-2 text-body font-semibold text-[#495057]"
               >
                 다시 보지 않기
               </button>
@@ -196,10 +196,10 @@ export function RatePromptModal() {
           </>
         ) : (
           <>
-            <h2 className="mt-4 text-center text-[17px] font-bold text-foreground">
+            <h2 className="mt-4 text-center text-title font-bold text-foreground">
               의견을 들려주세요
             </h2>
-            <p className="mt-1 text-center text-[12.5px] text-[#868E96]">
+            <p className="mt-1 text-center text-caption text-[#868E96]">
               불편하거나 아쉬웠던 점을 알려주시면 개선하겠습니다.
             </p>
 
@@ -208,10 +208,10 @@ export function RatePromptModal() {
                 value={text}
                 onChange={(e) => setText(e.target.value.slice(0, 200))}
                 placeholder="개선 의견을 남겨주세요"
-                className="h-[110px] w-full resize-none rounded-[10px] bg-[#F8F9FA] px-3 py-3 text-[13px] outline-none placeholder:text-[#ADB5BD] focus:ring-2 focus:ring-[#3A8A3A]/30"
+                className="h-[110px] w-full resize-none rounded-[10px] bg-[#F8F9FA] px-3 py-3 text-body outline-none placeholder:text-[#ADB5BD] focus:ring-2 focus:ring-[#3A8A3A]/30"
                 maxLength={200}
               />
-              <div className="mt-1 text-right text-[11px] text-[#868E96]">
+              <div className="mt-1 text-right text-meta text-[#868E96]">
                 {text.length}/200
               </div>
             </div>
@@ -221,7 +221,7 @@ export function RatePromptModal() {
               onClick={submitFeedback}
               disabled={submitting}
               className={cn(
-                "mt-2 w-full rounded-lg py-3 text-[14px] font-bold text-white transition-colors",
+                "mt-2 w-full rounded-lg py-3 text-body font-bold text-white transition-colors",
                 submitting ? "bg-[#ADB5BD]" : "bg-[#3A8A3A]",
               )}
             >
@@ -232,14 +232,14 @@ export function RatePromptModal() {
               <button
                 type="button"
                 onClick={closeLater}
-                className="px-2 py-2 text-[12.5px] font-semibold text-[#868E96]"
+                className="px-2 py-2 text-caption font-semibold text-[#868E96]"
               >
                 나중에
               </button>
               <button
                 type="button"
                 onClick={closeForever}
-                className="px-2 py-2 text-[12.5px] font-semibold text-[#495057]"
+                className="px-2 py-2 text-caption font-semibold text-[#495057]"
               >
                 다시 보지 않기
               </button>

@@ -148,7 +148,7 @@ function SearchPage() {
               if (e.key === "Enter") commit(q);
             }}
             placeholder="작물명, 시장명으로 검색"
-            className="h-9 flex-1 bg-transparent text-[14px] outline-none placeholder:text-muted-foreground"
+            className="h-9 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground"
           />
           {q.length > 0 && (
             <button
@@ -188,16 +188,16 @@ function SearchPage() {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
                               <span
-                                className="truncate text-[14px] font-semibold text-foreground"
+                                className="truncate text-body font-semibold text-foreground"
                                 dangerouslySetInnerHTML={{
                                   __html: highlight(c.name, query),
                                 }}
                               />
-                              <span className="rounded bg-[#F0F9F0] px-1.5 py-0.5 text-[10px] font-bold text-[#3A8A3A]">
+                              <span className="rounded bg-[#F0F9F0] px-1.5 py-0.5 text-meta font-bold text-[#3A8A3A]">
                                 {CATEGORY_LABEL[c.category]}
                               </span>
                             </div>
-                            <div className="mt-0.5 flex items-center gap-2 text-[12px] text-muted-foreground">
+                            <div className="mt-0.5 flex items-center gap-2 text-caption text-muted-foreground">
                               <span className="font-data">
                                 {c.currentPrice.toLocaleString()}
                               </span>
@@ -228,17 +228,17 @@ function SearchPage() {
                           onClick={() => commit(m.name)}
                           className="flex w-full items-center gap-3 px-4 py-3 text-left"
                         >
-                          <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface text-[16px]">
+                          <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface text-subtitle">
                             🏪
                           </span>
                           <div className="min-w-0 flex-1">
                             <div
-                              className="truncate text-[14px] font-semibold text-foreground"
+                              className="truncate text-body font-semibold text-foreground"
                               dangerouslySetInnerHTML={{
                                 __html: highlight(m.name, query),
                               }}
                             />
-                            <div className="text-[12px] text-muted-foreground">
+                            <div className="text-caption text-muted-foreground">
                               {m.region}
                             </div>
                           </div>
@@ -267,7 +267,7 @@ function SearchPage() {
                       setRecent([]);
                       saveRecent([]);
                     }}
-                    className="text-[12px] text-muted-foreground"
+                    className="text-caption text-muted-foreground"
                   >
                     전체삭제
                   </button>
@@ -283,7 +283,7 @@ function SearchPage() {
                       <button
                         type="button"
                         onClick={() => setQ(term)}
-                        className="flex-1 truncate text-left text-[14px] text-foreground"
+                        className="flex-1 truncate text-left text-body text-foreground"
                       >
                         {term}
                       </button>
@@ -315,7 +315,7 @@ function SearchPage() {
                     key={c.id}
                     type="button"
                     onClick={() => openCrop(c)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-[13px] font-semibold text-foreground"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-body font-semibold text-foreground"
                   >
                     <CropIcon name={c.name} size={16} />
                     {c.name}
@@ -342,7 +342,7 @@ function Section({
   return (
     <section className="mt-3">
       <div className="flex items-center justify-between px-4 pb-2">
-        <h2 className="text-[12px] font-bold text-muted-foreground">{title}</h2>
+        <h2 className="text-caption font-bold text-muted-foreground">{title}</h2>
         {action}
       </div>
       {children}
@@ -355,7 +355,7 @@ function ChangeBadge({ current, prev }: { current: number; prev: number }) {
   const pct = prev ? (diff / prev) * 100 : 0;
   if (diff === 0) {
     return (
-      <span className="rounded bg-[#F1F3F5] px-1.5 py-0.5 text-[11px] font-bold text-muted-foreground">
+      <span className="rounded bg-[#F1F3F5] px-1.5 py-0.5 text-meta font-bold text-muted-foreground">
         0.0%
       </span>
     );
@@ -364,7 +364,7 @@ function ChangeBadge({ current, prev }: { current: number; prev: number }) {
   return (
     <span
       className={cn(
-        "rounded px-1.5 py-0.5 text-[11px] font-bold",
+        "rounded px-1.5 py-0.5 text-meta font-bold",
         up ? "bg-[#FFF5F5] text-[#E03131]" : "bg-[#EDF2FF] text-[#1971C2]",
       )}
     >
@@ -379,10 +379,10 @@ function EmptyResults() {
       <div className="grid h-16 w-16 place-items-center rounded-full bg-[#F1F3F5]">
         <SearchIcon className="h-7 w-7 text-[#ADB5BD]" />
       </div>
-      <p className="mt-4 text-[15px] font-bold text-foreground">
+      <p className="mt-4 text-body-lg font-bold text-foreground">
         검색 결과가 없어요
       </p>
-      <p className="mt-1 text-[12px] text-muted-foreground">
+      <p className="mt-1 text-caption text-muted-foreground">
         다른 키워드로 검색해보세요
       </p>
     </div>

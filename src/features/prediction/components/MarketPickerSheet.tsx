@@ -26,7 +26,7 @@ export function MarketPickerSheet({
         className="mx-auto max-w-[430px] rounded-t-2xl p-0"
       >
         <SheetHeader className="border-b border-[#E9ECEF] px-4 py-3.5 text-left">
-          <SheetTitle className="text-[15px] font-bold text-foreground">
+          <SheetTitle className="text-body-lg font-bold text-foreground">
             도매시장 선택
           </SheetTitle>
         </SheetHeader>
@@ -50,13 +50,13 @@ export function MarketPickerSheet({
                     <div className="min-w-0 flex-1">
                       <div
                         className={cn(
-                          "text-[14px] font-semibold",
+                          "text-body font-semibold",
                           active ? "text-[#1F5C1F]" : "text-foreground",
                         )}
                       >
                         {m.name}
                       </div>
-                      <div className="text-[11px] text-[#868E96]">
+                      <div className="text-meta text-[#868E96]">
                         {m.region}
                       </div>
                     </div>

@@ -6,7 +6,7 @@ export function HomeSearchHeader() {
     <header className="sticky top-0 z-30 flex h-[56px] items-center gap-2 border-b border-[#E9ECEF] bg-background px-3">
       <Link
         to="/search"
-        className="group flex h-10 flex-1 items-center gap-2 rounded-full bg-[#F1F3F5] px-4 text-[13px] text-[#868E96] transition-colors hover:bg-[#E9ECEF]"
+        className="group flex h-10 flex-1 items-center gap-2 rounded-full bg-[#F1F3F5] px-4 text-body text-[#868E96] transition-colors hover:bg-[#E9ECEF]"
         aria-label="검색"
       >
         <Search className="h-4 w-4 text-[#868E96]" />

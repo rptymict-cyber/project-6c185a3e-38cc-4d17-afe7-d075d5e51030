@@ -22,14 +22,14 @@ function NotFoundComponent() {
     <div className="mx-auto flex min-h-dvh w-full max-w-[430px] items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-6xl font-bold text-foreground">404</h1>
-        <h2 className="mt-3 text-lg font-semibold">페이지를 찾을 수 없어요</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h2 className="mt-3 text-subtitle font-semibold">페이지를 찾을 수 없어요</h2>
+        <p className="mt-2 text-body text-muted-foreground">
           주소가 잘못되었거나 이동된 페이지입니다.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-body font-semibold text-primary-foreground"
           >
             홈으로
           </Link>
@@ -49,21 +49,21 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[430px] items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-lg font-semibold">페이지를 불러오지 못했어요</h1>
-        <p className="mt-2 text-sm text-muted-foreground">잠시 후 다시 시도해 주세요.</p>
+        <h1 className="text-subtitle font-semibold">페이지를 불러오지 못했어요</h1>
+        <p className="mt-2 text-body text-muted-foreground">잠시 후 다시 시도해 주세요.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-body font-semibold text-primary-foreground"
           >
             다시 시도
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-4 py-2 text-sm font-semibold"
+            className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-4 py-2 text-body font-semibold"
           >
             홈으로
           </a>

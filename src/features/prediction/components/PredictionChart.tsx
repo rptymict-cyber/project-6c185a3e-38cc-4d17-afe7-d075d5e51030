@@ -35,21 +35,21 @@ function CustomTooltip({
   const isForecast = p.predictedPrice !== undefined && !p.isToday && p.actualPrice === undefined;
   return (
     <div className="rounded-[10px] border border-[#E9ECEF] bg-white px-3 py-2 shadow-md">
-      <div className={`text-[12px] font-bold ${isForecast ? "text-[#2E9E6B]" : "text-foreground"}`}>
+      <div className={`text-caption font-bold ${isForecast ? "text-[#2E9E6B]" : "text-foreground"}`}>
         {label} · AI 예측
       </div>
       {p.actualPrice !== undefined && (
-        <div className="mt-0.5 text-[12px] font-bold text-[#E03B3B]">
+        <div className="mt-0.5 text-caption font-bold text-[#E03B3B]">
           평균가 {p.actualPrice.toLocaleString()}원
         </div>
       )}
       {p.pastVolume !== undefined && p.actualPrice !== undefined && (
-        <div className="text-[11.5px] text-[#495057]">
+        <div className="text-meta text-[#495057]">
           거래량 {p.pastVolume.toLocaleString()}t
         </div>
       )}
       {isForecast && p.predictedPrice !== undefined && (
-        <div className="mt-0.5 text-[12px] font-bold text-[#2E9E6B]">
+        <div className="mt-0.5 text-caption font-bold text-[#2E9E6B]">
           예상 평균가 {p.predictedPrice.toLocaleString()}원
         </div>
       )}
@@ -153,7 +153,7 @@ function XLabelsOverlay({
             x={c.x}
             y={y}
             textAnchor="middle"
-            fontSize={9}
+            fontSize={12}
             fontWeight={emphasized ? 700 : 400}
             fill={emphasized ? "#495057" : "#ADB5BD"}
           >
@@ -218,7 +218,7 @@ function LabelsOverlay({
   ) => {
     const padX = 8;
     const padY = 4;
-    const fontSize = 10.5;
+    const fontSize = 12;
     const w = Math.round(text.length * 6.6 + padX * 2);
     const h = fontSize + padY * 2;
     const GAP = 10;
@@ -389,7 +389,7 @@ function SelectedMarker({
           x={0}
           y={-h / 2 + 4}
           textAnchor="middle"
-          fontSize={11}
+          fontSize={12}
           fontWeight={800}
           fill="#fff"
         >
@@ -529,14 +529,14 @@ function PredictionChartBase({
       {/* 헤이딜러식 상단 제목 — 선택 날짜에 반응 */}
       {showTopInfo && selectedPrice != null && (
         <div className="mb-3">
-          <div className="text-[12px] font-bold text-[#6C757D]">
+          <div className="text-caption font-bold text-[#6C757D]">
             {selectedLabel} 예상 시세
           </div>
           <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <span className="text-[28px] font-black leading-none tabular-nums text-[#2E9E6B]">
+            <span className="text-[30px] font-black leading-none tabular-nums text-[#2E9E6B]">
               {selectedPrice.toLocaleString()}
             </span>
-            <span className="text-[13px] font-bold text-[#495057]">
+            <span className="text-body font-bold text-[#495057]">
               원{baseUnitLabel ? ` / ${baseUnitLabel}` : ""}
             </span>
           </div>
@@ -581,7 +581,7 @@ function PredictionChartBase({
 
             <YAxis
               yAxisId="price"
-              tick={{ fontSize: 10, fill: "#868E96" }}
+              tick={{ fontSize: 12, fill: "#868E96" }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(v) => v.toLocaleString()}
@@ -591,7 +591,7 @@ function PredictionChartBase({
             <YAxis
               yAxisId="vol"
               orientation="right"
-              tick={{ fontSize: 10, fill: "#868E96" }}
+              tick={{ fontSize: 12, fill: "#868E96" }}
               axisLine={false}
               tickLine={false}
               width={28}

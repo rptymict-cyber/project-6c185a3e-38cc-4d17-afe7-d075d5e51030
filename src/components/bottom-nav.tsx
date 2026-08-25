@@ -29,7 +29,7 @@ function BottomNavBase() {
           key={to}
           to={to}
           activeOptions={{ exact: to === "/" }}
-          className="group flex min-h-11 flex-1 flex-col items-center justify-center gap-1 text-[10px] text-[#9CA3AF] transition-colors data-[status=active]:text-primary"
+          className="group flex min-h-11 flex-1 flex-col items-center justify-center gap-1 text-body text-[#9CA3AF] transition-colors data-[status=active]:text-primary"
         >
           <span className="relative grid place-items-center">
             <Icon className="h-5 w-5" />

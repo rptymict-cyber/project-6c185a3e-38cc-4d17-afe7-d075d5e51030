@@ -122,7 +122,7 @@ function WatchlistAddPage() {
       <div className="flex flex-col gap-3 px-4 pt-4">
         {/* 품목 선택 */}
         <section className="rounded-2xl border border-border bg-background p-4">
-          <div className="mb-2 text-[12px] font-semibold text-muted-foreground">
+          <div className="mb-2 text-caption font-semibold text-muted-foreground">
             작물
           </div>
           <button
@@ -136,13 +136,13 @@ function WatchlistAddPage() {
                   <CropIcon name={item!.name} size={24} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[15px] font-bold text-foreground">
+                  <div className="truncate text-body-lg font-bold text-foreground">
                     {`${category?.name ?? ""} · ${item!.name} · ${variety?.name ?? "전체 품종"}`}
                   </div>
                 </div>
               </>
             ) : (
-              <div className="flex-1 text-[14px] text-muted-foreground">
+              <div className="flex-1 text-body text-muted-foreground">
                 품목을 선택하세요
               </div>
             )}
@@ -152,7 +152,7 @@ function WatchlistAddPage() {
 
         {/* 시장 선택 */}
         <section className="rounded-2xl border border-border bg-background p-4">
-          <div className="mb-2 text-[12px] font-semibold text-muted-foreground">
+          <div className="mb-2 text-caption font-semibold text-muted-foreground">
             도매시장
           </div>
           <button
@@ -163,19 +163,19 @@ function WatchlistAddPage() {
             <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-muted">
               <Store className="h-5 w-5 text-muted-foreground" />
             </div>
-            <div className="min-w-0 flex-1 text-[15px] font-bold text-foreground">
+            <div className="min-w-0 flex-1 text-body-lg font-bold text-foreground">
               {marketName}
             </div>
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </button>
-          <p className="mt-2 text-[11.5px] text-muted-foreground">
+          <p className="mt-2 text-meta text-muted-foreground">
             전체 시장을 선택해도 즐겨찾기로 저장할 수 있어요.
           </p>
         </section>
 
         {/* 단위 선택 */}
         <section className="rounded-2xl border border-border bg-background p-4">
-          <div className="mb-2 text-[12px] font-semibold text-muted-foreground">
+          <div className="mb-2 text-caption font-semibold text-muted-foreground">
             단위
           </div>
           <button
@@ -186,12 +186,12 @@ function WatchlistAddPage() {
             <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-muted">
               <Scale className="h-5 w-5 text-muted-foreground" />
             </div>
-            <div className="min-w-0 flex-1 text-[15px] font-bold text-foreground">
+            <div className="min-w-0 flex-1 text-body-lg font-bold text-foreground">
               {unit}
             </div>
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </button>
-          <p className="mt-2 text-[11.5px] text-muted-foreground">
+          <p className="mt-2 text-meta text-muted-foreground">
             가격은 kg 기준 시세를 선택한 단위로 환산해 표시해요.
           </p>
         </section>
@@ -199,19 +199,19 @@ function WatchlistAddPage() {
         {/* 미리보기 */}
         {cropSelected && quote && (
           <section className="rounded-2xl border border-border bg-background p-4">
-            <div className="mb-2 text-[12px] font-semibold text-muted-foreground">
+            <div className="mb-2 text-caption font-semibold text-muted-foreground">
               현재가 미리보기 ({unit} 기준)
             </div>
             <div className="flex items-end justify-between gap-3">
-              <div className="font-data text-[24px] font-bold leading-none tabular-nums text-foreground">
+              <div className="font-data text-display font-bold leading-none tabular-nums text-foreground">
                 {quote.price.toLocaleString()}
-                <span className="ml-1 text-[12px] font-medium text-muted-foreground">
+                <span className="ml-1 text-caption font-medium text-muted-foreground">
                   원 / {unit}
                 </span>
               </div>
               <span
                 className={cn(
-                  "inline-flex items-center whitespace-nowrap rounded-md px-2 py-1 text-[12px] font-bold tabular-nums",
+                  "inline-flex items-center whitespace-nowrap rounded-md px-2 py-1 text-caption font-bold tabular-nums",
                   flat
                     ? "bg-muted text-muted-foreground"
                     : rising
@@ -224,7 +224,7 @@ function WatchlistAddPage() {
                   : `${rising ? "▲ +" : "▼ "}${quote.prevPct.toFixed(1)}%`}
               </span>
             </div>
-            <p className="mt-2 text-[11.5px] text-muted-foreground">
+            <p className="mt-2 text-meta text-muted-foreground">
               {quote.effectiveLabel} · 거래량 {quote.volumeTon.toLocaleString()}t
             </p>
           </section>
@@ -238,7 +238,7 @@ function WatchlistAddPage() {
           onClick={handleSave}
           disabled={!cropSelected}
           className={cn(
-            "h-12 w-full rounded-xl text-[15px] font-bold",
+            "h-12 w-full rounded-xl text-body-lg font-bold",
             cropSelected
               ? "bg-primary text-primary-foreground active:opacity-90"
               : "bg-muted text-muted-foreground",
@@ -287,7 +287,7 @@ function UnitPickerSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="rounded-t-2xl p-0">
         <SheetHeader className="px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">단위 선택</SheetTitle>
+          <SheetTitle className="text-subtitle font-bold">단위 선택</SheetTitle>
         </SheetHeader>
         <ul className="px-2 pb-6 pt-2">
           {UNIT_OPTIONS.map((u) => {
@@ -298,7 +298,7 @@ function UnitPickerSheet({
                   type="button"
                   onClick={() => onSelect(u)}
                   className={cn(
-                    "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-[14px]",
+                    "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-body",
                     active ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
                   )}
                 >
@@ -332,7 +332,7 @@ function MarketPickerSheet({
         className="max-h-[85dvh] overflow-y-auto rounded-t-2xl p-0"
       >
         <SheetHeader className="px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">도매시장 선택</SheetTitle>
+          <SheetTitle className="text-subtitle font-bold">도매시장 선택</SheetTitle>
         </SheetHeader>
         <ul className="mt-3">
           <li className="border-b border-[#F1F3F5]">
@@ -340,7 +340,7 @@ function MarketPickerSheet({
               type="button"
               onClick={() => onSelect(ALL_MARKET_ID, ALL_MARKET_NAME)}
               className={cn(
-                "flex w-full items-center justify-between px-5 py-3.5 text-left text-[14px] font-semibold",
+                "flex w-full items-center justify-between px-5 py-3.5 text-left text-body font-semibold",
                 selectedId === ALL_MARKET_ID ? "text-[#1F5C1F]" : "text-foreground",
               )}
             >
@@ -362,13 +362,13 @@ function MarketPickerSheet({
                   <div className="min-w-0 flex-1">
                     <div
                       className={cn(
-                        "text-[15px] font-bold",
+                        "text-body-lg font-bold",
                         active ? "text-[#1F5C1F]" : "text-foreground",
                       )}
                     >
                       {m.name}
                     </div>
-                    <div className="mt-0.5 text-[12px] text-[#6C757D]">
+                    <div className="mt-0.5 text-caption text-[#6C757D]">
                       {m.region}
                     </div>
                   </div>

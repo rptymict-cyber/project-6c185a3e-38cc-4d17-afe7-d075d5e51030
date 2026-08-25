@@ -29,7 +29,7 @@ export function CropRankingRow({ item }: { item: RankingItem }) {
   const rankColor = item.rank <= 3 ? "text-[#3A8A3A]" : "text-[#ADB5BD]";
   return (
     <div className="flex items-center gap-3 px-4 py-3">
-      <span className={cn("w-4 text-center text-[14px] font-bold tabular-nums", rankColor)}>
+      <span className={cn("w-4 text-center text-body font-bold tabular-nums", rankColor)}>
         {item.rank}
       </span>
       <Link
@@ -46,15 +46,15 @@ export function CropRankingRow({ item }: { item: RankingItem }) {
           <CropIcon name={item.name} size={22} />
         </span>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-[14px] font-bold text-foreground">{item.name}</div>
-          <div className="truncate text-[11px] text-[#868E96]">{item.meta}</div>
+          <div className="truncate text-body font-bold text-foreground">{item.name}</div>
+          <div className="truncate text-meta text-[#868E96]">{item.meta}</div>
         </div>
         <div className="text-right">
-          <div className="text-[14px] font-bold tabular-nums text-foreground">
+          <div className="text-body font-bold tabular-nums text-foreground">
             {item.price.toLocaleString()}
-            <span className="ml-0.5 text-[10px] font-medium text-[#6C757D]">{item.unit}</span>
+            <span className="ml-0.5 text-meta font-medium text-[#6C757D]">{item.unit}</span>
           </div>
-          <div className={cn("text-[12px] font-semibold tabular-nums", color)}>
+          <div className={cn("text-caption font-semibold tabular-nums", color)}>
             {sign} {Math.abs(item.changePct).toFixed(1)}%
           </div>
         </div>

@@ -23,16 +23,16 @@ export function TrendDirectionCard() {
 
   return (
     <div className={CARD}>
-      <div className="text-[13px] font-bold text-foreground">추세 방향성</div>
-      <div className="mt-0.5 text-[11px] text-[#868E96]">
+      <div className="text-body font-bold text-foreground">추세 방향성</div>
+      <div className="mt-0.5 text-meta text-[#868E96]">
         지금 가격 흐름이 얼마나 뚜렷한 추세인지
       </div>
 
       <div className="mt-3 flex items-baseline gap-2">
-        <div className="text-[28px] font-black leading-none text-[#E8590C] tabular-nums">
+        <div className="text-[30px] font-black leading-none text-[#E8590C] tabular-nums">
           {value}
         </div>
-        <div className="text-[12px] font-semibold text-[#495057]">
+        <div className="text-caption font-semibold text-[#495057]">
           전환 국면 · 상승 추세 형성 중
         </div>
       </div>
@@ -50,7 +50,7 @@ export function TrendDirectionCard() {
                 }}
               />
               <div
-                className={`mt-1 text-center text-[10.5px] font-semibold ${
+                className={`mt-1 text-center text-meta font-semibold ${
                   active ? "text-[#E8590C]" : "text-[#868E96]"
                 }`}
               >
@@ -86,22 +86,22 @@ export function AuctionSupplyCard({
   ];
   return (
     <div className={CARD}>
-      <div className="text-[13px] font-bold text-foreground">
+      <div className="text-body font-bold text-foreground">
         경매·수급 동향
       </div>
-      <div className="mt-0.5 text-[11px] text-[#868E96]">
+      <div className="mt-0.5 text-meta text-[#868E96]">
         {marketName} · 2026년 29주차
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
         <div className="rounded-xl bg-[#F8F9FA] px-3 py-2.5">
-          <div className="text-[10.5px] text-[#6C757D]">주간 반입량</div>
+          <div className="text-meta text-[#6C757D]">주간 반입량</div>
           <div className="mt-0.5 flex items-baseline gap-1">
-            <span className="text-[16px] font-black text-foreground tabular-nums">
+            <span className="text-subtitle font-black text-foreground tabular-nums">
               {Math.round(weeklyVolumeTon).toLocaleString()}t
             </span>
             <span
-              className={`text-[11px] font-bold tabular-nums ${volumeChangePct >= 0 ? "text-[#E03B3B]" : "text-[#1971C2]"}`}
+              className={`text-meta font-bold tabular-nums ${volumeChangePct >= 0 ? "text-[#E03B3B]" : "text-[#1971C2]"}`}
             >
               {volumeChangePct >= 0 ? "+" : ""}
               {volumeChangePct.toFixed(1)}%
@@ -109,13 +109,13 @@ export function AuctionSupplyCard({
           </div>
         </div>
         <div className="rounded-xl bg-[#F8F9FA] px-3 py-2.5">
-          <div className="text-[10.5px] text-[#6C757D]">평균 낙찰가</div>
+          <div className="text-meta text-[#6C757D]">평균 낙찰가</div>
           <div className="mt-0.5 flex items-baseline gap-1">
-            <span className="text-[16px] font-black text-foreground tabular-nums">
+            <span className="text-subtitle font-black text-foreground tabular-nums">
               {Math.round(avgAuctionPrice).toLocaleString()}원
             </span>
             <span
-              className={`text-[11px] font-bold tabular-nums ${avgChangePct >= 0 ? "text-[#E03B3B]" : "text-[#1971C2]"}`}
+              className={`text-meta font-bold tabular-nums ${avgChangePct >= 0 ? "text-[#E03B3B]" : "text-[#1971C2]"}`}
             >
               {avgChangePct >= 0 ? "+" : ""}
               {avgChangePct.toFixed(1)}%
@@ -125,13 +125,13 @@ export function AuctionSupplyCard({
       </div>
 
       <div className="mt-3">
-        <div className="mb-1.5 text-[11.5px] font-semibold text-[#495057]">
+        <div className="mb-1.5 text-meta font-semibold text-[#495057]">
           산지 반입 비중
         </div>
         <div className="space-y-1.5">
           {origins.map((o) => (
             <div key={o.name} className="flex items-center gap-2">
-              <div className="w-8 shrink-0 text-[11px] font-semibold text-[#495057]">
+              <div className="w-8 shrink-0 text-meta font-semibold text-[#495057]">
                 {o.name}
               </div>
               <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[#F1F3F5]">
@@ -140,7 +140,7 @@ export function AuctionSupplyCard({
                   style={{ width: `${o.pct}%`, background: BRAND }}
                 />
               </div>
-              <div className="w-9 shrink-0 text-right text-[11px] font-bold text-[#212529] tabular-nums">
+              <div className="w-9 shrink-0 text-right text-meta font-bold text-[#212529] tabular-nums">
                 {o.pct}%
               </div>
             </div>
@@ -182,21 +182,21 @@ export function PriceOutlookReportCard({
   ];
   return (
     <div className={CARD}>
-      <div className="text-[13px] font-bold text-foreground">
+      <div className="text-body font-bold text-foreground">
         가격 전망 리포트
       </div>
-      <div className="mt-0.5 text-[11px] text-[#868E96]">작성일 2026-07-20</div>
+      <div className="mt-0.5 text-meta text-[#868E96]">작성일 2026-07-20</div>
 
       <div className="mt-3 space-y-3">
         {paragraphs.map((p) => (
           <div key={p.title}>
             <div
-              className="text-[12px] font-bold"
+              className="text-caption font-bold"
               style={{ color: BRAND }}
             >
               {p.title}
             </div>
-            <p className="mt-1 text-[12px] leading-relaxed text-[#343A40]">
+            <p className="mt-1 text-caption leading-relaxed text-[#343A40]">
               {p.body}
             </p>
           </div>
@@ -242,27 +242,27 @@ export function TopicRelatedNewsCard() {
   ];
   return (
     <div className={CARD}>
-      <div className="text-[13px] font-bold text-foreground">
+      <div className="text-body font-bold text-foreground">
         주제별 관련 뉴스
       </div>
-      <div className="mt-0.5 text-[11px] text-[#868E96]">
+      <div className="mt-0.5 text-meta text-[#868E96]">
         가격에 영향 준 이슈를 주제별로
       </div>
 
       <div className="mt-3 space-y-4">
         {topics.map((t) => (
           <div key={t.title}>
-            <div className="text-[12px] font-bold text-[#212529]">
+            <div className="text-caption font-bold text-[#212529]">
               {t.title}
             </div>
             <div className="mt-2 border-l-2 border-[#E9ECEF] pl-3">
               <ul className="space-y-2.5">
                 {t.items.map((n) => (
                   <li key={n.headline}>
-                    <div className="text-[10.5px] text-[#868E96]">
+                    <div className="text-meta text-[#868E96]">
                       {n.date} · {n.source}
                     </div>
-                    <div className="mt-0.5 text-[12px] font-semibold leading-snug text-[#343A40]">
+                    <div className="mt-0.5 text-caption font-semibold leading-snug text-[#343A40]">
                       {n.headline}
                     </div>
                   </li>

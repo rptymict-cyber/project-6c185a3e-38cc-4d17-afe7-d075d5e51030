@@ -16,7 +16,7 @@ export function UnitSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="rounded-t-2xl p-0">
         <SheetHeader className="px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">단위 선택</SheetTitle>
+          <SheetTitle className="text-subtitle font-bold">단위 선택</SheetTitle>
         </SheetHeader>
         <ul className="px-2 pb-6 pt-2">
           {UNITS.map((u) => {
@@ -29,7 +29,7 @@ export function UnitSheet({
                     onOpenChange(false);
                   }}
                   className={cn(
-                    "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-[14px]",
+                    "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-body",
                     active ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
                   )}
                 >

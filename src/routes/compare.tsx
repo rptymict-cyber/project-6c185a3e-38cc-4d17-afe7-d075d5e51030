@@ -59,7 +59,7 @@ function ComparePage() {
           search={{ from: "compare", return: "/compare" }}
         />
 
-        <h2 className="mt-6 mb-2 px-1 text-[13px] font-bold text-muted-foreground">
+        <h2 className="mt-6 mb-2 px-1 text-body font-bold text-muted-foreground">
           시장별 순위 <span className="font-semibold">(높은 가격순)</span>
         </h2>
         <ul className="overflow-hidden rounded-[10px] bg-surface">
@@ -80,7 +80,7 @@ function ComparePage() {
                 <div className="grid grid-cols-[28px_1fr_auto_auto] items-center gap-2.5">
                   <span
                     className={cn(
-                      "grid h-7 w-7 shrink-0 place-items-center rounded-full text-[12px] font-black tabular-nums",
+                      "grid h-7 w-7 shrink-0 place-items-center rounded-full text-caption font-black tabular-nums",
                       isTop
                         ? "bg-price-up text-white"
                         : isBottom
@@ -92,21 +92,21 @@ function ComparePage() {
                   </span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="truncate text-[14px] font-semibold">{r.market.name}</span>
+                      <span className="truncate text-body font-semibold">{r.market.name}</span>
                       {isTop && (
-                        <span className="shrink-0 rounded bg-price-up px-1.5 py-0.5 text-[10px] font-black text-white">
+                        <span className="shrink-0 rounded bg-price-up px-1.5 py-0.5 text-meta font-black text-white">
                           최고가
                         </span>
                       )}
                       {isBottom && (
-                        <span className="shrink-0 rounded bg-price-down px-1.5 py-0.5 text-[10px] font-black text-white">
+                        <span className="shrink-0 rounded bg-price-down px-1.5 py-0.5 text-meta font-black text-white">
                           최저가
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] text-muted-foreground">{r.market.region}</div>
+                    <div className="text-meta text-muted-foreground">{r.market.region}</div>
                   </div>
-                  <span className="font-data text-[14px] font-bold tabular-nums">
+                  <span className="font-data text-body font-bold tabular-nums">
                     {r.price.toLocaleString()}
                   </span>
                   <PriceBadge changePct={r.pct} />
@@ -129,7 +129,7 @@ function ComparePage() {
           <Link
             to="/market"
             onClick={() => applyMarketSelection(crop.id)}
-            className="text-[13px] font-semibold text-primary"
+            className="text-body font-semibold text-primary"
           >
             {crop.name} 상세 시세 보기 →
           </Link>

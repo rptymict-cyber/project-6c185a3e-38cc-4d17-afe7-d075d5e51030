@@ -86,7 +86,7 @@ export function DatePickerSheet({
       <SheetContent side="bottom" className="rounded-t-2xl p-0 [&>button:first-of-type]:hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5">
-          <h2 className="text-[16px] font-bold text-foreground">날짜 선택</h2>
+          <h2 className="text-subtitle font-bold text-foreground">날짜 선택</h2>
           <button
             aria-label="닫기"
             onClick={() => onOpenChange(false)}
@@ -101,7 +101,7 @@ export function DatePickerSheet({
           <button
             type="button"
             onClick={goToday}
-            className="text-[13px] font-semibold text-primary underline underline-offset-4"
+            className="text-body font-semibold text-primary underline underline-offset-4"
           >
             오늘
           </button>
@@ -138,7 +138,7 @@ export function DatePickerSheet({
           <button
             type="button"
             onClick={() => draft && commit(draft, humanLabel(draft))}
-            className="w-full rounded-[12px] bg-primary py-3.5 text-[14.5px] font-bold text-primary-foreground active:opacity-90"
+            className="w-full rounded-[12px] bg-primary py-3.5 text-body font-bold text-primary-foreground active:opacity-90"
           >
             완료
           </button>

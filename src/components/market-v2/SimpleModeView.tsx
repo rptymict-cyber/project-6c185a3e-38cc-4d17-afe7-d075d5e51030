@@ -43,12 +43,12 @@ export function SimpleModeView() {
       {/* Common header — matches table view */}
       <div>
         <div className="flex items-baseline gap-2">
-          <h3 className="text-[15px] font-bold text-foreground">경매내역</h3>
-          <span className="text-[15px] font-black text-[#3A8A3A]">
+          <h3 className="text-body-lg font-bold text-foreground">경매내역</h3>
+          <span className="text-body-lg font-black text-[#3A8A3A]">
             총 {rows.length}건
           </span>
         </div>
-        <div className="mt-1 text-[11.5px] text-[#868E96]">
+        <div className="mt-1 text-meta text-[#868E96]">
           {dateLabel} 기준 · {f.marketLabel} · {f.corpLabel} 법인
         </div>
       </div>
@@ -70,11 +70,11 @@ export function SimpleModeView() {
 
       {/* Recent 3 auctions */}
       <div className="mt-5 flex items-center justify-between">
-        <h3 className="text-[13.5px] font-bold text-foreground">최근 경매 3건</h3>
+        <h3 className="text-body font-bold text-foreground">최근 경매 3건</h3>
         <button
           type="button"
           onClick={goAllAuctions}
-          className="flex items-center gap-0.5 text-[12px] font-semibold text-[#3A8A3A]"
+          className="flex items-center gap-0.5 text-caption font-semibold text-[#3A8A3A]"
         >
           전체보기
           <ChevronRight className="h-3.5 w-3.5" />
@@ -91,20 +91,20 @@ export function SimpleModeView() {
                 params={{ id: r.id }}
                 className="flex items-center gap-3 px-3.5 py-3 active:bg-[#F8F9FA]"
               >
-                <div className="w-[54px] shrink-0 text-[11px] leading-tight text-[#868E96]">
+                <div className="w-[54px] shrink-0 text-meta leading-tight text-[#868E96]">
                   <div>{mmdd}</div>
                   <div>{r.auctionClock}</div>
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-[15px] font-bold text-[#E03131]">
+                    <span className="text-body-lg font-bold text-[#E03131]">
                       {r.price.toLocaleString()}원
                     </span>
-                    <span className="text-[11.5px] text-[#868E96]">
+                    <span className="text-meta text-[#868E96]">
                       수량 {r.count}건 · {r.packageLabel}
                     </span>
                   </div>
-                  <div className="mt-0.5 truncate text-[11.5px] text-[#495057]">
+                  <div className="mt-0.5 truncate text-meta text-[#495057]">
                     {r.origin} · {r.corporationName}
                   </div>
                 </div>
@@ -118,7 +118,7 @@ export function SimpleModeView() {
       <button
         type="button"
         onClick={goAllAuctions}
-        className="mt-3 flex h-11 w-full items-center justify-center gap-1 rounded-[10px] border border-[#E9ECEF] bg-white text-[13px] font-semibold text-[#495057]"
+        className="mt-3 flex h-11 w-full items-center justify-center gap-1 rounded-[10px] border border-[#E9ECEF] bg-white text-body font-semibold text-[#495057]"
       >
         경매내역 전체보기 ({rows.length}건)
         <ChevronRight className="h-4 w-4" />
@@ -140,8 +140,8 @@ function SummaryCell({
     tone === "up" ? "text-[#E03131]" : tone === "down" ? "text-[#1971C2]" : "text-foreground";
   return (
     <div className="flex flex-col items-center gap-0.5 rounded-[10px] border border-[#E9ECEF] bg-white px-2 py-2.5">
-      <span className="text-[10.5px] text-[#868E96]">{label}</span>
-      <span className={cn("text-[13px] font-bold", color)}>{value}</span>
+      <span className="text-meta text-[#868E96]">{label}</span>
+      <span className={cn("text-body font-bold", color)}>{value}</span>
     </div>
   );
 }

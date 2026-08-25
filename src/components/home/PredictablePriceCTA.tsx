@@ -8,14 +8,14 @@ export function PredictablePriceCTA() {
         to="/prediction"
         className="flex items-center gap-3 rounded-2xl bg-[#FFF8E1] px-4 py-3.5 ring-1 ring-[#FCE7A1]"
       >
-        <span className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[20px]">
+        <span className="grid h-10 w-10 place-items-center rounded-xl bg-white text-heading">
           📈
         </span>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] font-bold text-foreground">
+          <div className="text-body font-bold text-foreground">
             AI 가격 예측 보기
           </div>
-          <div className="mt-0.5 text-[11px] text-[#6C757D]">
+          <div className="mt-0.5 text-meta text-[#6C757D]">
             5개 품목의 예상 가격과 유리한 출하·매입 시점을 확인하세요
           </div>
         </div>

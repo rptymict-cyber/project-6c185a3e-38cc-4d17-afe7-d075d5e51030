@@ -22,7 +22,7 @@ export function SegmentTabs({
               key={t.id}
               onClick={() => onChange(t.id)}
               className={cn(
-                "relative z-10 rounded-[9px] py-2 text-[13.5px] font-semibold transition-colors",
+                "relative z-10 rounded-[9px] py-2 text-body font-semibold transition-colors",
                 active ? "text-foreground" : "text-muted-foreground",
               )}
               style={

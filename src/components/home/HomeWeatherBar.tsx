@@ -37,14 +37,14 @@ export function HomeWeatherBar() {
           <MapPin className="h-3.5 w-3.5 shrink-0" />
           <span
             className="whitespace-nowrap"
-            style={{ fontSize: 14, fontWeight: 600, lineHeight: "20px" }}
+            style={{ fontSize: 16, fontWeight: 600, lineHeight: "22px" }}
           >
             {w.region}
           </span>
           {isFallback ? (
             <span
               className="ml-1 rounded-full bg-white/20 px-1.5 py-0.5 text-white/95"
-              style={{ fontSize: 10.5, fontWeight: 600 }}
+              style={{ fontSize: 12, fontWeight: 600 }}
             >
               기본 지역
             </span>

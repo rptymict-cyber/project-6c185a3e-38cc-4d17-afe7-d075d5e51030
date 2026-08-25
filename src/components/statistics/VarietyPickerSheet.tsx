@@ -38,7 +38,7 @@ export function VarietyPickerSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-2xl p-0">
         <SheetHeader className="px-5 pt-5">
-          <SheetTitle className="text-[16px] font-bold">작물 선택</SheetTitle>
+          <SheetTitle className="text-subtitle font-bold">작물 선택</SheetTitle>
         </SheetHeader>
 
         <div className="mt-3 flex flex-wrap items-center gap-1.5 px-5">
@@ -73,7 +73,7 @@ export function VarietyPickerSheet({
                       setStep(2);
                     }}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-[14px]",
+                      "flex w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-body",
                       c.id === catId ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
                     )}
                   >
@@ -98,12 +98,12 @@ export function VarietyPickerSheet({
                         onOpenChange(false);
                       }}
                       className={cn(
-                        "flex w-full items-center justify-between gap-2 rounded-[10px] px-3 py-3 text-left text-[14px]",
+                        "flex w-full items-center justify-between gap-2 rounded-[10px] px-3 py-3 text-left text-body",
                         isCurrent ? "bg-[#F0F9F0] font-bold text-[#1F5C1F]" : "text-foreground",
                       )}
                     >
                       <span className="flex items-center gap-2">
-                        <span className="text-[18px]">{v.emoji}</span>
+                        <span className="text-title">{v.emoji}</span>
                         {v.name}
                       </span>
                       {isCurrent && <Check className="h-4 w-4 text-[#3A8A3A]" />}
@@ -137,7 +137,7 @@ function StepChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px]",
+        "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-caption",
         active
           ? "border-[#3A8A3A] bg-[#3A8A3A] text-white"
           : "border-[#E9ECEF] bg-white text-[#495057]",
@@ -145,7 +145,7 @@ function StepChip({
     >
       <span
         className={cn(
-          "grid h-4 w-4 place-items-center rounded-full text-[10px] font-bold",
+          "grid h-4 w-4 place-items-center rounded-full text-meta font-bold",
           active ? "bg-white/25 text-white" : "bg-[#F1F3F5] text-[#6C757D]",
         )}
       >

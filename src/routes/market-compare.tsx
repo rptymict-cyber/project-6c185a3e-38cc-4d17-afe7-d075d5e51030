@@ -93,15 +93,15 @@ function MarketComparePage() {
             onClick={() => setDateOpen(true)}
           />
         </div>
-        <p className="mt-2 text-right text-[11.5px] text-[#868E96]">
+        <p className="mt-2 text-right text-meta text-[#868E96]">
           kg당 평균가 · 경매일 기준 · 전체 시장
         </p>
 
 
         {!data && (
           <div className="mt-8 rounded-[12px] border border-dashed border-[#E9ECEF] bg-white px-4 py-12 text-center">
-            <p className="text-[13px] font-bold text-foreground">비교할 작물을 선택하세요</p>
-            <p className="mt-1 text-[11.5px] text-[#868E96]">
+            <p className="text-body font-bold text-foreground">비교할 작물을 선택하세요</p>
+            <p className="mt-1 text-meta text-[#868E96]">
               위 카드를 눌러 부류·품목·품종을 선택하면 시장별 가격을 비교할 수 있어요.
             </p>
           </div>
@@ -132,10 +132,10 @@ function MarketComparePage() {
             {/* Ranking list */}
             <section className="mt-5 rounded-[14px] border border-[#E9ECEF] bg-white">
               <header className="flex items-center justify-between border-b border-[#F1F3F5] px-4 py-3">
-                <h3 className="text-[14px] font-black text-foreground">
-                  시장별 순위 <span className="text-[12px] font-semibold text-[#868E96]">(높은 가격순)</span>
+                <h3 className="text-body font-black text-foreground">
+                  시장별 순위 <span className="text-caption font-semibold text-[#868E96]">(높은 가격순)</span>
                 </h3>
-                <span className="text-[11px] text-[#868E96]">{ranked.length}곳</span>
+                <span className="text-meta text-[#868E96]">{ranked.length}곳</span>
               </header>
               <ul>
                 {ranked.map((m, i) => {
@@ -161,7 +161,7 @@ function MarketComparePage() {
                       <div className="flex items-center gap-2.5">
                         <span
                           className={cn(
-                            "grid h-7 w-7 shrink-0 place-items-center rounded-full text-[12px] font-black tabular-nums",
+                            "grid h-7 w-7 shrink-0 place-items-center rounded-full text-caption font-black tabular-nums",
                             isTop ? "bg-[#E03131] text-white" : "bg-[#F1F3F5] text-[#495057]",
                           )}
                         >
@@ -169,25 +169,25 @@ function MarketComparePage() {
                         </span>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">
-                            <span className="truncate text-[13.5px] font-bold text-foreground">
+                            <span className="truncate text-body font-bold text-foreground">
                               {m.name}
                             </span>
                             {isTop && (
-                              <span className="shrink-0 rounded bg-[#E03131] px-1.5 py-0.5 text-[10px] font-black text-white">
+                              <span className="shrink-0 rounded bg-[#E03131] px-1.5 py-0.5 text-meta font-black text-white">
                                 최고가
                               </span>
                             )}
                           </div>
-                          <div className="mt-0.5 text-[11px] text-[#868E96]">{m.region}</div>
+                          <div className="mt-0.5 text-meta text-[#868E96]">{m.region}</div>
                         </div>
                         <div className="shrink-0 text-right">
-                          <div className="text-[14px] font-black tabular-nums text-foreground">
+                          <div className="text-body font-black tabular-nums text-foreground">
                             {m.avgKg.toLocaleString()}
-                            <span className="ml-0.5 text-[10.5px] font-semibold text-[#868E96]">
+                            <span className="ml-0.5 text-meta font-semibold text-[#868E96]">
                               원/kg
                             </span>
                           </div>
-                          <div className={cn("mt-0.5 text-[11px] font-bold tabular-nums", deltaColor)}>
+                          <div className={cn("mt-0.5 text-meta font-bold tabular-nums", deltaColor)}>
                             {tone === "up" ? "▲" : tone === "down" ? "▼" : "-"}{" "}
                             {Math.abs(m.deltaPct).toFixed(1)}%
                           </div>
@@ -214,7 +214,7 @@ function MarketComparePage() {
               <button
                 type="button"
                 onClick={() => navigate({ to: "/statistics/$variety", params: { variety: varietyId } })}
-                className="mt-4 flex w-full items-center justify-center gap-1 rounded-[12px] border border-[#3A8A3A] bg-white py-3 text-[13.5px] font-black text-[#3A8A3A] active:bg-[#F0F9F0]"
+                className="mt-4 flex w-full items-center justify-center gap-1 rounded-[12px] border border-[#3A8A3A] bg-white py-3 text-body font-black text-[#3A8A3A] active:bg-[#F0F9F0]"
               >
                 상세 시세 보기
                 <ChevronRight className="h-4 w-4" />
@@ -256,14 +256,14 @@ function HighlightCard({
   const labelColor = isUp ? "text-[#E03131]" : "text-[#1971C2]";
   return (
     <div className={cn("rounded-[12px] border px-3 py-3", border, bg)}>
-      <div className={cn("text-[11px] font-black", labelColor)}>{label}</div>
-      <div className="mt-1 truncate text-[13.5px] font-bold text-foreground">{marketName}</div>
-      <div className="text-[10.5px] text-[#868E96]">{region}</div>
-      <div className="mt-2 text-[17px] font-black tabular-nums text-foreground">
+      <div className={cn("text-meta font-black", labelColor)}>{label}</div>
+      <div className="mt-1 truncate text-body font-bold text-foreground">{marketName}</div>
+      <div className="text-meta text-[#868E96]">{region}</div>
+      <div className="mt-2 text-title font-black tabular-nums text-foreground">
         {price.toLocaleString()}
-        <span className="ml-0.5 text-[10.5px] font-semibold text-[#868E96]">원/kg</span>
+        <span className="ml-0.5 text-meta font-semibold text-[#868E96]">원/kg</span>
       </div>
-      <div className={cn("mt-0.5 text-[11px] font-bold tabular-nums", labelColor)}>
+      <div className={cn("mt-0.5 text-meta font-bold tabular-nums", labelColor)}>
         전일 대비 {deltaPct > 0 ? "+" : ""}
         {deltaPct.toFixed(1)}%
       </div>

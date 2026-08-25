@@ -32,7 +32,7 @@ export function MoversChart({ crops }: { crops: Crop[] }) {
   const rows = buildRows(crops);
   return (
     <div>
-      <div className="mb-2 flex items-center gap-3 text-[10px] text-muted-foreground">
+      <div className="mb-2 flex items-center gap-3 text-meta text-muted-foreground">
         <span className="inline-flex items-center gap-1">
           <span className="h-2 w-2 rounded-sm bg-[#E03131]" /> 상승
         </span>
@@ -53,14 +53,14 @@ export function MoversChart({ crops }: { crops: Crop[] }) {
             <CartesianGrid stroke="var(--chart-grid)" vertical={false} />
             <XAxis
               dataKey="name"
-              tick={{ fontSize: 10, fill: "#6C757D" }}
+              tick={{ fontSize: 12, fill: "#6C757D" }}
               tickLine={false}
               axisLine={{ stroke: "#E9ECEF" }}
               interval={0}
             />
             <YAxis
               yAxisId="pct"
-              tick={{ fontSize: 10, fill: "#6C757D" }}
+              tick={{ fontSize: 12, fill: "#6C757D" }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `${v}%`}
@@ -69,7 +69,7 @@ export function MoversChart({ crops }: { crops: Crop[] }) {
             <YAxis
               yAxisId="vol"
               orientation="right"
-              tick={{ fontSize: 10, fill: "#ADB5BD" }}
+              tick={{ fontSize: 12, fill: "#ADB5BD" }}
               tickLine={false}
               axisLine={false}
               width={28}

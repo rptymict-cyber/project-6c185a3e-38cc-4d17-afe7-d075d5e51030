@@ -19,11 +19,11 @@ export function HomeItemQuickSection() {
   return (
     <section className="mt-6 px-4">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-[14px] font-bold text-foreground">품목별 조회</h3>
+        <h3 className="text-body font-bold text-foreground">품목별 조회</h3>
         <button
           onClick={() => setEditing((v) => !v)}
           className={cn(
-            "rounded-full px-2.5 py-1 text-[11.5px] font-semibold",
+            "rounded-full px-2.5 py-1 text-meta font-semibold",
             editing ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-muted-foreground",
           )}
         >
@@ -44,7 +44,7 @@ export function HomeItemQuickSection() {
               <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[#F0F9F0]">
                 <CropIcon name={it.name} size={32} />
               </span>
-              <span className="text-[11px] font-medium text-foreground">{it.name}</span>
+              <span className="text-meta font-medium text-foreground">{it.name}</span>
             </Link>
             {editing && (
               <button
@@ -65,7 +65,7 @@ export function HomeItemQuickSection() {
             <span className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-dashed border-[#CED4DA] text-muted-foreground">
               <Plus className="h-5 w-5" />
             </span>
-            <span className="text-[11px] font-medium text-muted-foreground">추가</span>
+            <span className="text-meta font-medium text-muted-foreground">추가</span>
           </button>
         )}
       </div>

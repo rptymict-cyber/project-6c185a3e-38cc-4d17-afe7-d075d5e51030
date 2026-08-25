@@ -51,11 +51,11 @@ export function RealtimeCropRanking() {
   return (
     <section className="mt-6">
       <div className="flex items-center justify-between px-4">
-        <h2 className="flex items-center gap-1 text-[15px] font-bold text-foreground">
+        <h2 className="flex items-center gap-1 text-body-lg font-bold text-foreground">
           실시간 시세 랭킹
           <HelpCircle className="h-3.5 w-3.5 text-[#ADB5BD]" />
         </h2>
-        <div className="flex items-center gap-1 text-[11px] text-[#868E96]">
+        <div className="flex items-center gap-1 text-meta text-[#868E96]">
           <span>2026.07.03 14:30 기준</span>
           <button
             aria-label="새로고침"
@@ -75,7 +75,7 @@ export function RealtimeCropRanking() {
               key={f.id}
               onClick={() => setFilter(f.id)}
               className={cn(
-                "shrink-0 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors",
+                "shrink-0 rounded-full px-3 py-1.5 text-caption font-semibold transition-colors",
                 active
                   ? "bg-[#3A8A3A] text-white"
                   : "bg-[#F1F3F5] text-[#495057] hover:bg-[#E9ECEF]",
@@ -96,7 +96,7 @@ export function RealtimeCropRanking() {
       <div className="px-4 pt-2">
         <Link
           to="/market"
-          className="flex h-11 items-center justify-center rounded-xl border border-[#E9ECEF] text-[13px] font-semibold text-[#495057]"
+          className="flex h-11 items-center justify-center rounded-xl border border-[#E9ECEF] text-body font-semibold text-[#495057]"
         >
           더보기 ›
         </Link>

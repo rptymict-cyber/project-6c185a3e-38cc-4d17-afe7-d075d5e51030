@@ -31,16 +31,16 @@ export function PredictionFactorList({
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-[13px] font-semibold text-foreground">
+            <div className="text-body font-semibold text-foreground">
               {f.title}
             </div>
-            <div className="mt-0.5 text-[11.5px] leading-relaxed text-[#6C757D]">
+            <div className="mt-0.5 text-meta leading-relaxed text-[#6C757D]">
               {f.description}
             </div>
           </div>
         </div>
       ))}
-      <div className="flex items-start gap-1.5 rounded-xl bg-[#F8F9FA] px-3 py-2 text-[11px] leading-relaxed text-[#6C757D]">
+      <div className="flex items-start gap-1.5 rounded-xl bg-[#F8F9FA] px-3 py-2 text-meta leading-relaxed text-[#6C757D]">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>
           AI 가격 예측은 최근 경매 데이터와 가격 흐름을 기반으로 한 참고

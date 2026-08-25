@@ -29,9 +29,9 @@ export function StatsGauge({
         "flex flex-col items-center justify-center rounded-[14px] border border-[#EAECEF] bg-white px-[10px] py-[13px] text-center",
       )}
     >
-      <span className="text-[11px] font-semibold text-[#868E96]">{label}</span>
+      <span className="text-meta font-semibold text-[#868E96]">{label}</span>
       <span
-        className="mt-1 text-[19px] font-black tabular-nums leading-tight"
+        className="mt-1 text-heading font-black tabular-nums leading-tight"
         style={{ color: textColor }}
       >
         {has ? (
@@ -44,7 +44,7 @@ export function StatsGauge({
         )}
       </span>
       <span
-        className="mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-extrabold"
+        className="mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-meta font-extrabold"
         style={{ backgroundColor: badgeBg, color: textColor }}
       >
         {pctText}

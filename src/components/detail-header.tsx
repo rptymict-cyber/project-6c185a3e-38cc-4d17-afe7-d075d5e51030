@@ -47,7 +47,7 @@ export function DetailHeader({
       <div className="pointer-events-none absolute inset-x-14 top-0 flex h-[52px] items-center justify-center">
         {center ??
           (title ? (
-            <span className="truncate text-[15px] font-black tracking-tight text-foreground">
+            <span className="truncate text-body-lg font-black tracking-tight text-foreground">
               {title}
             </span>
           ) : null)}

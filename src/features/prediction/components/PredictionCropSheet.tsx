@@ -39,7 +39,7 @@ export function PredictionCropSheet({
         className="mx-auto max-w-[430px] rounded-t-2xl p-0"
       >
         <SheetHeader className="border-b border-[#E9ECEF] px-4 py-3.5 text-left">
-          <SheetTitle className="text-[15px] font-bold text-foreground">
+          <SheetTitle className="text-body-lg font-bold text-foreground">
             예측 작물 선택
           </SheetTitle>
         </SheetHeader>
@@ -50,7 +50,7 @@ export function PredictionCropSheet({
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="예측 작물 검색"
-              className="h-full flex-1 bg-transparent text-[13px] text-foreground outline-none placeholder:text-[#ADB5BD]"
+              className="h-full flex-1 bg-transparent text-body text-foreground outline-none placeholder:text-[#ADB5BD]"
             />
             {q && (
               <button
@@ -66,7 +66,7 @@ export function PredictionCropSheet({
         </div>
         <div className="max-h-[60vh] overflow-y-auto px-4 pb-6 pt-2">
           {filtered.length === 0 ? (
-            <div className="py-10 text-center text-[13px] text-[#868E96]">
+            <div className="py-10 text-center text-body text-[#868E96]">
               검색 결과가 없어요.
             </div>
           ) : (
@@ -90,13 +90,13 @@ export function PredictionCropSheet({
                       <div className="min-w-0 flex-1">
                         <div
                           className={cn(
-                            "text-[14px] font-semibold",
+                            "text-body font-semibold",
                             active ? "text-[#1F5C1F]" : "text-foreground",
                           )}
                         >
                           {c.name}
                         </div>
-                        <div className="text-[11px] text-[#868E96]">
+                        <div className="text-meta text-[#868E96]">
                           {c.categoryName} · {c.varietyName}
                         </div>
                       </div>

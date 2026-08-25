@@ -90,10 +90,10 @@ function ItemBrowsePage() {
                   <CropIcon name={item.name} size={26} />
                 </span>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-semibold text-[#3A8A3A]">
+                  <div className="text-meta font-semibold text-[#3A8A3A]">
                     작물
                   </div>
-                  <div className="mt-0.5 truncate text-[16px] font-bold text-foreground">
+                  <div className="mt-0.5 truncate text-subtitle font-bold text-foreground">
                     {`${ITEM_CATEGORIES.find((c) => c.id === item.category)?.label ?? ""} · ${item.name} · 전체 품종`}
                   </div>
                 </div>
@@ -104,7 +104,7 @@ function ItemBrowsePage() {
           <DrawerContent className="mx-auto max-h-[80vh] max-w-[430px] bg-background">
             <div className="mx-auto mt-2 h-1 w-8 rounded-full bg-[#E9ECEF]" />
             <div className="px-4 pb-3 pt-3">
-              <h3 className="text-center text-[15px] font-bold text-foreground">
+              <h3 className="text-center text-body-lg font-bold text-foreground">
                 품목 선택
               </h3>
             </div>
@@ -112,7 +112,7 @@ function ItemBrowsePage() {
               {grouped.map(({ cat, list }) =>
                 list.length === 0 ? null : (
                   <section key={cat.id} className="mb-4">
-                    <h4 className="mb-1.5 px-1 text-[12px] font-bold text-muted-foreground">
+                    <h4 className="mb-1.5 px-1 text-caption font-bold text-muted-foreground">
                       {cat.label}
                     </h4>
                     <ul className="overflow-hidden rounded-[10px] bg-surface">
@@ -133,7 +133,7 @@ function ItemBrowsePage() {
                               </span>
                               <span
                                 className={cn(
-                                  "flex-1 text-[14px] font-semibold text-foreground",
+                                  "flex-1 text-body font-semibold text-foreground",
                                   active && "text-[#3A8A3A]",
                                 )}
                               >
@@ -155,7 +155,7 @@ function ItemBrowsePage() {
         </Drawer>
 
         {/* 시장별 시세 리스트 */}
-        <h3 className="mb-2 mt-6 px-1 text-[12px] font-bold text-muted-foreground">
+        <h3 className="mb-2 mt-6 px-1 text-caption font-bold text-muted-foreground">
           {item.name} 도매시장별 시세
         </h3>
         <ul className="overflow-hidden rounded-[10px] bg-surface">
@@ -171,24 +171,24 @@ function ItemBrowsePage() {
                     idx === 0 && "border-t-0",
                   )}
                 >
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#F0F9F0] text-lg">
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#F0F9F0] text-subtitle">
                     🏛️
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[14px] font-semibold text-foreground">
+                    <div className="text-body font-semibold text-foreground">
                       {r.name}
                     </div>
-                    <div className="text-[11px] text-muted-foreground">
+                    <div className="text-meta text-muted-foreground">
                       {r.region}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-data text-[14px] font-bold tabular-nums text-foreground">
+                    <div className="font-data text-body font-bold tabular-nums text-foreground">
                       {r.priceKg.toLocaleString()}원
                     </div>
                     <div
                       className={cn(
-                        "text-[11px] font-semibold tabular-nums",
+                        "text-meta font-semibold tabular-nums",
                         up ? "text-[#DC2626]" : "text-[#2563EB]",
                       )}
                     >

@@ -64,7 +64,7 @@ function DataGuidePage() {
       }
     >
       <div className="px-4 pb-16 pt-4">
-        <p className="mb-4 text-[13px] leading-relaxed text-[#495057]">
+        <p className="mb-4 text-body leading-relaxed text-[#495057]">
           AGDICT는 KAMIS와 aT의 농산물 유통정보를 기반으로 시세를 제공합니다.
           아래 기준을 참고하시면 시세를 더 정확하게 이해하실 수 있어요.
         </p>
@@ -78,17 +78,17 @@ function DataGuidePage() {
                 <it.Icon className="h-4.5 w-4.5" />
               </span>
               <div className="min-w-0">
-                <h2 className="text-[14px] font-bold text-foreground">
+                <h2 className="text-body font-bold text-foreground">
                   {it.title}
                 </h2>
-                <p className="mt-1 text-[12.5px] leading-relaxed text-[#6C757D]">
+                <p className="mt-1 text-caption leading-relaxed text-[#6C757D]">
                   {it.body}
                 </p>
               </div>
             </li>
           ))}
         </ul>
-        <p className="mt-5 text-[11px] leading-relaxed text-[#868E96]">
+        <p className="mt-5 text-meta leading-relaxed text-[#868E96]">
           데이터 제공: KAMIS 농산물유통정보 / aT 한국농수산식품유통공사
         </p>
       </div>
