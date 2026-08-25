@@ -34,6 +34,7 @@ function loadPersist(): Persist | null {
     return {
       hidden: Boolean(parsed.hidden),
       lastShownAt: typeof parsed.lastShownAt === "string" ? parsed.lastShownAt : "",
+      visits: typeof parsed.visits === "number" ? parsed.visits : 0,
     };
   } catch {
     return null;
@@ -57,12 +58,23 @@ export function RatePromptModal() {
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // 앱 진입 시 1회만 판단
+  // 앱 진입 시 1회만 판단 — 첫 과업을 가로막지 않도록 방문 3회 + 20초 후에만 노출
   useEffect(() => {
     const p = loadPersist();
     if (p?.hidden) return;
-    setOpen(true);
-    savePersist({ hidden: false, lastShownAt: new Date().toISOString() });
+    const visits = (p?.visits ?? 0) + 1;
+    savePersist({
+      hidden: false,
+      lastShownAt: p?.lastShownAt ?? "",
+      visits,
+    });
+    if (visits < MIN_VISITS) return;
+
+    const t = setTimeout(() => {
+      setOpen(true);
+      savePersist({ hidden: false, lastShownAt: new Date().toISOString(), visits });
+    }, SHOW_DELAY_MS);
+    return () => clearTimeout(t);
   }, []);
 
   const closeLater = () => {
@@ -72,7 +84,11 @@ export function RatePromptModal() {
   };
 
   const closeForever = () => {
-    savePersist({ hidden: true, lastShownAt: new Date().toISOString() });
+    savePersist({
+      hidden: true,
+      lastShownAt: new Date().toISOString(),
+      visits: loadPersist()?.visits ?? MIN_VISITS,
+    });
     setOpen(false);
     setTimeout(reset, 200);
   };
