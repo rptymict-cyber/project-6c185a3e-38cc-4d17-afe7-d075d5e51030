@@ -10,6 +10,7 @@ import { AppShell } from "@/components/app-shell";
 import { DetailHeader } from "@/components/detail-header";
 import { useBackTo } from "@/hooks/useBackTo";
 import { DatePickerSheet, defaultTradingDayFilter } from "@/components/date-picker-sheet";
+import { basisDateIso } from "@/lib/data-basis";
 import { FullSelectCard } from "@/components/common/ConditionSelectCard";
 import { useCropSelection } from "@/store/cropSelection";
 import { getCategoryById, getItemById } from "@/lib/catalog-service";
@@ -53,7 +54,7 @@ function MarketComparePage() {
       ? item.id
       : (committed.varietyId as string | undefined);
 
-  const [date, setDate] = useState("2025-07-05");
+  const [date, setDate] = useState(basisDateIso());
   const [dateOpen, setDateOpen] = useState(false);
 
   const data = useMemo(
