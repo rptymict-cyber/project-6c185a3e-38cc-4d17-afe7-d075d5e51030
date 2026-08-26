@@ -71,13 +71,13 @@ export function PredictableCropCards() {
               key={crop.id}
               to="/prediction"
               search={{ cropId: crop.id, entrySource: "home" }}
-              className="flex w-[112px] min-w-[112px] flex-col items-start gap-1 rounded-[10px] bg-[#F5FAF6] px-2 py-2.5 transition-colors active:bg-[#E8F1E8]"
+              className="flex w-[116px] min-w-[116px] flex-col items-start gap-1 overflow-hidden rounded-[10px] bg-[#F5FAF6] px-2.5 py-2.5 transition-colors active:bg-[#E8F1E8]"
             >
               <CropIcon name={crop.name} size={24} />
-              <div className="text-caption font-bold leading-tight text-[#111827]">
+              <div className="w-full truncate text-caption font-bold leading-tight text-[#111827]">
                 {crop.name}
               </div>
-              <div className="whitespace-nowrap text-meta font-semibold tabular-nums leading-tight text-[#6B7280]">
+              <div className="w-full truncate text-meta font-semibold tabular-nums leading-tight text-[#6B7280]">
                 {h.price.toLocaleString()}원/{h.unitLabel}
               </div>
               <ChangeBadge changePct={h.changePct} />
