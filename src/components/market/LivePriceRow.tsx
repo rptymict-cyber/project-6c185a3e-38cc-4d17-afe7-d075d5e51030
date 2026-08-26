@@ -5,7 +5,7 @@ import type { LivePriceRow } from "@/lib/services/live-prices";
 
 // 헤더와 행이 반드시 같은 그리드를 쓰도록 상수로 공유 → 열이 정확히 정렬됨
 const GRID =
-  "grid grid-cols-[16px_28px_1fr_84px_64px_52px] items-center gap-2 px-3";
+  "grid grid-cols-[16px_28px_minmax(0,1fr)_74px_56px_50px] items-center gap-1.5 px-3";
 
 /**
  * 순위 · 아이콘 · 품목명(+시장·단위) · 현재가 · 등락률 · 거래량
@@ -50,6 +50,54 @@ export const LivePriceRowItem = memo(function LivePriceRowItem({
         </div>
         <div className="text-right text-meta tabular-nums text-muted-foreground">
           {row.volumeTon.toFixed(1)}t
+        </div>
+      </button>
+    </li>
+  );
+});
+
+/**
+ * 홈 전용 compact 행.
+ * 왼쪽: 순위 + 아이콘 + 품목명/시장, 오른쪽: 현재가 + 등락 배지,
+ * 거래량은 두 번째 줄 보조 정보로 이동한다. (고정 6열 표 미사용)
+ */
+export const LivePriceRowCompact = memo(function LivePriceRowCompact({
+  rank,
+  row,
+  onClick,
+}: {
+  rank: number;
+  row: LivePriceRow;
+  onClick: (row: LivePriceRow) => void;
+}) {
+  return (
+    <li className="border-t border-[#F1F3F5] first:border-t-0">
+      <button
+        onClick={() => onClick(row)}
+        className="flex w-full items-center gap-2.5 px-3 py-3 text-left active:bg-secondary"
+      >
+        <span className="w-4 shrink-0 text-center text-caption font-bold tabular-nums text-[#3A8A3A]">
+          {rank}
+        </span>
+        <CropIcon name={row.name} size={28} />
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-body font-semibold text-foreground">
+            {row.name}
+          </div>
+          <div className="mt-0.5 truncate text-meta text-muted-foreground">
+            {row.market} · {row.unit} · 거래량 {row.volumeTon.toFixed(1)}t
+          </div>
+        </div>
+        <div className="shrink-0 text-right">
+          <div className="whitespace-nowrap font-data text-body font-bold tabular-nums text-foreground">
+            {row.pricePerKg.toLocaleString()}
+            <span className="ml-0.5 text-meta font-medium text-muted-foreground">
+              원/kg
+            </span>
+          </div>
+          <div className="mt-1 flex justify-end">
+            <PriceBadge changePct={row.changePct} />
+          </div>
         </div>
       </button>
     </li>
