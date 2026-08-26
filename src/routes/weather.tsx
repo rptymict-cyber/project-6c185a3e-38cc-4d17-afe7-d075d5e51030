@@ -149,7 +149,7 @@ function WeatherDetailPage() {
             {w.daily.map((d) => (
               <li
                 key={d.date}
-                className="grid grid-cols-[70px_60px_28px_1fr_64px_84px] items-center gap-2 px-3 py-3"
+                className="grid grid-cols-[auto_auto_24px_minmax(0,1fr)_auto_auto] items-center gap-1.5 px-3 py-3"
               >
                 <span
                   className={cn(
