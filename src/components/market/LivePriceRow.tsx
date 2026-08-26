@@ -5,7 +5,7 @@ import type { LivePriceRow } from "@/lib/services/live-prices";
 
 // 헤더와 행이 반드시 같은 그리드를 쓰도록 상수로 공유 → 열이 정확히 정렬됨
 const GRID =
-  "grid grid-cols-[16px_28px_minmax(0,1fr)_74px_56px_50px] items-center gap-1.5 px-3";
+  "grid grid-cols-[16px_28px_minmax(0,1fr)_74px_62px_46px] items-center gap-1.5 px-3";
 
 /**
  * 순위 · 아이콘 · 품목명(+시장·단위) · 현재가 · 등락률 · 거래량
