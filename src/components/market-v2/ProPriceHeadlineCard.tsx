@@ -137,8 +137,8 @@ export function ProPriceHeadlineCard({
           </div>
         </div>
 
-        <div className="mt-3 flex items-end justify-between">
-          <div className="flex items-baseline gap-1">
+        <div className="mt-3 flex items-end justify-between gap-2">
+          <div className="flex min-w-0 flex-wrap items-baseline gap-1">
             <span className="text-[32px] font-black leading-none tracking-tight text-foreground">
               {quote.price.toLocaleString()}
             </span>

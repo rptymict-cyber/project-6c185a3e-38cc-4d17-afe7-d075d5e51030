@@ -56,6 +56,7 @@ export function MarketListHome({
           </button>
         </div>
         <RealtimeSection
+          variant="home"
           sort={sort}
           onSortChange={setSort}
           onSelect={onSelectCrop}

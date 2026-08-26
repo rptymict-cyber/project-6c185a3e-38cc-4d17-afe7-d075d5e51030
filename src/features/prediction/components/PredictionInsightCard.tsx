@@ -128,15 +128,15 @@ export function PredictionInsightCard({
         </div>
 
         {/* KPI 3개 */}
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          <div className="rounded-xl bg-white/12 px-2.5 py-2 backdrop-blur-sm">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <div className="rounded-xl bg-white/12 px-2 py-2 backdrop-blur-sm">
             <div className="text-meta font-semibold text-white/75">
               예상 평균가
             </div>
             <div className="mt-1 flex items-baseline whitespace-nowrap">
               <span
                 className="font-black tabular-nums leading-none"
-                style={{ fontSize: "clamp(15px, 4vw, 17px)" }}
+                style={{ fontSize: "clamp(15px, 4.2vw, 17px)" }}
               >
                 {formatFullWon(expectedPrice)}
               </span>
@@ -146,14 +146,14 @@ export function PredictionInsightCard({
             </div>
           </div>
 
-          <div className="rounded-xl bg-white/12 px-2.5 py-2 backdrop-blur-sm">
+          <div className="rounded-xl bg-white/12 px-2 py-2 backdrop-blur-sm">
             <div className="text-meta font-semibold text-white/75">
               {revenueLabel}
             </div>
             <div className="mt-1 flex items-baseline whitespace-nowrap">
               <span
                 className="font-black tabular-nums leading-none"
-                style={{ fontSize: "clamp(15px, 4vw, 17px)" }}
+                style={{ fontSize: "clamp(15px, 4.2vw, 17px)" }}
               >
                 {formatFullWon(totalRevenue)}
               </span>
@@ -165,7 +165,7 @@ export function PredictionInsightCard({
 
           <div
             className={cn(
-              "rounded-xl px-2.5 py-2",
+              "col-span-2 rounded-xl px-2 py-2 sm:col-span-1",
               gain >= 0
                 ? "bg-white text-[#1F5C1F]"
                 : "bg-white text-[#B02525]",
@@ -175,7 +175,7 @@ export function PredictionInsightCard({
             <div className="mt-1 flex items-baseline whitespace-nowrap">
               <span
                 className="font-black tabular-nums leading-none"
-                style={{ fontSize: "clamp(15px, 4vw, 17px)" }}
+                style={{ fontSize: "clamp(15px, 4.2vw, 17px)" }}
               >
                 {gain === 0
                   ? "0원"

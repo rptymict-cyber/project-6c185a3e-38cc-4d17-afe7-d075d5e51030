@@ -6,7 +6,11 @@ import {
   type LiveSort,
   type LivePriceRow,
 } from "@/lib/services/live-prices";
-import { LivePriceHeader, LivePriceRowItem } from "./LivePriceRow";
+import {
+  LivePriceHeader,
+  LivePriceRowCompact,
+  LivePriceRowItem,
+} from "./LivePriceRow";
 
 const SORT_ORDER: LiveSort[] = ["up", "down", "vol"];
 
@@ -16,15 +20,20 @@ export function RealtimeSection({
   onSelect,
   limit,
   showHeaderRow = true,
+  variant = "default",
 }: {
   sort: LiveSort;
   onSortChange: (s: LiveSort) => void;
   onSelect: (row: LivePriceRow) => void;
   limit: number;
   showHeaderRow?: boolean;
+  /** "home"은 홈 전용 compact 레이아웃(헤더행 없음) */
+  variant?: "default" | "home";
 }) {
   const { rows } = useMemo(() => getLivePrices({ sort, limit }), [sort, limit]);
   const hint = LIVE_SORT_META[sort].hint;
+  const isHome = variant === "home";
+  const Row = isHome ? LivePriceRowCompact : LivePriceRowItem;
 
   return (
     <div>
@@ -48,10 +57,10 @@ export function RealtimeSection({
       <p className="mt-1.5 text-meta text-muted-foreground">{hint}</p>
 
       <div className="mt-2 overflow-hidden rounded-[10px] bg-[#FAFBFA]">
-        {showHeaderRow && <LivePriceHeader />}
+        {!isHome && showHeaderRow && <LivePriceHeader />}
         <ul>
           {rows.map((row, i) => (
-            <LivePriceRowItem key={row.id} rank={i + 1} row={row} onClick={onSelect} />
+            <Row key={row.id} rank={i + 1} row={row} onClick={onSelect} />
           ))}
         </ul>
       </div>
