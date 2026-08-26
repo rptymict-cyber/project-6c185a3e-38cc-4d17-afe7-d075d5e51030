@@ -21,11 +21,14 @@ function ChangeBadge({ changePct }: { changePct: number }) {
   return (
     <span
       className={cn(
-        "inline-flex whitespace-nowrap rounded-[6px] px-[7px] py-[2px] text-meta font-extrabold tabular-nums",
+        "inline-flex max-w-full whitespace-nowrap rounded-[6px] px-1.5 py-[2px] text-meta font-extrabold tabular-nums",
         up ? "bg-[#FDECEC] text-[#E03B3B]" : "bg-[#EAF0FE] text-[#2563EB]",
       )}
+      aria-label={`예측 ${up ? "상승" : "하락"} ${Math.abs(changePct).toFixed(1)}퍼센트`}
     >
-      {up ? "↑ 예측 상승" : "↓ 예측 하락"} {Math.abs(changePct).toFixed(1)}%
+      <span aria-hidden="true">
+        {up ? "↑" : "↓"} {Math.abs(changePct).toFixed(1)}%
+      </span>
     </span>
   );
 }
