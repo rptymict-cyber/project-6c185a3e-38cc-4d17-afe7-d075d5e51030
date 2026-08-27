@@ -55,9 +55,9 @@ export function AppDrawerTrigger() {
       <SheetTrigger asChild>
         <button
           aria-label="더보기"
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+          className="grid h-11 w-11 place-items-center rounded-full text-foreground hover:bg-secondary"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-6 w-6" />
         </button>
       </SheetTrigger>
       <SheetContent
