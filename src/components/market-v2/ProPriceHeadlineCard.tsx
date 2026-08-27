@@ -108,7 +108,7 @@ export function ProPriceHeadlineCard({
                 toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 제거했어요");
               }}
               aria-label="즐겨찾기"
-              className="grid h-9 w-9 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
+              className="grid h-11 w-11 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
             >
               <Star
                 className={cn("h-[18px] w-[18px]", isFav && "fill-[#F59F00] text-[#F59F00]")}
@@ -130,7 +130,7 @@ export function ProPriceHeadlineCard({
                 }
               }}
               aria-label="알림 설정"
-              className="grid h-9 w-9 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
+              className="grid h-11 w-11 place-items-center rounded-full text-[#495057] active:bg-[#F1F3F5]"
             >
               <Bell className={cn("h-[18px] w-[18px]", hasAlert && "text-[#3A8A3A]")} />
             </button>
@@ -148,7 +148,7 @@ export function ProPriceHeadlineCard({
                 e.stopPropagation();
                 setUnitOpen(true);
               }}
-              className="ml-0.5 flex items-center gap-0.5 rounded-md min-h-9 px-2 py-1 text-body font-semibold text-[#495057] active:bg-[#F1F3F5]"
+              className="ml-0.5 flex items-center gap-0.5 rounded-md min-h-11 px-2 py-1 text-body font-semibold text-[#495057] active:bg-[#F1F3F5]"
               aria-label="단위 변경"
             >
               원/{quote.unit.replace(" 기준", "")}

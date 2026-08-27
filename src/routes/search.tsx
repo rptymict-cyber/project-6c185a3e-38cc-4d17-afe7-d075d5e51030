@@ -315,7 +315,7 @@ function SearchPage() {
                     key={c.id}
                     type="button"
                     onClick={() => openCrop(c)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-body font-semibold text-foreground"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-surface px-3 text-body font-semibold text-foreground"
                   >
                     <CropIcon name={c.name} size={16} />
                     {c.name}

@@ -76,7 +76,7 @@ export function RealtimeCropRanking() {
               key={f.id}
               onClick={() => setFilter(f.id)}
               className={cn(
-                "shrink-0 rounded-full px-3 py-1.5 text-caption font-semibold transition-colors",
+                "shrink-0 inline-flex min-h-11 items-center rounded-full px-3 text-caption font-semibold transition-colors",
                 active
                   ? "bg-[#3A8A3A] text-white"
                   : "bg-[#F1F3F5] text-[#495057] hover:bg-[#E9ECEF]",

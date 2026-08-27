@@ -17,7 +17,7 @@ export function CategoryChips({
             key={c.id}
             onClick={() => onChange(c.id)}
             className={cn(
-              "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-caption font-semibold transition-colors",
+              "inline-flex h-11 shrink-0 items-center rounded-full px-3.5 text-caption font-semibold transition-colors",
               active ? "bg-[#3A8A3A] text-white" : "bg-[#F8F9FA] text-[#6C757D]",
             )}
           >
