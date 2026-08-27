@@ -148,7 +148,7 @@ export function ProPriceHeadlineCard({
                 e.stopPropagation();
                 setUnitOpen(true);
               }}
-              className="ml-0.5 flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-body font-semibold text-[#495057] active:bg-[#F1F3F5]"
+              className="ml-0.5 flex items-center gap-0.5 rounded-md min-h-9 px-2 py-1 text-body font-semibold text-[#495057] active:bg-[#F1F3F5]"
               aria-label="단위 변경"
             >
               원/{quote.unit.replace(" 기준", "")}

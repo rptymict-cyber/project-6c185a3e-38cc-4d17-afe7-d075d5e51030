@@ -50,7 +50,7 @@ export function MarketListHome({
           <h3 className="text-title font-bold text-[#111827]">실시간 시세</h3>
           <button
             onClick={() => navigate({ to: "/live", search: { sort } })}
-            className="text-body font-medium text-[#4B5563]"
+            className="flex h-11 items-center pl-2 text-body font-medium text-[#4B5563]"
           >
             더보기 ›
           </button>
