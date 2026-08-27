@@ -191,7 +191,7 @@ export function ProAnalysisSection() {
                   key={p.id}
                   onClick={() => setPeriod(p.id)}
                   className={cn(
-                    "shrink-0 inline-flex h-9 items-center rounded-full px-3.5 text-caption font-semibold transition-colors",
+                    "shrink-0 inline-flex h-11 items-center rounded-full px-3.5 text-caption font-semibold transition-colors",
                     active
                       ? "bg-[#1F5C1F] text-white"
                       : "bg-[#F1F3F5] text-[#6C757D]",
