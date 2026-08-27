@@ -134,7 +134,7 @@ function SearchPage() {
         <Link
           to="/"
           aria-label="뒤로"
-          className="grid h-11 w-11 place-items-center rounded-full text-foreground hover:bg-secondary"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-foreground hover:bg-secondary"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
