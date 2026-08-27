@@ -23,7 +23,7 @@ export function StarToggle({
         onClick(e);
       }}
       className={cn(
-        "grid shrink-0 place-items-center rounded-full p-1.5 transition-colors",
+        "grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors",
         active ? "text-amber-500" : "text-muted-foreground hover:text-foreground",
       )}
     >
