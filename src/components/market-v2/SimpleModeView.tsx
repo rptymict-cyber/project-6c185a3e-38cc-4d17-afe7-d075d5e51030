@@ -74,7 +74,7 @@ export function SimpleModeView() {
         <button
           type="button"
           onClick={goAllAuctions}
-          className="flex items-center gap-0.5 text-caption font-semibold text-[#3A8A3A]"
+          className="inline-flex min-h-11 items-center gap-0.5 text-caption font-semibold text-[#3A8A3A]"
         >
           전체보기
           <ChevronRight className="h-3.5 w-3.5" />
