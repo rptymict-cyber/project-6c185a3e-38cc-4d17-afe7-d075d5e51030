@@ -134,7 +134,7 @@ function SearchPage() {
         <Link
           to="/"
           aria-label="뒤로"
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+          className="grid h-11 w-11 place-items-center rounded-full text-foreground hover:bg-secondary"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
@@ -158,7 +158,7 @@ function SearchPage() {
                 setQ("");
                 inputRef.current?.focus();
               }}
-              className="grid h-6 w-6 place-items-center rounded-full bg-[#ADB5BD] text-white"
+              className="relative grid h-6 w-6 place-items-center rounded-full bg-[#ADB5BD] text-white after:absolute after:-inset-[10px] after:content-['']"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -291,7 +291,7 @@ function SearchPage() {
                         type="button"
                         aria-label={`${term} 삭제`}
                         onClick={() => removeRecent(term)}
-                        className="grid h-7 w-7 place-items-center rounded-full text-muted-foreground hover:bg-secondary"
+                        className="grid h-11 w-11 place-items-center rounded-full text-muted-foreground hover:bg-secondary"
                       >
                         <X className="h-4 w-4" />
                       </button>

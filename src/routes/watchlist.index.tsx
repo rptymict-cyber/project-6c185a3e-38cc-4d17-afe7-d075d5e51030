@@ -244,7 +244,7 @@ function WatchlistPage() {
                     type="button"
                     onClick={() => setQuery("")}
                     aria-label="지우기"
-                    className="grid h-6 w-6 place-items-center rounded-full text-muted-foreground"
+                    className="relative grid h-6 w-6 place-items-center rounded-full text-muted-foreground after:absolute after:-inset-[10px] after:content-['']"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>

@@ -89,7 +89,7 @@ function NotificationsPage() {
             <Link
               to="/notifications/settings"
               aria-label="알림 설정"
-              className="grid h-9 w-9 place-items-center rounded-full text-[#495057] hover:bg-secondary"
+              className="grid h-11 w-11 place-items-center rounded-full text-[#495057] hover:bg-secondary"
             >
               <Settings className="h-5 w-5" />
             </Link>
@@ -135,7 +135,7 @@ function NotificationsPage() {
                           )}
                           <span
                             className={cn(
-                              "grid h-9 w-9 place-items-center rounded-full",
+                              "grid h-11 w-11 place-items-center rounded-full",
                               style.bg,
                               style.fg,
                             )}
