@@ -130,7 +130,7 @@ function NewsDetailView({
           <button
             type="button"
             onClick={onBack}
-            className="flex h-9 w-9 items-center justify-center rounded-full active:bg-[#F1F3F5]"
+            className="flex h-11 w-11 items-center justify-center rounded-full active:bg-[#F1F3F5]"
             aria-label="뒤로"
           >
             <ChevronLeft className="h-5 w-5 text-foreground" />
@@ -141,14 +141,14 @@ function NewsDetailView({
           <div className="flex items-center">
             <button
               type="button"
-              className="flex h-9 w-9 items-center justify-center rounded-full active:bg-[#F1F3F5]"
+              className="flex h-11 w-11 items-center justify-center rounded-full active:bg-[#F1F3F5]"
               aria-label="공유"
             >
               <Share2 className="h-[18px] w-[18px] text-[#495057]" />
             </button>
             <button
               type="button"
-              className="flex h-9 w-9 items-center justify-center rounded-full active:bg-[#F1F3F5]"
+              className="flex h-11 w-11 items-center justify-center rounded-full active:bg-[#F1F3F5]"
               aria-label="즐겨찾기"
             >
               <Star className="h-[18px] w-[18px] text-[#495057]" />

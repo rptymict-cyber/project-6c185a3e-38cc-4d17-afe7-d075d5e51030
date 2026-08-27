@@ -45,7 +45,7 @@ export function RealtimeSection({
               key={s}
               onClick={() => onSortChange(s)}
               className={cn(
-                "shrink-0 rounded-full px-3 py-1 text-caption font-semibold",
+                "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-caption font-semibold",
                 active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-muted-foreground",
               )}
             >

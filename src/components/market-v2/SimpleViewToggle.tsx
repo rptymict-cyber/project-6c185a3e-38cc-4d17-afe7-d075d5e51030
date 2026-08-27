@@ -27,7 +27,7 @@ export function SimpleViewToggle({
             type="button"
             onClick={() => onChange(t.id)}
             className={cn(
-              "inline-flex h-8 items-center gap-1 rounded-[8px] border px-2.5 text-caption font-semibold transition-colors",
+              "inline-flex h-9 items-center gap-1 rounded-[8px] border px-3 text-caption font-semibold transition-colors",
               active
                 ? "border-[#3A8A3A] bg-[#3A8A3A] text-white"
                 : "border-[#E9ECEF] bg-white text-[#495057]",

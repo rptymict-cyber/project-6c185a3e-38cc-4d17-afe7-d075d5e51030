@@ -16,7 +16,7 @@ export function AgricultureThemeSection() {
     <section className="mt-6">
       <div className="flex items-center justify-between px-4">
         <h2 className="text-body-lg font-bold text-foreground">지금 뜨는 농산물 테마</h2>
-        <button className="flex items-center gap-0.5 text-caption text-[#868E96]">
+        <button className="flex h-11 items-center gap-0.5 pl-2 text-caption text-[#868E96]">
           더보기 <ChevronRight className="h-3.5 w-3.5" />
         </button>
       </div>

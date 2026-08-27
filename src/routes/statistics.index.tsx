@@ -179,7 +179,7 @@ function StatisticsPage() {
                 type="button"
                 onClick={() => setPeriod(t.id)}
                 className={cn(
-                  "flex-1 rounded-full py-1.5 text-caption font-semibold transition-colors",
+                  "min-h-9 flex-1 rounded-full text-caption font-semibold transition-colors",
                   active
                     ? "bg-white text-[#1F5C1F] shadow-sm"
                     : "text-[#6C757D]",

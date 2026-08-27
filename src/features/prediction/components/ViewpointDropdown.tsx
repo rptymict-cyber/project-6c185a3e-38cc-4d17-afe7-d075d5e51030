@@ -30,7 +30,7 @@ export function ViewpointDropdown({
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1 rounded-full border border-[#3A8A3A]/40 bg-[#F0F9F0] px-3 py-1.5 text-caption font-semibold text-[#1F5C1F] active:bg-[#E4F3E4]"
+          className="inline-flex h-9 items-center gap-1 rounded-full border border-[#3A8A3A]/40 bg-[#F0F9F0] px-3.5 text-caption font-semibold text-[#1F5C1F] active:bg-[#E4F3E4]"
         >
           {current.label}
           <ChevronDown className="h-3.5 w-3.5" />

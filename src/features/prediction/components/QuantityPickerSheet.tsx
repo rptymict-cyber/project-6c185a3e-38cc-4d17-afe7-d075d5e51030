@@ -83,7 +83,7 @@ export function QuantityPickerSheet({
                   type="button"
                   onClick={() => handleUnitChange(opt)}
                   className={cn(
-                    "h-8 rounded-full text-caption font-semibold transition-colors",
+                    "h-9 rounded-full text-caption font-semibold transition-colors",
                     active
                       ? "bg-white text-[#1F5C1F] shadow-sm"
                       : "text-[#6C757D]",

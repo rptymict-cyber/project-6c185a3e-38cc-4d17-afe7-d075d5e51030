@@ -18,7 +18,7 @@ export function MarketQuickMarketSection({
               toast("도매시장별 조회는 준비 중입니다");
             }
           }}
-          className="text-caption font-medium text-muted-foreground"
+          className="flex h-11 items-center pl-2 text-caption font-medium text-muted-foreground"
         >
           더보기 ›
         </button>

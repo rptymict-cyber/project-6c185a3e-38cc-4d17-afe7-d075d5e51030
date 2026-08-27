@@ -35,7 +35,7 @@ export function HomeAgriNewsSection() {
         </h3>
         <Link
           to="/news"
-          className="flex items-center gap-0.5 text-body font-medium text-[#4B5563]"
+          className="flex h-11 items-center gap-0.5 pl-2 text-body font-medium text-[#4B5563]"
         >
           더보기
           <ChevronRight className="h-3.5 w-3.5" />

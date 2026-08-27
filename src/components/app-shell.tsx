@@ -21,7 +21,7 @@ export function AppShell({
       data-screen-state={screenId ? screenState : undefined}
     >
       {header}
-      <main className="pb-[calc(60px+env(safe-area-inset-bottom))]">{children}</main>
+      <main className="pb-[calc(64px+env(safe-area-inset-bottom))]">{children}</main>
       {bottom}
       <BottomNav />
     </div>
