@@ -32,7 +32,7 @@ export function PredictionGradeSegment({
               type="button"
               onClick={() => onChange(o.value)}
               className={cn(
-                "h-8 rounded-lg text-caption font-semibold transition-colors",
+                "h-9 rounded-lg text-caption font-semibold transition-colors",
                 active
                   ? "bg-white text-[#1F5C1F] shadow-sm"
                   : "text-[#868E96]",

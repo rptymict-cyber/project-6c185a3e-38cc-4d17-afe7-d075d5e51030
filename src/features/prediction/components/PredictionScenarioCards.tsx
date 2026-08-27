@@ -83,7 +83,7 @@ export function PredictionScenarioCards({
               onOpenRangeDetail();
             }
           }}
-          className="ml-0.5 cursor-pointer whitespace-nowrap font-bold text-[#1F7A50] underline underline-offset-2"
+          className="ml-0.5 inline-flex min-h-9 cursor-pointer items-center whitespace-nowrap font-bold text-[#1F7A50] underline underline-offset-2"
         >
           자세히›
         </span>
