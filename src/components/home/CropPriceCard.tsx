@@ -23,7 +23,7 @@ export function CropPriceCard({ crop, grade = "특" }: { crop: Crop; grade?: str
       onClick={() => applyMarketSelection(crop.id)}
       className="block w-[168px] shrink-0 rounded-2xl bg-white p-3 shadow-[0_1px_4px_rgba(0,0,0,0.06)] ring-1 ring-[#F1F3F5]"
     >
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <CropIcon name={crop.name} size={28} />
         <span className="text-body font-bold text-foreground">{crop.name}</span>
         <span className="rounded bg-[#F1F3F5] px-1 py-0.5 text-meta font-medium text-[#6C757D]">
