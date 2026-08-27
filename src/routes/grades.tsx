@@ -35,7 +35,7 @@ function GradesPage() {
             return (
               <li key={c.id} className="rounded-[10px] bg-surface p-4">
                 <div className="flex items-center gap-2">
-                  <CropIcon name={c.name} size={22} />
+                  <CropIcon name={c.name} size={28} />
                   <span className="text-body-lg font-bold">{c.name}</span>
                   <span className="ml-auto text-meta text-muted-foreground">
                     {c.updatedAt}

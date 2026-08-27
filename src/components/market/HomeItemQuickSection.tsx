@@ -42,7 +42,7 @@ export function HomeItemQuickSection() {
               )}
             >
               <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[#F0F9F0]">
-                <CropIcon name={it.name} size={32} />
+                <CropIcon name={it.name} size={40} />
               </span>
               <span className="text-meta font-medium text-foreground">{it.name}</span>
             </Link>

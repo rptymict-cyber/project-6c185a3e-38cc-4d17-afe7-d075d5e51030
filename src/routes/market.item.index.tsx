@@ -89,7 +89,7 @@ function ItemBrowsePage() {
             >
               <div className="flex min-w-0 items-center gap-3">
                 <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#F0F9F0]">
-                  <CropIcon name={item.name} size={26} />
+                  <CropIcon name={item.name} size={36} />
                 </span>
                 <div className="min-w-0">
                   <div className="text-meta font-semibold text-[#3A8A3A]">
@@ -131,7 +131,7 @@ function ItemBrowsePage() {
                               )}
                             >
                               <span className="grid h-9 w-9 place-items-center rounded-lg bg-white">
-                                <CropIcon name={x.name} size={22} />
+                                <CropIcon name={x.name} size={28} />
                               </span>
                               <span
                                 className={cn(

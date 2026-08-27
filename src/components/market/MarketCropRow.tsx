@@ -20,7 +20,7 @@ export function MarketCropRow({
         <span className="w-5 text-center text-body font-bold text-[#3A8A3A] tabular-nums">
           {rank}
         </span>
-        <CropIcon name={crop.name} size={28} />
+        <CropIcon name={crop.name} size={36} />
         <div className="min-w-0 flex-1">
           <div className="text-body-lg font-semibold text-foreground">{crop.name}</div>
           <div className="mt-0.5 truncate text-meta text-muted-foreground">

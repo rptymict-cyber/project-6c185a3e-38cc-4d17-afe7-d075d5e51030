@@ -43,7 +43,7 @@ export function CropRankingRow({ item }: { item: RankingItem }) {
         className="flex flex-1 items-center gap-3 min-w-0"
       >
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F1F3F5]">
-          <CropIcon name={item.name} size={22} />
+          <CropIcon name={item.name} size={28} />
         </span>
         <div className="min-w-0 flex-1">
           <div className="truncate text-body font-bold text-foreground">{item.name}</div>
