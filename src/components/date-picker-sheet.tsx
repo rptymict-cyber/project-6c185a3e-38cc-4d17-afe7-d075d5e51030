@@ -90,9 +90,9 @@ export function DatePickerSheet({
           <button
             aria-label="닫기"
             onClick={() => onOpenChange(false)}
-            className="grid h-8 w-8 place-items-center rounded-full hover:bg-secondary"
+            className="grid h-11 w-11 place-items-center rounded-full hover:bg-secondary"
           >
-            <X className="h-4 w-4 text-[#495057]" />
+            <X className="h-5 w-5 text-[#495057]" />
           </button>
         </div>
 
