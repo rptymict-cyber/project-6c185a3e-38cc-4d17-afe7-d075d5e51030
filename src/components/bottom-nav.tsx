@@ -21,7 +21,7 @@ const tabs: {
 function BottomNavBase() {
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto flex h-[60px] w-full max-w-[430px] items-stretch border-t border-[#E8EEE8] bg-white"
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto flex w-full max-w-[430px] items-stretch border-t border-[#E8EEE8] bg-white pb-[env(safe-area-inset-bottom)]"
       aria-label="주요 메뉴"
     >
       {tabs.map(({ to, label, Icon, showUnread }) => (
@@ -29,13 +29,15 @@ function BottomNavBase() {
           key={to}
           to={to}
           activeOptions={{ exact: to === "/" }}
-          className="group flex min-h-11 flex-1 flex-col items-center justify-center gap-1 text-body text-[#9CA3AF] transition-colors data-[status=active]:text-primary"
+          className="group flex h-16 flex-1 flex-col items-center justify-center gap-1 px-0.5 text-[#9CA3AF] transition-colors data-[status=active]:text-primary"
         >
           <span className="relative grid place-items-center">
-            <Icon className="h-5 w-5" />
+            <Icon className="h-6 w-6" />
             {showUnread && <UnreadBadge className="-right-2 -top-1" />}
           </span>
-          <span className="font-medium">{label}</span>
+          <span className="w-full truncate text-center text-[12px] font-medium leading-none">
+            {label}
+          </span>
         </Link>
       ))}
     </nav>
