@@ -179,7 +179,7 @@ function WholesaleBrowsePage() {
                     {idx + 1}
                   </span>
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#F0F9F0]">
-                    <CropIcon name={it.name} size={24} />
+                    <CropIcon name={it.name} size={28} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="text-body font-semibold text-foreground">

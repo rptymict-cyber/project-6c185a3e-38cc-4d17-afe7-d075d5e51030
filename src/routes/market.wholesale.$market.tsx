@@ -127,7 +127,7 @@ function WholesaleDetailPage() {
               )}
             >
               <span className="inline-flex items-center gap-1">
-                <CropIcon name={c.name} size={16} />
+                <CropIcon name={c.name} size={20} />
                 {c.name}
               </span>
             </button>

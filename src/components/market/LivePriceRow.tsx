@@ -30,7 +30,7 @@ export const LivePriceRowItem = memo(function LivePriceRowItem({
         <span className="text-center text-caption font-bold tabular-nums text-[#3A8A3A]">
           {rank}
         </span>
-        <CropIcon name={row.name} size={28} />
+        <CropIcon name={row.name} size={36} />
         <div className="min-w-0">
           <div className="truncate text-body font-semibold text-foreground">
             {row.name}
@@ -79,7 +79,7 @@ export const LivePriceRowCompact = memo(function LivePriceRowCompact({
         <span className="w-4 shrink-0 text-center text-caption font-bold tabular-nums text-[#3A8A3A]">
           {rank}
         </span>
-        <CropIcon name={row.name} size={28} />
+        <CropIcon name={row.name} size={36} />
         <div className="min-w-0 flex-1">
           <div className="truncate text-body font-semibold text-foreground">
             {row.name}

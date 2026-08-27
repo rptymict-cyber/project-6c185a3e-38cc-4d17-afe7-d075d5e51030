@@ -47,7 +47,7 @@ export function InterestChips() {
                   : "border-[#3A8A3A] bg-[#F0F9F0] text-[#1F5C1F]",
               )}
             >
-              <CropIcon name={c.name} size={16} />
+              <CropIcon name={c.name} size={20} />
               <span>{c.name}</span>
               {editing && (
                 <span

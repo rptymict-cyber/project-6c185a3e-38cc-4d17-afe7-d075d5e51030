@@ -71,7 +71,7 @@ export function ProPriceHeadlineCard({
         <div className="flex items-start justify-between gap-2">
           <div className="flex min-w-0 items-center gap-3">
             <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] bg-[#F0F9F0]">
-              <CropIcon name={itemLabel} size={28} />
+              <CropIcon name={itemLabel} size={36} />
             </div>
             <div className="min-w-0">
               <div className="truncate text-subtitle font-black leading-tight text-foreground">

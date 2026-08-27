@@ -183,7 +183,7 @@ function SearchPage() {
                           className="flex w-full items-center gap-3 px-4 py-3 text-left"
                         >
                           <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface">
-                            <CropIcon name={c.name} size={22} />
+                            <CropIcon name={c.name} size={28} />
                           </span>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
@@ -317,7 +317,7 @@ function SearchPage() {
                     onClick={() => openCrop(c)}
                     className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-surface px-3 text-body font-semibold text-foreground"
                   >
-                    <CropIcon name={c.name} size={16} />
+                    <CropIcon name={c.name} size={20} />
                     {c.name}
                   </button>
                 ))}

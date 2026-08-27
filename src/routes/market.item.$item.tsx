@@ -58,7 +58,7 @@ function ItemVarietiesPage() {
       {/* 선택 품목 칩 */}
       <div className="flex items-center gap-1.5 px-4 pt-3">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F0F9F0] px-3 py-1 text-caption font-semibold text-[#3A8A3A]">
-          <CropIcon name={item.name} size={16} />
+          <CropIcon name={item.name} size={20} />
           {item.name}
         </span>
         <span

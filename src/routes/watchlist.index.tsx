@@ -402,7 +402,7 @@ function FavoriteCardBody({
           className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-muted"
           aria-hidden
         >
-          <CropIcon name={item.cropName} size={26} />
+          <CropIcon name={item.cropName} size={36} />
         </div>
         <div className={cn("min-w-0 flex-1", disableLink && "pr-9")}>
           <div className="flex items-start justify-between gap-2">

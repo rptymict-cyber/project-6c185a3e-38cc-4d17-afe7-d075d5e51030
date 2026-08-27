@@ -465,7 +465,7 @@ function Step1Category({
                   )}
                 >
                   <span className="flex items-center gap-2 min-w-0">
-                    <CropIcon iconKey={c.iconKey} size={26} />
+                    <CropIcon iconKey={c.iconKey} size={36} />
                     <span
                       className={cn(
                         "truncate text-body font-semibold",
