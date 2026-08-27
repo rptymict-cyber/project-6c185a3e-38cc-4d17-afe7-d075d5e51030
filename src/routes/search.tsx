@@ -148,7 +148,7 @@ function SearchPage() {
               if (e.key === "Enter") commit(q);
             }}
             placeholder="작물명, 시장명으로 검색"
-            className="h-9 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground"
+            className="h-9 w-full min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground"
           />
           {q.length > 0 && (
             <button
