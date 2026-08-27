@@ -131,7 +131,7 @@ export function RegionStatsList({
                         <button
                           type="button"
                           onClick={() => setExpandedMarket(mOpen ? null : mKey)}
-                          className="flex w-full items-center gap-2 py-2 text-left"
+                          className="flex w-full min-h-11 items-center gap-2 py-2 text-left"
                           aria-expanded={mOpen}
                         >
                           <Store className="h-4 w-4 text-[#3A8A3A]" />
@@ -196,7 +196,7 @@ export function RegionStatsList({
                     <button
                       type="button"
                       onClick={() => onOpenTrend(r.region)}
-                      className="flex w-full items-center justify-center gap-1 rounded-[8px] border border-[#3A8A3A] py-2 text-caption font-bold text-[#3A8A3A]"
+                      className="flex w-full items-center justify-center gap-1 rounded-[8px] border border-[#3A8A3A] min-h-11 py-2 text-caption font-bold text-[#3A8A3A]"
                     >
                       {r.region} 가격 추이 보기
                       <ChevronRight className="h-3.5 w-3.5" />

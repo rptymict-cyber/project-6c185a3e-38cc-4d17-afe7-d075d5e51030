@@ -75,7 +75,7 @@ export function VolumeByMarketTab({
             return (
               <li
                 key={b.id}
-                className="flex items-center justify-between gap-2 py-2"
+                className="flex items-center min-h-11 justify-between gap-2 py-2"
               >
                 <div className="flex min-w-0 items-center gap-2">
                   <span
