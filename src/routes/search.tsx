@@ -138,8 +138,8 @@ function SearchPage() {
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
-        <div className="flex flex-1 items-center gap-2 rounded-full bg-[#F1F3F5] px-3">
-          <SearchIcon className="h-4 w-4 text-muted-foreground" />
+        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-full bg-[#F1F3F5] px-3">
+          <SearchIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
           <input
             ref={inputRef}
             value={q}
