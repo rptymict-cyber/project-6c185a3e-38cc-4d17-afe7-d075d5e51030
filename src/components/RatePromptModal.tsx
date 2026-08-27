@@ -203,14 +203,14 @@ export function RatePromptModal() {
               <button
                 type="button"
                 onClick={closeLater}
-                className="px-2 py-2 text-body font-semibold text-[#868E96]"
+                className="inline-flex min-h-11 items-center px-2 text-body font-semibold text-[#868E96]"
               >
                 나중에
               </button>
               <button
                 type="button"
                 onClick={closeForever}
-                className="px-2 py-2 text-body font-semibold text-[#495057]"
+                className="inline-flex min-h-11 items-center px-2 text-body font-semibold text-[#495057]"
               >
                 다시 보지 않기
               </button>
@@ -243,7 +243,7 @@ export function RatePromptModal() {
               onClick={submitFeedback}
               disabled={submitting}
               className={cn(
-                "mt-2 w-full rounded-lg py-3 text-body font-bold text-white transition-colors",
+                "mt-2 flex h-14 w-full items-center justify-center rounded-lg text-body font-bold text-white transition-colors",
                 submitting ? "bg-[#ADB5BD]" : "bg-[#3A8A3A]",
               )}
             >
@@ -254,14 +254,14 @@ export function RatePromptModal() {
               <button
                 type="button"
                 onClick={closeLater}
-                className="px-2 py-2 text-caption font-semibold text-[#868E96]"
+                className="inline-flex min-h-11 items-center px-2 text-caption font-semibold text-[#868E96]"
               >
                 나중에
               </button>
               <button
                 type="button"
                 onClick={closeForever}
-                className="px-2 py-2 text-caption font-semibold text-[#495057]"
+                className="inline-flex min-h-11 items-center px-2 text-caption font-semibold text-[#495057]"
               >
                 다시 보지 않기
               </button>

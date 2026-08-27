@@ -254,7 +254,7 @@ function CropSelectPage() {
           type="button"
           onClick={handleBack}
           aria-label="뒤로가기"
-          className="flex h-10 w-10 items-center justify-center -ml-2 text-gray-900"
+          className="flex h-11 w-11 items-center justify-center -ml-2 text-gray-900"
         >
           <ArrowLeft className="h-6 w-6" />
         </button>
@@ -742,7 +742,7 @@ function SearchInput({
           type="button"
           onClick={() => onChange("")}
           aria-label="지우기"
-          className="flex h-6 w-6 items-center justify-center rounded-full text-gray-400 active:bg-gray-100"
+          className="relative flex h-6 w-6 items-center justify-center rounded-full text-gray-400 active:bg-gray-100 after:absolute after:-inset-[10px] after:content-['']"
         >
           <X className="h-4 w-4" />
         </button>
@@ -759,7 +759,7 @@ function UpperChip({ label, onRemove }: { label: string; onRemove: () => void })
         type="button"
         onClick={onRemove}
         aria-label={`${label} 선택 해제`}
-        className="flex h-5 w-5 items-center justify-center rounded-full text-[#2E9E6B]/70 active:bg-white/40"
+        className="relative flex h-5 w-5 items-center justify-center rounded-full text-[#2E9E6B]/70 active:bg-white/40 after:absolute after:-inset-[10px] after:content-['']"
       >
         <X className="h-3.5 w-3.5" />
       </button>

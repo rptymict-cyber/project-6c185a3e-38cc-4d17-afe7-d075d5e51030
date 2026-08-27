@@ -101,7 +101,7 @@ export function DatePickerSheet({
           <button
             type="button"
             onClick={goToday}
-            className="text-body font-semibold text-primary underline underline-offset-4"
+            className="inline-flex min-h-11 items-center text-body font-semibold text-primary underline underline-offset-4"
           >
             오늘
           </button>
@@ -138,7 +138,7 @@ export function DatePickerSheet({
           <button
             type="button"
             onClick={() => draft && commit(draft, humanLabel(draft))}
-            className="w-full rounded-[12px] bg-primary py-3.5 text-body font-bold text-primary-foreground active:opacity-90"
+            className="flex h-14 w-full items-center justify-center rounded-[12px] bg-primary text-body font-bold text-primary-foreground active:opacity-90"
           >
             완료
           </button>

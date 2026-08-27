@@ -84,7 +84,7 @@ function LivePage() {
                   navigate({ search: { sort: s }, replace: true });
                 }}
                 className={
-                  "shrink-0 inline-flex h-9 items-center rounded-full px-3.5 text-caption font-semibold " +
+                  "shrink-0 inline-flex h-11 items-center rounded-full px-3.5 text-caption font-semibold " +
                   (active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-muted-foreground")
                 }
               >

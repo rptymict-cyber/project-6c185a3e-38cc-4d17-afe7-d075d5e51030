@@ -21,7 +21,7 @@ export function LoadMoreButton({
       onClick={onClick}
       aria-label={ariaLabel}
       className={cn(
-        "mt-3 flex h-11 w-full items-center justify-center gap-1 rounded-[10px] border border-[#E9ECEF] bg-white text-body font-semibold text-[#495057] active:bg-secondary",
+        "mt-3 flex h-12 w-full items-center justify-center gap-1 rounded-[10px] border border-[#E9ECEF] bg-white text-body font-semibold text-[#495057] active:bg-secondary",
         className,
       )}
     >

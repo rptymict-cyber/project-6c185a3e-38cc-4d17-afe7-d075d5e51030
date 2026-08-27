@@ -238,7 +238,7 @@ function WatchlistAddPage() {
           onClick={handleSave}
           disabled={!cropSelected}
           className={cn(
-            "h-12 w-full rounded-xl text-body-lg font-bold",
+            "h-14 w-full rounded-xl text-body-lg font-bold",
             cropSelected
               ? "bg-primary text-primary-foreground active:opacity-90"
               : "bg-muted text-muted-foreground",
