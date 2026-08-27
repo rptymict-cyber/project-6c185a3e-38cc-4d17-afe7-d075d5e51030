@@ -6,7 +6,7 @@
  *
  * 사용:
  *   import { CropIcon } from "@/components/crop-icon";
- *   <CropIcon name={crop.name} size={36} />
+ *   <CropIcon name={crop.name} size={28} />
  */
 
 // eager import all svg URLs
