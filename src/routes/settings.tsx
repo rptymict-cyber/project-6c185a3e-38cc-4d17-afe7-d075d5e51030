@@ -423,7 +423,7 @@ function FeedbackSheet({ onClose }: { onClose: () => void }) {
         onClick={submit}
         disabled={!canSubmit}
         className={cn(
-          "mt-6 w-full rounded-lg py-3.5 text-body font-bold text-white transition-colors",
+          "mt-6 flex h-14 w-full items-center justify-center rounded-lg text-body font-bold text-white transition-colors",
           canSubmit ? "bg-[#3A8A3A]" : "bg-[#ADB5BD]",
         )}
       >
@@ -461,14 +461,14 @@ function StoreReviewPrompt({
             if (opened) toast("스토어로 이동합니다");
             onClose();
           }}
-          className="w-full rounded-lg bg-[#3A8A3A] py-3.5 text-body font-bold text-white"
+          className="flex h-14 w-full items-center justify-center rounded-lg bg-[#3A8A3A] text-body font-bold text-white"
         >
           스토어에 리뷰 쓰기
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="w-full rounded-lg bg-[#F1F3F5] py-3.5 text-body font-semibold text-foreground"
+          className="flex h-14 w-full items-center justify-center rounded-lg bg-[#F1F3F5] text-body font-semibold text-foreground"
         >
           다음에 할게요
         </button>

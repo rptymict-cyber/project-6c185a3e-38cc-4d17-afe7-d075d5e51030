@@ -40,14 +40,14 @@ export function LocationPermissionDevModal() {
           <button
             type="button"
             onClick={() => resolvePrompt(false)}
-            className="py-3.5 text-body font-semibold text-[#6C757D] active:bg-[#F8F9FA]"
+            className="flex min-h-14 items-center justify-center text-body font-semibold text-[#6C757D] active:bg-[#F8F9FA]"
           >
             거부
           </button>
           <button
             type="button"
             onClick={() => resolvePrompt(true)}
-            className="border-l border-[#F1F3F5] py-3.5 text-body font-bold text-[#3A8A3A] active:bg-[#F8F9FA]"
+            className="flex min-h-14 items-center justify-center border-l border-[#F1F3F5] text-body font-bold text-[#3A8A3A] active:bg-[#F8F9FA]"
           >
             허용
           </button>

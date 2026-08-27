@@ -41,7 +41,7 @@ function NewsDetailPage() {
         <div className="flex h-12 items-center justify-between border-b border-[#F1F3F5] bg-white px-2">
           <Link
             to="/news"
-            className="flex h-9 w-9 items-center justify-center rounded-full active:bg-[#F1F3F5]"
+            className="flex h-11 w-11 items-center justify-center rounded-full active:bg-[#F1F3F5]"
             aria-label="뒤로"
           >
             <ChevronLeft className="h-5 w-5 text-foreground" />
@@ -50,14 +50,14 @@ function NewsDetailPage() {
           <div className="flex items-center">
             <button
               type="button"
-              className="flex h-9 w-9 items-center justify-center rounded-full active:bg-[#F1F3F5]"
+              className="flex h-11 w-11 items-center justify-center rounded-full active:bg-[#F1F3F5]"
               aria-label="공유"
             >
               <Share2 className="h-4.5 w-4.5 text-[#495057]" />
             </button>
             <button
               type="button"
-              className="flex h-9 w-9 items-center justify-center rounded-full active:bg-[#F1F3F5]"
+              className="flex h-11 w-11 items-center justify-center rounded-full active:bg-[#F1F3F5]"
               aria-label="즐겨찾기"
             >
               <Star className="h-4.5 w-4.5 text-[#495057]" />
@@ -140,7 +140,7 @@ function NewsDetailPage() {
               <Link
                 to="/market"
                 onClick={() => applyMarketSelection(cropRouteId)}
-                className="mt-3 flex h-10 items-center justify-center rounded-lg bg-[#2E9E6B] text-body font-bold text-white active:bg-[#1F7A50]"
+                className="mt-3 flex h-12 items-center justify-center rounded-lg bg-[#2E9E6B] text-body font-bold text-white active:bg-[#1F7A50]"
               >
                 {primaryCrop} 실시간 시세 보러가기 ›
               </Link>
