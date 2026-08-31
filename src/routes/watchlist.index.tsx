@@ -184,8 +184,7 @@ function WatchlistPage() {
 
   const bottomBar = editMode ? (
     <div
-      className="sticky bottom-[60px] z-20 border-t border-border bg-background"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="sticky bottom-[calc(64px+env(safe-area-inset-bottom))] z-20 border-t border-border bg-background"
     >
       <div className="grid grid-cols-2 items-center gap-3 px-4 py-3">
         <button
