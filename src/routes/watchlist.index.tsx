@@ -184,8 +184,7 @@ function WatchlistPage() {
 
   const bottomBar = editMode ? (
     <div
-      className="sticky bottom-[60px] z-20 border-t border-border bg-background"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="sticky bottom-[calc(64px+env(safe-area-inset-bottom))] z-20 border-t border-border bg-background"
     >
       <div className="grid grid-cols-2 items-center gap-3 px-4 py-3">
         <button
@@ -478,7 +477,7 @@ function EmptyState() {
   return (
     <div
       className="flex flex-col items-center justify-center px-6 text-center"
-      style={{ minHeight: "calc(100dvh - 52px - 60px - env(safe-area-inset-bottom))" }}
+      style={{ minHeight: "calc(100dvh - 52px - 64px - env(safe-area-inset-bottom))" }}
     >
       <Star className="mb-5 text-[#B2DFB2]" size={48} strokeWidth={1.5} />
       <h3 className="text-subtitle font-bold text-foreground">저장한 시세 조건이 아직 없어요</h3>

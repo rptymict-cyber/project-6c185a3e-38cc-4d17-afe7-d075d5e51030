@@ -86,7 +86,7 @@ function WholesaleDetailPage() {
         />
       }
       bottom={
-        <div className="fixed inset-x-0 bottom-[60px] z-30 mx-auto w-full max-w-[430px] border-t border-[#E9ECEF] bg-[#F8F9FA] px-4 py-2.5">
+        <div className="fixed inset-x-0 bottom-[calc(64px+env(safe-area-inset-bottom))] z-30 mx-auto w-full max-w-[430px] border-t border-[#E9ECEF] bg-[#F8F9FA] px-4 py-2.5">
           <div className="flex items-center justify-between text-caption">
             <span className="text-[#6C757D]">
               {data.item.name} 총 거래량{" "}
