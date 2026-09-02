@@ -81,3 +81,11 @@ TanStack Router Route로 만든다.
   부모 Route에서 `<Outlet />`을 렌더하거나, 시트 Route 컴포넌트가 부모
   화면을 함께 렌더하도록 구성한다.
 
+## 개발자 DS 댓글 대응
+
+사용자가 Confluence DS 사양서에 달린 개발자 댓글(앱-사양서 불일치 지적)을
+붙여넣으면, 절차·판정 기준·사양서 수정/앱 수정 규칙·회신 작성 규칙·변경 이력
+로그 형식을 반드시 `docs/ds/dev-comments/WORKFLOW.md`를 따른다. 이 문서가
+Claude Code(CLAUDE.md)와 공유하는 단일 소스이므로 내용을 여기에 다시 옮겨
+적지 않는다.
+
