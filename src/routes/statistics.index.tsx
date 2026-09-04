@@ -73,8 +73,8 @@ function StatisticsPage() {
   // 최초 진입 시 committed가 비어 있으면 기본 작물(배추)로 seed.
   useEffect(() => {
     if (!committed.itemId) {
-      setDraftCategory("06");
-      setDraftItem("0602"); // 배추
+      setDraftCategory("10");
+      setDraftItem("1001"); // 배추
       setDraftVariety("ALL");
       commitDraft();
     }
