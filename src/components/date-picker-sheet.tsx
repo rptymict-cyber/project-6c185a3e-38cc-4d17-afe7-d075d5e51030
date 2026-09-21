@@ -91,8 +91,11 @@ export function DatePickerSheet({
     dOnly.setHours(0, 0, 0, 0);
     const t = new Date();
     t.setHours(0, 0, 0, 0);
-    if (dOnly.getTime() > t.getTime()) return true;
-    return !has(toISO(dOnly));
+    if (!allowFuture && dOnly.getTime() > t.getTime()) return true;
+    const iso = toISO(dOnly);
+    if (minIso && iso < minIso) return true;
+    if (maxIso && iso > maxIso) return true;
+    return !has(iso);
   };
 
   return (
