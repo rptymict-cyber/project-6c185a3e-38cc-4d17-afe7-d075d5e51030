@@ -1,66 +1,29 @@
 import { useMemo } from "react";
-import { cn } from "@/lib/utils";
-import {
-  getLivePrices,
-  LIVE_SORT_META,
-  type LiveSort,
-  type LivePriceRow,
-} from "@/lib/services/live-prices";
-import {
-  LivePriceHeader,
-  LivePriceRowCompact,
-  LivePriceRowItem,
-} from "./LivePriceRow";
+import { getLiveTrades, type LiveTrade } from "@/lib/services/live-prices";
+import { LiveTradeRowItem } from "./LivePriceRow";
 
-const SORT_ORDER: LiveSort[] = ["up", "down", "vol"];
-
+/**
+ * 최근 거래 피드 미리보기(홈) — 최신 거래순.
+ * 정렬 탭/순위/등락률/거래량 집계는 표시하지 않는다(/live와 정의 통일).
+ */
 export function RealtimeSection({
-  sort,
-  onSortChange,
   onSelect,
   limit,
-  showHeaderRow = true,
-  variant = "default",
 }: {
-  sort: LiveSort;
-  onSortChange: (s: LiveSort) => void;
-  onSelect: (row: LivePriceRow) => void;
+  onSelect: (trade: LiveTrade) => void;
   limit: number;
-  showHeaderRow?: boolean;
-  /** "home"은 홈 전용 compact 레이아웃(헤더행 없음) */
-  variant?: "default" | "home";
 }) {
-  const { rows } = useMemo(() => getLivePrices({ sort, limit }), [sort, limit]);
-  const hint = LIVE_SORT_META[sort].hint;
-  const isHome = variant === "home";
-  const Row = isHome ? LivePriceRowCompact : LivePriceRowItem;
+  const { rows } = useMemo(() => getLiveTrades({ limit }), [limit]);
 
   return (
     <div>
-      <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
-        {SORT_ORDER.map((s) => {
-          const active = s === sort;
-          return (
-            <button
-              key={s}
-              onClick={() => onSortChange(s)}
-              className={cn(
-                "inline-flex h-11 shrink-0 items-center rounded-full px-3.5 text-caption font-semibold",
-                active ? "bg-[#3A8A3A] text-white" : "bg-[#F1F3F5] text-muted-foreground",
-              )}
-            >
-              {LIVE_SORT_META[s].label}
-            </button>
-          );
-        })}
-      </div>
-      <p className="mt-1.5 text-meta text-muted-foreground">{hint}</p>
-
+      <p className="text-meta text-muted-foreground">
+        가장 최근 거래부터 표시됩니다.
+      </p>
       <div className="mt-2 overflow-hidden rounded-[10px] bg-[#FAFBFA]">
-        {!isHome && showHeaderRow && <LivePriceHeader />}
         <ul>
-          {rows.map((row, i) => (
-            <Row key={row.id} rank={i + 1} row={row} onClick={onSelect} />
+          {rows.map((trade) => (
+            <LiveTradeRowItem key={trade.key} trade={trade} onClick={onSelect} />
           ))}
         </ul>
       </div>
