@@ -176,6 +176,14 @@ function PredictionPage() {
   const selectedDate = selectedPoint?.label ?? insight.recommendationDate;
   const selectedPrice = selectedPoint?.predictedPrice ?? insight.expectedPrice;
 
+  // 비교 날짜 선택 가능 범위 = 예측값이 있는 미래 포인트 (오늘 제외)
+  const futurePoints = prediction.predictedPoints.filter(
+    (p) => p.predictedPrice !== undefined && !p.isToday,
+  );
+  const futureIsoSet = new Set(futurePoints.map((p) => p.date));
+  const compareMinIso = futurePoints[0]?.date;
+  const compareMaxIso = futurePoints[futurePoints.length - 1]?.date;
+
   const priceDiff = selectedPrice - prediction.currentPrice;
   const isPositiveForUser = isFarmer ? priceDiff > 0 : priceDiff < 0;
 
