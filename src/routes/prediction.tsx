@@ -275,7 +275,7 @@ function PredictionPage() {
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-meta text-[#495057]">
             <span className="inline-flex items-center gap-1.5">
               <span className="inline-block h-[2px] w-3 rounded-full bg-[#E03B3B]" />
-              실제 평균가
+              실제 가격
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span
@@ -285,20 +285,10 @@ function PredictionPage() {
                     "linear-gradient(to right, #2E9E6B 0 4px, transparent 4px 8px, #2E9E6B 8px 12px, transparent 12px 16px)",
                 }}
               />
-              중립 예측
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-4 rounded-sm"
-                style={{ background: "rgba(46,158,107,0.24)" }}
-              />
-              낙관~비관 범위
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="inline-block h-2 w-2 rounded-full bg-[#C9A227]" />
-              변곡점
+              예상 가격
             </span>
           </div>
+
 
           {/* 5. 낙관/중립/비관 3 값카드 */}
           <div className="mt-3">

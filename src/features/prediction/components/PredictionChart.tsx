@@ -805,12 +805,10 @@ function PredictionChartBase({
               component={(props: any) => (
                 <RecommendBadge
                   {...props}
-                  label={recommendedVisible?.label ?? recommended?.label}
-                  price={
-                    recommendedVisible?.predictedPrice ??
-                    (recommendedVisible ? undefined : undefined)
-                  }
+                  label={recommendedVisible?.label}
+                  price={recommendedVisible?.predictedPrice}
                 />
+
               )}
             />
             {tip && (
