@@ -62,7 +62,9 @@ export function PredictionInsightCard({
       ? `${action} 시점을 검토하세요`
       : `${action} 참고`;
 
-  const gainLabel = isFarmer ? "예상 금액 차이" : "예상 절감액";
+  const gainLabel = isFarmer
+    ? "오늘 출하 대비 예상 판매금액 차이"
+    : "오늘 매입 대비 예상 매입액 차이";
   const revenueLabel = isFarmer ? "예상 판매금액" : "예상 매입액";
 
   return (
