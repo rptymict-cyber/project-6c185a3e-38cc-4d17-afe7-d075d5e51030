@@ -19,6 +19,15 @@ export interface DatePickerSheetProps {
   onConfirm: (iso: string, label: string) => void;
   /** 실제 거래 데이터 유무. 미지정 시 항상 true 로 간주 */
   hasDataFor?: (iso: string) => boolean;
+  /** 미래 날짜 선택 허용 (예측 대상일 선택 등). 기본 false */
+  allowFuture?: boolean;
+  /** 선택 가능한 최소/최대 날짜 (ISO "YYYY-MM-DD") */
+  minIso?: string;
+  maxIso?: string;
+  /** 시트 제목. 기본 "날짜 선택" */
+  title?: string;
+  /** "오늘" 바로가기 표시. 기본 true */
+  showToday?: boolean;
 }
 
 const WEEK_KO = ["일", "월", "화", "수", "목", "금", "토"];
