@@ -169,7 +169,7 @@ export function PredictionInsightCard({
               </span>
             </div>
             <div className="mt-0.5 text-meta text-white/60">
-              {quantityBoxes.toLocaleString()}{quantityUnitLabel}
+              {quantityLabel}
             </div>
           </div>
 
