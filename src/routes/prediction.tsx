@@ -19,6 +19,7 @@ import {
   TopicRelatedNewsCard,
 } from "@/features/prediction/components/PredictionRationaleExtras";
 
+import { DatePickerSheet } from "@/components/date-picker-sheet";
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
 import { QUANTITY_UNIT_LABEL } from "@/features/prediction/quantityUnits";
@@ -99,6 +100,7 @@ function PredictionPage() {
   const [marketSheetOpen, setMarketSheetOpen] = useState(false);
   const [viewpointSheetOpen, setViewpointSheetOpen] = useState(false);
   const [rangeDetailOpen, setRangeDetailOpen] = useState(false);
+  const [compareDateOpen, setCompareDateOpen] = useState(false);
 
   const prediction = usePrediction(
     selectedCropId,
@@ -174,6 +176,14 @@ function PredictionPage() {
   const selectedPoint = prediction.predictedPoints[effectiveIdx];
   const selectedDate = selectedPoint?.label ?? insight.recommendationDate;
   const selectedPrice = selectedPoint?.predictedPrice ?? insight.expectedPrice;
+
+  // 비교 날짜 선택 가능 범위 = 예측값이 있는 미래 포인트 (오늘 제외)
+  const futurePoints = prediction.predictedPoints.filter(
+    (p) => p.predictedPrice !== undefined && !p.isToday,
+  );
+  const futureIsoSet = new Set(futurePoints.map((p) => p.date));
+  const compareMinIso = futurePoints[0]?.date;
+  const compareMaxIso = futurePoints[futurePoints.length - 1]?.date;
 
   const priceDiff = selectedPrice - prediction.currentPrice;
   const isPositiveForUser = isFarmer ? priceDiff > 0 : priceDiff < 0;
@@ -302,17 +312,21 @@ function PredictionPage() {
 
         </section>
 
-        {/* 6. 출하/매입 시점 비교 */}
+        {/* 6. 출하/매입 시점 비교 — 사용자가 직접 선택한 날짜와 오늘 비교 */}
         <div className="mt-4">
           <PredictionCompareCards
             viewpoint={selectedViewpoint}
             currentPrice={prediction.currentPrice}
-            expectedPrice={selectedPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
-            recommendationDate={selectedDate}
+            quantityUnit={quantityUnit}
+            cropName={prediction.cropName}
+            compareIso={selectedPoint?.date}
+            compareLabel={selectedDate}
+            comparePrice={selectedPoint?.predictedPrice}
             isRecommendedSelection={!!selectedPoint?.isRecommendedDate}
+            onPickDate={() => setCompareDateOpen(true)}
           />
         </div>
 
@@ -442,6 +456,23 @@ function PredictionPage() {
         onOpenChange={setViewpointSheetOpen}
         value={selectedViewpoint}
         onChange={setSelectedViewpoint}
+      />
+      <DatePickerSheet
+        open={compareDateOpen}
+        onOpenChange={setCompareDateOpen}
+        selected={selectedPoint?.date ?? compareMinIso ?? ""}
+        title="비교 날짜 선택"
+        showToday={false}
+        allowFuture
+        minIso={compareMinIso}
+        maxIso={compareMaxIso}
+        hasDataFor={(iso) => futureIsoSet.has(iso)}
+        onConfirm={(iso) => {
+          const idx = prediction.predictedPoints.findIndex(
+            (p) => p.date === iso,
+          );
+          if (idx >= 0) setSelectedDayIndex(idx);
+        }}
       />
       <PredictionRangeDetailSheet
         open={rangeDetailOpen}

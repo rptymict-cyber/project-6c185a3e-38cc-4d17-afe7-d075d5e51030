@@ -19,6 +19,15 @@ export interface DatePickerSheetProps {
   onConfirm: (iso: string, label: string) => void;
   /** 실제 거래 데이터 유무. 미지정 시 항상 true 로 간주 */
   hasDataFor?: (iso: string) => boolean;
+  /** 미래 날짜 선택 허용 (예측 대상일 선택 등). 기본 false */
+  allowFuture?: boolean;
+  /** 선택 가능한 최소/최대 날짜 (ISO "YYYY-MM-DD") */
+  minIso?: string;
+  maxIso?: string;
+  /** 시트 제목. 기본 "날짜 선택" */
+  title?: string;
+  /** "오늘" 바로가기 표시. 기본 true */
+  showToday?: boolean;
 }
 
 const WEEK_KO = ["일", "월", "화", "수", "목", "금", "토"];
@@ -46,6 +55,11 @@ export function DatePickerSheet({
   selected,
   onConfirm,
   hasDataFor,
+  allowFuture = false,
+  minIso,
+  maxIso,
+  title = "날짜 선택",
+  showToday = true,
 }: DatePickerSheetProps) {
   const has = hasDataFor ?? (() => true);
   const [draft, setDraft] = useState<string>(selected);
@@ -77,8 +91,11 @@ export function DatePickerSheet({
     dOnly.setHours(0, 0, 0, 0);
     const t = new Date();
     t.setHours(0, 0, 0, 0);
-    if (dOnly.getTime() > t.getTime()) return true;
-    return !has(toISO(dOnly));
+    if (!allowFuture && dOnly.getTime() > t.getTime()) return true;
+    const iso = toISO(dOnly);
+    if (minIso && iso < minIso) return true;
+    if (maxIso && iso > maxIso) return true;
+    return !has(iso);
   };
 
   return (
@@ -86,7 +103,7 @@ export function DatePickerSheet({
       <SheetContent side="bottom" className="rounded-t-2xl p-0 [&>button:first-of-type]:hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5">
-          <h2 className="text-subtitle font-bold text-foreground">날짜 선택</h2>
+          <h2 className="text-subtitle font-bold text-foreground">{title}</h2>
           <button
             aria-label="닫기"
             onClick={() => onOpenChange(false)}
@@ -97,15 +114,17 @@ export function DatePickerSheet({
         </div>
 
         {/* Today shortcut */}
-        <div className="flex items-center px-5 pt-3">
-          <button
-            type="button"
-            onClick={goToday}
-            className="inline-flex min-h-11 items-center text-body font-semibold text-primary underline underline-offset-4"
-          >
-            오늘
-          </button>
-        </div>
+        {showToday ? (
+          <div className="flex items-center px-5 pt-3">
+            <button
+              type="button"
+              onClick={goToday}
+              className="inline-flex min-h-11 items-center text-body font-semibold text-primary underline underline-offset-4"
+            >
+              오늘
+            </button>
+          </div>
+        ) : null}
 
         {/* Calendar */}
         <div className="mt-1 flex justify-center px-2">
