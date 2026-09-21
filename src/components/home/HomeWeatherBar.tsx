@@ -69,14 +69,6 @@ export function HomeWeatherBar() {
             {w.region}
             <ChevronDown className="h-4 w-4" />
           </span>
-          {isFallback ? (
-            <span
-              className="ml-1 rounded-full bg-white/20 px-1.5 py-0.5 text-white/95"
-              style={{ fontSize: 12, fontWeight: 600 }}
-            >
-              기본 지역
-            </span>
-          ) : null}
         </div>
 
         {/* 기온 + 상태 */}
