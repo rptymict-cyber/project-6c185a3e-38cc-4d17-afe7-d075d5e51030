@@ -63,6 +63,26 @@ export function HomeWeatherBar() {
               기본 지역
             </span>
           ) : null}
+          <span
+            role="button"
+            tabIndex={0}
+            aria-label="지역 변경"
+            onClick={(e) => {
+              e.stopPropagation();
+              setRegionOpen(true);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.stopPropagation();
+                setRegionOpen(true);
+              }
+            }}
+            className="ml-auto flex shrink-0 items-center gap-0.5 rounded-full bg-white/20 px-2.5 py-1 text-white"
+            style={{ fontSize: 13, fontWeight: 600, lineHeight: "18px" }}
+          >
+            지역 변경
+            <ChevronDown className="h-3.5 w-3.5" />
+          </span>
         </div>
 
         {/* 기온 + 상태 */}
