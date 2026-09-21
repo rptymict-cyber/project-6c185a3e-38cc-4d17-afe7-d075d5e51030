@@ -1,8 +1,15 @@
+import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { MapPin, ChevronRight, Umbrella } from "lucide-react";
+import { MapPin, ChevronRight, ChevronDown, Umbrella } from "lucide-react";
 import { useLocation } from "@/store/location";
-import { MOCK_WEATHER, DEFAULT_REGION_WEATHER } from "@/lib/mock/weather";
+import {
+  MOCK_WEATHER,
+  DEFAULT_REGION_WEATHER,
+  getWeatherForRegion,
+} from "@/lib/mock/weather";
 import { WeatherIllustration } from "@/components/weather/WeatherIllustration";
+import { WeatherRegionSheet } from "@/components/weather/WeatherRegionSheet";
+import { useWeatherRegion } from "@/store/weatherRegion";
 
 // 틸다 날씨 API 교체 대상
 export function HomeWeatherBar() {
@@ -10,12 +17,19 @@ export function HomeWeatherBar() {
   const granted = useLocation((s) => s.granted);
   const request = useLocation((s) => s.request);
   const pending = useLocation((s) => s.pending);
+  const regionId = useWeatherRegion((s) => s.regionId);
+  const [regionOpen, setRegionOpen] = useState(false);
 
-  // 권한이 없으면 기본 지역(서울) 날씨로 대체 표시
-  const isFallback = granted !== true;
-  const w = isFallback ? DEFAULT_REGION_WEATHER : MOCK_WEATHER;
+  // 사용자가 지역을 직접 선택했으면 그 지역, 아니면 권한 여부에 따라 결정
+  const isFallback = regionId === null && granted !== true;
+  const w = regionId
+    ? getWeatherForRegion(regionId)
+    : granted === true
+      ? MOCK_WEATHER
+      : DEFAULT_REGION_WEATHER;
 
   return (
+    <>
     <button
       type="button"
       onClick={() => navigate({ to: "/weather" })}
