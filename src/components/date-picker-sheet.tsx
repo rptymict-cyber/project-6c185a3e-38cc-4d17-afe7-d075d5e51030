@@ -114,15 +114,17 @@ export function DatePickerSheet({
         </div>
 
         {/* Today shortcut */}
-        <div className="flex items-center px-5 pt-3">
-          <button
-            type="button"
-            onClick={goToday}
-            className="inline-flex min-h-11 items-center text-body font-semibold text-primary underline underline-offset-4"
-          >
-            오늘
-          </button>
-        </div>
+        {showToday ? (
+          <div className="flex items-center px-5 pt-3">
+            <button
+              type="button"
+              onClick={goToday}
+              className="inline-flex min-h-11 items-center text-body font-semibold text-primary underline underline-offset-4"
+            >
+              오늘
+            </button>
+          </div>
+        ) : null}
 
         {/* Calendar */}
         <div className="mt-1 flex justify-center px-2">
