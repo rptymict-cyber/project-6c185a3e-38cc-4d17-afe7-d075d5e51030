@@ -127,7 +127,8 @@ export function getWeatherForRegion(id: string): Weather {
     region: region.name,
     regionFull: region.fullName,
     current: { icon: v.icon, temp: v.temp + offset, desc: v.condition },
-    tip: v.impact === "high" ? "강수 주의" : MOCK_WEATHER.tip,
+    tip:
+      v.impact === "high" ? "강수 주의" : v.impact === "warn" ? "흐림" : "",
     today: {
       ...MOCK_WEATHER.today,
       high: v.temp + offset + 2,
