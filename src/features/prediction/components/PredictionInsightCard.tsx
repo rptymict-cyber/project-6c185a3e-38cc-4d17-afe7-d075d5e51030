@@ -1,6 +1,7 @@
 import { ChevronRight, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import type { PredictionViewpoint } from "../types";
 import { cn } from "@/lib/utils";
+import { toKg, unitKgOf, type AmountUnit } from "@/lib/units";
 
 interface Props {
   viewpoint: PredictionViewpoint;
@@ -10,6 +11,7 @@ interface Props {
   baseUnitLabel: string; // "10kg"
   quantityBoxes: number;
   quantityUnitLabel?: string; // "상자" | "kg" | "톤" | "개"
+  quantityUnit?: AmountUnit;
   isPositiveForUser: boolean;
   cropName: string;
   onDetailClick: () => void;
@@ -23,6 +25,7 @@ export function PredictionInsightCard({
   baseUnitLabel,
   quantityBoxes,
   quantityUnitLabel = "상자",
+  quantityUnit = "box",
   isPositiveForUser,
   cropName,
   onDetailClick,
@@ -33,8 +36,13 @@ export function PredictionInsightCard({
   const priceHigher = diffPrice > 0;
   const priceLower = diffPrice < 0;
 
-  const totalRevenue = expectedPrice * quantityBoxes;
-  const totalDiff = diffPrice * quantityBoxes;
+  // 출하량을 kg으로 환산한 뒤 기준 단위(10kg 등) 개수로 나눠 총액을 계산한다.
+  const baseUnitKg = unitKgOf(baseUnitLabel) || 1;
+  const baseUnitCount = toKg(quantityBoxes, quantityUnit, cropName) / baseUnitKg;
+  const quantityLabel = `출하량 ${quantityBoxes.toLocaleString()}${quantityUnitLabel} 기준`;
+
+  const totalRevenue = expectedPrice * baseUnitCount;
+  const totalDiff = diffPrice * baseUnitCount;
   // 관점별 이득: 농민=매출↑, 도매상=비용↓
   const gain = isFarmer ? totalDiff : -totalDiff;
   const gainAbs = Math.abs(gain);
@@ -54,7 +62,9 @@ export function PredictionInsightCard({
       ? `${action} 시점을 검토하세요`
       : `${action} 참고`;
 
-  const gainLabel = isFarmer ? "예상 금액 차이" : "예상 절감액";
+  const gainLabel = isFarmer
+    ? "오늘 출하 대비 예상 판매금액 차이"
+    : "오늘 매입 대비 예상 매입액 차이";
   const revenueLabel = isFarmer ? "예상 판매금액" : "예상 매입액";
 
   return (
@@ -123,7 +133,7 @@ export function PredictionInsightCard({
               <TrendingDown className="h-3 w-3" />
             ) : null}
             오늘 대비 {priceHigher ? "+" : priceLower ? "-" : ""}
-            {diffAbs.toLocaleString()}원
+            {diffAbs.toLocaleString()}원 / {baseUnitLabel}
           </span>
         </div>
 
@@ -159,7 +169,7 @@ export function PredictionInsightCard({
               </span>
             </div>
             <div className="mt-0.5 text-meta text-white/60">
-              {quantityBoxes.toLocaleString()}{quantityUnitLabel}
+              {quantityLabel}
             </div>
           </div>
 
@@ -183,7 +193,7 @@ export function PredictionInsightCard({
               </span>
             </div>
             <div className="mt-0.5 text-meta opacity-70">
-              오늘 대비
+              {quantityLabel}
             </div>
           </div>
         </div>
@@ -199,7 +209,7 @@ export function PredictionInsightCard({
           onClick={onDetailClick}
           className="mt-4 flex w-full items-center justify-between rounded-2xl bg-white/15 px-3.5 py-2.5 text-caption font-bold text-white backdrop-blur-sm transition-colors active:bg-white/25"
         >
-          <span>시세 상세 보기</span>
+          <span>현재 시세 상세 보기</span>
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>

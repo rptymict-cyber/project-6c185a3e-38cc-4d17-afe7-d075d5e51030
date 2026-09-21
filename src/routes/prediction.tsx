@@ -217,6 +217,7 @@ function PredictionPage() {
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
+            quantityUnit={quantityUnit}
             isPositiveForUser={isPositiveForUser}
             cropName={prediction.cropName}
             onDetailClick={() =>
