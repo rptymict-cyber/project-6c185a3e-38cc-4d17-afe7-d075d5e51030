@@ -144,5 +144,7 @@ export function HomeWeatherBar() {
         <ChevronRight className="h-5 w-5 text-white/95" />
       </div>
     </button>
+    <WeatherRegionSheet open={regionOpen} onOpenChange={setRegionOpen} />
+    </>
   );
 }
