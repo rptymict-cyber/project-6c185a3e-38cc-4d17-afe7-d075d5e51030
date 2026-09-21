@@ -302,17 +302,21 @@ function PredictionPage() {
 
         </section>
 
-        {/* 6. 출하/매입 시점 비교 */}
+        {/* 6. 출하/매입 시점 비교 — 사용자가 직접 선택한 날짜와 오늘 비교 */}
         <div className="mt-4">
           <PredictionCompareCards
             viewpoint={selectedViewpoint}
             currentPrice={prediction.currentPrice}
-            expectedPrice={selectedPrice}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
-            recommendationDate={selectedDate}
+            quantityUnit={quantityUnit}
+            cropName={prediction.cropName}
+            compareIso={selectedPoint?.date}
+            compareLabel={selectedDate}
+            comparePrice={selectedPoint?.predictedPrice}
             isRecommendedSelection={!!selectedPoint?.isRecommendedDate}
+            onPickDate={() => setCompareDateOpen(true)}
           />
         </div>
 
