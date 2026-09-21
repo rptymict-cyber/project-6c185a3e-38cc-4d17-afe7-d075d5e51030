@@ -85,6 +85,58 @@ export const DEFAULT_REGION_WEATHER: Weather = {
 };
 
 /* -------------------------------------------------------------------------
+ * 지역 선택용 목록 (틸다 날씨 API 교체 대상)
+ * ---------------------------------------------------------------------- */
+
+export type WeatherRegion = { id: string; name: string; fullName: string };
+
+export const WEATHER_REGIONS: WeatherRegion[] = [
+  { id: "seoul", name: "서울", fullName: "서울특별시" },
+  { id: "incheon", name: "인천", fullName: "인천광역시" },
+  { id: "suwon", name: "수원시", fullName: "경기 수원시" },
+  { id: "chuncheon", name: "춘천시", fullName: "강원 춘천시" },
+  { id: "gongju", name: "공주시 우성면", fullName: "충남 공주시 우성면" },
+  { id: "daejeon", name: "대전", fullName: "대전광역시" },
+  { id: "cheongju", name: "청주시", fullName: "충북 청주시" },
+  { id: "jeonju", name: "전주시", fullName: "전북 전주시" },
+  { id: "naju", name: "나주시", fullName: "전남 나주시" },
+  { id: "gwangju", name: "광주", fullName: "광주광역시" },
+  { id: "daegu", name: "대구", fullName: "대구광역시" },
+  { id: "andong", name: "안동시", fullName: "경북 안동시" },
+  { id: "busan", name: "부산", fullName: "부산광역시" },
+  { id: "changwon", name: "창원시", fullName: "경남 창원시" },
+  { id: "jeju", name: "제주시", fullName: "제주특별자치도 제주시" },
+];
+
+export function getRegionById(id: string): WeatherRegion | undefined {
+  return WEATHER_REGIONS.find((r) => r.id === id);
+}
+
+/**
+ * 지역별 날씨 조회. 실제로는 틸다 API 호출 대상.
+ * 현재는 지역 id 기반 결정적 mock (랜덤 없음).
+ */
+export function getWeatherForRegion(id: string): Weather {
+  const region = getRegionById(id);
+  if (!region) return DEFAULT_REGION_WEATHER;
+  const h = hashDate(id);
+  const v = WEATHER_VARIANTS[h % WEATHER_VARIANTS.length];
+  const offset = (h % 5) - 2;
+  return {
+    ...MOCK_WEATHER,
+    region: region.name,
+    regionFull: region.fullName,
+    current: { icon: v.icon, temp: v.temp + offset, desc: v.condition },
+    tip: v.impact === "high" ? "강수 주의" : MOCK_WEATHER.tip,
+    today: {
+      ...MOCK_WEATHER.today,
+      high: v.temp + offset + 2,
+      low: v.temp + offset - 4,
+    },
+  };
+}
+
+/* -------------------------------------------------------------------------
  * 날짜별 날씨 (예측 그래프 연동용)
  * 실제로는 틸다 날씨 API 교체 대상. 지금은 date 문자열 기반으로 결정적으로
  * 생성한 mock. 데이터 계약을 분리해 뒀으므로 프론트 코드 변경 없이
