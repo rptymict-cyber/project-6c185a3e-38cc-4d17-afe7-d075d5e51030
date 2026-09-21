@@ -99,6 +99,7 @@ function PredictionPage() {
   const [marketSheetOpen, setMarketSheetOpen] = useState(false);
   const [viewpointSheetOpen, setViewpointSheetOpen] = useState(false);
   const [rangeDetailOpen, setRangeDetailOpen] = useState(false);
+  const [compareDateOpen, setCompareDateOpen] = useState(false);
 
   const prediction = usePrediction(
     selectedCropId,
