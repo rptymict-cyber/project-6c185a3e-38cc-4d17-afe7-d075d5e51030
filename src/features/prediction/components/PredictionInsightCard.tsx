@@ -133,7 +133,7 @@ export function PredictionInsightCard({
               <TrendingDown className="h-3 w-3" />
             ) : null}
             오늘 대비 {priceHigher ? "+" : priceLower ? "-" : ""}
-            {diffAbs.toLocaleString()}원
+            {diffAbs.toLocaleString()}원 / {baseUnitLabel}
           </span>
         </div>
 
