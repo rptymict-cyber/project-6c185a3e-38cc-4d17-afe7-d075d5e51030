@@ -21,7 +21,7 @@ export function DataSourceNotice() {
         </span>
       </div>
       <p className="mt-2">
-        kg 환산 가격은 제공 데이터 기준이며, 일부 품목은 원 단위로 표시될 수 있습니다.
+        품목별 가격 단위는 제공 데이터 기준에 따라 다르게 표시될 수 있습니다.
       </p>
     </section>
   );
