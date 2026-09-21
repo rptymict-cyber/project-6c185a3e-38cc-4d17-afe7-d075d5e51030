@@ -193,7 +193,7 @@ export function PredictionInsightCard({
               </span>
             </div>
             <div className="mt-0.5 text-meta opacity-70">
-              오늘 대비
+              {quantityLabel}
             </div>
           </div>
         </div>
