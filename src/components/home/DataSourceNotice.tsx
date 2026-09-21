@@ -13,10 +13,6 @@ export function DataSourceNotice() {
         </span>
         <span className="text-[#DEE2E6]">|</span>
         <span>
-          단위 <span className="font-semibold text-[#495057]">{BASIS_PRICE_UNIT}</span>
-        </span>
-        <span className="text-[#DEE2E6]">|</span>
-        <span>
           출처 <span className="font-semibold text-[#495057]">{BASIS_SOURCE}</span>
         </span>
         <span className="text-[#DEE2E6]">|</span>
