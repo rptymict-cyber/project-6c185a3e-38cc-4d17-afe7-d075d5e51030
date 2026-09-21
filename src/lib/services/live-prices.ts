@@ -181,22 +181,22 @@ function allTrades(): LiveTrade[] {
 
 /**
  * 최근 거래 목록(최신순). 시장/품목 조건은 "전체"를 지원한다.
- * marketLabel / cropId 가 없으면 전체.
+ * marketLabel / cropName 이 없으면 전체.
  */
 export function getLiveTrades({
   marketLabel,
-  cropId,
+  cropName,
   limit,
   offset = 0,
 }: {
   marketLabel?: string;
-  cropId?: string;
+  cropName?: string;
   limit: number;
   offset?: number;
 }): { rows: LiveTrade[]; total: number } {
   let all = allTrades();
   if (marketLabel) all = all.filter((t) => t.market === marketLabel);
-  if (cropId) all = all.filter((t) => t.id === cropId);
+  if (cropName) all = all.filter((t) => t.name === cropName);
   return { rows: all.slice(offset, offset + limit), total: all.length };
 }
 

@@ -56,7 +56,7 @@ function LivePage() {
     () =>
       getLiveTrades({
         marketLabel: market.id === "all" ? undefined : market.label,
-        cropId: cropItem?.name,
+        cropName: cropItem?.name,
         limit: pageSize,
       }),
     [market, cropItem?.name, pageSize],
