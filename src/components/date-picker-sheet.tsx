@@ -55,6 +55,11 @@ export function DatePickerSheet({
   selected,
   onConfirm,
   hasDataFor,
+  allowFuture = false,
+  minIso,
+  maxIso,
+  title = "날짜 선택",
+  showToday = true,
 }: DatePickerSheetProps) {
   const has = hasDataFor ?? (() => true);
   const [draft, setDraft] = useState<string>(selected);
