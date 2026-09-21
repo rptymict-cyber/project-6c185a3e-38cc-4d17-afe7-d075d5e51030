@@ -2,6 +2,8 @@
 // 컴포넌트는 sort/limit/offset만 넘기고, 이미 정렬된 결과를 그대로 렌더한다.
 
 import { getPriceBase } from "@/lib/mock/price-base";
+import { basisDateIso, BASIS_UPDATED_TIME } from "@/lib/data-basis";
+import { unitKgOf } from "@/lib/units";
 
 export type LivePriceRow = {
   id: string;
@@ -101,9 +103,6 @@ export const LIVE_SORT_META: Record<LiveSort, { label: string; hint: string }> =
  * selector만 확장한다. 실제 API 교체 시 `buildTrades`만 응답 매핑으로
  * 바꾸면 되고 화면 코드는 수정하지 않는다. (random 미사용 — deterministic)
  * ---------------------------------------------------------------------- */
-
-import { basisDateIso, BASIS_UPDATED_TIME } from "@/lib/data-basis";
-import { unitKgOf } from "@/lib/units";
 
 export type LiveTrade = {
   /** 거래 단건 키 */
