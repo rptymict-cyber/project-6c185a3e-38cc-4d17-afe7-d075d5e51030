@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Search } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { DataSourceNotice } from "@/components/home/DataSourceNotice";
@@ -11,7 +10,6 @@ import {
   WholesaleMarketIllustration,
   ItemBasketIllustration,
 } from "@/components/home/HomeFeatureCard";
-import type { LiveSort } from "@/lib/services/live-prices";
 
 const HOME_LIMIT = 5;
 
@@ -21,7 +19,6 @@ export function MarketListHome({
   onSelectCrop: (row: { id: string; market: string }) => void;
 }) {
   const navigate = useNavigate();
-  const [sort, setSort] = useState<LiveSort>("up");
 
   return (
     <div className="min-h-full bg-white pb-6">
@@ -49,19 +46,13 @@ export function MarketListHome({
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-title font-bold text-[#111827]">실시간 시세</h3>
           <button
-            onClick={() => navigate({ to: "/live", search: { sort } })}
+            onClick={() => navigate({ to: "/live" })}
             className="flex h-11 items-center pl-2 text-body font-medium text-[#4B5563]"
           >
             더보기 ›
           </button>
         </div>
-        <RealtimeSection
-          variant="home"
-          sort={sort}
-          onSortChange={setSort}
-          onSelect={onSelectCrop}
-          limit={HOME_LIMIT}
-        />
+        <RealtimeSection onSelect={onSelectCrop} limit={HOME_LIMIT} />
       </section>
 
       {/* 오늘의 농업 뉴스 */}

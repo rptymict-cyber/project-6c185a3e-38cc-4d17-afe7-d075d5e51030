@@ -9,11 +9,18 @@ import { cn } from "@/lib/utils";
 export function MarketSheet({
   open,
   onOpenChange,
+  value,
+  onSelect,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
+  /** 지정하면 전역 시세 필터 대신 이 값/콜백을 사용(제어 모드). 예: /live */
+  value?: string;
+  onSelect?: (id: string, label: string) => void;
 }) {
-  const { marketId, setMarket } = useMarketFilter();
+  const store = useMarketFilter();
+  const marketId = value ?? store.marketId;
+  const setMarket = onSelect ?? store.setMarket;
   const granted = useLocation((s) => s.granted);
   const request = useLocation((s) => s.request);
   const pending = useLocation((s) => s.pending);

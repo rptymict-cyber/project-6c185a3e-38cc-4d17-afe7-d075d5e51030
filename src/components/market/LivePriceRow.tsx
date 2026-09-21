@@ -1,7 +1,48 @@
 import { memo } from "react";
 import { CropIcon } from "@/components/crop-icon";
 import { PriceBadge } from "@/components/price-badge";
-import type { LivePriceRow } from "@/lib/services/live-prices";
+import type { LivePriceRow, LiveTrade } from "@/lib/services/live-prices";
+import { formatTradedAt } from "@/lib/services/live-prices";
+
+/**
+ * 최근 거래 피드 행 — 시간 | 아이콘 | 품목 / 시장·단위 | 거래 가격
+ * (등락률·거래량은 전국 집계값이라 개별 거래 행에는 표시하지 않는다)
+ */
+export const LiveTradeRowItem = memo(function LiveTradeRowItem({
+  trade,
+  onClick,
+}: {
+  trade: LiveTrade;
+  onClick: (trade: LiveTrade) => void;
+}) {
+  return (
+    <li className="border-t border-[#F1F3F5] first:border-t-0">
+      <button
+        onClick={() => onClick(trade)}
+        className="flex w-full items-center gap-2.5 px-3 py-3 text-left active:bg-secondary"
+      >
+        <span className="w-[42px] shrink-0 whitespace-nowrap text-center font-data text-caption font-bold tabular-nums text-[#3A8A3A]">
+          {formatTradedAt(trade.tradedAt)}
+        </span>
+        <CropIcon name={trade.name} size={36} />
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-body font-semibold text-foreground">
+            {trade.name}
+          </div>
+          <div className="mt-0.5 truncate text-meta text-muted-foreground">
+            {trade.market} · {trade.unit}
+          </div>
+        </div>
+        <div className="shrink-0 whitespace-nowrap text-right font-data text-body font-bold tabular-nums text-foreground">
+          {trade.price.toLocaleString()}
+          <span className="ml-0.5 text-meta font-medium text-muted-foreground">
+            원
+          </span>
+        </div>
+      </button>
+    </li>
+  );
+});
 
 // 헤더와 행이 반드시 같은 그리드를 쓰도록 상수로 공유 → 열이 정확히 정렬됨
 const GRID =
