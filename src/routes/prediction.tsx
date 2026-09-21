@@ -456,6 +456,23 @@ function PredictionPage() {
         value={selectedViewpoint}
         onChange={setSelectedViewpoint}
       />
+      <DatePickerSheet
+        open={compareDateOpen}
+        onOpenChange={setCompareDateOpen}
+        selected={selectedPoint?.date ?? compareMinIso ?? ""}
+        title="비교 날짜 선택"
+        showToday={false}
+        allowFuture
+        minIso={compareMinIso}
+        maxIso={compareMaxIso}
+        hasDataFor={(iso) => futureIsoSet.has(iso)}
+        onConfirm={(iso) => {
+          const idx = prediction.predictedPoints.findIndex(
+            (p) => p.date === iso,
+          );
+          if (idx >= 0) setSelectedDayIndex(idx);
+        }}
+      />
       <PredictionRangeDetailSheet
         open={rangeDetailOpen}
         onOpenChange={setRangeDetailOpen}
