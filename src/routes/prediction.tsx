@@ -19,6 +19,7 @@ import {
   TopicRelatedNewsCard,
 } from "@/features/prediction/components/PredictionRationaleExtras";
 
+import { DatePickerSheet } from "@/components/date-picker-sheet";
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
 import { QUANTITY_UNIT_LABEL } from "@/features/prediction/quantityUnits";
