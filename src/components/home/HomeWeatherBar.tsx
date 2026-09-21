@@ -50,20 +50,6 @@ export function HomeWeatherBar() {
         <div className="flex items-center gap-1 text-white/95">
           <MapPin className="h-3.5 w-3.5 shrink-0" />
           <span
-            className="whitespace-nowrap"
-            style={{ fontSize: 16, fontWeight: 600, lineHeight: "22px" }}
-          >
-            {w.region}
-          </span>
-          {isFallback ? (
-            <span
-              className="ml-1 rounded-full bg-white/20 px-1.5 py-0.5 text-white/95"
-              style={{ fontSize: 12, fontWeight: 600 }}
-            >
-              기본 지역
-            </span>
-          ) : null}
-          <span
             role="button"
             tabIndex={0}
             aria-label="지역 변경"
@@ -77,12 +63,20 @@ export function HomeWeatherBar() {
                 setRegionOpen(true);
               }
             }}
-            className="ml-auto flex shrink-0 items-center gap-0.5 rounded-full bg-white/20 px-2.5 py-1 text-white"
-            style={{ fontSize: 13, fontWeight: 600, lineHeight: "18px" }}
+            className="relative flex min-h-11 shrink-0 items-center gap-0.5 whitespace-nowrap text-white after:absolute after:-inset-2 after:content-['']"
+            style={{ fontSize: 16, fontWeight: 600, lineHeight: "22px" }}
           >
-            지역 변경
-            <ChevronDown className="h-3.5 w-3.5" />
+            {w.region}
+            <ChevronDown className="h-4 w-4" />
           </span>
+          {isFallback ? (
+            <span
+              className="ml-1 rounded-full bg-white/20 px-1.5 py-0.5 text-white/95"
+              style={{ fontSize: 12, fontWeight: 600 }}
+            >
+              기본 지역
+            </span>
+          ) : null}
         </div>
 
         {/* 기온 + 상태 */}
