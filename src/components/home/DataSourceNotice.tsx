@@ -1,5 +1,4 @@
 import {
-  BASIS_PRICE_UNIT,
   BASIS_SOURCE,
   BASIS_UPDATED_TIME,
   basisDateLabel,
