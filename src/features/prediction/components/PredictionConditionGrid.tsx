@@ -133,7 +133,7 @@ export function PredictionConditionGrid({
 }) {
   return (
     <div>
-      <section className="rounded-2xl border-[1.5px] border-[#3A8A3A]/50 bg-[#F7FBF7] p-3">
+      <section>
         <h2 className="mb-2 text-caption font-bold text-[#1F5C1F]">조회 조건 선택</h2>
         <div className="grid grid-cols-2 gap-2">
           <ConditionCell
