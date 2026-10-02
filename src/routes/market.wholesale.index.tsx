@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DetailHeader } from "@/components/detail-header";
 import { useBackTo } from "@/hooks/useBackTo";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { MarketSheet } from "@/components/market-v2/MarketSheet";
 import { MARKETS } from "@/lib/mock/markets";
 import { ITEMS } from "@/lib/mock/items";
 import { CropIcon } from "@/components/crop-icon";
@@ -83,78 +83,25 @@ function WholesaleBrowsePage() {
     >
       <div className="px-4 pb-8 pt-3">
         {/* 선택 시장 드롭다운 */}
-        <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerTrigger asChild>
-            <button
-              type="button"
-              className="flex w-full items-center justify-between rounded-[12px] border border-[#E9ECEF] bg-white px-4 py-3.5 text-left active:bg-[#F8F9FA]"
-            >
-              <div className="min-w-0">
-                <div className="text-meta font-semibold text-[#3A8A3A]">
-                  도매시장
-                </div>
-                <div className="mt-0.5 text-subtitle font-bold text-foreground">
-                  {market.name}
-                </div>
-                <div className="text-meta text-muted-foreground">
-                  {market.region}
-                </div>
-              </div>
-              <ChevronDown className="h-5 w-5 text-muted-foreground" />
-            </button>
-          </DrawerTrigger>
-          <DrawerContent className="mx-auto max-h-[80vh] max-w-[430px] bg-background">
-            <div className="mx-auto mt-2 h-1 w-8 rounded-full bg-[#E9ECEF]" />
-            <div className="px-4 pb-3 pt-3">
-              <h3 className="text-center text-body-lg font-bold text-foreground">
-                도매시장 선택
-              </h3>
-            </div>
-            <div className="overflow-y-auto px-4 pb-6">
-              {Object.entries(grouped).map(([region, list]) => (
-                <section key={region} className="mb-4">
-                  <h4 className="mb-1.5 px-1 text-caption font-bold text-muted-foreground">
-                    {region}
-                  </h4>
-                  <ul className="overflow-hidden rounded-[10px] bg-surface">
-                    {list.map((x) => {
-                      const active = x.id === market.id;
-                      return (
-                        <li key={x.id}>
-                          <button
-                            type="button"
-                            onClick={() => selectMarket(x.id)}
-                            className={cn(
-                              "flex w-full items-center justify-between border-t border-[#F1F3F5] px-3 py-3 text-left first:border-t-0",
-                              active && "bg-[#F0F9F0]",
-                            )}
-                          >
-                            <div>
-                              <div
-                                className={cn(
-                                  "text-body font-semibold text-foreground",
-                                  active && "text-[#3A8A3A]",
-                                )}
-                              >
-                                {x.name}
-                              </div>
-                              <div className="text-meta text-muted-foreground">
-                                {x.region}
-                              </div>
-                            </div>
-                            {active && (
-                              <Check className="h-4 w-4 text-[#3A8A3A]" />
-                            )}
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </section>
-              ))}
-            </div>
-          </DrawerContent>
-        </Drawer>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="flex w-full items-center justify-between rounded-[12px] border border-[#E9ECEF] bg-white px-4 py-3.5 text-left active:bg-[#F8F9FA]"
+        >
+          <div className="min-w-0">
+            <div className="text-meta font-semibold text-[#3A8A3A]">도매시장</div>
+            <div className="mt-0.5 text-subtitle font-bold text-foreground">{market.name}</div>
+            <div className="text-meta text-muted-foreground">{market.region}</div>
+          </div>
+          <ChevronDown className="h-5 w-5 text-muted-foreground" />
+        </button>
+        <MarketSheet
+          open={open}
+          onOpenChange={setOpen}
+          value={market.id}
+          onSelect={(id) => selectMarket(id)}
+          includeAll={false}
+        />
 
         {/* 품목 리스트 */}
         <h3 className="mb-2 mt-6 px-1 text-caption font-bold text-muted-foreground">
