@@ -10,7 +10,7 @@ import { PredictionCompareCards } from "@/features/prediction/components/Predict
 import { PredictionConditionGrid } from "@/features/prediction/components/PredictionConditionGrid";
 import { PredictionFactorList } from "@/features/prediction/components/PredictionFactorList";
 import { PredictionInsightCard } from "@/features/prediction/components/PredictionInsightCard";
-import { PredictionGradeSegment } from "@/features/prediction/components/PredictionGradeSegment";
+
 import { PredictionScenarioCards } from "@/features/prediction/components/PredictionScenarioCards";
 import { PredictionRangeDetailSheet } from "@/features/prediction/components/PredictionRangeDetailSheet";
 import {
