@@ -1,347 +1,69 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  CartesianGrid,
-  ComposedChart,
-  Customized,
-  Line,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { RotateCcw } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { PredictionPoint } from "../types";
 
-/** 과거 실제 가격 기본 표시 일수 (정책 변경 시 이 상수만 수정) */
-const PAST_VISIBLE_DAYS = 5;
-/** 확대 시 화면에 유지되는 최소 데이터 포인트 수 */
-const MIN_VISIBLE_POINTS = 7;
-/** 최대 확대 배율 */
-const MAX_ZOOM = 3;
-/** 수평 Pan으로 판정하는 최소 이동 거리(px) */
-const PAN_THRESHOLD = 12;
+/**
+ * 가격 예측 차트 (가격 단일 축)
+ * - 핀치(두 손가락)/휠 = 확대·축소, 드래그(한 손가락/마우스) = 좌우 이동
+ * - 표시 구간 자체가 재계산되며 Y축도 보이는 구간 기준으로 재산출
+ * - 차트 내부는 가로 제스처만 처리, 세로 스크롤은 페이지로 전달(touch-action: pan-y)
+ */
 
-const RED = "#E03B3B";
-const TEAL = "#2E9E6B";
-const GREY = "#94A3B8";
-const UP_TURN = "#F08C00";
-const DOWN_TURN = "#1971C2";
-const NAVY = "#1F2937";
+/** 기본 표시 구간(일) */
+const DEFAULT_SPAN = 15;
+/** 최대 확대 시 최소 표시 일수 */
+const MIN_SPAN = 5;
+/** 최대 축소 시 표시 일수 */
+const MAX_SPAN = 40;
+const TAP_MOVE_PX = 8;
+const TOOLTIP_MS = 2800;
 
-type TurnKind = "up" | "down";
+const H = 230;
+const PAD = { top: 26, right: 14, bottom: 26, left: 44 };
 
-interface ChartRow extends PredictionPoint {
-  turn?: TurnKind;
-  prevActualPrice?: number;
-}
+const ACTUAL = "#5E8F6B";
+const PRED = "#2E9E6B";
+const UP = "#E03B3B";
+const DOWN = "#1971C2";
+const TURN = "#F08C00";
+const GREY = "#ADB5BD";
 
 const WEEKDAY = ["일", "월", "화", "수", "목", "금", "토"];
 
-function weekdayOf(iso?: string): string {
-  if (!iso) return "";
-  const d = new Date(`${iso}T00:00:00`);
-  if (Number.isNaN(d.getTime())) return "";
-  return WEEKDAY[d.getDay()];
+function parseIso(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, (m ?? 1) - 1, d ?? 1);
 }
-
+function md(iso: string) {
+  const d = parseIso(iso);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
+}
+function korDate(iso: string, withDow = true) {
+  const d = parseIso(iso);
+  return `${d.getMonth() + 1}월 ${d.getDate()}일${withDow ? `(${WEEKDAY[d.getDay()]})` : ""}`;
+}
 function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
 }
-
-interface ScaleInfo {
-  xScale?: (label: string) => number;
-  bandwidth: number;
-  yScale?: (v: number) => number;
-  offset?: { top: number; left: number; width: number; height: number };
+function hash(s: string) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+function signed(n: number) {
+  return `${n > 0 ? "+" : n < 0 ? "-" : ""}${Math.abs(Math.round(n)).toLocaleString()}`;
 }
 
-/** 오늘 기준선 */
-function TodayLine({
-  xAxisMap,
-  offset,
-  todayLabel,
-}: {
-  xAxisMap?: Record<string, any>;
-  offset?: { top: number; left: number; width: number; height: number };
-  todayLabel?: string;
-}) {
-  if (!xAxisMap || !offset || !todayLabel) return null;
-  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
-  if (!xAxis?.scale) return null;
-  const scale = xAxis.scale;
-  const v = scale(todayLabel);
-  if (typeof v !== "number" || Number.isNaN(v)) return null;
-  const bw = typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
-  const x = v + bw / 2;
-  return (
-    <g style={{ pointerEvents: "none" }}>
-      <line
-        x1={x}
-        x2={x}
-        y1={offset.top}
-        y2={offset.top + offset.height}
-        stroke={GREY}
-        strokeWidth={1}
-        strokeDasharray="3 3"
-      />
-      <text
-        x={x}
-        y={offset.top - 8}
-        textAnchor="middle"
-        fontSize={12}
-        fontWeight={700}
-        fill="#868E96"
-      >
-        오늘
-      </text>
-    </g>
-  );
+type Turn = "up" | "down";
+interface Row extends PredictionPoint {
+  i: number;
+  turn?: Turn;
 }
 
-/** 좌표/스케일 캡처 (터치 히트 테스트용) */
-function ScaleCapture({
-  xAxisMap,
-  yAxisMap,
-  offset,
-  onCapture,
-}: {
-  xAxisMap?: Record<string, any>;
-  yAxisMap?: Record<string, any>;
-  offset?: { top: number; left: number; width: number; height: number };
-  onCapture: (info: ScaleInfo) => void;
-}) {
-  const xAxis = xAxisMap
-    ? (xAxisMap["main"] ?? Object.values(xAxisMap)[0])
-    : undefined;
-  const yAxis = yAxisMap
-    ? (yAxisMap["price"] ?? Object.values(yAxisMap)[0])
-    : undefined;
-  onCapture({
-    xScale: xAxis?.scale,
-    bandwidth:
-      xAxis?.scale && typeof xAxis.scale.bandwidth === "function"
-        ? xAxis.scale.bandwidth()
-        : 0,
-    yScale: yAxis?.scale,
-    offset,
-  });
-  return null;
-}
-
-/** X축 라벨 (충돌 회피) */
-function XLabelsOverlay({
-  xAxisMap,
-  offset,
-  candidates,
-}: {
-  xAxisMap?: Record<string, any>;
-  offset?: { top: number; left: number; width: number; height: number };
-  candidates: Array<{ label: string; display: string; priority: number }>;
-}) {
-  if (!xAxisMap || !offset || candidates.length === 0) return null;
-  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
-  if (!xAxis?.scale) return null;
-  const scale = xAxis.scale;
-  const bw = typeof scale.bandwidth === "function" ? scale.bandwidth() : 0;
-  const withX = candidates
-    .map((c) => {
-      const v = scale(c.label);
-      return typeof v === "number" && !Number.isNaN(v)
-        ? { ...c, x: v + bw / 2 }
-        : null;
-    })
-    .filter((c): c is { label: string; display: string; priority: number; x: number } => !!c);
-  const accepted: typeof withX = [];
-  for (const c of [...withX].sort((a, b) => a.priority - b.priority)) {
-    if (accepted.every((a) => Math.abs(a.x - c.x) >= 34)) {
-      accepted.push(c);
-      if (accepted.length >= 5) break;
-    }
-  }
-  accepted.sort((a, b) => a.x - b.x);
-  const y = offset.top + offset.height + 16;
-  return (
-    <g style={{ pointerEvents: "none" }}>
-      {accepted.map((c) => (
-        <text
-          key={`xl-${c.label}`}
-          x={c.x}
-          y={y}
-          textAnchor="middle"
-          fontSize={12}
-          fontWeight={c.priority === 1 ? 700 : 400}
-          fill={c.priority === 1 ? "#495057" : "#ADB5BD"}
-        >
-          {c.display}
-        </text>
-      ))}
-    </g>
-  );
-}
-
-/** 추천 badge */
-function RecommendBadge({
-  xAxisMap,
-  yAxisMap,
-  offset,
-  label,
-  price,
-}: {
-  xAxisMap?: Record<string, any>;
-  yAxisMap?: Record<string, any>;
-  offset?: { top: number; left: number; width: number; height: number };
-  label?: string;
-  price?: number;
-}) {
-  if (!xAxisMap || !yAxisMap || !offset || !label || typeof price !== "number")
-    return null;
-  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
-  const yAxis = yAxisMap["price"] ?? Object.values(yAxisMap)[0];
-  if (!xAxis?.scale || !yAxis?.scale) return null;
-  const xv = xAxis.scale(label);
-  const yv = yAxis.scale(price);
-  if (typeof xv !== "number" || typeof yv !== "number") return null;
-  const bw =
-    typeof xAxis.scale.bandwidth === "function" ? xAxis.scale.bandwidth() : 0;
-  const w = 38;
-  const h = 20;
-  const cx = clamp(
-    xv + bw / 2,
-    offset.left + w / 2,
-    offset.left + offset.width - w / 2,
-  );
-  let cy = yv - 18;
-  if (cy - h / 2 < offset.top) cy = yv + 18;
-  return (
-    <g style={{ pointerEvents: "none" }}>
-      <rect
-        x={cx - w / 2}
-        y={cy - h / 2}
-        width={w}
-        height={h}
-        rx={10}
-        ry={10}
-        fill={TEAL}
-      />
-      <text
-        x={cx}
-        y={cy + 4}
-        textAnchor="middle"
-        fontSize={12}
-        fontWeight={800}
-        fill="#fff"
-      >
-        추천
-      </text>
-    </g>
-  );
-}
-
-/** 터치 Tooltip (Dark Navy) */
-function TooltipOverlay({
-  xAxisMap,
-  yAxisMap,
-  offset,
-  row,
-  lines,
-  title,
-}: {
-  xAxisMap?: Record<string, any>;
-  yAxisMap?: Record<string, any>;
-  offset?: { top: number; left: number; width: number; height: number };
-  row?: ChartRow;
-  lines: string[];
-  title: string;
-}) {
-  if (!xAxisMap || !yAxisMap || !offset || !row) return null;
-  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
-  const yAxis = yAxisMap["price"] ?? Object.values(yAxisMap)[0];
-  if (!xAxis?.scale || !yAxis?.scale) return null;
-  const xv = xAxis.scale(row.label);
-  const value = row.actualPrice ?? row.predictedPrice;
-  if (typeof xv !== "number" || typeof value !== "number") return null;
-  const yv = yAxis.scale(value);
-  if (typeof yv !== "number" || Number.isNaN(yv)) return null;
-  const bw =
-    typeof xAxis.scale.bandwidth === "function" ? xAxis.scale.bandwidth() : 0;
-  const px = xv + bw / 2;
-
-  const all = [title, ...lines];
-  const w = Math.min(
-    240,
-    Math.max(...all.map((t) => t.length * 7.4)) + 20,
-  );
-  const lineH = 17;
-  const h = 12 + all.length * lineH;
-  const cx = clamp(px, offset.left + w / 2 + 2, offset.left + offset.width - w / 2 - 2);
-  let top = yv - 14 - h;
-  if (top < offset.top) top = Math.min(yv + 16, offset.top + offset.height - h - 2);
-
-  return (
-    <g style={{ pointerEvents: "none" }}>
-      <circle cx={px} cy={yv} r={5.5} fill={NAVY} stroke="#fff" strokeWidth={2} />
-      <g>
-        <rect
-          x={cx - w / 2}
-          y={top}
-          width={w}
-          height={h}
-          rx={10}
-          ry={10}
-          fill={NAVY}
-          opacity={0.96}
-        />
-        {all.map((t, i) => (
-          <text
-            key={`tt-${i}`}
-            x={cx - w / 2 + 10}
-            y={top + 20 + i * lineH}
-            fontSize={i === 0 ? 13 : 12}
-            fontWeight={i === 0 ? 800 : 500}
-            fill="#fff"
-          >
-            {t}
-          </text>
-        ))}
-      </g>
-    </g>
-  );
-}
-
-/** 상승/하락 전환 marker */
-function TurnMarkers({
-  xAxisMap,
-  yAxisMap,
-  offset,
-  rows,
-}: {
-  xAxisMap?: Record<string, any>;
-  yAxisMap?: Record<string, any>;
-  offset?: { top: number; left: number; width: number; height: number };
-  rows: ChartRow[];
-}) {
-  if (!xAxisMap || !yAxisMap || !offset) return null;
-  const xAxis = xAxisMap["main"] ?? Object.values(xAxisMap)[0];
-  const yAxis = yAxisMap["price"] ?? Object.values(yAxisMap)[0];
-  if (!xAxis?.scale || !yAxis?.scale) return null;
-  const bw =
-    typeof xAxis.scale.bandwidth === "function" ? xAxis.scale.bandwidth() : 0;
-  return (
-    <g style={{ pointerEvents: "none" }}>
-      {rows.map((r) => {
-        if (!r.turn || r.predictedPrice === undefined) return null;
-        const xv = xAxis.scale(r.label);
-        const yv = yAxis.scale(r.predictedPrice);
-        if (typeof xv !== "number" || typeof yv !== "number") return null;
-        const cx = xv + bw / 2;
-        const color = r.turn === "up" ? UP_TURN : DOWN_TURN;
-        return (
-          <g key={`turn-${r.label}`}>
-            <circle cx={cx} cy={yv} r={5} fill={color} stroke="#fff" strokeWidth={1.6} />
-          </g>
-        );
-      })}
-    </g>
-  );
+interface Win {
+  start: number;
+  span: number;
 }
 
 interface PredictionChartProps {
@@ -356,496 +78,595 @@ interface PredictionChartProps {
 
 function PredictionChartBase({
   points,
-  selectedIndex,
   onSelectIndex,
   currentPrice,
-  baseUnitLabel,
+  baseUnitLabel = "10kg",
 }: PredictionChartProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scaleRef = useRef<ScaleInfo>({ bandwidth: 0 });
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(340);
+  const [showUp, setShowUp] = useState(false);
+  const [showDown, setShowDown] = useState(false);
+  const [showTurn, setShowTurn] = useState(false);
+  const [tip, setTip] = useState<{ idx: number; kind: "actual" | "pred" | "turn" } | null>(null);
 
-  // ── 기본 표시 범위: 최근 PAST_VISIBLE_DAYS 실제 + 오늘 + 선택 예측 기간
-  const base = useMemo<ChartRow[]>(() => {
-    const todayIdx = points.findIndex((p) => p.isToday);
-    const from =
-      todayIdx >= 0 ? Math.max(0, todayIdx - PAST_VISIBLE_DAYS) : 0;
-    const sliced = points.slice(from);
-    return sliced.map((p, i) => {
-      const prev = sliced[i - 1];
-      let turn: TurnKind | undefined;
-      if (p.isInflection && p.predictedPrice !== undefined) {
-        const before = sliced[i - 1]?.predictedPrice;
-        const after = sliced[i + 1]?.predictedPrice;
-        if (before !== undefined && after !== undefined) {
-          turn = after >= p.predictedPrice && p.predictedPrice <= before ? "up" : "down";
-        }
-      }
-      return {
-        ...p,
-        turn,
-        prevActualPrice: prev?.actualPrice,
-      };
-    });
-  }, [points]);
-
-  const total = base.length;
-  const todayRow = base.find((p) => p.isToday);
-  const todayPrice = todayRow?.actualPrice ?? currentPrice;
-  const recommended = base.find((p) => p.isRecommendedDate);
-
-  const minCount = Math.min(
-    total,
-    Math.max(MIN_VISIBLE_POINTS, Math.ceil(total / MAX_ZOOM)),
-  );
-
-  const [zoom, setZoom] = useState<{ start: number; count: number } | null>(null);
-  const [tipLabel, setTipLabel] = useState<string | null>(null);
-
-  // 기간/작물 변경 시 zoom·tooltip 초기화
   useEffect(() => {
-    setZoom(null);
-    setTipLabel(null);
-  }, [total, base[0]?.date, base[total - 1]?.date]);
+    const el = wrapRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setWidth(el.clientWidth || 340));
+    ro.observe(el);
+    setWidth(el.clientWidth || 340);
+    return () => ro.disconnect();
+  }, []);
 
-  const count = zoom ? clamp(zoom.count, minCount, total) : total;
-  const start = zoom ? clamp(zoom.start, 0, total - count) : 0;
-  const visible = useMemo(
-    () => base.slice(start, start + count),
-    [base, start, count],
+  const rows = useMemo<Row[]>(
+    () =>
+      points.map((p, i) => {
+        let turn: Turn | undefined;
+        if (p.isInflection && p.predictedPrice !== undefined) {
+          const after = points[i + 1]?.predictedPrice;
+          turn = after !== undefined && after >= p.predictedPrice ? "up" : "down";
+        }
+        return { ...p, i, turn };
+      }),
+    [points],
   );
-  const isZoomed = count < total || start > 0;
+  const total = rows.length;
+  const todayIdx = Math.max(0, rows.findIndex((r) => r.isToday));
+  const todayPrice = rows[todayIdx]?.actualPrice ?? currentPrice ?? 0;
 
-  const yDomain = useMemo<[number, number]>(() => {
+  const maxSpan = Math.min(MAX_SPAN, total);
+  const minSpan = Math.min(MIN_SPAN, total);
+  const defaultWin = useMemo<Win>(() => {
+    const span = Math.min(DEFAULT_SPAN, total);
+    const start = clamp(todayIdx - Math.floor((span - 1) / 2), 0, total - span);
+    return { start, span };
+  }, [total, todayIdx]);
+
+  const [win, setWin] = useState<Win>(defaultWin);
+  useEffect(() => {
+    setWin(defaultWin);
+    setTip(null);
+  }, [defaultWin, points]);
+
+  const fix = useCallback(
+    (w: Win): Win => {
+      const span = clamp(w.span, minSpan, maxSpan);
+      return { span, start: clamp(w.start, 0, Math.max(0, total - span)) };
+    },
+    [minSpan, maxSpan, total],
+  );
+
+  const plotW = Math.max(10, width - PAD.left - PAD.right);
+  const plotH = H - PAD.top - PAD.bottom;
+  const denom = Math.max(1, win.span - 1);
+  const xOf = (i: number) => PAD.left + ((i - win.start) / denom) * plotW;
+
+  const visLo = Math.max(0, Math.floor(win.start));
+  const visHi = Math.min(total - 1, Math.ceil(win.start + win.span - 1));
+  const visible = rows.slice(visLo, visHi + 1);
+
+  const [yMin, yMax] = useMemo(() => {
     const vals: number[] = [];
-    visible.forEach((p) => {
-      if (p.actualPrice !== undefined) vals.push(p.actualPrice);
-      if (p.predictedPrice !== undefined) vals.push(p.predictedPrice);
-    });
-    if (vals.length === 0) return [0, 1];
+    for (const r of visible) {
+      if (r.actualPrice !== undefined) vals.push(r.actualPrice);
+      if (r.predictedPrice !== undefined) vals.push(r.predictedPrice);
+      if (showUp && r.optimisticPrice !== undefined) vals.push(r.optimisticPrice);
+      if (showDown && r.pessimisticPrice !== undefined) vals.push(r.pessimisticPrice);
+    }
+    if (!vals.length) return [0, 1];
     const lo = Math.min(...vals);
     const hi = Math.max(...vals);
-    const pad = Math.max((hi - lo) * 0.18, hi * 0.01);
-    return [Math.floor(lo - pad), Math.ceil(hi + pad)];
-  }, [visible]);
+    const pad = Math.max((hi - lo) * 0.2, hi * 0.01);
+    return [lo - pad, hi + pad];
+  }, [visible, showUp, showDown]);
+  const yOf = (v: number) => PAD.top + (1 - (v - yMin) / (yMax - yMin || 1)) * plotH;
 
-  // X축 라벨 후보
-  const candidates = useMemo(() => {
-    const toMD = (p?: ChartRow) => {
-      if (!p) return "";
-      if (p.date) {
-        const [, m, dd] = p.date.split("-");
-        return `${Number(m)}/${Number(dd)}`;
-      }
-      return p.label;
-    };
-    const list: Array<{ label: string; display: string; priority: number }> = [];
-    const todayVisible = visible.find((p) => p.isToday);
-    if (todayVisible)
-      list.push({ label: todayVisible.label, display: "오늘", priority: 1 });
-    const last = visible[visible.length - 1];
-    if (last && !last.isToday)
-      list.push({ label: last.label, display: toMD(last), priority: 2 });
-    const rec = visible.find((p) => p.isRecommendedDate);
-    if (rec && !list.some((c) => c.label === rec.label))
-      list.push({ label: rec.label, display: toMD(rec), priority: 3 });
-    const first = visible[0];
-    if (first && !list.some((c) => c.label === first.label))
-      list.push({ label: first.label, display: toMD(first), priority: 4 });
-    const mid = visible[Math.floor(visible.length / 2)];
-    if (mid && !list.some((c) => c.label === mid.label))
-      list.push({ label: mid.label, display: toMD(mid), priority: 5 });
-    return list;
-  }, [visible]);
+  // ── 제스처 (Pointer Events)
+  const ptrs = useRef(new Map<number, { x: number; y: number }>());
+  const gesture = useRef<{
+    startWin: Win;
+    startX: number;
+    startY: number;
+    moved: boolean;
+    pinchDist?: number;
+    pinchCenter?: number;
+    t: number;
+  } | null>(null);
 
-  const ticks = useMemo(
-    () => Array.from(new Set(candidates.map((c) => c.label))),
-    [candidates],
-  );
+  const localX = (clientX: number) => {
+    const r = wrapRef.current?.getBoundingClientRect();
+    return r ? clientX - r.left : clientX;
+  };
 
-  // ── 터치 히트 테스트
-  const indexFromClientX = useCallback(
-    (clientX: number): number => {
-      const el = containerRef.current;
-      const info = scaleRef.current;
-      if (!el || !info.xScale) return -1;
-      const rect = el.getBoundingClientRect();
-      const x = clientX - rect.left;
-      let bestIdx = -1;
-      let bestDist = Infinity;
-      visible.forEach((p, i) => {
-        const v = info.xScale!(p.label);
-        if (typeof v !== "number" || Number.isNaN(v)) return;
-        const cx = v + info.bandwidth / 2;
-        const d = Math.abs(cx - x);
-        if (d < bestDist) {
-          bestDist = d;
-          bestIdx = i;
-        }
-      });
-      return bestDist <= 28 ? bestIdx : -1;
-    },
-    [visible],
-  );
+  const onPointerDown = (e: React.PointerEvent) => {
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const list = [...ptrs.current.values()];
+    if (list.length === 1) {
+      gesture.current = { startWin: win, startX: e.clientX, startY: e.clientY, moved: false, t: Date.now() };
+    } else if (list.length === 2 && gesture.current) {
+      const [a, b] = list;
+      gesture.current = {
+        ...gesture.current,
+        startWin: win,
+        moved: true,
+        pinchDist: Math.abs(a.x - b.x) || 1,
+        pinchCenter: localX((a.x + b.x) / 2),
+      };
+    }
+  };
 
-  const handleTap = useCallback(
-    (clientX: number) => {
-      const i = indexFromClientX(clientX);
-      if (i < 0) {
-        setTipLabel(null);
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!ptrs.current.has(e.pointerId) || !gesture.current) return;
+    ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const g = gesture.current;
+    const list = [...ptrs.current.values()];
+    const perPx = denom / plotW;
+    if (list.length >= 2 && g.pinchDist && g.pinchCenter !== undefined) {
+      const [a, b] = list;
+      const dist = Math.abs(a.x - b.x) || 1;
+      const span = clamp(g.startWin.span * (g.pinchDist / dist), minSpan, maxSpan);
+      const anchorIdx = g.startWin.start + (g.pinchCenter - PAD.left) * ((g.startWin.span - 1) / plotW);
+      const ratio = (g.pinchCenter - PAD.left) / plotW;
+      setWin(fix({ span, start: anchorIdx - ratio * (span - 1) }));
+      return;
+    }
+    const dx = e.clientX - g.startX;
+    const dy = e.clientY - g.startY;
+    if (!g.moved && Math.abs(dx) < TAP_MOVE_PX && Math.abs(dy) < TAP_MOVE_PX) return;
+    if (!g.moved && Math.abs(dy) > Math.abs(dx)) {
+      // 세로 제스처 → 페이지 스크롤에 양보
+      ptrs.current.delete(e.pointerId);
+      gesture.current = null;
+      return;
+    }
+    g.moved = true;
+    setWin(fix({ span: g.startWin.span, start: g.startWin.start - dx * perPx }));
+  };
+
+  const tapAt = (clientX: number, clientY: number) => {
+    const x = localX(clientX);
+    const r = wrapRef.current?.getBoundingClientRect();
+    const y = r ? clientY - r.top : 0;
+    // 전환 시점 점 우선
+    if (showTurn) {
+      const hit = visible.find(
+        (row) =>
+          row.turn &&
+          row.predictedPrice !== undefined &&
+          Math.hypot(xOf(row.i) - x, yOf(row.predictedPrice) - y) < 18,
+      );
+      if (hit) {
+        setTip({ idx: hit.i, kind: "turn" });
         return;
       }
-      const row = visible[i];
-      if (!row) return;
-      setTipLabel((prev) => (prev === row.label ? null : row.label));
-      if (row.predictedPrice !== undefined && !row.isToday && row.actualPrice === undefined) {
-        const globalIdx = points.findIndex((p) => p.label === row.label);
-        if (globalIdx >= 0) onSelectIndex?.(globalIdx);
+    }
+    let best = -1;
+    let bd = Infinity;
+    for (const row of visible) {
+      const d = Math.abs(xOf(row.i) - x);
+      if (d < bd) {
+        bd = d;
+        best = row.i;
       }
-    },
-    [indexFromClientX, visible, points, onSelectIndex],
-  );
+    }
+    if (best < 0 || bd > 30) {
+      setTip(null);
+      return;
+    }
+    const row = rows[best];
+    const isPast = row.actualPrice !== undefined && !row.isToday;
+    setTip({ idx: best, kind: isPast || row.isToday ? "actual" : "pred" });
+    if (!isPast && !row.isToday && row.predictedPrice !== undefined) onSelectIndex?.(best);
+  };
 
-  // ── Pinch Zoom / Pan (세로 스크롤 보존)
+  const onPointerUp = (e: React.PointerEvent) => {
+    const g = gesture.current;
+    const wasSingle = ptrs.current.size === 1;
+    ptrs.current.delete(e.pointerId);
+    if (g && wasSingle && !g.moved && Date.now() - g.t < 500) tapAt(e.clientX, e.clientY);
+    if (ptrs.current.size === 0) gesture.current = null;
+    else if (ptrs.current.size === 1 && g) {
+      const [p] = [...ptrs.current.values()];
+      gesture.current = { startWin: win, startX: p.x, startY: p.y, moved: true, t: Date.now() };
+    }
+  };
+
+  // 휠 = 확대/축소 (PC)
+  const wheelRef = useRef<(e: WheelEvent) => void>(() => {});
+  wheelRef.current = (e: WheelEvent) => {
+    const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1);
+    const cx = localX(e.clientX);
+    setWin((w) => {
+      const span = clamp(w.span * Math.exp(dy * 0.002), minSpan, maxSpan);
+      const ratio = clamp((cx - PAD.left) / plotW, 0, 1);
+      const anchor = w.start + ratio * (w.span - 1);
+      return fix({ span, start: anchor - ratio * (span - 1) });
+    });
+  };
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el || total === 0) return;
-
-    let mode: "none" | "pan" | "pinch" | "undecided" = "none";
-    let startX = 0;
-    let startY = 0;
-    let baseStart = start;
-    let baseCount = count;
-    let pinchDist0 = 0;
-    let pinchCenterIdx = 0;
-    let moved = false;
-
-    const plotWidth = () => {
-      const info = scaleRef.current.offset;
-      return info?.width ?? el.clientWidth;
+    const el = wrapRef.current;
+    if (!el) return;
+    const h = (e: WheelEvent) => {
+      e.preventDefault();
+      wheelRef.current(e);
     };
+    el.addEventListener("wheel", h, { passive: false });
+    return () => el.removeEventListener("wheel", h);
+  }, []);
 
-    const onTouchStart = (e: TouchEvent) => {
-      baseStart = start;
-      baseCount = count;
-      moved = false;
-      if (e.touches.length === 2) {
-        mode = "pinch";
-        pinchDist0 = Math.abs(e.touches[0].clientX - e.touches[1].clientX) || 1;
-        const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-        const rect = el.getBoundingClientRect();
-        const ratio = clamp((midX - rect.left) / Math.max(1, rect.width), 0, 1);
-        pinchCenterIdx = baseStart + ratio * baseCount;
-      } else if (e.touches.length === 1) {
-        mode = "undecided";
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-      }
-    };
+  // 툴팁 자동 숨김
+  useEffect(() => {
+    if (!tip) return;
+    const t = setTimeout(() => setTip(null), TOOLTIP_MS);
+    return () => clearTimeout(t);
+  }, [tip]);
 
-    const onTouchMove = (e: TouchEvent) => {
-      if (mode === "pinch" && e.touches.length === 2) {
-        e.preventDefault();
-        moved = true;
-        const dist = Math.abs(e.touches[0].clientX - e.touches[1].clientX) || 1;
-        const nextCount = clamp(
-          Math.round(baseCount / (dist / pinchDist0)),
-          minCount,
-          total,
-        );
-        const ratio = nextCount > 0 ? (pinchCenterIdx - baseStart) / baseCount : 0;
-        const nextStart = clamp(
-          Math.round(pinchCenterIdx - ratio * nextCount),
-          0,
-          total - nextCount,
-        );
-        setZoom({ start: nextStart, count: nextCount });
-        setTipLabel(null);
-        return;
-      }
-      if (e.touches.length !== 1) return;
-      const dx = e.touches[0].clientX - startX;
-      const dy = e.touches[0].clientY - startY;
-      if (mode === "undecided") {
-        if (Math.abs(dx) > PAN_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.2) {
-          if (baseCount < total) {
-            mode = "pan";
-          } else {
-            mode = "none";
-          }
-        } else if (Math.abs(dy) > 8) {
-          mode = "none"; // 세로 스크롤은 페이지에 양보
-        }
-        return;
-      }
-      if (mode === "pan") {
-        e.preventDefault();
-        moved = true;
-        const pxPerPoint = plotWidth() / Math.max(1, baseCount);
-        const shift = Math.round(-dx / Math.max(1, pxPerPoint));
-        setZoom({
-          start: clamp(baseStart + shift, 0, total - baseCount),
-          count: baseCount,
-        });
-      }
-    };
+  const isDefault =
+    Math.abs(win.start - defaultWin.start) < 0.3 && Math.abs(win.span - defaultWin.span) < 0.3;
 
-    const onTouchEnd = (e: TouchEvent) => {
-      const wasMode = mode;
-      mode = "none";
-      if (moved || wasMode === "pan" || wasMode === "pinch") return;
-      const t = e.changedTouches[0];
-      if (!t) return;
-      const dx = Math.abs(t.clientX - startX);
-      const dy = Math.abs(t.clientY - startY);
-      if (dx < 10 && dy < 10) handleTap(t.clientX);
-    };
+  // ── 경로
+  const pathOf = (list: Array<[number, number]>) =>
+    list.map(([x, y], k) => `${k ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`).join("");
+  const actualPath = pathOf(
+    rows.filter((r) => r.actualPrice !== undefined).map((r) => [xOf(r.i), yOf(r.actualPrice!)]),
+  );
+  const predPath = pathOf(
+    rows.filter((r) => r.i >= todayIdx && r.predictedPrice !== undefined).map((r) => [xOf(r.i), yOf(r.predictedPrice!)]),
+  );
+  const seriesPath = (key: "optimisticPrice" | "pessimisticPrice") =>
+    pathOf(
+      rows
+        .filter((r) => r.i >= todayIdx)
+        .map((r) => {
+          const v = r.isToday ? todayPrice : r[key];
+          return v === undefined ? null : ([xOf(r.i), yOf(v)] as [number, number]);
+        })
+        .filter((v): v is [number, number] => !!v),
+    );
 
-    el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
-    el.addEventListener("touchend", onTouchEnd, { passive: true });
-    return () => {
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("touchmove", onTouchMove);
-      el.removeEventListener("touchend", onTouchEnd);
-    };
-  }, [start, count, total, minCount, handleTap]);
+  const lastVisFuture = [...visible].reverse().find((r) => r.optimisticPrice !== undefined);
 
-  // ── Tooltip 내용
-  const tipRow = tipLabel ? visible.find((p) => p.label === tipLabel) : undefined;
-  const tip = useMemo(() => {
-    if (!tipRow) return null;
-    const unit = baseUnitLabel ? ` / ${baseUnitLabel}` : "";
-    const wd = weekdayOf(tipRow.date);
-    const title = `${tipRow.label}${wd ? ` (${wd})` : ""}`;
-    const lines: string[] = [];
-    const isForecast =
-      tipRow.predictedPrice !== undefined &&
-      !tipRow.isToday &&
-      tipRow.actualPrice === undefined;
+  const pastVisible = visible.filter((r) => r.actualPrice !== undefined);
+  const minPast = pastVisible.length
+    ? pastVisible.reduce((a, b) => (b.actualPrice! < a.actualPrice! ? b : a))
+    : undefined;
+  const optVisible = visible.filter((r) => r.optimisticPrice !== undefined);
+  const maxOpt = showUp && optVisible.length
+    ? optVisible.reduce((a, b) => (b.optimisticPrice! > a.optimisticPrice! ? b : a))
+    : undefined;
 
-    if (isForecast && tipRow.predictedPrice !== undefined) {
-      lines.push(`${tipRow.predictedPrice.toLocaleString()}원${unit}`);
-      if (typeof todayPrice === "number" && todayPrice > 0) {
-        const diff = tipRow.predictedPrice - todayPrice;
-        const rate = (diff / todayPrice) * 100;
-        lines.push(
-          `오늘 대비 ${diff >= 0 ? "+" : "-"}${Math.abs(diff).toLocaleString()}원 (${diff >= 0 ? "+" : "-"}${Math.abs(rate).toFixed(1)}%)`,
-        );
-      }
-    } else if (tipRow.actualPrice !== undefined) {
-      lines.push(`${tipRow.actualPrice.toLocaleString()}원${unit}`);
-      if (tipRow.prevActualPrice) {
-        const diff = tipRow.actualPrice - tipRow.prevActualPrice;
-        const rate = (diff / tipRow.prevActualPrice) * 100;
-        lines.push(
-          `전일 대비 ${diff >= 0 ? "+" : "-"}${Math.abs(diff).toLocaleString()}원 (${diff >= 0 ? "+" : "-"}${Math.abs(rate).toFixed(1)}%)`,
-        );
-      }
+  // 거래량(배경 장식)
+  const vols = visible
+    .filter((r) => r.actualPrice !== undefined)
+    .map((r) => ({ r, v: r.volume ?? 40 + (hash(r.date) % 60) }));
+  const volMax = Math.max(1, ...vols.map((v) => v.v));
+  const barW = Math.max(2, Math.min(10, (plotW / Math.max(1, win.span)) * 0.5));
+
+  // X축 라벨
+  const xTicks = (() => {
+    const n = Math.min(5, visible.length);
+    const out = new Set<number>();
+    for (let k = 0; k < n; k++) {
+      const idx = Math.round(win.start + (k / Math.max(1, n - 1)) * (win.span - 1));
+      if (idx >= 0 && idx < total) out.add(idx);
     }
-
-    if (tipRow.turn === "up") {
-      lines.push("상승 전환 예상");
-      lines.push("이 시점 이후 가격 흐름이 상승 방향으로");
-      lines.push("바뀔 가능성이 있습니다.");
-    } else if (tipRow.turn === "down") {
-      lines.push("하락 전환 예상");
-      lines.push("이 시점 이후 가격 흐름이 하락 방향으로");
-      lines.push("바뀔 가능성이 있습니다.");
+    if (todayIdx >= visLo && todayIdx <= visHi) {
+      for (const t of [...out]) if (Math.abs(xOf(t) - xOf(todayIdx)) < 30) out.delete(t);
+      out.add(todayIdx);
     }
-    return { title, lines };
-  }, [tipRow, baseUnitLabel, todayPrice]);
+    return [...out].sort((a, b) => a - b);
+  })();
 
-  const selectedPoint = selectedIndex != null ? points[selectedIndex] : undefined;
-  const selectedLabel = selectedPoint?.label;
-  const selectedPrice = selectedPoint?.predictedPrice;
-  const showTopInfo = !!selectedLabel && typeof selectedPrice === "number";
+  const yTicks = [0, 1, 2, 3].map((k) => yMin + ((yMax - yMin) * k) / 3);
 
-  const todayLabel = visible.find((p) => p.isToday)?.label;
-  const recommendedVisible = visible.find((p) => p.isRecommendedDate);
-  const hasTurn = visible.some((p) => p.turn);
+  const todayX = xOf(todayIdx);
+  const todayInView = todayX >= PAD.left - 1 && todayX <= PAD.left + plotW + 1;
+
+  const firstIso = rows[Math.round(win.start)]?.date;
+  const lastIso = rows[Math.min(total - 1, Math.round(win.start + win.span - 1))]?.date;
+
+  // ── 툴팁 내용
+  const tipNode = (() => {
+    if (!tip) return null;
+    const r = rows[tip.idx];
+    if (!r) return null;
+    const value = tip.kind === "actual" ? r.actualPrice : r.predictedPrice;
+    if (value === undefined) return null;
+    const x = xOf(r.i);
+    const y = yOf(value);
+    let body: React.ReactNode;
+    if (tip.kind === "turn") {
+      body = (
+        <>
+          <div className="font-bold">{korDate(r.date)}</div>
+          <div className="mt-0.5 font-extrabold text-[#FFC078]">
+            {r.turn === "up" ? "상승" : "하락"} 전환 예상
+          </div>
+          <div className="mt-0.5 text-white/80">
+            이후 가격이 {r.turn === "up" ? "상승" : "하락"} 흐름으로
+            <br />
+            바뀔 가능성이 있어요.
+          </div>
+        </>
+      );
+    } else {
+      const ref =
+        tip.kind === "actual" ? rows[r.i - 1]?.actualPrice : todayPrice;
+      const diff = ref !== undefined ? value - ref : undefined;
+      const pct = ref ? (diff! / ref) * 100 : 0;
+      body = (
+        <>
+          <div className="font-bold">{korDate(r.date)}</div>
+          <div className="mt-0.5">
+            <span className="text-body font-extrabold tabular-nums">{value.toLocaleString()}</span>{" "}
+            원/{baseUnitLabel}
+          </div>
+          {diff !== undefined ? (
+            <div
+              className={cn(
+                "mt-0.5 font-bold tabular-nums",
+                diff > 0 ? "text-[#FF8787]" : diff < 0 ? "text-[#74C0FC]" : "text-white/80",
+              )}
+            >
+              {tip.kind === "actual" ? "전일" : "오늘"} 대비 {signed(diff)}원({diff > 0 ? "+" : ""}
+              {pct.toFixed(1)}%)
+            </div>
+          ) : null}
+        </>
+      );
+    }
+    const bw = 170;
+    const left = clamp(x - bw / 2, 2, width - bw - 2);
+    const above = y > 80;
+    return (
+      <>
+        <div
+          className="pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#1F2937]"
+          style={{ left: x, top: y }}
+        />
+        <div
+          role="tooltip"
+          className="pointer-events-none absolute z-10 rounded-[10px] bg-[#1F2937]/95 px-2.5 py-2 text-meta leading-snug text-white shadow-lg"
+          style={{
+            left,
+            width: bw,
+            top: above ? undefined : y + 12,
+            bottom: above ? H - y + 12 : undefined,
+          }}
+        >
+          {body}
+        </div>
+      </>
+    );
+  })();
+
+  const toggles: Array<{ key: string; label: string; on: boolean; color: string; set?: () => void }> = [
+    { key: "mid", label: "예상 가격", on: true, color: PRED },
+    { key: "up", label: "상승 예상치", on: showUp, color: UP, set: () => setShowUp((v) => !v) },
+    { key: "down", label: "하락 예상치", on: showDown, color: DOWN, set: () => setShowDown((v) => !v) },
+    { key: "turn", label: "전환 시점", on: showTurn, color: TURN, set: () => setShowTurn((v) => !v) },
+  ];
 
   return (
-    <div className="w-full">
-      {showTopInfo && selectedPrice != null && (
-        <div className="mb-3 flex items-end justify-between gap-2">
-          <div className="min-w-0">
-            <div className="text-caption font-bold text-[#6C757D]">
-              {selectedLabel} 예상 시세
-            </div>
-            <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className="text-[30px] font-black leading-none tabular-nums text-[#2E9E6B]">
-                {selectedPrice.toLocaleString()}
-              </span>
-              <span className="text-body font-bold text-[#495057]">
-                원{baseUnitLabel ? ` / ${baseUnitLabel}` : ""}
-              </span>
-            </div>
-          </div>
-          {isZoomed && (
-            <button
-              type="button"
-              onClick={() => {
-                setZoom(null);
-                setTipLabel(null);
-              }}
-              className="inline-flex h-9 shrink-0 items-center gap-1 rounded-full bg-[#F1F3F5] px-3 text-caption font-semibold text-[#495057] active:bg-[#E9ECEF]"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              전체 보기
-            </button>
-          )}
-        </div>
-      )}
-
-      <div
-        ref={containerRef}
-        className="h-[260px] w-full touch-pan-y pb-2 select-none"
-        onClick={(e) => handleTap(e.clientX)}
-      >
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            data={visible}
-            margin={{ top: 28, right: 12, left: 0, bottom: 6 }}
-          >
-            <CartesianGrid stroke="#F1F3F5" vertical={false} />
-            <XAxis
-              xAxisId="main"
-              dataKey="label"
-              tick={() => <g />}
-              axisLine={false}
-              tickLine={false}
-              ticks={ticks}
-              interval={0}
-              height={24}
-            />
-            <YAxis
-              yAxisId="price"
-              tick={{ fontSize: 12, fill: "#868E96" }}
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(v) => Number(v).toLocaleString()}
-              domain={yDomain}
-              width={44}
-            />
-            <Customized
-              component={(props: any) => (
-                <ScaleCapture
-                  {...props}
-                  onCapture={(info: ScaleInfo) => {
-                    scaleRef.current = info;
-                  }}
-                />
-              )}
-            />
-            <Customized
-              component={(props: any) => (
-                <TodayLine {...props} todayLabel={todayLabel} />
-              )}
-            />
-            <Customized
-              component={(props: any) => (
-                <XLabelsOverlay {...props} candidates={candidates} />
-              )}
-            />
-
-            <Line
-              xAxisId="main"
-              yAxisId="price"
-              type="monotone"
-              dataKey="actualPrice"
-              stroke={RED}
-              strokeWidth={2.4}
-              dot={false}
-              activeDot={false}
-              isAnimationActive={false}
-              connectNulls={false}
-            />
-            <Line
-              xAxisId="main"
-              yAxisId="price"
-              type="monotone"
-              dataKey="predictedPrice"
-              stroke={TEAL}
-              strokeWidth={2.4}
-              strokeDasharray="5 4"
-              dot={(dotProps: any) => {
-                const { cx, cy, index, payload } = dotProps;
-                if (
-                  payload.predictedPrice === undefined ||
-                  payload.isToday ||
-                  typeof cx !== "number" ||
-                  typeof cy !== "number"
-                ) {
-                  return <g key={`d-${index}`} />;
-                }
-                const isRec = !!payload.isRecommendedDate;
-                return (
-                  <circle
-                    key={`d-${index}`}
-                    cx={cx}
-                    cy={cy}
-                    r={isRec ? 5 : 3}
-                    fill={TEAL}
-                    stroke="#fff"
-                    strokeWidth={isRec ? 2 : 1.5}
-                  />
-                );
-              }}
-              activeDot={false}
-              isAnimationActive={false}
-              connectNulls={false}
-            />
-
-            <Customized
-              component={(props: any) => (
-                <TurnMarkers {...props} rows={visible} />
-              )}
-            />
-            <Customized
-              component={(props: any) => (
-                <RecommendBadge
-                  {...props}
-                  label={recommendedVisible?.label}
-                  price={recommendedVisible?.predictedPrice}
-                />
-
-              )}
-            />
-            {tip && (
-              <Customized
-                component={(props: any) => (
-                  <TooltipOverlay
-                    {...props}
-                    row={tipRow}
-                    title={tip.title}
-                    lines={tip.lines}
-                  />
-                )}
-              />
+    <div>
+      {/* 선택형 토글 */}
+      <div className="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-2">
+        {toggles.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            aria-pressed={t.on}
+            disabled={!t.set}
+            onClick={t.set}
+            className={cn(
+              "inline-flex min-h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-2.5 text-meta font-bold",
+              t.on ? "bg-white" : "border-[#E9ECEF] bg-[#F8F9FA] text-[#868E96]",
+              !t.set && "cursor-default",
             )}
-          </ComposedChart>
-        </ResponsiveContainer>
+            style={t.on ? { borderColor: t.color, color: t.color } : undefined}
+          >
+            <span
+              className="inline-block h-2 w-2 rounded-full"
+              style={{ background: t.on ? t.color : GREY }}
+            />
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      {hasTurn && (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-meta text-[#868E96]">
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-2 w-2 rounded-full"
-              style={{ background: UP_TURN }}
-            />
-            상승 전환 예상
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-2 w-2 rounded-full"
-              style={{ background: DOWN_TURN }}
-            />
-            하락 전환 예상
-          </span>
-        </div>
-      )}
+      {/* 구간 배지 + 전체 보기 */}
+      <div className="flex min-h-8 items-center justify-between">
+        <span className="rounded-full bg-[#F0F9F0] px-2 py-0.5 text-meta font-bold text-[#1F5C1F]">
+          {firstIso && lastIso ? `${korDate(firstIso, false)} ~ ${korDate(lastIso, false)}` : ""}
+        </span>
+        {!isDefault ? (
+          <button
+            type="button"
+            onClick={() => setWin(defaultWin)}
+            className="inline-flex min-h-9 items-center gap-1 rounded-full border border-[#DEE2E6] bg-white px-2.5 text-meta font-bold text-[#495057]"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            전체 보기
+          </button>
+        ) : null}
+      </div>
+
+      <div
+        ref={wrapRef}
+        className="relative mt-1 select-none"
+        style={{ height: H, touchAction: "pan-y" }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        role="img"
+        aria-label="가격 예측 차트. 핀치 또는 휠로 확대·축소, 드래그로 구간 이동"
+      >
+        <svg width={width} height={H} className="block">
+          <defs>
+            <clipPath id="pc-clip">
+              <rect x={PAD.left} y={0} width={plotW} height={H} />
+            </clipPath>
+          </defs>
+
+          {/* Y 그리드 + 라벨 */}
+          {yTicks.map((v, k) => (
+            <g key={k}>
+              <line x1={PAD.left} x2={PAD.left + plotW} y1={yOf(v)} y2={yOf(v)} stroke="#F1F3F5" />
+              <text x={PAD.left - 6} y={yOf(v) + 4} textAnchor="end" fontSize={10} fill="#ADB5BD">
+                {v >= 10000 ? `${(v / 10000).toFixed(1)}만` : Math.round(v).toLocaleString()}
+              </text>
+            </g>
+          ))}
+
+          <g clipPath="url(#pc-clip)">
+            {/* 거래량 배경 막대 */}
+            {vols.map(({ r, v }) => {
+              const h = (v / volMax) * plotH * 0.25;
+              return (
+                <rect
+                  key={`v-${r.i}`}
+                  x={xOf(r.i) - barW / 2}
+                  y={PAD.top + plotH - h}
+                  width={barW}
+                  height={h}
+                  rx={1.5}
+                  fill="#E9F3EC"
+                />
+              );
+            })}
+
+            {/* 오늘 구분선 */}
+            {todayInView ? (
+              <line x1={todayX} x2={todayX} y1={PAD.top - 8} y2={PAD.top + plotH} stroke={GREY} strokeDasharray="3 3" />
+            ) : null}
+
+            <path d={actualPath} fill="none" stroke={ACTUAL} strokeWidth={2.2} strokeLinejoin="round" />
+            <path d={predPath} fill="none" stroke={PRED} strokeWidth={2.4} strokeDasharray="5 4" strokeLinejoin="round" />
+            {showUp ? (
+              <path d={seriesPath("optimisticPrice")} fill="none" stroke={UP} strokeWidth={1.6} strokeDasharray="4 4" />
+            ) : null}
+            {showDown ? (
+              <path d={seriesPath("pessimisticPrice")} fill="none" stroke={DOWN} strokeWidth={1.6} strokeDasharray="4 4" />
+            ) : null}
+
+            {/* 전환 시점 */}
+            {showTurn
+              ? visible.map((r) =>
+                  r.turn && r.predictedPrice !== undefined ? (
+                    <g key={`t-${r.i}`}>
+                      <circle cx={xOf(r.i)} cy={yOf(r.predictedPrice)} r={5} fill={TURN} stroke="#fff" strokeWidth={1.6} />
+                      <text
+                        x={xOf(r.i)}
+                        y={yOf(r.predictedPrice) - 10}
+                        textAnchor="middle"
+                        fontSize={10}
+                        fontWeight={800}
+                        fill={TURN}
+                      >
+                        {r.turn === "up" ? "상승" : "하락"} 전환 예상
+                      </text>
+                    </g>
+                  ) : null,
+                )
+              : null}
+          </g>
+
+          {/* 실제/예상 구분 라벨 */}
+          {todayInView ? (
+            <g fontSize={10} fontWeight={700}>
+              <text x={todayX - 6} y={PAD.top - 12} textAnchor="end" fill="#868E96">
+                ← 실제 가격
+              </text>
+              <text x={todayX + 6} y={PAD.top - 12} textAnchor="start" fill={PRED}>
+                예상 가격 →
+              </text>
+            </g>
+          ) : null}
+
+          {/* 최저 콜아웃 (과거 구간) */}
+          {minPast ? (
+            <Callout x={xOf(minPast.i)} y={yOf(minPast.actualPrice!) + 16} text={`최저 ${minPast.actualPrice!.toLocaleString()}`} color={DOWN} minX={PAD.left} maxX={PAD.left + plotW} />
+          ) : null}
+          {/* 최고 콜아웃 (상승 예상치 ON) */}
+          {maxOpt ? (
+            <Callout x={xOf(maxOpt.i)} y={yOf(maxOpt.optimisticPrice!) - 16} text={`최고 ${maxOpt.optimisticPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
+          ) : null}
+
+          {/* 끝값 라벨 */}
+          {lastVisFuture && showUp && lastVisFuture.i !== maxOpt?.i ? (
+            <EndLabel x={xOf(lastVisFuture.i)} y={yOf(lastVisFuture.optimisticPrice!)} v={lastVisFuture.optimisticPrice!} color={UP} maxX={PAD.left + plotW} />
+          ) : null}
+          {lastVisFuture && showDown ? (
+            <EndLabel x={xOf(lastVisFuture.i)} y={yOf(lastVisFuture.pessimisticPrice!)} v={lastVisFuture.pessimisticPrice!} color={DOWN} maxX={PAD.left + plotW} />
+          ) : null}
+
+          {/* X축 */}
+          {xTicks.map((i) => (
+            <text
+              key={`x-${i}`}
+              x={clamp(xOf(i), PAD.left + 10, PAD.left + plotW - 10)}
+              y={H - 8}
+              textAnchor="middle"
+              fontSize={10.5}
+              fontWeight={i === todayIdx ? 800 : 500}
+              fill={i === todayIdx ? "#495057" : "#ADB5BD"}
+            >
+              {i === todayIdx ? "오늘" : md(rows[i].date)}
+            </text>
+          ))}
+        </svg>
+        {tipNode}
+      </div>
+
+      <div className="mt-2 rounded-xl bg-[#F8F9FA] px-3 py-2 text-meta leading-snug text-[#6C757D]">
+        그래프를 터치하면 날짜별 상세 정보를 확인할 수 있어요. 핀치로 구간을 확대/축소할 수 있습니다.
+        확대된 경우 우측 상단의 전체 보기 버튼으로 원래 범위로 돌아갈 수 있어요.
+      </div>
     </div>
+  );
+}
+
+function Callout({
+  x,
+  y,
+  text,
+  color,
+  minX,
+  maxX,
+}: {
+  x: number;
+  y: number;
+  text: string;
+  color: string;
+  minX: number;
+  maxX: number;
+}) {
+  const w = text.length * 6.6 + 12;
+  const cx = clamp(x, minX + w / 2, maxX - w / 2);
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      <rect x={cx - w / 2} y={y - 9} width={w} height={18} rx={5} fill="#fff" stroke={color} strokeWidth={1} />
+      <text x={cx} y={y + 4} textAnchor="middle" fontSize={10} fontWeight={800} fill={color}>
+        {text}
+      </text>
+    </g>
+  );
+}
+
+function EndLabel({ x, y, v, color, maxX }: { x: number; y: number; v: number; color: string; maxX: number }) {
+  const text = v.toLocaleString();
+  const w = text.length * 6.4 + 10;
+  const left = Math.min(x + 4, maxX - w);
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      <circle cx={x} cy={y} r={3} fill={color} />
+      <rect x={left} y={y - 17} width={w} height={14} rx={4} fill={color} />
+      <text x={left + w / 2} y={y - 7} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#fff">
+        {text}
+      </text>
+    </g>
   );
 }
 
