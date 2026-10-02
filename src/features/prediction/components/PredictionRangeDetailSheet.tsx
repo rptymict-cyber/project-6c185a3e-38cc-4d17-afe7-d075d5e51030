@@ -84,8 +84,8 @@ export function PredictionRangeDetailSheet({
           )}
 
           <div className="mt-3 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-meta leading-snug text-[#2c6444]">
-            📌 화면의 낙관·중립·비관은 이 범위에서 각각 위쪽·가운데·아래쪽
-            값입니다. 중립이 가장 가능성이 높습니다.
+            📌 화면의 상승 예상가·기준 예상가·하락 예상가는 이 범위에서 각각 위쪽·가운데·아래쪽
+            값입니다. 기준 예상가가 가장 가능성이 높습니다.
           </div>
 
           <button
