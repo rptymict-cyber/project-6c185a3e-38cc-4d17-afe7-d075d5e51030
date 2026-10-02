@@ -34,7 +34,7 @@ export function HomeWeatherBar() {
       type="button"
       onClick={() => navigate({ to: "/weather" })}
       aria-label={`${w.region} 날씨 상세 보기`}
-      className="relative flex w-full items-stretch overflow-hidden rounded-[20px] text-left text-white shadow-[0_6px_16px_rgba(2,82,153,0.16)] transition-transform duration-150 ease-out active:scale-[0.99]"
+      className="group relative flex
       style={{
         background:
           "linear-gradient(110deg, #0879ca 0%, #0968b6 52%, #07569d 100%)",
@@ -127,7 +127,12 @@ export function HomeWeatherBar() {
 
       <div className="flex shrink-0 items-center gap-1 pl-2">
         <WeatherIllustration size={82} className="max-w-[88px]" />
-        <ChevronRight className="h-5 w-5 text-white/95" />
+        <span
+          aria-hidden="true"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.14] transition-colors duration-150 group-active:bg-white/[0.24]"
+        >
+          <ChevronRight className="h-5 w-5 text-white" />
+        </span>
       </div>
     </button>
     <WeatherRegionSheet open={regionOpen} onOpenChange={setRegionOpen} />
