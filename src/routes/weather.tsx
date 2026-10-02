@@ -1,8 +1,16 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Droplets, Info, MapPin, Sun, Umbrella, Wind } from "lucide-react";
+import { ChevronDown, Droplets, Info, MapPin, Sun, Umbrella, Wind } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { WeatherIllustration } from "@/components/weather/WeatherIllustration";
-import { MOCK_WEATHER } from "@/lib/mock/weather";
+import {
+  MOCK_WEATHER,
+  DEFAULT_REGION_WEATHER,
+  getWeatherForRegion,
+} from "@/lib/mock/weather";
+import { WeatherRegionSheet } from "@/components/weather/WeatherRegionSheet";
+import { useWeatherRegion } from "@/store/weatherRegion";
+import { useLocation } from "@/store/location";
 import { cn } from "@/lib/utils";
 import { useBackTo } from "@/hooks/useBackTo";
 import { DetailHeader } from "@/components/detail-header";
@@ -29,7 +37,14 @@ export const Route = createFileRoute("/weather")({
 
 function WeatherDetailPage() {
   const goBack = useBackTo("/");
-  const w = MOCK_WEATHER;
+  const regionId = useWeatherRegion((s) => s.regionId);
+  const granted = useLocation((s) => s.granted);
+  const [regionOpen, setRegionOpen] = useState(false);
+  const w = regionId
+    ? getWeatherForRegion(regionId)
+    : granted === true
+      ? MOCK_WEATHER
+      : DEFAULT_REGION_WEATHER;
 
   return (
     <AppShell screenId="WTR-001_날씨상세"
@@ -51,7 +66,15 @@ function WeatherDetailPage() {
               <div className="min-w-0">
                 <div className="flex items-center gap-1 text-body font-semibold text-white/95">
                   <MapPin className="h-3.5 w-3.5" />
-                  <span>{w.region}</span>
+                  <button
+                    type="button"
+                    aria-label="지역 변경"
+                    onClick={() => setRegionOpen(true)}
+                    className="relative flex min-h-11 items-center gap-0.5 whitespace-nowrap text-white after:absolute after:-inset-2 after:content-['']"
+                  >
+                    {w.region}
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
                 </div>
                 <div className="mt-1.5 flex items-baseline">
                   <span className="text-[64px] font-bold leading-none tracking-tight">
@@ -193,6 +216,7 @@ function WeatherDetailPage() {
           </section>
         ) : null}
       </div>
+      <WeatherRegionSheet open={regionOpen} onOpenChange={setRegionOpen} />
     </AppShell>
   );
 }
