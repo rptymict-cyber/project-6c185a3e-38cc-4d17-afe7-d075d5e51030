@@ -120,6 +120,7 @@ function PredictionPage() {
     effectiveCompareMarketId,
   );
   const [compareIso, setCompareIso] = useState<string | null>(null);
+  const [baseIso, setBaseIso] = useState<string | null>(null);
   const cropMeta = getPredictableCrop(selectedCropId);
   const marketName =
     prediction?.marketName ??
@@ -217,6 +218,17 @@ function PredictionPage() {
     const [, m, d] = compareDateIso.split("-").map(Number);
     return `${m}월 ${d}일`;
   })();
+  const baseDateIso = baseIso ?? compareRangeMin;
+  const isBaseToday = baseDateIso === compareRangeMin;
+  const basePrice = isBaseToday
+    ? prediction.currentPrice
+    : (comparePrediction?.predictedPoints.find((p) => p.date === baseDateIso)
+        ?.predictedPrice ?? prediction.currentPrice);
+  const md = (iso: string) => {
+    const [, m, d] = iso.split("-").map(Number);
+    return `${m}/${d}`;
+  };
+  const baseTitleLabel = isBaseToday ? `오늘(${md(baseDateIso)})` : `기준일(${md(baseDateIso)})`;
   const todayPoint = prediction.predictedPoints.find((p) => p.isToday);
   const todayShort = (() => {
     const iso = todayPoint?.date ?? prediction.currentDate;
@@ -330,7 +342,9 @@ function PredictionPage() {
         <div className="mt-4">
           <PredictionCompareCards
             viewpoint={selectedViewpoint}
-            currentPrice={prediction.currentPrice}
+            currentPrice={basePrice}
+            baseTitle={baseTitleLabel}
+            datePickerValue={`${md(baseDateIso)} → ${md(compareDateIso)}`}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
@@ -485,7 +499,14 @@ function PredictionPage() {
         onChange={setCompareMarketId}
       />
       <DatePickerSheet
-        confirmOnSelect
+        pair={{
+          baseIso: baseDateIso,
+          compareIso: compareDateIso,
+          onConfirm: (b, c) => {
+            setBaseIso(b);
+            setCompareIso(c);
+          },
+        }}
         open={compareDateOpen}
         onOpenChange={setCompareDateOpen}
         selected={compareDateIso}

@@ -27,6 +27,10 @@ interface Props {
   /** 비교 시장 지역명 (날씨 안내용) */
   compareRegion: string;
   onPickMarket: () => void;
+  /** 좌측 기준 박스 타이틀 접두 (예: "오늘(10/1)", "기준일(10/3)") */
+  baseTitle?: string;
+  /** 비교 날짜 피커 표시값 (예: "10/1 → 10/8") */
+  datePickerValue?: string;
 }
 
 export function PredictionCompareCards({
@@ -46,7 +50,10 @@ export function PredictionCompareCards({
   compareMarketName,
   compareRegion,
   onPickMarket,
+  baseTitle,
+  datePickerValue,
 }: Props) {
+  const baseLabel = baseTitle ?? `오늘${todayShort ? `(${todayShort})` : ""}`;
   const isFarmer = viewpoint === "farmer";
   const title = isFarmer ? "출하 시점 비교" : "매입 시점 비교";
   const action = isFarmer ? "출하" : "매입";
@@ -88,7 +95,7 @@ export function PredictionCompareCards({
         <PickerButton
           icon={<Calendar className="h-3.5 w-3.5" />}
           label="비교 날짜"
-          value={compareLabel}
+          value={datePickerValue ?? compareLabel}
           onClick={onPickDate}
         />
         <PickerButton
@@ -107,7 +114,7 @@ export function PredictionCompareCards({
         >
           <div className="min-w-0">
             <div className="text-meta font-semibold opacity-90">
-              오늘 {action} 대비
+              {baseLabel} {action} 대비
             </div>
             <div className="mt-0.5 text-caption font-bold opacity-95">
               {compareLabel} {action} 시 예상 금액 차이
@@ -141,7 +148,7 @@ export function PredictionCompareCards({
         {/* 오늘 출하 */}
         <div className="rounded-2xl border border-[#E9ECEF] bg-white p-3">
           <div className="text-meta font-semibold text-[#868E96]">
-            오늘{todayShort ? `(${todayShort})` : ""} {action}
+            {baseLabel} {action}
           </div>
           <div className="mt-1.5 flex items-baseline gap-1">
             <span className="text-title font-black tabular-nums text-foreground">
