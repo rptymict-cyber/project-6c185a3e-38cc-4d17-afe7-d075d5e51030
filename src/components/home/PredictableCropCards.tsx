@@ -84,22 +84,24 @@ export function PredictableCropCards() {
               key={crop.id}
               to="/prediction"
               search={{ cropId: crop.id, entrySource: "home" }}
-              className="flex w-[116px] min-w-[116px] flex-col items-start gap-1 overflow-hidden rounded-[10px] bg-[#F5FAF6] px-2.5 py-2.5 transition-colors active:bg-[#E8F1E8]"
+              className="flex w-[124px] min-w-[124px] flex-col items-start overflow-hidden rounded-[10px] bg-[#F5FAF6] px-3 pb-3 pt-3.5 transition-colors active:bg-[#E8F1E8]"
             >
               <CropIcon name={crop.name} size={24} />
-              <div className="w-full truncate text-caption font-bold leading-tight text-[#111827]">
+              <div className="mt-1.5 w-full truncate text-caption font-bold leading-tight text-[#111827]">
                 {crop.name}
               </div>
-              <div className="w-full">
+              <div className="mt-2 w-full">
                 <div className="truncate text-body font-extrabold tabular-nums leading-tight text-primary">
                   {h.price.toLocaleString()}
                   <span className="text-meta font-bold">원</span>
                 </div>
-                <div className="truncate text-meta font-medium leading-tight text-[#6B7280]">
+                <div className="mt-0.5 truncate text-meta font-medium leading-tight text-[#6B7280]">
                   / {h.unitLabel}
                 </div>
               </div>
-              <ChangeBadge changePct={h.changePct} />
+              <div className="mt-3 w-full">
+                <ChangeBadge changePct={h.changePct} />
+              </div>
             </Link>
           );
         })}
