@@ -331,9 +331,12 @@ function PredictionChartBase({
   const minPast = pastVisible.length
     ? pastVisible.reduce((a, b) => (b.actualPrice! < a.actualPrice! ? b : a))
     : undefined;
-  const optVisible = visible.filter((r) => r.optimisticPrice !== undefined);
-  const maxOpt = showUp && optVisible.length
-    ? optVisible.reduce((a, b) => (b.optimisticPrice! > a.optimisticPrice! ? b : a))
+  // 최고: 보이는 미래 구간의 예상 가격(기준선) 최댓값 — 토글과 무관하게 항상 표시
+  const futVisible = visible.filter(
+    (r) => r.predictedPrice !== undefined && r.actualPrice === undefined,
+  );
+  const maxFut = futVisible.length
+    ? futVisible.reduce((a, b) => (b.predictedPrice! > a.predictedPrice! ? b : a))
     : undefined;
 
   // 거래량(배경 장식)
@@ -589,13 +592,13 @@ function PredictionChartBase({
           {minPast ? (
             <Callout x={xOf(minPast.i)} y={yOf(minPast.actualPrice!) + 16} text={`최저 ${minPast.actualPrice!.toLocaleString()}`} color={DOWN} minX={PAD.left} maxX={PAD.left + plotW} />
           ) : null}
-          {/* 최고 콜아웃 (상승 예상치 ON) */}
-          {maxOpt ? (
-            <Callout x={xOf(maxOpt.i)} y={yOf(maxOpt.optimisticPrice!) - 16} text={`최고 ${maxOpt.optimisticPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
+          {/* 최고 콜아웃 (미래 예상 가격 기준선, 항상 표시) */}
+          {maxFut ? (
+            <Callout x={xOf(maxFut.i)} y={yOf(maxFut.predictedPrice!) - 16} text={`최고 ${maxFut.predictedPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
           ) : null}
 
           {/* 끝값 라벨 */}
-          {lastVisFuture && showUp && lastVisFuture.i !== maxOpt?.i ? (
+          {lastVisFuture && showUp ? (
             <EndLabel x={xOf(lastVisFuture.i)} y={yOf(lastVisFuture.optimisticPrice!)} v={lastVisFuture.optimisticPrice!} color={UP} maxX={PAD.left + plotW} />
           ) : null}
           {lastVisFuture && showDown ? (
