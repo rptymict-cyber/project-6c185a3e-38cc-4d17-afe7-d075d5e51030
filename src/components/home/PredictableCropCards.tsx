@@ -46,21 +46,12 @@ export function PredictableCropCards() {
   return (
     <section className="mt-5 px-4">
       {/* Section header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-1.5">
-            <h3 className="text-title font-bold text-[#111827]">AI 시세 예측</h3>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-meta font-bold text-primary">
-              Beta
-            </span>
-          </div>
-          <p className="mt-0.5 text-body text-[#6B7280]">
-            5개 품목의 최근 평균가와 AI 전망을 확인해보세요
-          </p>
-          <p className="mt-1 flex min-h-[18px] items-center gap-1 text-caption font-medium text-[#6B7280]">
-            <CalendarDays className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-            {basis}
-          </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <h3 className="text-title font-bold text-[#111827]">AI 시세 예측</h3>
+          <span className="rounded bg-primary/10 px-1.5 py-0.5 text-meta font-bold text-primary">
+            Beta
+          </span>
         </div>
         <Link
           to="/prediction"
@@ -70,6 +61,14 @@ export function PredictableCropCards() {
           <ChevronRight className="h-3.5 w-3.5" />
         </Link>
       </div>
+      <p className="-mt-1 text-body text-[#6B7280]">
+        5개 품목의 최근 평균가와 AI 전망을 확인해보세요
+      </p>
+      <p className="mt-1 flex min-h-[18px] items-center gap-1 text-caption font-medium text-[#6B7280]">
+        <CalendarDays className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+        {basis}
+      </p>
+
 
       {/* Horizontal scroll cards - mini (4 visible + peek) */}
       <div className="no-scrollbar -mx-4 mt-3 flex gap-1.5 overflow-x-auto px-4 pb-1">
