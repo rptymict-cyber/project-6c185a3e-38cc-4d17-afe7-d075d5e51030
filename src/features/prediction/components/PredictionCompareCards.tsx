@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Calendar, ChevronDown, Store } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toKg, unitKgOf, type AmountUnit } from "@/lib/units";
@@ -48,7 +47,6 @@ export function PredictionCompareCards({
   compareRegion,
   onPickMarket,
 }: Props) {
-  const [mode, setMode] = useState<"date" | "market">("date");
   const isFarmer = viewpoint === "farmer";
   const title = isFarmer ? "출하 시점 비교" : "매입 시점 비교";
   const action = isFarmer ? "출하" : "매입";
@@ -82,29 +80,7 @@ export function PredictionCompareCards({
     <section>
       <h2 className="mb-2 text-body font-bold text-foreground">{title}</h2>
 
-      <div className="flex gap-1 rounded-xl bg-[#F1F3F5] p-1" role="tablist">
-        {(
-          [
-            ["date", "날짜 비교"],
-            ["market", "시장 비교"],
-          ] as const
-        ).map(([k, l]) => (
-          <button
-            key={k}
-            type="button"
-            role="tab"
-            aria-selected={mode === k}
-            onClick={() => setMode(k)}
-            className={cn(
-              "min-h-11 flex-1 rounded-lg text-caption font-bold",
-              mode === k ? "bg-white text-foreground shadow-sm" : "text-[#868E96]",
-            )}
-          >
-            {l}
-          </button>
-        ))}
-      </div>
-      <p className="mt-2 text-meta text-[#6C757D]">
+      <p className="text-meta text-[#6C757D]">
         날짜와 시장을 선택해 오늘과 비교해보세요
       </p>
 

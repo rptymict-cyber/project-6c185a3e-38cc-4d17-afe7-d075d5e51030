@@ -10,7 +10,7 @@ import { PredictionCompareCards } from "@/features/prediction/components/Predict
 import { PredictionConditionGrid } from "@/features/prediction/components/PredictionConditionGrid";
 import { PredictionFactorList } from "@/features/prediction/components/PredictionFactorList";
 import { PredictionInsightCard } from "@/features/prediction/components/PredictionInsightCard";
-import { PredictionGradeSegment } from "@/features/prediction/components/PredictionGradeSegment";
+
 import { PredictionScenarioCards } from "@/features/prediction/components/PredictionScenarioCards";
 import { PredictionRangeDetailSheet } from "@/features/prediction/components/PredictionRangeDetailSheet";
 import {
@@ -236,7 +236,10 @@ function PredictionPage() {
           quantityLabel={`${quantityBoxes.toLocaleString()}${QUANTITY_UNIT_LABEL[quantityUnit]}`}
           cropLabel={`${cropMeta.categoryName} · ${cropMeta.name} · ${cropMeta.varietyName}`}
           marketLabel={marketName}
-          viewpointLabel={isFarmer ? "농민" : "도매상"}
+          grade={selectedGrade}
+          onGradeChange={setSelectedGrade}
+          viewpoint={selectedViewpoint}
+          onViewpointChange={setSelectedViewpoint}
           onQuantityClick={() => setQtySheetOpen(true)}
           onCropClick={() =>
             navigate({
@@ -245,16 +248,7 @@ function PredictionPage() {
             })
           }
           onMarketClick={() => setMarketSheetOpen(true)}
-          onViewpointClick={() => setViewpointSheetOpen(true)}
         />
-
-        {/* 2. 등급 세그먼트 (신규) */}
-        <div className="mt-3">
-          <PredictionGradeSegment
-            value={selectedGrade}
-            onChange={setSelectedGrade}
-          />
-        </div>
 
         {/* 3. AI 추천 카드 */}
         <div className="mt-3">
