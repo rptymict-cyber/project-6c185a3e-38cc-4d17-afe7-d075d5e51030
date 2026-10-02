@@ -451,7 +451,7 @@ function PredictionChartBase({
   return (
     <div>
       {/* 선택형 토글 */}
-      <div className="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-2">
+      <div className="grid grid-cols-4 gap-1 pb-2">
         {toggles.map((t) => (
           <button
             key={t.key}
@@ -460,7 +460,7 @@ function PredictionChartBase({
             disabled={!t.set}
             onClick={t.set}
             className={cn(
-              "inline-flex min-h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-2.5 text-meta font-bold",
+              "inline-flex min-h-9 min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border px-1 text-meta font-bold tracking-tight",
               t.on ? "bg-white" : "border-[#E9ECEF] bg-[#F8F9FA] text-[#868E96]",
               !t.set && "cursor-default",
             )}
