@@ -231,16 +231,16 @@ export function PredictionCompareCards({
           <span
             className={cn(
               "shrink-0 rounded-full px-2 py-0.5 text-meta font-bold",
-              weather.impact === "ok"
+              weather.impact !== "high"
                 ? "bg-[#E7F1FF] text-[#1971C2]"
                 : "bg-[#FFF4E6] text-[#E8590C]",
             )}
           >
-            {weather.impact === "ok" ? "이상없음" : "주의"}
+            {weather.impact !== "high" ? "이상없음" : "주의"}
           </span>
           <p className="min-w-0 flex-1 text-meta leading-snug text-[#495057]">
             {regionShort} 지역 {weather.condition}
-            {weather.impact === "ok"
+            {weather.impact !== "high"
               ? ` — ${action} 특이사항 없어요`
               : ` 예보 — 수확·${action} 지연 가능성이 있어요`}
           </p>
