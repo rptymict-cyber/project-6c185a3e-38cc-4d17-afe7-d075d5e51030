@@ -1,4 +1,6 @@
-import { ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { Check, ChevronRight } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import type { PredictionGrade, PredictionViewpoint } from "../types";
 
@@ -51,34 +53,61 @@ function GradeCell({
   value: PredictionGrade;
   onChange: (g: PredictionGrade) => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const current = GRADE_OPTIONS.find((o) => o.value === value)?.label ?? "전체";
   return (
-    <div className="w-full rounded-xl border border-[#E9ECEF] bg-white px-2 py-2">
-      <div className="flex items-center gap-1 px-1">
-        <span className="text-meta font-medium text-[#868E96]">등급</span>
-        <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-[10px] font-extrabold text-[#D33]">
-          NEW
-        </span>
-      </div>
-      <div className="mt-1 grid grid-cols-4 gap-0.5 rounded-lg bg-[#F1F3F5] p-0.5">
-        {GRADE_OPTIONS.map((o) => {
-          const active = o.value === value;
-          return (
-            <button
-              key={o.value}
-              type="button"
-              aria-pressed={active}
-              onClick={() => onChange(o.value)}
-              className={cn(
-                "h-7 whitespace-nowrap rounded-md text-[11px] font-semibold",
-                active ? "bg-white text-[#1F5C1F] shadow-sm" : "text-[#868E96]",
-              )}
-            >
-              {o.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex w-full items-center justify-between gap-2 rounded-xl border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
+      >
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1 text-meta font-medium text-[#868E96]">
+            등급
+            <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-[10px] font-extrabold text-[#D33]">
+              NEW
+            </span>
+          </div>
+          <div className="mt-0.5 truncate text-body font-bold text-foreground">{current}</div>
+        </div>
+        <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
+      </button>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="bottom" className="mx-auto max-w-[430px] rounded-t-2xl p-0">
+          <SheetHeader className="border-b border-[#E9ECEF] px-4 py-3.5 text-left">
+            <SheetTitle className="text-body-lg font-bold text-foreground">등급 선택</SheetTitle>
+          </SheetHeader>
+          <div className="px-4 py-3">
+            <ul className="divide-y divide-[#F1F3F5] overflow-hidden rounded-xl border border-[#E9ECEF] bg-white">
+              {GRADE_OPTIONS.map((o) => {
+                const active = o.value === value;
+                return (
+                  <li key={o.value}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onChange(o.value);
+                        setOpen(false);
+                      }}
+                      className={cn(
+                        "flex min-h-12 w-full items-center justify-between px-4 py-3 text-left active:bg-[#F8F9FA]",
+                        active && "bg-[#F0F9F0]",
+                      )}
+                    >
+                      <span className={cn("text-body font-semibold", active ? "text-[#1F5C1F]" : "text-foreground")}>
+                        {o.label}
+                      </span>
+                      {active && <Check className="h-5 w-5 text-[#3A8A3A]" />}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }
 
