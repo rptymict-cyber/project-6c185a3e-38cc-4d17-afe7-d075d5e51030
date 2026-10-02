@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CalendarDays, ChevronRight } from "lucide-react";
+import { basisDateIso } from "@/lib/data-basis";
 import { PREDICTABLE_CROPS } from "@/features/prediction/mockPredictionData";
 import { cn } from "@/lib/utils";
 import { CropIcon } from "@/components/crop-icon";
@@ -24,16 +26,23 @@ function ChangeBadge({ changePct }: { changePct: number }) {
         "inline-flex max-w-full whitespace-nowrap rounded-[6px] px-1.5 py-[2px] text-meta font-extrabold tabular-nums",
         up ? "bg-[#FDECEC] text-[#E03B3B]" : "bg-[#EAF0FE] text-[#2563EB]",
       )}
-      aria-label={`예측 ${up ? "상승" : "하락"} ${Math.abs(changePct).toFixed(1)}퍼센트`}
+      aria-label={`전일 대비 ${up ? "상승" : "하락"} ${Math.abs(changePct).toFixed(1)}퍼센트`}
     >
       <span aria-hidden="true">
-        {up ? "↑" : "↓"} {Math.abs(changePct).toFixed(1)}%
+        전일 대비 {up ? "↑" : "↓"} {Math.abs(changePct).toFixed(1)}%
       </span>
     </span>
   );
 }
 
+function basisLabel(): string {
+  const [, m, d] = basisDateIso().split("-").map(Number);
+  return `${m}월 ${d}일 평균가`;
+}
+
 export function PredictableCropCards() {
+  const [basis, setBasis] = useState("");
+  useEffect(() => setBasis(basisLabel()), []);
   return (
     <section className="mt-5 px-4">
       {/* Section header */}
@@ -46,7 +55,11 @@ export function PredictableCropCards() {
             </span>
           </div>
           <p className="mt-0.5 text-body text-[#6B7280]">
-            5개 품목의 예상 시세와 유리한 시점을 확인해보세요
+            5개 품목의 최근 평균가와 AI 전망을 확인해보세요
+          </p>
+          <p className="mt-1 flex min-h-[18px] items-center gap-1 text-caption font-medium text-[#6B7280]">
+            <CalendarDays className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+            {basis}
           </p>
         </div>
         <Link
@@ -77,8 +90,14 @@ export function PredictableCropCards() {
               <div className="w-full truncate text-caption font-bold leading-tight text-[#111827]">
                 {crop.name}
               </div>
-              <div className="w-full truncate text-meta font-semibold tabular-nums leading-tight text-[#6B7280]">
-                {h.price.toLocaleString()}원/{h.unitLabel}
+              <div className="w-full">
+                <div className="truncate text-body font-extrabold tabular-nums leading-tight text-primary">
+                  {h.price.toLocaleString()}
+                  <span className="text-meta font-bold">원</span>
+                </div>
+                <div className="truncate text-meta font-medium leading-tight text-[#6B7280]">
+                  / {h.unitLabel}
+                </div>
               </div>
               <ChangeBadge changePct={h.changePct} />
             </Link>
