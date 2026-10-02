@@ -461,10 +461,10 @@ function PredictionChartBase({
             onClick={t.set}
             className={cn(
               "inline-flex min-h-9 min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border px-1 text-meta font-bold tracking-tight",
-              t.on ? "bg-white" : "border-[#E9ECEF] bg-[#F8F9FA] text-[#868E96]",
+              t.on ? "bg-white" : "border-[#E9ECEF] bg-[#F8F9FA]",
               !t.set && "cursor-default",
             )}
-            style={t.on ? { borderColor: t.color, color: t.color } : undefined}
+            style={t.on ? { borderColor: t.color, color: t.color } : { color: "#868E96" }}
           >
             <span
               className="inline-block h-2 w-2 rounded-full"
