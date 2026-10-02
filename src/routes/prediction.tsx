@@ -363,7 +363,7 @@ function PredictionPage() {
             cropName={prediction.cropName}
             compareIso={compareDateIso}
             compareLabel={compareDateLabel}
-            comparePrice={comparePoint?.predictedPrice}
+            comparePrice={comparePoint?.predictedPrice ?? (compareDateIso === compareRangeMin ? comparePrediction?.currentPrice : undefined)}
             isRecommendedSelection={
               !!comparePoint?.isRecommendedDate &&
               effectiveCompareMarketId === marketId
