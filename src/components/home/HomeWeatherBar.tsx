@@ -47,8 +47,7 @@ export function HomeWeatherBar() {
     >
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-1">
         {/* 위치 */}
-        <div className="flex items-center gap-1 text-white/95">
-          <MapPin className="h-3.5 w-3.5 shrink-0" />
+        <div className="flex items-center">
           <span
             role="button"
             tabIndex={0}
@@ -63,9 +62,10 @@ export function HomeWeatherBar() {
                 setRegionOpen(true);
               }
             }}
-            className="relative flex min-h-11 shrink-0 items-center gap-0.5 whitespace-nowrap text-white after:absolute after:-inset-2 after:content-['']"
+            className="relative flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/30 bg-white/[0.14] pl-3 pr-2.5 text-white transition-colors duration-150 active:bg-white/[0.24] after:absolute after:-inset-1 after:content-['']"
             style={{ fontSize: 16, fontWeight: 600, lineHeight: "22px" }}
           >
+            <MapPin className="h-4 w-4 shrink-0" />
             {w.region}
             <ChevronDown className="h-4 w-4" />
           </span>
