@@ -34,7 +34,7 @@ export function HomeWeatherBar() {
       type="button"
       onClick={() => navigate({ to: "/weather" })}
       aria-label={`${w.region} 날씨 상세 보기`}
-      className="group relative flex
+      className="group relative flex w-full items-stretch overflow-hidden rounded-[20px] text-left text-white shadow-[0_6px_16px_rgba(2,82,153,0.16)] transition-transform duration-150 ease-out active:scale-[0.99]"
       style={{
         background:
           "linear-gradient(110deg, #0879ca 0%, #0968b6 52%, #07569d 100%)",
