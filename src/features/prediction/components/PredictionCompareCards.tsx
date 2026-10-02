@@ -1,6 +1,6 @@
-import { Calendar } from "lucide-react";
+import { useState } from "react";
+import { Calendar, ChevronDown, Store } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FullSelectCard } from "@/components/common/ConditionSelectCard";
 import { toKg, unitKgOf, type AmountUnit } from "@/lib/units";
 import { getWeatherForDate } from "@/lib/mock/weather";
 import type { PredictionViewpoint } from "../types";
@@ -22,6 +22,12 @@ interface Props {
   /** 선택 날짜가 AI 추천일과 동일한지 */
   isRecommendedSelection: boolean;
   onPickDate: () => void;
+  /** 오늘 날짜 짧은 표기 (예: "9/21") */
+  todayShort?: string;
+  compareMarketName: string;
+  /** 비교 시장 지역명 (날씨 안내용) */
+  compareRegion: string;
+  onPickMarket: () => void;
 }
 
 export function PredictionCompareCards({
@@ -37,7 +43,12 @@ export function PredictionCompareCards({
   comparePrice,
   isRecommendedSelection,
   onPickDate,
+  todayShort,
+  compareMarketName,
+  compareRegion,
+  onPickMarket,
 }: Props) {
+  const [mode, setMode] = useState<"date" | "market">("date");
   const isFarmer = viewpoint === "farmer";
   const title = isFarmer ? "출하 시점 비교" : "매입 시점 비교";
   const action = isFarmer ? "출하" : "매입";
@@ -64,26 +75,53 @@ export function PredictionCompareCards({
     : "linear-gradient(135deg,#E03131 0%,#B02525 100%)";
 
   const weather = compareIso ? getWeatherForDate(compareIso) : undefined;
-  const weatherNote =
-    weather?.impact === "high"
-      ? `${action} 작업에 주의가 필요합니다.`
-      : weather?.impact === "warn"
-        ? `${action} 작업 일정에 참고하세요.`
-        : undefined;
-  const precip = weather?.cause.steps[0]?.sm;
+  const regionShort =
+    compareRegion.replace(/(특별시|광역시|특별자치시|도)$/, "") || compareMarketName;
 
   return (
     <section>
       <h2 className="mb-2 text-body font-bold text-foreground">{title}</h2>
 
-      {/* 사용자가 직접 선택하는 비교 날짜 */}
-      <FullSelectCard
-        icon={<Calendar className="h-4 w-4" />}
-        label="비교 날짜"
-        value={compareLabel}
-        trigger="sheet"
-        onClick={onPickDate}
-      />
+      <div className="flex gap-1 rounded-xl bg-[#F1F3F5] p-1" role="tablist">
+        {(
+          [
+            ["date", "날짜 비교"],
+            ["market", "시장 비교"],
+          ] as const
+        ).map(([k, l]) => (
+          <button
+            key={k}
+            type="button"
+            role="tab"
+            aria-selected={mode === k}
+            onClick={() => setMode(k)}
+            className={cn(
+              "min-h-11 flex-1 rounded-lg text-caption font-bold",
+              mode === k ? "bg-white text-foreground shadow-sm" : "text-[#868E96]",
+            )}
+          >
+            {l}
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-meta text-[#6C757D]">
+        날짜와 시장을 선택해 오늘과 비교해보세요
+      </p>
+
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        <PickerButton
+          icon={<Calendar className="h-3.5 w-3.5" />}
+          label="비교 날짜"
+          value={compareLabel}
+          onClick={onPickDate}
+        />
+        <PickerButton
+          icon={<Store className="h-3.5 w-3.5" />}
+          label="비교 시장"
+          value={compareMarketName}
+          onClick={onPickMarket}
+        />
+      </div>
 
       {/* 금액 차이 배너 — 총 예상 판매금액 차이 (비용 미반영) */}
       {gain !== undefined ? (
@@ -93,10 +131,10 @@ export function PredictionCompareCards({
         >
           <div className="min-w-0">
             <div className="text-meta font-semibold opacity-90">
-              {compareLabel} {action} 시
+              오늘 {action} 대비
             </div>
             <div className="mt-0.5 text-caption font-bold opacity-95">
-              오늘 {action} 대비 {totalLabel} 차이
+              {compareLabel} {action} 시 예상 금액 차이
             </div>
             <div className="mt-0.5 text-meta opacity-90">
               {qtyLabel} {qtyText} 기준
@@ -127,7 +165,7 @@ export function PredictionCompareCards({
         {/* 오늘 출하 */}
         <div className="rounded-2xl border border-[#E9ECEF] bg-white p-3">
           <div className="text-meta font-semibold text-[#868E96]">
-            오늘 {action}
+            오늘{todayShort ? `(${todayShort})` : ""} {action}
           </div>
           <div className="mt-1.5 flex items-baseline gap-1">
             <span className="text-title font-black tabular-nums text-foreground">
@@ -187,32 +225,56 @@ export function PredictionCompareCards({
         </div>
       </div>
 
-      {/* 선택 날짜 날씨 요약 (기존 안내 카드 스타일) */}
-      <div className="mt-2 rounded-xl border border-[#E9ECEF] bg-white p-3">
-        {weather ? (
-          <div className="flex items-start gap-2">
-            <span className="text-heading leading-none">{weather.icon}</span>
-            <div className="min-w-0 flex-1">
-              <div className="text-body font-bold text-foreground">
-                {compareLabel} 예상 날씨
-              </div>
-              <p className="mt-1 text-meta leading-snug text-[#495057]">
-                {weather.condition} · {weather.temp}°
-                {precip ? ` · ${precip}` : ""}
-              </p>
-              {weatherNote ? (
-                <p className="mt-1 text-meta font-semibold leading-snug text-[#E03B3B]">
-                  {weatherNote}
-                </p>
-              ) : null}
-            </div>
-          </div>
-        ) : (
-          <p className="text-meta text-[#6C757D]">
-            선택한 날짜의 날씨 정보가 없습니다.
+      {/* 선택 날짜 · 비교 시장 지역 날씨 안내 (예측 근거의 날씨 영향과 별개) */}
+      {weather ? (
+        <div className="mt-2 flex items-center gap-2 rounded-xl border border-[#E9ECEF] bg-white px-3 py-2.5">
+          <span
+            className={cn(
+              "shrink-0 rounded-full px-2 py-0.5 text-meta font-bold",
+              weather.impact !== "high"
+                ? "bg-[#E7F1FF] text-[#1971C2]"
+                : "bg-[#FFF4E6] text-[#E8590C]",
+            )}
+          >
+            {weather.impact !== "high" ? "이상없음" : "주의"}
+          </span>
+          <p className="min-w-0 flex-1 text-meta leading-snug text-[#495057]">
+            {regionShort} 지역 {weather.condition}
+            {weather.impact !== "high"
+              ? ` — ${action} 특이사항 없어요`
+              : ` 예보 — 수확·${action} 지연 가능성이 있어요`}
           </p>
-        )}
-      </div>
+        </div>
+      ) : null}
     </section>
+  );
+}
+
+function PickerButton({
+  icon,
+  label,
+  value,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex min-h-16 flex-col items-start gap-1 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
+    >
+      <span className="flex items-center gap-1 text-meta font-semibold text-[#868E96]">
+        {icon}
+        {label}
+      </span>
+      <span className="flex w-full items-center justify-between gap-1 text-body font-bold text-foreground">
+        <span className="truncate">{value}</span>
+        <ChevronDown className="h-4 w-4 shrink-0 text-[#868E96]" />
+      </span>
+    </button>
   );
 }
