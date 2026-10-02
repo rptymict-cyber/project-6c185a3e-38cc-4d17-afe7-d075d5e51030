@@ -9,95 +9,40 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WeatherRouteImport } from './routes/weather'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as PredictionRouteImport } from './routes/prediction'
-import { Route as NotificationsRouteImport } from './routes/notifications'
-import { Route as NewsRouteImport } from './routes/news'
-import { Route as MarketCompareRouteImport } from './routes/market-compare'
-import { Route as MarketRouteImport } from './routes/market'
-import { Route as LiveRouteImport } from './routes/live'
-import { Route as GradesRouteImport } from './routes/grades'
-import { Route as DataGuideRouteImport } from './routes/data-guide'
-import { Route as CropSelectRouteImport } from './routes/crop-select'
-import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WatchlistIndexRouteImport } from './routes/watchlist.index'
-import { Route as StatisticsIndexRouteImport } from './routes/statistics.index'
-import { Route as NotificationsIndexRouteImport } from './routes/notifications.index'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as CropSelectRouteImport } from './routes/crop-select'
+import { Route as DataGuideRouteImport } from './routes/data-guide'
+import { Route as GradesRouteImport } from './routes/grades'
+import { Route as LiveRouteImport } from './routes/live'
+import { Route as MarketRouteImport } from './routes/market'
+import { Route as MarketCompareRouteImport } from './routes/market-compare'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as PredictionRouteImport } from './routes/prediction'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as WeatherRouteImport } from './routes/weather'
 import { Route as MarketIndexRouteImport } from './routes/market.index'
-import { Route as WatchlistAddRouteImport } from './routes/watchlist.add'
-import { Route as StatisticsVarietyRouteImport } from './routes/statistics.$variety'
-import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
 import { Route as NewsIdRouteImport } from './routes/news.$id'
-import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
-import { Route as MarketWholesaleIndexRouteImport } from './routes/market.wholesale.index'
-import { Route as MarketItemIndexRouteImport } from './routes/market.item.index'
-import { Route as NotificationsSettingsNewRouteImport } from './routes/notifications.settings.new'
-import { Route as NotificationsSettingsRuleIdRouteImport } from './routes/notifications.settings.$ruleId'
-import { Route as MarketWholesaleMarketRouteImport } from './routes/market.wholesale.$market'
-import { Route as MarketItemItemRouteImport } from './routes/market.item.$item'
+import { Route as NotificationsIndexRouteImport } from './routes/notifications.index'
+import { Route as NotificationsSettingsRouteImport } from './routes/notifications.settings'
+import { Route as StatisticsIndexRouteImport } from './routes/statistics.index'
+import { Route as StatisticsVarietyRouteImport } from './routes/statistics.$variety'
+import { Route as WatchlistIndexRouteImport } from './routes/watchlist.index'
+import { Route as WatchlistAddRouteImport } from './routes/watchlist.add'
 import { Route as MarketAuctionIdRouteImport } from './routes/market.auction.$id'
+import { Route as MarketItemIndexRouteImport } from './routes/market.item.index'
+import { Route as MarketItemItemRouteImport } from './routes/market.item.$item'
+import { Route as MarketWholesaleIndexRouteImport } from './routes/market.wholesale.index'
+import { Route as MarketWholesaleMarketRouteImport } from './routes/market.wholesale.$market'
+import { Route as NotificationsSettingsIndexRouteImport } from './routes/notifications.settings.index'
+import { Route as NotificationsSettingsRuleIdRouteImport } from './routes/notifications.settings.$ruleId'
+import { Route as NotificationsSettingsNewRouteImport } from './routes/notifications.settings.new'
 
-const WeatherRoute = WeatherRouteImport.update({
-  id: '/weather',
-  path: '/weather',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PredictionRoute = PredictionRouteImport.update({
-  id: '/prediction',
-  path: '/prediction',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NotificationsRoute = NotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsRoute = NewsRouteImport.update({
-  id: '/news',
-  path: '/news',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MarketCompareRoute = MarketCompareRouteImport.update({
-  id: '/market-compare',
-  path: '/market-compare',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MarketRoute = MarketRouteImport.update({
-  id: '/market',
-  path: '/market',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LiveRoute = LiveRouteImport.update({
-  id: '/live',
-  path: '/live',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GradesRoute = GradesRouteImport.update({
-  id: '/grades',
-  path: '/grades',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DataGuideRoute = DataGuideRouteImport.update({
-  id: '/data-guide',
-  path: '/data-guide',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CropSelectRoute = CropSelectRouteImport.update({
-  id: '/crop-select',
-  path: '/crop-select',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareRoute = CompareRouteImport.update({
@@ -105,34 +50,89 @@ const CompareRoute = CompareRouteImport.update({
   path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CropSelectRoute = CropSelectRouteImport.update({
+  id: '/crop-select',
+  path: '/crop-select',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WatchlistIndexRoute = WatchlistIndexRouteImport.update({
-  id: '/watchlist/',
-  path: '/watchlist/',
+const DataGuideRoute = DataGuideRouteImport.update({
+  id: '/data-guide',
+  path: '/data-guide',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StatisticsIndexRoute = StatisticsIndexRouteImport.update({
-  id: '/statistics/',
-  path: '/statistics/',
+const GradesRoute = GradesRouteImport.update({
+  id: '/grades',
+  path: '/grades',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NotificationsIndexRoute = NotificationsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => NotificationsRoute,
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketCompareRoute = MarketCompareRouteImport.update({
+  id: '/market-compare',
+  path: '/market-compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PredictionRoute = PredictionRouteImport.update({
+  id: '/prediction',
+  path: '/prediction',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WeatherRoute = WeatherRouteImport.update({
+  id: '/weather',
+  path: '/weather',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MarketIndexRoute = MarketIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MarketRoute,
 } as any)
-const WatchlistAddRoute = WatchlistAddRouteImport.update({
-  id: '/watchlist/add',
-  path: '/watchlist/add',
+const NewsIdRoute = NewsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NewsRoute,
+} as any)
+const NotificationsIndexRoute = NotificationsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NotificationsRoute,
+} as any)
+const NotificationsSettingsRoute = NotificationsSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => NotificationsRoute,
+} as any)
+const StatisticsIndexRoute = StatisticsIndexRouteImport.update({
+  id: '/statistics/',
+  path: '/statistics/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StatisticsVarietyRoute = StatisticsVarietyRouteImport.update({
@@ -140,25 +140,19 @@ const StatisticsVarietyRoute = StatisticsVarietyRouteImport.update({
   path: '/statistics/$variety',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NotificationsSettingsRoute = NotificationsSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => NotificationsRoute,
+const WatchlistIndexRoute = WatchlistIndexRouteImport.update({
+  id: '/watchlist/',
+  path: '/watchlist/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const NewsIdRoute = NewsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => NewsRoute,
+const WatchlistAddRoute = WatchlistAddRouteImport.update({
+  id: '/watchlist/add',
+  path: '/watchlist/add',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const NotificationsSettingsIndexRoute =
-  NotificationsSettingsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => NotificationsSettingsRoute,
-  } as any)
-const MarketWholesaleIndexRoute = MarketWholesaleIndexRouteImport.update({
-  id: '/wholesale/',
-  path: '/wholesale/',
+const MarketAuctionIdRoute = MarketAuctionIdRouteImport.update({
+  id: '/auction/$id',
+  path: '/auction/$id',
   getParentRoute: () => MarketRoute,
 } as any)
 const MarketItemIndexRoute = MarketItemIndexRouteImport.update({
@@ -166,10 +160,25 @@ const MarketItemIndexRoute = MarketItemIndexRouteImport.update({
   path: '/item/',
   getParentRoute: () => MarketRoute,
 } as any)
-const NotificationsSettingsNewRoute =
-  NotificationsSettingsNewRouteImport.update({
-    id: '/new',
-    path: '/new',
+const MarketItemItemRoute = MarketItemItemRouteImport.update({
+  id: '/item/$item',
+  path: '/item/$item',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketWholesaleIndexRoute = MarketWholesaleIndexRouteImport.update({
+  id: '/wholesale/',
+  path: '/wholesale/',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketWholesaleMarketRoute = MarketWholesaleMarketRouteImport.update({
+  id: '/wholesale/$market',
+  path: '/wholesale/$market',
+  getParentRoute: () => MarketRoute,
+} as any)
+const NotificationsSettingsIndexRoute =
+  NotificationsSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
     getParentRoute: () => NotificationsSettingsRoute,
   } as any)
 const NotificationsSettingsRuleIdRoute =
@@ -178,21 +187,12 @@ const NotificationsSettingsRuleIdRoute =
     path: '/$ruleId',
     getParentRoute: () => NotificationsSettingsRoute,
   } as any)
-const MarketWholesaleMarketRoute = MarketWholesaleMarketRouteImport.update({
-  id: '/wholesale/$market',
-  path: '/wholesale/$market',
-  getParentRoute: () => MarketRoute,
-} as any)
-const MarketItemItemRoute = MarketItemItemRouteImport.update({
-  id: '/item/$item',
-  path: '/item/$item',
-  getParentRoute: () => MarketRoute,
-} as any)
-const MarketAuctionIdRoute = MarketAuctionIdRouteImport.update({
-  id: '/auction/$id',
-  path: '/auction/$id',
-  getParentRoute: () => MarketRoute,
-} as any)
+const NotificationsSettingsNewRoute =
+  NotificationsSettingsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => NotificationsSettingsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -407,88 +407,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/weather': {
-      id: '/weather'
-      path: '/weather'
-      fullPath: '/weather'
-      preLoaderRoute: typeof WeatherRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/prediction': {
-      id: '/prediction'
-      path: '/prediction'
-      fullPath: '/prediction'
-      preLoaderRoute: typeof PredictionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/notifications': {
-      id: '/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof NotificationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/market-compare': {
-      id: '/market-compare'
-      path: '/market-compare'
-      fullPath: '/market-compare'
-      preLoaderRoute: typeof MarketCompareRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/market': {
-      id: '/market'
-      path: '/market'
-      fullPath: '/market'
-      preLoaderRoute: typeof MarketRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/live': {
-      id: '/live'
-      path: '/live'
-      fullPath: '/live'
-      preLoaderRoute: typeof LiveRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/grades': {
-      id: '/grades'
-      path: '/grades'
-      fullPath: '/grades'
-      preLoaderRoute: typeof GradesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/data-guide': {
-      id: '/data-guide'
-      path: '/data-guide'
-      fullPath: '/data-guide'
-      preLoaderRoute: typeof DataGuideRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/crop-select': {
-      id: '/crop-select'
-      path: '/crop-select'
-      fullPath: '/crop-select'
-      preLoaderRoute: typeof CropSelectRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare': {
@@ -498,33 +421,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/crop-select': {
+      id: '/crop-select'
+      path: '/crop-select'
+      fullPath: '/crop-select'
+      preLoaderRoute: typeof CropSelectRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/watchlist/': {
-      id: '/watchlist/'
-      path: '/watchlist'
-      fullPath: '/watchlist/'
-      preLoaderRoute: typeof WatchlistIndexRouteImport
+    '/data-guide': {
+      id: '/data-guide'
+      path: '/data-guide'
+      fullPath: '/data-guide'
+      preLoaderRoute: typeof DataGuideRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/statistics/': {
-      id: '/statistics/'
-      path: '/statistics'
-      fullPath: '/statistics/'
-      preLoaderRoute: typeof StatisticsIndexRouteImport
+    '/grades': {
+      id: '/grades'
+      path: '/grades'
+      fullPath: '/grades'
+      preLoaderRoute: typeof GradesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/notifications/': {
-      id: '/notifications/'
-      path: '/'
-      fullPath: '/notifications/'
-      preLoaderRoute: typeof NotificationsIndexRouteImport
-      parentRoute: typeof NotificationsRoute
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market-compare': {
+      id: '/market-compare'
+      path: '/market-compare'
+      fullPath: '/market-compare'
+      preLoaderRoute: typeof MarketCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prediction': {
+      id: '/prediction'
+      path: '/prediction'
+      fullPath: '/prediction'
+      preLoaderRoute: typeof PredictionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/weather': {
+      id: '/weather'
+      path: '/weather'
+      fullPath: '/weather'
+      preLoaderRoute: typeof WeatherRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/market/': {
       id: '/market/'
@@ -533,11 +512,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketIndexRouteImport
       parentRoute: typeof MarketRoute
     }
-    '/watchlist/add': {
-      id: '/watchlist/add'
-      path: '/watchlist/add'
-      fullPath: '/watchlist/add'
-      preLoaderRoute: typeof WatchlistAddRouteImport
+    '/news/$id': {
+      id: '/news/$id'
+      path: '/$id'
+      fullPath: '/news/$id'
+      preLoaderRoute: typeof NewsIdRouteImport
+      parentRoute: typeof NewsRoute
+    }
+    '/notifications/': {
+      id: '/notifications/'
+      path: '/'
+      fullPath: '/notifications/'
+      preLoaderRoute: typeof NotificationsIndexRouteImport
+      parentRoute: typeof NotificationsRoute
+    }
+    '/notifications/settings': {
+      id: '/notifications/settings'
+      path: '/settings'
+      fullPath: '/notifications/settings'
+      preLoaderRoute: typeof NotificationsSettingsRouteImport
+      parentRoute: typeof NotificationsRoute
+    }
+    '/statistics/': {
+      id: '/statistics/'
+      path: '/statistics'
+      fullPath: '/statistics/'
+      preLoaderRoute: typeof StatisticsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/statistics/$variety': {
@@ -547,32 +547,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatisticsVarietyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/notifications/settings': {
-      id: '/notifications/settings'
-      path: '/settings'
-      fullPath: '/notifications/settings'
-      preLoaderRoute: typeof NotificationsSettingsRouteImport
-      parentRoute: typeof NotificationsRoute
+    '/watchlist/': {
+      id: '/watchlist/'
+      path: '/watchlist'
+      fullPath: '/watchlist/'
+      preLoaderRoute: typeof WatchlistIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/news/$id': {
-      id: '/news/$id'
-      path: '/$id'
-      fullPath: '/news/$id'
-      preLoaderRoute: typeof NewsIdRouteImport
-      parentRoute: typeof NewsRoute
+    '/watchlist/add': {
+      id: '/watchlist/add'
+      path: '/watchlist/add'
+      fullPath: '/watchlist/add'
+      preLoaderRoute: typeof WatchlistAddRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/notifications/settings/': {
-      id: '/notifications/settings/'
-      path: '/'
-      fullPath: '/notifications/settings/'
-      preLoaderRoute: typeof NotificationsSettingsIndexRouteImport
-      parentRoute: typeof NotificationsSettingsRoute
-    }
-    '/market/wholesale/': {
-      id: '/market/wholesale/'
-      path: '/wholesale'
-      fullPath: '/market/wholesale/'
-      preLoaderRoute: typeof MarketWholesaleIndexRouteImport
+    '/market/auction/$id': {
+      id: '/market/auction/$id'
+      path: '/auction/$id'
+      fullPath: '/market/auction/$id'
+      preLoaderRoute: typeof MarketAuctionIdRouteImport
       parentRoute: typeof MarketRoute
     }
     '/market/item/': {
@@ -582,11 +575,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketItemIndexRouteImport
       parentRoute: typeof MarketRoute
     }
-    '/notifications/settings/new': {
-      id: '/notifications/settings/new'
-      path: '/new'
-      fullPath: '/notifications/settings/new'
-      preLoaderRoute: typeof NotificationsSettingsNewRouteImport
+    '/market/item/$item': {
+      id: '/market/item/$item'
+      path: '/item/$item'
+      fullPath: '/market/item/$item'
+      preLoaderRoute: typeof MarketItemItemRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/wholesale/': {
+      id: '/market/wholesale/'
+      path: '/wholesale'
+      fullPath: '/market/wholesale/'
+      preLoaderRoute: typeof MarketWholesaleIndexRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/wholesale/$market': {
+      id: '/market/wholesale/$market'
+      path: '/wholesale/$market'
+      fullPath: '/market/wholesale/$market'
+      preLoaderRoute: typeof MarketWholesaleMarketRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/notifications/settings/': {
+      id: '/notifications/settings/'
+      path: '/'
+      fullPath: '/notifications/settings/'
+      preLoaderRoute: typeof NotificationsSettingsIndexRouteImport
       parentRoute: typeof NotificationsSettingsRoute
     }
     '/notifications/settings/$ruleId': {
@@ -596,26 +610,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsSettingsRuleIdRouteImport
       parentRoute: typeof NotificationsSettingsRoute
     }
-    '/market/wholesale/$market': {
-      id: '/market/wholesale/$market'
-      path: '/wholesale/$market'
-      fullPath: '/market/wholesale/$market'
-      preLoaderRoute: typeof MarketWholesaleMarketRouteImport
-      parentRoute: typeof MarketRoute
-    }
-    '/market/item/$item': {
-      id: '/market/item/$item'
-      path: '/item/$item'
-      fullPath: '/market/item/$item'
-      preLoaderRoute: typeof MarketItemItemRouteImport
-      parentRoute: typeof MarketRoute
-    }
-    '/market/auction/$id': {
-      id: '/market/auction/$id'
-      path: '/auction/$id'
-      fullPath: '/market/auction/$id'
-      preLoaderRoute: typeof MarketAuctionIdRouteImport
-      parentRoute: typeof MarketRoute
+    '/notifications/settings/new': {
+      id: '/notifications/settings/new'
+      path: '/new'
+      fullPath: '/notifications/settings/new'
+      preLoaderRoute: typeof NotificationsSettingsNewRouteImport
+      parentRoute: typeof NotificationsSettingsRoute
     }
   }
 }
