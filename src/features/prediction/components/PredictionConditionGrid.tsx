@@ -63,12 +63,7 @@ function GradeCell({
         className="flex w-full items-center justify-between gap-2 rounded-xl border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
       >
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1 text-meta font-medium text-[#868E96]">
-            등급
-            <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-[10px] font-extrabold text-[#D33]">
-              NEW
-            </span>
-          </div>
+          <div className="text-meta font-medium text-[#868E96]">등급</div>
           <div className="mt-0.5 truncate text-body font-bold text-foreground">{current}</div>
         </div>
         <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
