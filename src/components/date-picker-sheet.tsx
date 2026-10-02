@@ -30,6 +30,15 @@ export interface DatePickerSheetProps {
   showToday?: boolean;
   /** 날짜를 누르면 완료 버튼 없이 즉시 반영하고 닫기. 기본 false */
   confirmOnSelect?: boolean;
+  /**
+   * 기준일·비교일 2단계 선택 모드. 지정 시 탭 순환(기준→비교→기준...)으로
+   * 두 날짜를 고르고 "확인"으로 반영한다. 확인 시 기준일이 늦으면 자동 교환.
+   */
+  pair?: {
+    baseIso: string;
+    compareIso: string;
+    onConfirm: (baseIso: string, compareIso: string) => void;
+  };
 }
 
 const WEEK_KO = ["일", "월", "화", "수", "목", "금", "토"];
@@ -44,6 +53,12 @@ function toISO(date: Date): string {
 function fromISO(iso: string): Date {
   const [y, m, d] = iso.split("-").map(Number);
   return new Date(y, (m ?? 1) - 1, d ?? 1);
+}
+
+function shortMD(iso: string): string {
+  if (!iso) return "-";
+  const dt = fromISO(iso);
+  return `${dt.getMonth() + 1}/${dt.getDate()}`;
 }
 
 function humanLabel(iso: string): string {
@@ -63,16 +78,27 @@ export function DatePickerSheet({
   title = "날짜 선택",
   showToday = true,
   confirmOnSelect = false,
+  pair,
 }: DatePickerSheetProps) {
   const has = hasDataFor ?? (() => true);
   const [draft, setDraft] = useState<string>(selected);
   const [month, setMonth] = useState<Date>(selected ? fromISO(selected) : new Date());
 
+  const [pBase, setPBase] = useState(pair?.baseIso ?? "");
+  const [pCmp, setPCmp] = useState(pair?.compareIso ?? "");
+  const [nextTarget, setNextTarget] = useState<"base" | "compare">("base");
+
   useEffect(() => {
     if (open) {
+      if (pair) {
+        setPBase(pair.baseIso);
+        setPCmp(pair.compareIso);
+        setNextTarget("base");
+      }
       setDraft(selected);
       setMonth(selected ? fromISO(selected) : new Date());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, selected]);
 
   const commit = (iso: string, label: string) => {
@@ -80,6 +106,7 @@ export function DatePickerSheet({
     onOpenChange(false);
   };
 
+  const todayStr = toISO(new Date());
   const draftDate = draft ? fromISO(draft) : undefined;
 
   const goToday = () => {
@@ -116,6 +143,23 @@ export function DatePickerSheet({
           </button>
         </div>
 
+        {pair ? (
+          <div className="mx-5 mt-2 flex items-center gap-4 rounded-xl bg-[#F8F9FA] px-3 py-2.5 text-caption">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#ADB5BD]" />
+              <span className="text-[#868E96]">기준일:</span>
+              <b className="font-bold text-foreground">
+                {pBase === todayStr ? `오늘(${shortMD(pBase)})` : shortMD(pBase)}
+              </b>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#2E9E6B]" />
+              <span className="text-[#868E96]">비교일:</span>
+              <b className="font-bold text-[#1F7A50]">{shortMD(pCmp)}</b>
+            </span>
+          </div>
+        ) : null}
+
         {/* Today shortcut */}
         {showToday ? (
           <div className="flex items-center px-5 pt-3">
@@ -134,9 +178,66 @@ export function DatePickerSheet({
           <Calendar
             mode="single"
             locale={ko}
-            selected={draftDate}
+            selected={pair ? undefined : draftDate}
+            onDayClick={
+              pair
+                ? (d, m) => {
+                    if (m.disabled) return;
+                    const iso = toISO(d);
+                    if (nextTarget === "base") {
+                      setPBase(iso);
+                      setNextTarget("compare");
+                    } else {
+                      setPCmp(iso);
+                      setNextTarget("base");
+                    }
+                  }
+                : undefined
+            }
+            components={
+              pair
+                ? {
+                    DayButton: ({ day, modifiers, className: _c, ...props }) => {
+                      const iso = toISO(day.date);
+                      const isB = iso === pBase;
+                      const isC = iso === pCmp;
+                      const isT = iso === todayStr;
+                      const tag = isB && isC ? "기준·비교" : isB ? "기준" : isC ? "비교" : "";
+                      return (
+                        <button
+                          {...props}
+                          type="button"
+                          className={[
+                            "relative flex aspect-square w-full flex-col items-center justify-center rounded-md text-sm",
+                            modifiers.disabled ? "text-[#CED4DA]" : "text-foreground",
+                            isC ? "bg-[#2E9E6B] font-bold text-white" : "",
+                            isB && !isC ? "border border-[#ADB5BD] bg-white font-bold" : "",
+                          ].join(" ")}
+                        >
+                          {tag ? (
+                            <span
+                              className={[
+                                "absolute -top-1.5 whitespace-nowrap rounded px-0.5 text-[9px] font-bold leading-tight",
+                                isC ? "bg-[#1F7A50] text-white" : "bg-[#495057] text-white",
+                              ].join(" ")}
+                            >
+                              {tag}
+                            </span>
+                          ) : null}
+                          <span>{day.date.getDate()}</span>
+                          {isT ? (
+                            <span className={["text-[9px] leading-none", isC ? "text-white" : "text-primary"].join(" ")}>
+                              오늘
+                            </span>
+                          ) : null}
+                        </button>
+                      );
+                    },
+                  }
+                : undefined
+            }
             onSelect={(d) => {
-              if (!d) return;
+              if (pair || !d) return;
               const iso = toISO(d);
               setDraft(iso);
               if (confirmOnSelect) commit(iso, humanLabel(iso));
@@ -159,14 +260,22 @@ export function DatePickerSheet({
         </div>
 
         {/* Confirm button */}
-        {confirmOnSelect ? <div className="pb-6" /> : (
+        {confirmOnSelect && !pair ? <div className="pb-6" /> : (
         <div className="px-5 pb-6 pt-4">
           <button
             type="button"
-            onClick={() => draft && commit(draft, humanLabel(draft))}
+            onClick={() => {
+              if (pair) {
+                const [b, c] = pBase <= pCmp ? [pBase, pCmp] : [pCmp, pBase];
+                pair.onConfirm(b, c);
+                onOpenChange(false);
+                return;
+              }
+              if (draft) commit(draft, humanLabel(draft));
+            }}
             className="flex h-14 w-full items-center justify-center rounded-[12px] bg-primary text-body font-bold text-primary-foreground active:opacity-90"
           >
-            완료
+            {pair ? "확인" : "완료"}
           </button>
         </div>
         )}
