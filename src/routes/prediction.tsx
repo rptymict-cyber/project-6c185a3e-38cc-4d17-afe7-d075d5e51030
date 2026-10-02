@@ -1,3 +1,4 @@
+import { todayIso } from "@/lib/date";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { applyMarketSelection } from "@/lib/goto-market";
@@ -114,10 +115,11 @@ function PredictionPage() {
   const effectiveCompareMarketId = compareMarketId ?? marketId;
   const comparePrediction = usePrediction(
     selectedCropId,
-    selectedRangeDays,
+    14, // 출하 시점 비교 범위(오늘~+14일)는 차트 예측 기간과 별개
     selectedGrade,
     effectiveCompareMarketId,
   );
+  const [compareIso, setCompareIso] = useState<string | null>(null);
   const cropMeta = getPredictableCrop(selectedCropId);
   const marketName =
     prediction?.marketName ??
@@ -196,9 +198,25 @@ function PredictionPage() {
   const compareMaxIso = futurePoints[futurePoints.length - 1]?.date;
 
   const compareMarket = MARKETS.find((m) => m.id === effectiveCompareMarketId);
+  // 비교 날짜 선택 범위: 오늘 ~ 오늘+14일
+  const compareRangeMin = todayIso();
+  const compareRangeMax = (() => {
+    const [y, m, d] = compareRangeMin.split("-").map(Number);
+    const dt = new Date(y, m - 1, d + 14);
+    return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+  })();
+  const compareDateIso =
+    compareIso ??
+    (selectedPoint?.date && selectedPoint.date <= compareRangeMax
+      ? selectedPoint.date
+      : compareRangeMin);
   const comparePoint = comparePrediction?.predictedPoints.find(
-    (p) => p.date === selectedPoint?.date,
+    (p) => p.date === compareDateIso,
   );
+  const compareDateLabel = (() => {
+    const [, m, d] = compareDateIso.split("-").map(Number);
+    return `${m}월 ${d}일`;
+  })();
   const todayPoint = prediction.predictedPoints.find((p) => p.isToday);
   const todayShort = (() => {
     const iso = todayPoint?.date ?? prediction.currentDate;
@@ -343,11 +361,11 @@ function PredictionPage() {
             quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
             quantityUnit={quantityUnit}
             cropName={prediction.cropName}
-            compareIso={selectedPoint?.date}
-            compareLabel={selectedDate}
+            compareIso={compareDateIso}
+            compareLabel={compareDateLabel}
             comparePrice={comparePoint?.predictedPrice}
             isRecommendedSelection={
-              !!selectedPoint?.isRecommendedDate &&
+              !!comparePoint?.isRecommendedDate &&
               effectiveCompareMarketId === marketId
             }
             onPickDate={() => setCompareDateOpen(true)}
@@ -495,20 +513,15 @@ function PredictionPage() {
         confirmOnSelect
         open={compareDateOpen}
         onOpenChange={setCompareDateOpen}
-        selected={selectedPoint?.date ?? compareMinIso ?? ""}
+        selected={compareDateIso}
         title="비교 날짜 선택"
         showToday={false}
         allowFuture
-        minIso={compareMinIso}
-        maxIso={compareMaxIso}
-        hasDataFor={(iso) => futureIsoSet.has(iso)}
-        onConfirm={(iso) => {
-          const idx = prediction.predictedPoints.findIndex(
-            (p) => p.date === iso,
-          );
-          if (idx >= 0) setSelectedDayIndex(idx);
-        }}
+        minIso={compareRangeMin}
+        maxIso={compareRangeMax}
+        onConfirm={(iso) => setCompareIso(iso)}
       />
+
       <PredictionRangeDetailSheet
         open={rangeDetailOpen}
         onOpenChange={setRangeDetailOpen}
