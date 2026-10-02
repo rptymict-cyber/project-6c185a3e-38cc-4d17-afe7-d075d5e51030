@@ -108,6 +108,16 @@ function PredictionPage() {
     selectedGrade,
     marketId,
   );
+  // 출하 시점 비교 전용 시장 (상단 조건 시장과 별개, 기본값은 상단 시장)
+  const [compareMarketId, setCompareMarketId] = useState<string | null>(null);
+  const [compareMarketOpen, setCompareMarketOpen] = useState(false);
+  const effectiveCompareMarketId = compareMarketId ?? marketId;
+  const comparePrediction = usePrediction(
+    selectedCropId,
+    selectedRangeDays,
+    selectedGrade,
+    effectiveCompareMarketId,
+  );
   const cropMeta = getPredictableCrop(selectedCropId);
   const marketName =
     prediction?.marketName ??
@@ -184,6 +194,17 @@ function PredictionPage() {
   const futureIsoSet = new Set(futurePoints.map((p) => p.date));
   const compareMinIso = futurePoints[0]?.date;
   const compareMaxIso = futurePoints[futurePoints.length - 1]?.date;
+
+  const compareMarket = MARKETS.find((m) => m.id === effectiveCompareMarketId);
+  const comparePoint = comparePrediction?.predictedPoints.find(
+    (p) => p.date === selectedPoint?.date,
+  );
+  const todayPoint = prediction.predictedPoints.find((p) => p.isToday);
+  const todayShort = (() => {
+    const iso = todayPoint?.date ?? prediction.currentDate;
+    const [, m, d] = (iso ?? "").slice(0, 10).split("-").map(Number);
+    return m && d ? `${m}/${d}` : "";
+  })();
 
   const priceDiff = selectedPrice - prediction.currentPrice;
   const isPositiveForUser = isFarmer ? priceDiff > 0 : priceDiff < 0;
@@ -324,9 +345,16 @@ function PredictionPage() {
             cropName={prediction.cropName}
             compareIso={selectedPoint?.date}
             compareLabel={selectedDate}
-            comparePrice={selectedPoint?.predictedPrice}
-            isRecommendedSelection={!!selectedPoint?.isRecommendedDate}
+            comparePrice={comparePoint?.predictedPrice}
+            isRecommendedSelection={
+              !!selectedPoint?.isRecommendedDate &&
+              effectiveCompareMarketId === marketId
+            }
             onPickDate={() => setCompareDateOpen(true)}
+            todayShort={todayShort}
+            compareMarketName={compareMarket?.name ?? marketName}
+            compareRegion={compareMarket?.region ?? ""}
+            onPickMarket={() => setCompareMarketOpen(true)}
           />
         </div>
 
@@ -457,7 +485,14 @@ function PredictionPage() {
         value={selectedViewpoint}
         onChange={setSelectedViewpoint}
       />
+      <MarketPickerSheet
+        open={compareMarketOpen}
+        onOpenChange={setCompareMarketOpen}
+        value={effectiveCompareMarketId}
+        onChange={setCompareMarketId}
+      />
       <DatePickerSheet
+        confirmOnSelect
         open={compareDateOpen}
         onOpenChange={setCompareDateOpen}
         selected={selectedPoint?.date ?? compareMinIso ?? ""}

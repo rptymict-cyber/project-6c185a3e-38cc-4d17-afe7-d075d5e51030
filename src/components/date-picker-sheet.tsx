@@ -28,6 +28,8 @@ export interface DatePickerSheetProps {
   title?: string;
   /** "오늘" 바로가기 표시. 기본 true */
   showToday?: boolean;
+  /** 날짜를 누르면 완료 버튼 없이 즉시 반영하고 닫기. 기본 false */
+  confirmOnSelect?: boolean;
 }
 
 const WEEK_KO = ["일", "월", "화", "수", "목", "금", "토"];
@@ -60,6 +62,7 @@ export function DatePickerSheet({
   maxIso,
   title = "날짜 선택",
   showToday = true,
+  confirmOnSelect = false,
 }: DatePickerSheetProps) {
   const has = hasDataFor ?? (() => true);
   const [draft, setDraft] = useState<string>(selected);
@@ -133,7 +136,10 @@ export function DatePickerSheet({
             locale={ko}
             selected={draftDate}
             onSelect={(d) => {
-              if (d) setDraft(toISO(d));
+              if (!d) return;
+              const iso = toISO(d);
+              setDraft(iso);
+              if (confirmOnSelect) commit(iso, humanLabel(iso));
             }}
             month={month}
             onMonthChange={setMonth}
@@ -153,6 +159,7 @@ export function DatePickerSheet({
         </div>
 
         {/* Confirm button */}
+        {confirmOnSelect ? <div className="pb-6" /> : (
         <div className="px-5 pb-6 pt-4">
           <button
             type="button"
@@ -162,6 +169,7 @@ export function DatePickerSheet({
             완료
           </button>
         </div>
+        )}
       </SheetContent>
     </Sheet>
   );
