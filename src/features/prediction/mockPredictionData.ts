@@ -168,7 +168,7 @@ function buildPoints(
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const pastDays = 7;
+  const pastDays = 30; // 차트 축소 시 최대 40일 구간 조회용
   const points: PredictionPoint[] = [];
 
   const prevDelta = cropPrevDeltaPct(cropId, marketId);
