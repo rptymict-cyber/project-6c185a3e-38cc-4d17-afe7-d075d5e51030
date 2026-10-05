@@ -362,7 +362,14 @@ function PredictionChartBase({
   }, [tip]);
 
   const isDefault =
-    Math.abs(win.start - defaultWin.start) < 0.3 && Math.abs(win.span - defaultWin.span) < 0.3;
+    level === 0 &&
+    Math.abs(win.start - fix(defaultWin).start) < 0.3 &&
+    Math.abs(win.span - defaultWin.span) < 0.3;
+  const resetView = () => {
+    setLevel(0);
+    setWin(fix(defaultWin));
+    setTip(null);
+  };
 
   // ── 경로
   const pathOf = (list: Array<[number, number]>) =>
@@ -398,19 +405,12 @@ function PredictionChartBase({
     ? futVisible.reduce((a, b) => (b.predictedPrice! > a.predictedPrice! ? b : a))
     : undefined;
 
-  // 거래량(배경 장식)
-  const vols = visible
-    .filter((r) => r.actualPrice !== undefined)
-    .map((r) => ({ r, v: r.volume ?? 40 + (hash(r.date) % 60) }));
-  const volMax = Math.max(1, ...vols.map((v) => v.v));
-  const barW = Math.max(2, Math.min(10, (plotW / Math.max(1, win.span)) * 0.5));
-
-  // X축 라벨
+  // X축 라벨: 보이는 구간 균등 분할(시작·끝 포함)
   const xTicks = (() => {
     const n = Math.min(5, visible.length);
     const out = new Set<number>();
     for (let k = 0; k < n; k++) {
-      const idx = Math.round(win.start + (k / Math.max(1, n - 1)) * (win.span - 1));
+      const idx = Math.round(visLo + (k / Math.max(1, n - 1)) * (visHi - visLo));
       if (idx >= 0 && idx < total) out.add(idx);
     }
     if (todayIdx >= visLo && todayIdx <= visHi) {
