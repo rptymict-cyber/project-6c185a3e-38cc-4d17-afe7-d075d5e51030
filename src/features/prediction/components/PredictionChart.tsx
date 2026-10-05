@@ -639,7 +639,7 @@ function PredictionChartBase({
           <g clipPath="url(#pc-clip)">
             {/* 거래량 배경 막대 */}
             {vols.map(({ r, v }) => {
-              const h = (v / volMax) * plotH * 0.25;
+              const h = volH(v);
               return (
                 <rect
                   key={`v-${r.i}`}
@@ -648,14 +648,14 @@ function PredictionChartBase({
                   width={barW}
                   height={h}
                   rx={1.5}
-                  fill="#E9F3EC"
+                  fill={VOL_FILL}
                 />
               );
             })}
 
             {/* 오늘 구분선 */}
             {todayInView ? (
-              <line x1={todayX} x2={todayX} y1={PAD.top - 8} y2={PAD.top + plotH} stroke={GREY} strokeDasharray="3 3" />
+              <line x1={todayX} x2={todayX} y1={PAD.top - 8} y2={PAD.top + plotH} stroke={TODAY_LINE} strokeDasharray="3 3" />
             ) : null}
 
             <path d={actualPath} fill="none" stroke={ACTUAL} strokeWidth={2.2} strokeLinejoin="round" />
@@ -667,26 +667,26 @@ function PredictionChartBase({
               <path d={seriesPath("pessimisticPrice")} fill="none" stroke={DOWN} strokeWidth={1.6} strokeDasharray="4 4" />
             ) : null}
 
-            {/* 전환 시점 */}
-            {showTurn
-              ? visible.map((r) =>
-                  r.turn && r.predictedPrice !== undefined ? (
-                    <g key={`t-${r.i}`}>
-                      <circle cx={xOf(r.i)} cy={yOf(r.predictedPrice)} r={5} fill={TURN} stroke="#fff" strokeWidth={1.6} />
-                      <text
-                        x={xOf(r.i)}
-                        y={yOf(r.predictedPrice) - 10}
-                        textAnchor="middle"
-                        fontSize={10}
-                        fontWeight={800}
-                        fill={TURN}
-                      >
-                        {r.turn === "up" ? "상승" : "하락"} 전환 예상
-                      </text>
-                    </g>
-                  ) : null,
-                )
-              : null}
+            {/* 전환 시점: OFF = 25% 마커만, ON = 불투명 + 텍스트 */}
+            {visible.map((r) =>
+              r.turn && r.predictedPrice !== undefined ? (
+                <g key={`t-${r.i}`} opacity={showTurn ? 1 : 0.25}>
+                  <circle cx={xOf(r.i)} cy={yOf(r.predictedPrice)} r={5} fill={TURN} stroke="#fff" strokeWidth={1.6} />
+                  {showTurn ? (
+                    <text
+                      x={xOf(r.i) + (xOf(r.i) > PAD.left + plotW - 70 ? -9 : 9)}
+                      y={yOf(r.predictedPrice) + 4}
+                      textAnchor={xOf(r.i) > PAD.left + plotW - 70 ? "end" : "start"}
+                      fontSize={10}
+                      fontWeight={800}
+                      fill={TURN}
+                    >
+                      {r.turn === "up" ? "상승" : "하락"} 전환 예상
+                    </text>
+                  ) : null}
+                </g>
+              ) : null,
+            )}
           </g>
 
           {/* 실제/예상 구분 라벨 */}
