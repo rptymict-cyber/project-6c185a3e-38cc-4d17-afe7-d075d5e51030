@@ -10,14 +10,19 @@ import type { PredictionPoint } from "../types";
  * - 차트 내부는 가로 제스처만 처리, 세로 스크롤은 페이지로 전달(touch-action: pan-y)
  */
 
-/** 기본 표시 구간(일) */
-const DEFAULT_SPAN = 15;
-/** 최대 확대 시 최소 표시 일수 */
-const MIN_SPAN = 5;
-/** 최대 축소 시 표시 일수 */
-const MAX_SPAN = 40;
+// TODO(미확정): 과거 데이터 보유 일수는 틸다 확인 후 확정
+const MAX_PAST_DAYS = 30;
+// TODO(미확정): 확대 단계 과거/미래 일수
+const ZOOM_IN_PAST = 3;
+const ZOOM_IN_FUTURE = 4;
+// TODO(미확정): 거래량 막대 최대 높이 비율(차트 영역 대비)
+const VOL_MAX_RATIO = 0.3;
+// TODO(미확정): 거래량 단위(현재 Mock)
+const VOL_UNIT = "t";
 const TAP_MOVE_PX = 8;
-const TOOLTIP_MS = 2800;
+const TOOLTIP_MS = 2600;
+/** 핀치 한 번에 한 단계 이동 판정 비율 */
+const PINCH_STEP_RATIO = 1.2;
 
 const H = 230;
 const PAD = { top: 26, right: 14, bottom: 26, left: 44 };
@@ -26,8 +31,13 @@ const ACTUAL = "#5E8F6B";
 const PRED = "#2E9E6B";
 const UP = "#E03B3B";
 const DOWN = "#1971C2";
-const TURN = "#F08C00";
+const TURN = "#C9A227";
+const TODAY_LINE = "#94A3B8";
+const VOL_FILL = "rgba(224,59,59,0.20)";
 const GREY = "#ADB5BD";
+
+/** -1 = 확대, 0 = 기본, 1 = 축소 */
+type ZoomLevel = -1 | 0 | 1;
 
 const WEEKDAY = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -74,20 +84,25 @@ interface PredictionChartProps {
   currentPrice?: number;
   quantityBoxes?: number;
   baseUnitLabel?: string;
+  /** 선택된 예측 탭 일수(N). 미래 구간은 N일을 넘지 않는다. */
+  rangeDays?: number;
 }
+
+type TipKind = "actual" | "pred" | "turn" | "vol";
 
 function PredictionChartBase({
   points,
   onSelectIndex,
   currentPrice,
   baseUnitLabel = "10kg",
+  rangeDays,
 }: PredictionChartProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(340);
   const [showUp, setShowUp] = useState(false);
   const [showDown, setShowDown] = useState(false);
   const [showTurn, setShowTurn] = useState(false);
-  const [tip, setTip] = useState<{ idx: number; kind: "actual" | "pred" | "turn" } | null>(null);
+  const [tip, setTip] = useState<{ idx: number; kind: TipKind } | null>(null);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -113,27 +128,50 @@ function PredictionChartBase({
   const total = rows.length;
   const todayIdx = Math.max(0, rows.findIndex((r) => r.isToday));
   const todayPrice = rows[todayIdx]?.actualPrice ?? currentPrice ?? 0;
+  const N = Math.max(1, Math.min(rangeDays ?? total - 1 - todayIdx, total - 1 - todayIdx));
 
-  const maxSpan = Math.min(MAX_SPAN, total);
-  const minSpan = Math.min(MIN_SPAN, total);
-  const defaultWin = useMemo<Win>(() => {
-    const span = Math.min(DEFAULT_SPAN, total);
-    const start = clamp(todayIdx - Math.floor((span - 1) / 2), 0, total - span);
-    return { start, span };
-  }, [total, todayIdx]);
+  // 이동 가능 범위: 과거 MAX_PAST_DAYS, 미래 N (Lock)
+  const minStart = todayIdx - MAX_PAST_DAYS;
+  const maxEnd = todayIdx + N;
 
+  const winForLevel = useCallback(
+    (lv: ZoomLevel): Win => {
+      const past = lv === -1 ? ZOOM_IN_PAST : lv === 1 ? MAX_PAST_DAYS : Math.min(N, MAX_PAST_DAYS);
+      const fut = lv === -1 ? Math.min(ZOOM_IN_FUTURE, N) : N;
+      return { start: todayIdx - past, span: past + fut + 1 };
+    },
+    [N, todayIdx],
+  );
+
+  const [level, setLevel] = useState<ZoomLevel>(0);
+  const defaultWin = useMemo(() => winForLevel(0), [winForLevel]);
   const [win, setWin] = useState<Win>(defaultWin);
   useEffect(() => {
+    setLevel(0);
     setWin(defaultWin);
     setTip(null);
   }, [defaultWin, points]);
 
   const fix = useCallback(
-    (w: Win): Win => {
-      const span = clamp(w.span, minSpan, maxSpan);
-      return { span, start: clamp(w.start, 0, Math.max(0, total - span)) };
+    (w: Win): Win => ({
+      span: w.span,
+      start: clamp(w.start, minStart, Math.max(minStart, maxEnd - (w.span - 1))),
+    }),
+    [minStart, maxEnd],
+  );
+
+  /** 한 단계 확대/축소. 현재 위치의 오늘 기준 오프셋을 최대한 유지 */
+  const stepZoom = useCallback(
+    (dir: 1 | -1) => {
+      setLevel((lv) => {
+        const next = clamp(lv + dir, -1, 1) as ZoomLevel;
+        if (next === lv) return lv;
+        setWin(fix(winForLevel(next)));
+        setTip(null);
+        return next;
+      });
     },
-    [minSpan, maxSpan, total],
+    [fix, winForLevel],
   );
 
   const plotW = Math.max(10, width - PAD.left - PAD.right);
@@ -161,6 +199,15 @@ function PredictionChartBase({
   }, [visible, showUp, showDown]);
   const yOf = (v: number) => PAD.top + (1 - (v - yMin) / (yMax - yMin || 1)) * plotH;
 
+  // 거래량 (과거 구간만, Mock)
+  const volOf = (r: PredictionPoint) => r.volume ?? 40 + (hash(r.date) % 60);
+  const vols = visible
+    .filter((r) => r.actualPrice !== undefined && !r.isToday)
+    .map((r) => ({ r, v: volOf(r) }));
+  const volMax = Math.max(1, ...vols.map((v) => v.v));
+  const barW = Math.max(2, Math.min(10, (plotW / Math.max(1, win.span)) * 0.5));
+  const volH = (v: number) => (v / volMax) * plotH * VOL_MAX_RATIO;
+
   // ── 제스처 (Pointer Events)
   const ptrs = useRef(new Map<number, { x: number; y: number }>());
   const gesture = useRef<{
@@ -169,7 +216,7 @@ function PredictionChartBase({
     startY: number;
     moved: boolean;
     pinchDist?: number;
-    pinchCenter?: number;
+    pinchDone?: boolean;
     t: number;
   } | null>(null);
 
@@ -191,7 +238,7 @@ function PredictionChartBase({
         startWin: win,
         moved: true,
         pinchDist: Math.abs(a.x - b.x) || 1,
-        pinchCenter: localX((a.x + b.x) / 2),
+        pinchDone: false,
       };
     }
   };
@@ -201,14 +248,17 @@ function PredictionChartBase({
     ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     const g = gesture.current;
     const list = [...ptrs.current.values()];
-    const perPx = denom / plotW;
-    if (list.length >= 2 && g.pinchDist && g.pinchCenter !== undefined) {
+    if (list.length >= 2 && g.pinchDist) {
+      if (g.pinchDone) return;
       const [a, b] = list;
-      const dist = Math.abs(a.x - b.x) || 1;
-      const span = clamp(g.startWin.span * (g.pinchDist / dist), minSpan, maxSpan);
-      const anchorIdx = g.startWin.start + (g.pinchCenter - PAD.left) * ((g.startWin.span - 1) / plotW);
-      const ratio = (g.pinchCenter - PAD.left) / plotW;
-      setWin(fix({ span, start: anchorIdx - ratio * (span - 1) }));
+      const ratio = (Math.abs(a.x - b.x) || 1) / g.pinchDist;
+      if (ratio > PINCH_STEP_RATIO) {
+        g.pinchDone = true;
+        stepZoom(-1);
+      } else if (ratio < 1 / PINCH_STEP_RATIO) {
+        g.pinchDone = true;
+        stepZoom(1);
+      }
       return;
     }
     const dx = e.clientX - g.startX;
@@ -221,26 +271,38 @@ function PredictionChartBase({
       return;
     }
     g.moved = true;
-    setWin(fix({ span: g.startWin.span, start: g.startWin.start - dx * perPx }));
+    // 손가락 1:1 추종, 관성 없음
+    setWin(fix({ span: g.startWin.span, start: g.startWin.start - dx * (denom / plotW) }));
   };
 
   const tapAt = (clientX: number, clientY: number) => {
     const x = localX(clientX);
     const r = wrapRef.current?.getBoundingClientRect();
     const y = r ? clientY - r.top : 0;
-    // 전환 시점 점 우선
-    if (showTurn) {
-      const hit = visible.find(
-        (row) =>
-          row.turn &&
-          row.predictedPrice !== undefined &&
-          Math.hypot(xOf(row.i) - x, yOf(row.predictedPrice) - y) < 18,
-      );
-      if (hit) {
-        setTip({ idx: hit.i, kind: "turn" });
-        return;
-      }
+    // 1) 전환 시점 마커
+    const hitTurn = visible.find(
+      (row) =>
+        row.turn &&
+        row.predictedPrice !== undefined &&
+        Math.hypot(xOf(row.i) - x, yOf(row.predictedPrice) - y) < 18,
+    );
+    if (hitTurn) {
+      setTip({ idx: hitTurn.i, kind: "turn" });
+      return;
     }
+    // 2) 거래량 막대 (툴팁만, 기준일 변경 없음)
+    const baseY = PAD.top + plotH;
+    const hitVol = vols.find(
+      ({ r: row, v }) =>
+        Math.abs(xOf(row.i) - x) <= Math.max(barW / 2 + 4, 8) &&
+        y >= baseY - volH(v) - 4 &&
+        y <= baseY + 4,
+    );
+    if (hitVol) {
+      setTip({ idx: hitVol.r.i, kind: "vol" });
+      return;
+    }
+    // 3) 선 위 포인트
     let best = -1;
     let bd = Infinity;
     for (const row of visible) {
@@ -272,17 +334,14 @@ function PredictionChartBase({
     }
   };
 
-  // 휠 = 확대/축소 (PC)
+  // 휠 = 한 단계 확대/축소 (PC), 연속 휠은 쓰로틀
   const wheelRef = useRef<(e: WheelEvent) => void>(() => {});
+  const lastWheel = useRef(0);
   wheelRef.current = (e: WheelEvent) => {
-    const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1);
-    const cx = localX(e.clientX);
-    setWin((w) => {
-      const span = clamp(w.span * Math.exp(dy * 0.002), minSpan, maxSpan);
-      const ratio = clamp((cx - PAD.left) / plotW, 0, 1);
-      const anchor = w.start + ratio * (w.span - 1);
-      return fix({ span, start: anchor - ratio * (span - 1) });
-    });
+    const now = Date.now();
+    if (now - lastWheel.current < 350 || Math.abs(e.deltaY) < 2) return;
+    lastWheel.current = now;
+    stepZoom(e.deltaY < 0 ? -1 : 1);
   };
   useEffect(() => {
     const el = wrapRef.current;
