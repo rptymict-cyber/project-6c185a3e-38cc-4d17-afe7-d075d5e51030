@@ -324,6 +324,7 @@ function PredictionPage() {
               currentPrice={prediction.currentPrice}
               quantityBoxes={quantityBoxes}
               baseUnitLabel={baseUnitLabel}
+              rangeDays={prediction.predictionRangeDays}
             />
           </div>
 
