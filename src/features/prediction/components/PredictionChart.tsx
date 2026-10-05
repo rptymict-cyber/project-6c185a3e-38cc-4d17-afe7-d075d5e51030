@@ -425,44 +425,29 @@ function PredictionChartBase({
   const todayX = xOf(todayIdx);
   const todayInView = todayX >= PAD.left - 1 && todayX <= PAD.left + plotW + 1;
 
-  const firstIso = rows[Math.round(win.start)]?.date;
-  const lastIso = rows[Math.min(total - 1, Math.round(win.start + win.span - 1))]?.date;
+  const firstIso = rows[visLo]?.date;
+  const lastIso = rows[visHi]?.date;
 
-  // ── 툴팁 내용
+  // ── 툴팁 내용 (검정 말풍선, 탭 지점 바로 위, 아래 꼬리)
   const tipNode = (() => {
     if (!tip) return null;
     const r = rows[tip.idx];
     if (!r) return null;
-    const value = tip.kind === "actual" ? r.actualPrice : r.predictedPrice;
-    if (value === undefined) return null;
     const x = xOf(r.i);
-    const y = yOf(value);
+    let y: number;
     let body: React.ReactNode;
-    if (tip.kind === "turn") {
+    if (tip.kind === "vol") {
+      const v = volOf(r);
+      const prevRow = rows[r.i - 1];
+      const prev = prevRow && prevRow.actualPrice !== undefined ? volOf(prevRow) : undefined;
+      const diff = prev !== undefined ? v - prev : undefined;
+      const pct = prev ? (diff! / prev) * 100 : 0;
+      y = PAD.top + plotH - volH(v);
       body = (
         <>
-          <div className="font-bold">{korDate(r.date)}</div>
-          <div className="mt-0.5 font-extrabold text-[#FFC078]">
-            {r.turn === "up" ? "상승" : "하락"} 전환 예상
-          </div>
-          <div className="mt-0.5 text-white/80">
-            이후 가격이 {r.turn === "up" ? "상승" : "하락"} 흐름으로
-            <br />
-            바뀔 가능성이 있어요.
-          </div>
-        </>
-      );
-    } else {
-      const ref =
-        tip.kind === "actual" ? rows[r.i - 1]?.actualPrice : todayPrice;
-      const diff = ref !== undefined ? value - ref : undefined;
-      const pct = ref ? (diff! / ref) * 100 : 0;
-      body = (
-        <>
-          <div className="font-bold">{korDate(r.date)}</div>
+          <div className="font-bold">{korDate(r.date)} · 거래량</div>
           <div className="mt-0.5">
-            <span className="text-body font-extrabold tabular-nums">{value.toLocaleString()}</span>{" "}
-            원/{baseUnitLabel}
+            <span className="text-body font-extrabold tabular-nums">{v.toLocaleString()}</span> {VOL_UNIT}
           </div>
           {diff !== undefined ? (
             <div
@@ -471,33 +456,73 @@ function PredictionChartBase({
                 diff > 0 ? "text-[#FF8787]" : diff < 0 ? "text-[#74C0FC]" : "text-white/80",
               )}
             >
-              {tip.kind === "actual" ? "전일" : "오늘"} 대비 {signed(diff)}원({diff > 0 ? "+" : ""}
+              전일 대비 {signed(diff)} {VOL_UNIT} ({diff > 0 ? "+" : ""}
               {pct.toFixed(1)}%)
             </div>
           ) : null}
         </>
       );
+    } else {
+      const value = tip.kind === "actual" ? r.actualPrice : r.predictedPrice;
+      if (value === undefined) return null;
+      y = yOf(value);
+      if (tip.kind === "turn") {
+        body = (
+          <>
+            <div className="font-bold">{korDate(r.date)}</div>
+            <div className="mt-0.5 font-extrabold" style={{ color: "#F5D565" }}>
+              {r.turn === "up" ? "상승" : "하락"} 전환 예상
+            </div>
+            <div className="mt-0.5 text-white/80">
+              이후 가격이 {r.turn === "up" ? "상승" : "하락"} 흐름으로 바뀔 가능성이 있어요.
+            </div>
+          </>
+        );
+      } else {
+        const ref = tip.kind === "actual" ? rows[r.i - 1]?.actualPrice : todayPrice;
+        const diff = ref !== undefined ? value - ref : undefined;
+        const pct = ref ? (diff! / ref) * 100 : 0;
+        body = (
+          <>
+            <div className="font-bold">{korDate(r.date)}</div>
+            <div className="mt-0.5">
+              <span className="text-body font-extrabold tabular-nums">{value.toLocaleString()}</span>{" "}
+              원/{baseUnitLabel}
+            </div>
+            {diff !== undefined ? (
+              <div
+                className={cn(
+                  "mt-0.5 font-bold tabular-nums",
+                  diff > 0 ? "text-[#FF8787]" : diff < 0 ? "text-[#74C0FC]" : "text-white/80",
+                )}
+              >
+                {tip.kind === "actual" ? "전일" : "오늘"} 대비 {signed(diff)}원 ({diff > 0 ? "+" : ""}
+                {pct.toFixed(1)}%)
+              </div>
+            ) : null}
+          </>
+        );
+      }
     }
-    const bw = 170;
+    const bw = 176;
     const left = clamp(x - bw / 2, 2, width - bw - 2);
-    const above = y > 80;
+    const tailX = clamp(x - left, 10, bw - 10);
     return (
       <>
         <div
-          className="pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#1F2937]"
+          className="pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#111827]"
           style={{ left: x, top: y }}
         />
         <div
           role="tooltip"
-          className="pointer-events-none absolute z-10 rounded-[10px] bg-[#1F2937]/95 px-2.5 py-2 text-meta leading-snug text-white shadow-lg"
-          style={{
-            left,
-            width: bw,
-            top: above ? undefined : y + 12,
-            bottom: above ? H - y + 12 : undefined,
-          }}
+          className="pointer-events-none absolute z-10 rounded-[10px] bg-[#111827] px-2.5 py-2 text-meta leading-snug text-white shadow-lg"
+          style={{ left, width: bw, bottom: H - y + 10 }}
         >
           {body}
+          <span
+            className="absolute top-full h-0 w-0 -translate-x-1/2 border-x-[6px] border-t-[6px] border-x-transparent border-t-[#111827]"
+            style={{ left: tailX }}
+          />
         </div>
       </>
     );
@@ -508,6 +533,14 @@ function PredictionChartBase({
     { key: "up", label: "상승 예상치", on: showUp, color: UP, set: () => setShowUp((v) => !v) },
     { key: "down", label: "하락 예상치", on: showDown, color: DOWN, set: () => setShowDown((v) => !v) },
     { key: "turn", label: "전환 시점", on: showTurn, color: TURN, set: () => setShowTurn((v) => !v) },
+  ];
+
+  const legend: Array<{ label: string; color: string; kind: "solid" | "dash" | "bar"; dim?: boolean }> = [
+    { label: "실제 가격", color: ACTUAL, kind: "solid" },
+    { label: "예상 가격", color: PRED, kind: "dash" },
+    { label: "상승 예상치", color: UP, kind: "dash", dim: !showUp },
+    { label: "하락 예상치", color: DOWN, kind: "dash", dim: !showDown },
+    { label: "거래량(과거)", color: VOL_FILL, kind: "bar" },
   ];
 
   return (
@@ -537,6 +570,27 @@ function PredictionChartBase({
         ))}
       </div>
 
+      {/* 범례 */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pb-2">
+        {legend.map((l) => (
+          <span
+            key={l.label}
+            className="inline-flex items-center gap-1 text-meta font-medium text-[#495057]"
+            style={{ opacity: l.dim ? 0.35 : 1 }}
+          >
+            {l.kind === "bar" ? (
+              <span className="inline-block h-2.5 w-2 rounded-[1px]" style={{ background: l.color }} />
+            ) : (
+              <span
+                className="inline-block w-4"
+                style={{ borderTop: `2px ${l.kind === "dash" ? "dashed" : "solid"} ${l.color}` }}
+              />
+            )}
+            {l.label}
+          </span>
+        ))}
+      </div>
+
       {/* 구간 배지 + 전체 보기 */}
       <div className="flex min-h-8 items-center justify-between">
         <span className="rounded-full bg-[#F0F9F0] px-2 py-0.5 text-meta font-bold text-[#1F5C1F]">
@@ -545,7 +599,7 @@ function PredictionChartBase({
         {!isDefault ? (
           <button
             type="button"
-            onClick={() => setWin(defaultWin)}
+            onClick={resetView}
             className="inline-flex min-h-9 items-center gap-1 rounded-full border border-[#DEE2E6] bg-white px-2.5 text-meta font-bold text-[#495057]"
           >
             <RotateCcw className="h-3.5 w-3.5" />
