@@ -90,23 +90,41 @@ export const DEFAULT_REGION_WEATHER: Weather = {
 
 export type WeatherRegion = { id: string; name: string; fullName: string };
 
-export const WEATHER_REGIONS: WeatherRegion[] = [
+/** 시/도 17개 (지역 선택 기본 목록) */
+export const WEATHER_PROVINCES: WeatherRegion[] = [
   { id: "seoul", name: "서울", fullName: "서울특별시" },
+  { id: "busan", name: "부산", fullName: "부산광역시" },
+  { id: "daegu", name: "대구", fullName: "대구광역시" },
   { id: "incheon", name: "인천", fullName: "인천광역시" },
+  { id: "gwangju", name: "광주", fullName: "광주광역시" },
+  { id: "daejeon", name: "대전", fullName: "대전광역시" },
+  { id: "ulsan", name: "울산", fullName: "울산광역시" },
+  { id: "sejong", name: "세종", fullName: "세종특별자치시" },
+  { id: "gyeonggi", name: "경기", fullName: "경기도" },
+  { id: "gangwon", name: "강원", fullName: "강원특별자치도" },
+  { id: "chungbuk", name: "충북", fullName: "충청북도" },
+  { id: "chungnam", name: "충남", fullName: "충청남도" },
+  { id: "jeonbuk", name: "전북", fullName: "전북특별자치도" },
+  { id: "jeonnam", name: "전남", fullName: "전라남도" },
+  { id: "gyeongbuk", name: "경북", fullName: "경상북도" },
+  { id: "gyeongnam", name: "경남", fullName: "경상남도" },
+  { id: "jejudo", name: "제주", fullName: "제주특별자치도" },
+];
+
+/** 시·군·구 (검색 결과용) */
+export const WEATHER_DISTRICTS: WeatherRegion[] = [
   { id: "suwon", name: "수원시", fullName: "경기 수원시" },
   { id: "chuncheon", name: "춘천시", fullName: "강원 춘천시" },
   { id: "gongju", name: "공주시 우성면", fullName: "충남 공주시 우성면" },
-  { id: "daejeon", name: "대전", fullName: "대전광역시" },
   { id: "cheongju", name: "청주시", fullName: "충북 청주시" },
   { id: "jeonju", name: "전주시", fullName: "전북 전주시" },
   { id: "naju", name: "나주시", fullName: "전남 나주시" },
-  { id: "gwangju", name: "광주", fullName: "광주광역시" },
-  { id: "daegu", name: "대구", fullName: "대구광역시" },
   { id: "andong", name: "안동시", fullName: "경북 안동시" },
-  { id: "busan", name: "부산", fullName: "부산광역시" },
   { id: "changwon", name: "창원시", fullName: "경남 창원시" },
   { id: "jeju", name: "제주시", fullName: "제주특별자치도 제주시" },
 ];
+
+export const WEATHER_REGIONS: WeatherRegion[] = [...WEATHER_PROVINCES, ...WEATHER_DISTRICTS];
 
 export function getRegionById(id: string): WeatherRegion | undefined {
   return WEATHER_REGIONS.find((r) => r.id === id);
