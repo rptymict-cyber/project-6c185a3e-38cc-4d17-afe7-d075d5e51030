@@ -737,9 +737,6 @@ function PredictionChartBase({
               });
             })()}
           </g>
-              ) : null,
-            )}
-          </g>
 
           {/* 실제/예상 구분 라벨 */}
           {todayInView ? (
