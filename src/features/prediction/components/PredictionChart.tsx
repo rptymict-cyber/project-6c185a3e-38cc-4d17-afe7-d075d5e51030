@@ -570,27 +570,6 @@ function PredictionChartBase({
         ))}
       </div>
 
-      {/* 범례 */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pb-2">
-        {legend.map((l) => (
-          <span
-            key={l.label}
-            className="inline-flex items-center gap-1 text-meta font-medium text-[#495057]"
-            style={{ opacity: l.dim ? 0.35 : 1 }}
-          >
-            {l.kind === "bar" ? (
-              <span className="inline-block h-2.5 w-2 rounded-[1px]" style={{ background: l.color }} />
-            ) : (
-              <span
-                className="inline-block w-4"
-                style={{ borderTop: `2px ${l.kind === "dash" ? "dashed" : "solid"} ${l.color}` }}
-              />
-            )}
-            {l.label}
-          </span>
-        ))}
-      </div>
-
       {/* 구간 배지 + 전체 보기 */}
       <div className="flex min-h-8 items-center justify-between">
         <span className="rounded-full bg-[#F0F9F0] px-2 py-0.5 text-meta font-bold text-[#1F5C1F]">
@@ -734,6 +713,27 @@ function PredictionChartBase({
           ))}
         </svg>
         {tipNode}
+      </div>
+
+      {/* 범례 */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-2">
+        {legend.map((l) => (
+          <span
+            key={l.label}
+            className="inline-flex items-center gap-1 text-meta font-medium text-[#495057]"
+            style={{ opacity: l.dim ? 0.35 : 1 }}
+          >
+            {l.kind === "bar" ? (
+              <span className="inline-block h-2.5 w-2 rounded-[1px]" style={{ background: l.color }} />
+            ) : (
+              <span
+                className="inline-block w-4"
+                style={{ borderTop: `2px ${l.kind === "dash" ? "dashed" : "solid"} ${l.color}` }}
+              />
+            )}
+            {l.label}
+          </span>
+        ))}
       </div>
 
       <div className="mt-2 rounded-xl bg-[#F8F9FA] px-3 py-2 text-meta leading-snug text-[#6C757D]">
