@@ -221,9 +221,6 @@ export function DatePickerSheet({
               />
             </div>
             <div className="no-scrollbar mt-3 flex items-center gap-1.5 overflow-x-auto px-5">
-              {nextTarget === "compare" ? (
-                <span className="shrink-0 pr-0.5 text-meta text-[#868E96]">기준일로부터</span>
-              ) : null}
               {QUICK.map((q) => {
                 const iso = addDays(nextTarget === "base" ? todayStr : pBase || todayStr, q.n);
                 const off = isDisabled(fromISO(iso));
@@ -422,7 +419,7 @@ function PairCard({
     <button
       type="button"
       onClick={onClick}
-      className="flex min-h-[76px] min-w-0 flex-1 flex-col items-start rounded-xl border bg-white px-3 py-2 text-left"
+      className="flex min-w-0 flex-1 flex-col items-start gap-1 rounded-xl border bg-white px-3 py-2.5 text-left"
       style={
         active
           ? { borderColor: "#2E9E6B", borderWidth: 2, boxShadow: "0 0 0 3px rgba(46,158,107,0.15)" }
@@ -435,7 +432,7 @@ function PairCard({
           {label}
         </span>
       </span>
-      <span className={["mt-1 text-body font-bold", iso ? "text-foreground" : "text-[#ADB5BD]"].join(" ")}>
+      <span className={["text-body font-bold leading-tight", iso ? "text-foreground" : "text-[#ADB5BD]"].join(" ")}>
         {iso ? humanLabel(iso) : "날짜 선택"}
       </span>
     </button>
