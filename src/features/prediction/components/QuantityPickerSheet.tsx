@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Minus, Plus } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { QUANTITY_MAX, QUANTITY_UNIT_PRESETS, QUANTITY_UNIT_STEP, type QuantityUnit } from "../quantityUnits";
 import { PredictionSheetFrame, SheetPrimaryButton } from "./PredictionSheetFrame";
