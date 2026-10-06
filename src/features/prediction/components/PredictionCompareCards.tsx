@@ -74,13 +74,13 @@ export function PredictionCompareCards({
       <div className="mt-2 grid grid-cols-2 gap-2">
         <PickerButton
           icon={<Calendar className="h-3.5 w-3.5" />}
-          label="비교할 날짜 2개"
+          label="비교 날짜"
           value={datePickerValue}
           onClick={onPickDate}
         />
         <PickerButton
           icon={<Store className="h-3.5 w-3.5" />}
-          label="비교할 도매시장(선택, 최대 2개)"
+          label="비교 도매시장"
           value={marketPickerValue}
           onClick={onPickMarket}
         />
