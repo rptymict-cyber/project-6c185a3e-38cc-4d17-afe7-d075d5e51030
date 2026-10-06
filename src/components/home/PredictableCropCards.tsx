@@ -36,8 +36,13 @@ function ChangeBadge({ changePct }: { changePct: number }) {
 }
 
 function basisLabel(): string {
-  const [, m, d] = basisDateIso().split("-").map(Number);
-  return `${m}월 ${d}일 평균가`;
+  const [y, m, d] = basisDateIso().split("-").map(Number);
+  const dt = new Date(y, m - 1, d);
+  const W = ["일", "월", "화", "수", "목", "금", "토"];
+  const prev = new Date(dt);
+  prev.setDate(prev.getDate() - 1);
+  if (prev.getDay() === 0) prev.setDate(prev.getDate() - 1);
+  return `${m}월 ${d}일(${W[dt.getDay()]}) 평균가 · 전일(${prev.getMonth() + 1}/${prev.getDate()}) 대비`;
 }
 
 export function PredictableCropCards() {
@@ -64,7 +69,7 @@ export function PredictableCropCards() {
       <p className="-mt-1 text-body text-[#6B7280]">
         5개 품목의 최근 평균가와 AI 전망을 확인해보세요
       </p>
-      <p className="mt-1 flex min-h-[18px] items-center gap-1 text-caption font-medium text-[#6B7280]">
+      <p className="mt-2 inline-flex min-h-[26px] items-center gap-1 rounded-full bg-primary-tint px-2.5 py-1 text-caption font-bold text-[#1F5C1F]">
         <CalendarDays className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
         {basis}
       </p>

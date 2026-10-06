@@ -7,7 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { WEATHER_REGIONS } from "@/lib/mock/weather";
+import { WEATHER_PROVINCES, WEATHER_REGIONS } from "@/lib/mock/weather";
 import { useWeatherRegion } from "@/store/weatherRegion";
 import { useLocation } from "@/store/location";
 import { SheetSearch } from "@/components/market-v2/MarketSheet";
@@ -25,14 +25,20 @@ export function WeatherRegionSheet({
   const request = useLocation((s) => s.request);
   const pending = useLocation((s) => s.pending);
   const [q, setQ] = useState("");
+  const [draft, setDraft] = useState<string | null>(regionId);
   useEffect(() => {
-    if (open) setQ("");
-  }, [open]);
+    if (open) {
+      setQ("");
+      setDraft(regionId);
+    }
+  }, [open, regionId]);
 
   const query = q.trim().toLowerCase();
   const filtered = query
-    ? WEATHER_REGIONS.filter((r) => r.fullName.toLowerCase().includes(query))
-    : WEATHER_REGIONS;
+    ? WEATHER_REGIONS.filter(
+        (r) => r.fullName.toLowerCase().includes(query) || r.name.toLowerCase().includes(query),
+      )
+    : WEATHER_PROVINCES;
 
   const useCurrent = async () => {
     const ok = await request();
@@ -47,7 +53,7 @@ export function WeatherRegionSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="rounded-t-2xl p-0">
+      <SheetContent side="bottom" className="flex max-h-[85dvh] flex-col rounded-t-2xl p-0">
         <SheetHeader className="px-5 pt-5">
           <SheetTitle className="text-subtitle font-bold">지역 선택</SheetTitle>
         </SheetHeader>
@@ -64,20 +70,19 @@ export function WeatherRegionSheet({
           </button>
         </div>
 
-        <SheetSearch value={q} onChange={setQ} placeholder="지역명 검색" />
+        <SheetSearch value={q} onChange={setQ} placeholder="시·군·구 검색 (예: 수원, 공주)" />
 
         {filtered.length === 0 ? (
           <p className="px-4 py-6 text-center text-caption text-[#868E96]">검색 결과가 없어요.</p>
         ) : null}
-        <ul className="max-h-[50vh] overflow-y-auto px-2 pb-6 pt-1">
+        <ul className="min-h-0 flex-1 overflow-y-auto px-2 pb-3 pt-1">
           {filtered.map((r) => {
-            const active = r.id === regionId;
+            const active = r.id === draft;
             return (
               <li key={r.id}>
                 <button
                   onClick={() => {
-                    setRegionId(r.id);
-                    onOpenChange(false);
+                    setDraft(r.id);
                   }}
                   className={cn(
                     "flex min-h-11 w-full items-center justify-between rounded-[10px] px-3 py-3 text-left text-body",
@@ -93,6 +98,19 @@ export function WeatherRegionSheet({
             );
           })}
         </ul>
+        <div className="border-t border-[#F1F3F5] px-4 pb-[calc(16px+env(safe-area-inset-bottom))] pt-3">
+          <button
+            type="button"
+            disabled={!draft}
+            onClick={() => {
+              if (draft) setRegionId(draft);
+              onOpenChange(false);
+            }}
+            className="flex h-14 w-full items-center justify-center rounded-[12px] bg-primary text-body font-bold text-primary-foreground active:opacity-90 disabled:bg-[#CFD6DB]"
+          >
+            적용하기
+          </button>
+        </div>
       </SheetContent>
     </Sheet>
   );
