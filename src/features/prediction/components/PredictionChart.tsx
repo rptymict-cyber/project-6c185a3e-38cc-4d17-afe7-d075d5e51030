@@ -34,6 +34,7 @@ const DOWN = "#1971C2";
 const TURN = "#C9A227";
 const TODAY_LINE = "#94A3B8";
 const VOL_FILL = "rgba(224,59,59,0.20)";
+const BAND_FILL = "rgba(46,158,107,0.22)";
 const GREY = "#ADB5BD";
 
 /** -1 = 확대, 0 = 기본, 1 = 축소 */
@@ -445,7 +446,14 @@ function PredictionChartBase({
     return [...out].sort((a, b) => a - b);
   })();
 
-  const yTicks = [0, 1, 2, 3].map((k) => yMin + ((yMax - yMin) * k) / 3);
+  const yTicks = (() => {
+    let step = 500;
+    const count = (st: number) => Math.floor(yMax / st) - Math.ceil(yMin / st) + 1;
+    while (count(step) > 7) step = step === 500 ? 1000 : step * 2;
+    const out: number[] = [];
+    for (let v = Math.ceil(yMin / step) * step; v <= yMax; v += step) out.push(v);
+    return out;
+  })();
 
   const todayX = xOf(todayIdx);
   const todayInView = todayX >= PAD.left - 1 && todayX <= PAD.left + plotW + 1;
@@ -571,14 +579,14 @@ function PredictionChartBase({
     { key: "turn", label: "전환 시점", on: showTurn, color: TURN, set: () => setShowTurn((v) => !v) },
   ];
 
-  const legend: Array<{ label: string; color: string; kind: "solid" | "dash" | "bar"; dim?: boolean }> = [
-    { label: "실제 가격", color: ACTUAL, kind: "solid" },
-    { label: "예상 가격", color: PRED, kind: "dash", dim: !showMid },
-    { label: "예측 범위", color: "rgba(46,158,107,0.22)", kind: "bar", dim: !showBand },
-    { label: "거래량(과거)", color: VOL_FILL, kind: "bar" },
+  const legend: Array<{ label: string; color: string; kind: "solid" | "dash" | "bar" | "dot"; dim?: boolean }> = [
+    { label: "실제 평균가", color: ACTUAL, kind: "solid" },
+    { label: "중립 예측", color: PRED, kind: "dash", dim: !showMid },
+    { label: "낙관~비관 범위", color: BAND_FILL, kind: "bar", dim: !showBand },
     ...(showTurn
-      ? [{ label: "전환 시점(가격 반등·조정 전환 예상)", color: TURN, kind: "solid" as const }]
+      ? [{ label: "전환 시점(가격 반등·조정 전환 예상)", color: TURN, kind: "dot" as const }]
       : []),
+    { label: "거래량(과거)", color: VOL_FILL, kind: "bar" },
   ];
 
   return (
@@ -594,15 +602,30 @@ function PredictionChartBase({
             onClick={t.set}
             className={cn(
               "inline-flex min-h-9 min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border px-1 text-meta font-bold tracking-tight",
-              t.on ? "bg-white" : "border-[#E9ECEF] bg-[#F8F9FA]",
+              t.on ? "" : "border-[#DEE2E6] bg-white",
               !t.set && "cursor-default",
             )}
-            style={t.on ? { borderColor: t.color, color: t.color } : { color: "#868E96" }}
+            style={
+              t.on
+                ? {
+                    borderColor: t.color,
+                    color: t.key === "turn" ? "#8A6D0B" : "#1F7A50",
+                    background: t.key === "turn" ? "#FFFBEA" : "#F0F9F0",
+                  }
+                : { color: "#868E96" }
+            }
           >
-            <span
-              className="inline-block h-2 w-2 rounded-full"
-              style={{ background: t.on ? t.color : GREY }}
-            />
+            {t.key === "band" ? (
+              <span
+                className="inline-block h-2.5 w-2.5 rounded-[2px]"
+                style={{ background: t.on ? BAND_FILL : GREY, border: t.on ? "1px solid rgba(46,158,107,0.45)" : undefined }}
+              />
+            ) : (
+              <span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ background: t.on ? t.color : GREY }}
+              />
+            )}
             {t.label}
           </button>
         ))}
@@ -648,7 +671,7 @@ function PredictionChartBase({
             <g key={k}>
               <line x1={PAD.left} x2={PAD.left + plotW} y1={yOf(v)} y2={yOf(v)} stroke="#F1F3F5" />
               <text x={PAD.left - 6} y={yOf(v) + 4} textAnchor="end" fontSize={10} fill="#ADB5BD">
-                {v >= 10000 ? `${(v / 10000).toFixed(1)}만` : Math.round(v).toLocaleString()}
+                {Math.round(v).toLocaleString()}
               </text>
             </g>
           ))}
@@ -676,29 +699,44 @@ function PredictionChartBase({
             ) : null}
 
             <path d={actualPath} fill="none" stroke={ACTUAL} strokeWidth={2.2} strokeLinejoin="round" />
-            {showBand && bandPath ? <path d={bandPath} fill="rgba(46,158,107,0.22)" stroke="none" /> : null}
+            {showBand && bandPath ? <path d={bandPath} fill={BAND_FILL} stroke="none" /> : null}
             {showMid ? (
               <path d={predPath} fill="none" stroke={PRED} strokeWidth={2.4} strokeDasharray="5 4" strokeLinejoin="round" />
             ) : null}
 
-            {/* 전환 시점: OFF = 25% 마커만, ON = 불투명 + 텍스트 */}
-            {visible.map((r) =>
-              r.turn && r.predictedPrice !== undefined ? (
-                <g key={`t-${r.i}`} opacity={showTurn ? 1 : 0.25}>
-                  <circle cx={xOf(r.i)} cy={yOf(r.predictedPrice)} r={5} fill={TURN} stroke="#fff" strokeWidth={1.6} />
-                  {showTurn ? (
-                    <text
-                      x={xOf(r.i) + (xOf(r.i) > PAD.left + plotW - 70 ? -9 : 9)}
-                      y={yOf(r.predictedPrice) + 4}
-                      textAnchor={xOf(r.i) > PAD.left + plotW - 70 ? "end" : "start"}
-                      fontSize={10}
-                      fontWeight={800}
-                      fill={TURN}
-                    >
-                      가격 반등·조정 전환 예상
-                    </text>
-                  ) : null}
-                </g>
+            {/* 전환 시점: OFF = 25% 마커만, ON = 불투명 + 짧은 "전환" 라벨 (40px 이내 겹침은 하나만) */}
+            {(() => {
+              const marks = visible.filter((r) => r.turn && r.predictedPrice !== undefined);
+              let lastLabelX = -Infinity;
+              const avoid = [maxFut, minFut].filter(Boolean).map((r) => ({ x: xOf(r!.i), y: yOf(r!.predictedPrice!) }));
+              return marks.map((r) => {
+                const cx = xOf(r.i);
+                const cy = yOf(r.predictedPrice!);
+                const showLabel = showTurn && cx - lastLabelX > 40;
+                if (showLabel) lastLabelX = cx;
+                const nearCallout = avoid.some((p) => Math.abs(p.x - cx) < 50 && Math.abs(p.y - cy) < 40);
+                const ly = nearCallout ? cy + 18 : cy + 4;
+                const right = cx > PAD.left + plotW - 40;
+                return (
+                  <g key={`t-${r.i}`} opacity={showTurn ? 1 : 0.25}>
+                    <circle cx={cx} cy={cy} r={5} fill={TURN} stroke="#fff" strokeWidth={1.6} />
+                    {showLabel ? (
+                      <text
+                        x={nearCallout ? cx : cx + (right ? -9 : 9)}
+                        y={ly}
+                        textAnchor={nearCallout ? "middle" : right ? "end" : "start"}
+                        fontSize={11}
+                        fontWeight={800}
+                        fill={TURN}
+                      >
+                        전환
+                      </text>
+                    ) : null}
+                  </g>
+                );
+              });
+            })()}
+          </g>
               ) : null,
             )}
           </g>
@@ -715,12 +753,18 @@ function PredictionChartBase({
             </g>
           ) : null}
 
-          {/* 최고/최저 콜아웃 (선택 기간 중립 예측값 기준) */}
           {minFut && minFut !== maxFut ? (
-            <Callout x={xOf(minFut.i)} y={yOf(minFut.predictedPrice!) + 16} text={`최저 ${md(minFut.date)} ${minFut.predictedPrice!.toLocaleString()}`} color={DOWN} minX={PAD.left} maxX={PAD.left + plotW} />
+            <circle cx={xOf(minFut.i)} cy={yOf(minFut.predictedPrice!)} r={3.5} fill={DOWN} stroke="#fff" strokeWidth={1.2} />
           ) : null}
           {maxFut ? (
-            <Callout x={xOf(maxFut.i)} y={yOf(maxFut.predictedPrice!) - 16} text={`최고 ${md(maxFut.date)} ${maxFut.predictedPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
+            <circle cx={xOf(maxFut.i)} cy={yOf(maxFut.predictedPrice!)} r={3.5} fill={UP} stroke="#fff" strokeWidth={1.2} />
+          ) : null}
+          {/* 최고/최저 콜아웃 (선택 기간 중립 예측값 기준) */}
+          {minFut && minFut !== maxFut ? (
+            <Callout x={xOf(minFut.i)} y={yOf(minFut.predictedPrice!) + 16} text={`최저 ${minFut.predictedPrice!.toLocaleString()}`} color={DOWN} minX={PAD.left} maxX={PAD.left + plotW} />
+          ) : null}
+          {maxFut ? (
+            <Callout x={xOf(maxFut.i)} y={yOf(maxFut.predictedPrice!) - 16} text={`최고 ${maxFut.predictedPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
           ) : null}
 
           {/* X축 */}
@@ -750,7 +794,9 @@ function PredictionChartBase({
             style={{ opacity: l.dim ? 0.35 : 1 }}
           >
             {l.kind === "bar" ? (
-              <span className="inline-block h-2.5 w-2 rounded-[1px]" style={{ background: l.color }} />
+              <span className="inline-block h-2.5 w-2.5 rounded-[2px]" style={{ background: l.color }} />
+            ) : l.kind === "dot" ? (
+              <span className="inline-block h-2 w-2 rounded-full" style={{ background: l.color }} />
             ) : (
               <span
                 className="inline-block w-4"
@@ -763,7 +809,7 @@ function PredictionChartBase({
       </div>
 
       <div className="mt-2 rounded-xl bg-[#F8F9FA] px-3 py-2 text-meta leading-snug text-[#6C757D]">
-        차트를 터치하면 날짜별 가격을 볼 수 있어요. 두 손가락으로 확대·축소할 수 있어요.
+        선(가격)을 터치하면 가격 정보가, 아래쪽 막대(거래량)를 터치하면 그날의 거래량이 각각 따로 표시돼요. 핀치로 구간을 확대/축소할 수 있습니다. 확대된 경우 우측 상단의 전체 보기 버튼으로 원래 범위로 돌아갈 수 있어요.
       </div>
     </div>
   );
