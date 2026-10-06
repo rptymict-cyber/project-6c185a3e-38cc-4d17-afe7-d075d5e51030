@@ -295,7 +295,7 @@ export function DatePickerSheet({
                           {...props}
                           type="button"
                           disabled={off}
-                          className="relative flex h-[42px] w-full items-center justify-center text-sm"
+                          className="relative flex h-full w-full items-center justify-center text-base"
                         >
                           {hasRange && (inMid || isB || isC) ? (
                             <span
@@ -309,7 +309,7 @@ export function DatePickerSheet({
                             />
                           ) : null}
                           <span
-                            className="relative flex h-9 w-9 flex-col items-center justify-center rounded-full"
+                            className="relative flex h-10 w-10 flex-col items-center justify-center rounded-full"
                             style={{
                               background: isB ? "#4B5563" : isC ? "#2E9E6B" : undefined,
                               color: isB || isC ? "#fff" : off ? "#CED4DA" : sun ? "#E03131" : "#212529",
@@ -351,7 +351,7 @@ export function DatePickerSheet({
               weekday:
                 "text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal [&:first-child]:text-[#E03131]",
             }}
-            className="p-3 pointer-events-auto [--cell-size:2.5rem]"
+            className="w-full p-2 pointer-events-auto [--cell-size:clamp(2.75rem,12.5vw,3.25rem)]"
           />
         </div>
 
