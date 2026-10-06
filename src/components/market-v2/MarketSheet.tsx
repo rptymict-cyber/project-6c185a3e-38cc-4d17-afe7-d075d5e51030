@@ -1,4 +1,5 @@
-import { MapPin, Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { MapPin, Check, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { MARKETS, nearestMarket, DEFAULT_MARKET } from "@/lib/mock/markets";
@@ -28,6 +29,10 @@ export function MarketSheet({
   const request = useLocation((s) => s.request);
   const pending = useLocation((s) => s.pending);
   const isFallback = granted !== true;
+  const [q, setQ] = useState("");
+  useEffect(() => {
+    if (open) setQ("");
+  }, [open]);
 
   const pick = (id: string, label: string) => {
     setMarket(id, label);
@@ -54,6 +59,16 @@ export function MarketSheet({
     ...(includeAll ? [{ id: "all", label: "전체" }] : []),
     ...MARKETS.map((m) => ({ id: m.id, label: m.name })),
   ];
+  const query = q.trim().toLowerCase();
+  const filtered = query
+    ? options.filter((o) => {
+        const m = MARKETS.find((x) => x.id === o.id);
+        return (
+          o.label.toLowerCase().includes(query) ||
+          (m?.region ?? "").toLowerCase().includes(query)
+        );
+      })
+    : options;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -80,8 +95,13 @@ export function MarketSheet({
         </div>
 
 
+        <SheetSearch value={q} onChange={setQ} placeholder="도매시장명 또는 지역 검색" />
+
+        {filtered.length === 0 ? (
+          <p className="px-4 py-6 text-center text-caption text-[#868E96]">검색 결과가 없어요.</p>
+        ) : null}
         <ul className="px-2 pb-3">
-          {options.map((m) => {
+          {filtered.map((m) => {
             const on = m.id === marketId;
             return (
               <li key={m.id}>
@@ -106,5 +126,41 @@ export function MarketSheet({
         </ul>
       </SheetContent>
     </Sheet>
+  );
+}
+
+export function SheetSearch({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <div className="px-4 pb-2 pt-1">
+      <div className="flex h-12 items-center gap-2 rounded-[12px] bg-[#F1F3F5] px-3">
+        <Search className="h-4 w-4 shrink-0 text-[#868E96]" />
+        <input
+          type="search"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          aria-label={placeholder}
+          className="min-w-0 flex-1 bg-transparent text-body text-foreground outline-none placeholder:text-[#ADB5BD] [&::-webkit-search-cancel-button]:hidden"
+        />
+        {value ? (
+          <button
+            type="button"
+            aria-label="검색어 지우기"
+            onClick={() => onChange("")}
+            className="grid h-8 w-8 place-items-center rounded-full text-[#868E96]"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        ) : null}
+      </div>
+    </div>
   );
 }
