@@ -240,14 +240,11 @@ export function DatePickerSheet({
                 );
               })}
             </div>
-            <div
-              className={[
-                "mx-5 mt-3 rounded-lg px-3 py-2 text-caption",
-                warn ? "bg-[#FFF4E6] font-semibold text-[#D9480F]" : "bg-[#F8F9FA] text-[#495057]",
-              ].join(" ")}
-            >
-              {warn ? `⚠ ${warn}` : pairHint}
-            </div>
+            {warn ? (
+              <div className="mx-5 mt-3 rounded-lg bg-[#FFF4E6] px-3 py-2 text-caption font-semibold text-[#D9480F]">
+                ⚠ {warn}
+              </div>
+            ) : null}
           </>
         ) : null}
 
@@ -358,8 +355,6 @@ export function DatePickerSheet({
         {/* Confirm button */}
         {confirmOnSelect && !pair ? <div className="pb-6" /> : (
         <div className="px-5 pb-6 pt-2">
-            </div>
-          ) : null}
           <button
             type="button"
             disabled={!!pair && !canConfirm}
