@@ -91,10 +91,20 @@ export function PredictionCompareCards({
           className="mt-2 flex items-center justify-between rounded-2xl px-4 py-3 text-white shadow-[0_10px_28px_-14px_rgba(46,158,107,0.6)]"
           style={{ background: "linear-gradient(135deg,#2E9E6B 0%,#1F7A50 100%)" }}
         >
-          <div className="text-caption font-bold">최고 조합과 최저 조합의 차이</div>
+          <div className="min-w-0">
+            <div className="text-caption font-bold leading-snug">
+              최고 조합과 최저 조합의
+              <br />
+              {totalLabel} 차이
+            </div>
+            <div className="mt-0.5 text-meta opacity-90">
+              {isFarmer ? "출하량" : "매입량"} {quantityBoxes.toLocaleString()}
+              {quantityUnitLabel} 기준
+            </div>
+          </div>
           <div className="flex shrink-0 items-baseline gap-0.5">
             <span className="tabular-nums leading-none" style={{ fontSize: "22px", fontWeight: 900 }}>
-              {Math.round(diff).toLocaleString()}
+              +{Math.round(diff).toLocaleString()}
             </span>
             <span className="text-body font-extrabold">원</span>
           </div>
