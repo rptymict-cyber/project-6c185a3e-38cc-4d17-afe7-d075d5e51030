@@ -358,14 +358,6 @@ export function DatePickerSheet({
         {/* Confirm button */}
         {confirmOnSelect && !pair ? <div className="pb-6" /> : (
         <div className="px-5 pb-6 pt-2">
-          {pair ? (
-            <div className="mb-3 flex items-center justify-between gap-2 text-caption">
-              <span className="text-[#495057]">
-                기준 {shortMD(pBase)} ~ {pCmp ? `비교 ${shortMD(pCmp)}` : "비교일을 선택해 주세요"}
-              </span>
-              {pCmp && pBase ? (
-                <b className="shrink-0 font-bold text-[#2E9E6B]">기준일보다 {dayDiff(pBase, pCmp)}일 뒤</b>
-              ) : null}
             </div>
           ) : null}
           <button
@@ -435,12 +427,10 @@ function PairCard({
           <span className="h-2 w-2 rounded-full" style={{ background: dot }} />
           {label}
         </span>
-        {active ? <span className="text-meta font-bold text-[#2E9E6B]">선택 중</span> : null}
       </span>
       <span className={["mt-1 text-body font-bold", iso ? "text-foreground" : "text-[#ADB5BD]"].join(" ")}>
         {iso ? humanLabel(iso) : "날짜 선택"}
       </span>
-      <span className="mt-0.5 min-h-4 text-meta text-[#868E96]">{sub}</span>
     </button>
   );
 }
