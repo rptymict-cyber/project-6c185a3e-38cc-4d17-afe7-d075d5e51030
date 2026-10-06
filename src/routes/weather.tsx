@@ -85,11 +85,6 @@ function WeatherDetailPage() {
                 <div className="mt-2 text-heading font-semibold text-white">
                   {w.current.desc}
                 </div>
-                {w.tip ? (
-                  <div className="mt-1.5 text-body font-medium text-white/90">
-                    {w.tip}
-                  </div>
-                ) : null}
                 <div className="mt-2 text-body text-white/85">
                   {w.today.dateLabel}
                 </div>
