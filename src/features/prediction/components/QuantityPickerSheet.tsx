@@ -48,38 +48,20 @@ export function QuantityPickerSheet({
       }
     >
       <div className="px-4 py-4">
-        <div className="flex items-center justify-center gap-3">
-          <button
-            type="button"
-            aria-label="감소"
-            onClick={() => setN(Math.max(0, n - step))}
-            className="grid h-11 w-11 place-items-center rounded-full border border-[#E9ECEF] bg-white text-foreground active:bg-[#F8F9FA]"
-          >
-            <Minus className="h-4 w-4" />
-          </button>
-          <div className="flex items-baseline gap-1">
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={text}
-              placeholder="0"
-              onChange={(e) => {
-                const digits = e.target.value.replace(/\D/g, "").slice(0, 4);
-                setText(digits);
-              }}
-              className="w-28 border-0 bg-transparent text-center text-[32px] font-black tabular-nums text-foreground outline-none placeholder:text-[#CED4DA]"
-            />
-            <span className="text-body-lg font-bold text-[#495057]">kg</span>
-          </div>
-          <button
-            type="button"
-            aria-label="증가"
-            onClick={() => setN(n + step)}
-            className="grid h-11 w-11 place-items-center rounded-full border border-[#E9ECEF] bg-white text-foreground active:bg-[#F8F9FA]"
-          >
-            <Plus className="h-4 w-4" />
-          </button>
+        <div className="flex items-center gap-3">
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={text}
+            placeholder="직접 입력"
+            onChange={(e) => {
+              const digits = e.target.value.replace(/\D/g, "").slice(0, 4);
+              setText(digits);
+            }}
+            className="h-14 min-w-0 flex-1 rounded-xl border border-[#E9ECEF] bg-white px-4 text-heading font-black tabular-nums text-foreground outline-none placeholder:text-body-lg placeholder:font-bold placeholder:text-[#ADB5BD] focus:border-[#3A8A3A]"
+          />
+          <span className="shrink-0 text-body font-bold text-foreground">kg</span>
         </div>
 
         <div className="mt-4 grid grid-cols-3 gap-2">
