@@ -69,10 +69,6 @@ export function PredictableCropCards() {
       <p className="-mt-1 text-body text-[#6B7280]">
         5개 품목의 최근 평균가와 AI 전망을 확인해보세요
       </p>
-      <p className="mt-2 inline-flex min-h-[26px] items-center gap-1 rounded-full bg-primary-tint px-2.5 py-1 text-caption font-bold text-[#1F5C1F]">
-        <CalendarDays className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-        {basis}
-      </p>
 
 
       {/* Horizontal scroll cards - mini (4 visible + peek) */}
