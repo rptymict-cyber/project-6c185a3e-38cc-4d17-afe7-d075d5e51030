@@ -99,8 +99,8 @@ function PredictionChartBase({
 }: PredictionChartProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(340);
-  const [showUp, setShowUp] = useState(false);
-  const [showDown, setShowDown] = useState(false);
+  const [showMid, setShowMid] = useState(true);
+  const [showBand, setShowBand] = useState(true);
   const [showTurn, setShowTurn] = useState(false);
   const [tip, setTip] = useState<{ idx: number; kind: TipKind } | null>(null);
 
@@ -179,6 +179,30 @@ function PredictionChartBase({
   const denom = Math.max(1, win.span - 1);
   const xOf = (i: number) => PAD.left + ((i - win.start) / denom) * plotW;
 
+  // 예측 범위 밴드: 중립선 기준 대칭, 먼 미래일수록 넓어짐(단조 증가)
+  const bandHalf = useMemo(() => {
+    const m = new Map<number, number>();
+    let prev = 0;
+    for (const r of rows) {
+      if (r.i < todayIdx || r.predictedPrice === undefined) continue;
+      const k = r.i - todayIdx;
+      const fromData =
+        r.optimisticPrice !== undefined && r.pessimisticPrice !== undefined
+          ? (r.optimisticPrice - r.pessimisticPrice) / 2
+          : 0;
+      const formula = ((40 + 24 * k) * r.predictedPrice) / 10000;
+      const hw = k === 0 ? 0 : Math.max(prev, fromData, formula);
+      prev = hw;
+      m.set(r.i, Math.round(hw));
+    }
+    return m;
+  }, [rows, todayIdx]);
+  const bandOf = (r: { i: number; predictedPrice?: number }) => {
+    const hw = bandHalf.get(r.i);
+    if (hw === undefined || r.predictedPrice === undefined) return null;
+    return { hi: r.predictedPrice + hw, lo: r.predictedPrice - hw };
+  };
+
   const visLo = Math.max(0, Math.floor(win.start));
   const visHi = Math.min(total - 1, Math.ceil(win.start + win.span - 1));
   const visible = rows.slice(visLo, visHi + 1);
@@ -188,15 +212,16 @@ function PredictionChartBase({
     for (const r of visible) {
       if (r.actualPrice !== undefined) vals.push(r.actualPrice);
       if (r.predictedPrice !== undefined) vals.push(r.predictedPrice);
-      if (showUp && r.optimisticPrice !== undefined) vals.push(r.optimisticPrice);
-      if (showDown && r.pessimisticPrice !== undefined) vals.push(r.pessimisticPrice);
+      const b = bandOf(r);
+      if (showBand && b) vals.push(b.hi, b.lo);
     }
     if (!vals.length) return [0, 1];
     const lo = Math.min(...vals);
     const hi = Math.max(...vals);
     const pad = Math.max((hi - lo) * 0.2, hi * 0.01);
     return [lo - pad, hi + pad];
-  }, [visible, showUp, showDown]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, showBand]);
   const yOf = (v: number) => PAD.top + (1 - (v - yMin) / (yMax - yMin || 1)) * plotH;
 
   // 거래량 (과거 구간만, Mock)
@@ -380,29 +405,29 @@ function PredictionChartBase({
   const predPath = pathOf(
     rows.filter((r) => r.i >= todayIdx && r.predictedPrice !== undefined).map((r) => [xOf(r.i), yOf(r.predictedPrice!)]),
   );
-  const seriesPath = (key: "optimisticPrice" | "pessimisticPrice") =>
-    pathOf(
-      rows
-        .filter((r) => r.i >= todayIdx)
-        .map((r) => {
-          const v = r.isToday ? todayPrice : r[key];
-          return v === undefined ? null : ([xOf(r.i), yOf(v)] as [number, number]);
-        })
-        .filter((v): v is [number, number] => !!v),
-    );
+  const bandRows = rows.filter((r) => r.i >= todayIdx && bandOf(r));
+  const bandPath = bandRows.length
+    ? pathOf(bandRows.map((r) => [xOf(r.i), yOf(bandOf(r)!.hi)])) +
+      bandRows
+        .slice()
+        .reverse()
+        .map((r) => `L${xOf(r.i).toFixed(1)},${yOf(bandOf(r)!.lo).toFixed(1)}`)
+        .join("") +
+      "Z"
+    : "";
 
-  const lastVisFuture = [...visible].reverse().find((r) => r.optimisticPrice !== undefined);
-
-  const pastVisible = visible.filter((r) => r.actualPrice !== undefined);
-  const minPast = pastVisible.length
-    ? pastVisible.reduce((a, b) => (b.actualPrice! < a.actualPrice! ? b : a))
-    : undefined;
-  // 최고: 보이는 미래 구간의 예상 가격(기준선) 최댓값 — 토글과 무관하게 항상 표시
-  const futVisible = visible.filter(
-    (r) => r.predictedPrice !== undefined && r.actualPrice === undefined,
+  // 최고/최저: 선택한 예측 기간(오늘 이후 rangeDays일) 안의 중립 예측값 기준
+  const futRange = rows.filter(
+    (r) =>
+      r.predictedPrice !== undefined &&
+      r.i > todayIdx &&
+      (rangeDays ? r.i <= todayIdx + rangeDays : true),
   );
-  const maxFut = futVisible.length
-    ? futVisible.reduce((a, b) => (b.predictedPrice! > a.predictedPrice! ? b : a))
+  const maxFut = futRange.length
+    ? futRange.reduce((a, b) => (b.predictedPrice! > a.predictedPrice! ? b : a))
+    : undefined;
+  const minFut = futRange.length
+    ? futRange.reduce((a, b) => (b.predictedPrice! < a.predictedPrice! ? b : a))
     : undefined;
 
   // X축 라벨: 보이는 구간 균등 분할(시작·끝 포함)
@@ -471,11 +496,23 @@ function PredictionChartBase({
           <>
             <div className="font-bold">{korDate(r.date)}</div>
             <div className="mt-0.5 font-extrabold" style={{ color: "#F5D565" }}>
-              {r.turn === "up" ? "상승" : "하락"} 전환 예상
+              가격 반등·조정 전환 예상
             </div>
             <div className="mt-0.5 text-white/80">
-              이후 가격이 {r.turn === "up" ? "상승" : "하락"} 흐름으로 바뀔 가능성이 있어요.
+              이후 가격 흐름이 바뀔 가능성이 있어요.
             </div>
+          </>
+        );
+      } else if (tip.kind !== "actual" && bandOf(r) && !r.isToday) {
+        const b = bandOf(r)!;
+        body = (
+          <>
+            <div className="font-bold">{korDate(r.date)}</div>
+            <div className="mt-0.5 tabular-nums">낙관 {b.hi.toLocaleString()}원</div>
+            <div className="tabular-nums">
+              중립 <span className="text-body font-extrabold">{value.toLocaleString()}</span>원/{baseUnitLabel}
+            </div>
+            <div className="tabular-nums">비관 {b.lo.toLocaleString()}원</div>
           </>
         );
       } else {
@@ -529,24 +566,25 @@ function PredictionChartBase({
   })();
 
   const toggles: Array<{ key: string; label: string; on: boolean; color: string; set?: () => void }> = [
-    { key: "mid", label: "예상 가격", on: true, color: PRED },
-    { key: "up", label: "상승 예상치", on: showUp, color: UP, set: () => setShowUp((v) => !v) },
-    { key: "down", label: "하락 예상치", on: showDown, color: DOWN, set: () => setShowDown((v) => !v) },
+    { key: "mid", label: "예상 가격", on: showMid, color: PRED, set: () => setShowMid((v) => !v) },
+    { key: "band", label: "예측 범위", on: showBand, color: PRED, set: () => setShowBand((v) => !v) },
     { key: "turn", label: "전환 시점", on: showTurn, color: TURN, set: () => setShowTurn((v) => !v) },
   ];
 
   const legend: Array<{ label: string; color: string; kind: "solid" | "dash" | "bar"; dim?: boolean }> = [
     { label: "실제 가격", color: ACTUAL, kind: "solid" },
-    { label: "예상 가격", color: PRED, kind: "dash" },
-    { label: "상승 예상치", color: UP, kind: "dash", dim: !showUp },
-    { label: "하락 예상치", color: DOWN, kind: "dash", dim: !showDown },
+    { label: "예상 가격", color: PRED, kind: "dash", dim: !showMid },
+    { label: "예측 범위", color: "rgba(46,158,107,0.22)", kind: "bar", dim: !showBand },
     { label: "거래량(과거)", color: VOL_FILL, kind: "bar" },
+    ...(showTurn
+      ? [{ label: "전환 시점(가격 반등·조정 전환 예상)", color: TURN, kind: "solid" as const }]
+      : []),
   ];
 
   return (
     <div>
       {/* 선택형 토글 */}
-      <div className="grid grid-cols-4 gap-1 pb-2">
+      <div className="grid grid-cols-3 gap-1 pb-2">
         {toggles.map((t) => (
           <button
             key={t.key}
@@ -638,12 +676,9 @@ function PredictionChartBase({
             ) : null}
 
             <path d={actualPath} fill="none" stroke={ACTUAL} strokeWidth={2.2} strokeLinejoin="round" />
-            <path d={predPath} fill="none" stroke={PRED} strokeWidth={2.4} strokeDasharray="5 4" strokeLinejoin="round" />
-            {showUp ? (
-              <path d={seriesPath("optimisticPrice")} fill="none" stroke={UP} strokeWidth={1.6} strokeDasharray="4 4" />
-            ) : null}
-            {showDown ? (
-              <path d={seriesPath("pessimisticPrice")} fill="none" stroke={DOWN} strokeWidth={1.6} strokeDasharray="4 4" />
+            {showBand && bandPath ? <path d={bandPath} fill="rgba(46,158,107,0.22)" stroke="none" /> : null}
+            {showMid ? (
+              <path d={predPath} fill="none" stroke={PRED} strokeWidth={2.4} strokeDasharray="5 4" strokeLinejoin="round" />
             ) : null}
 
             {/* 전환 시점: OFF = 25% 마커만, ON = 불투명 + 텍스트 */}
@@ -660,7 +695,7 @@ function PredictionChartBase({
                       fontWeight={800}
                       fill={TURN}
                     >
-                      {r.turn === "up" ? "상승" : "하락"} 전환 예상
+                      가격 반등·조정 전환 예상
                     </text>
                   ) : null}
                 </g>
@@ -680,21 +715,12 @@ function PredictionChartBase({
             </g>
           ) : null}
 
-          {/* 최저 콜아웃 (과거 구간) */}
-          {minPast ? (
-            <Callout x={xOf(minPast.i)} y={yOf(minPast.actualPrice!) + 16} text={`최저 ${minPast.actualPrice!.toLocaleString()}`} color={DOWN} minX={PAD.left} maxX={PAD.left + plotW} />
+          {/* 최고/최저 콜아웃 (선택 기간 중립 예측값 기준) */}
+          {minFut && minFut !== maxFut ? (
+            <Callout x={xOf(minFut.i)} y={yOf(minFut.predictedPrice!) + 16} text={`최저 ${md(minFut.date)} ${minFut.predictedPrice!.toLocaleString()}`} color={DOWN} minX={PAD.left} maxX={PAD.left + plotW} />
           ) : null}
-          {/* 최고 콜아웃 (미래 예상 가격 기준선, 항상 표시) */}
           {maxFut ? (
-            <Callout x={xOf(maxFut.i)} y={yOf(maxFut.predictedPrice!) - 16} text={`최고 ${maxFut.predictedPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
-          ) : null}
-
-          {/* 끝값 라벨 */}
-          {lastVisFuture && showUp ? (
-            <EndLabel x={xOf(lastVisFuture.i)} y={yOf(lastVisFuture.optimisticPrice!)} v={lastVisFuture.optimisticPrice!} color={UP} maxX={PAD.left + plotW} />
-          ) : null}
-          {lastVisFuture && showDown ? (
-            <EndLabel x={xOf(lastVisFuture.i)} y={yOf(lastVisFuture.pessimisticPrice!)} v={lastVisFuture.pessimisticPrice!} color={DOWN} maxX={PAD.left + plotW} />
+            <Callout x={xOf(maxFut.i)} y={yOf(maxFut.predictedPrice!) - 16} text={`최고 ${md(maxFut.date)} ${maxFut.predictedPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
           ) : null}
 
           {/* X축 */}
@@ -737,7 +763,7 @@ function PredictionChartBase({
       </div>
 
       <div className="mt-2 rounded-xl bg-[#F8F9FA] px-3 py-2 text-meta leading-snug text-[#6C757D]">
-        선(가격)을 터치하면 가격 정보가, 아래쪽 막대(거래량)를 터치하면 그날의 거래량이 각각 따로 표시돼요. 핀치로 구간을 확대/축소할 수 있습니다. 확대된 경우 우측 상단의 전체 보기 버튼으로 원래 범위로 돌아갈 수 있어요.
+        차트를 터치하면 날짜별 가격을 볼 수 있어요. 두 손가락으로 확대·축소할 수 있어요.
       </div>
     </div>
   );
@@ -764,21 +790,6 @@ function Callout({
     <g style={{ pointerEvents: "none" }}>
       <rect x={cx - w / 2} y={y - 9} width={w} height={18} rx={5} fill="#fff" stroke={color} strokeWidth={1} />
       <text x={cx} y={y + 4} textAnchor="middle" fontSize={10} fontWeight={800} fill={color}>
-        {text}
-      </text>
-    </g>
-  );
-}
-
-function EndLabel({ x, y, v, color, maxX }: { x: number; y: number; v: number; color: string; maxX: number }) {
-  const text = v.toLocaleString();
-  const w = text.length * 6.4 + 10;
-  const left = Math.min(x + 4, maxX - w);
-  return (
-    <g style={{ pointerEvents: "none" }}>
-      <circle cx={x} cy={y} r={3} fill={color} />
-      <rect x={left} y={y - 17} width={w} height={14} rx={4} fill={color} />
-      <text x={left + w / 2} y={y - 7} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#fff">
         {text}
       </text>
     </g>

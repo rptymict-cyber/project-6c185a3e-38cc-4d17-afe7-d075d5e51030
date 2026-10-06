@@ -187,12 +187,10 @@ function CropSelectPage() {
 
     if (from === "prediction" && item) {
       const predictable = PREDICTABLE_CROPS.find((c) => c.name === item.name);
-      if (!predictable) {
-        toast("선택한 품목은 아직 AI 예측을 지원하지 않아요.");
-        navigate({ to: "/prediction" });
-        return;
-      }
-      navigate({ to: "/prediction", search: { cropId: predictable.id } });
+      navigate({
+        to: "/prediction",
+        search: predictable ? { cropId: predictable.id } : {},
+      });
       return;
     }
 

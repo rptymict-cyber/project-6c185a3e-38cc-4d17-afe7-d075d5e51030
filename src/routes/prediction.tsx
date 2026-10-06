@@ -21,6 +21,8 @@ import {
 } from "@/features/prediction/components/PredictionRationaleExtras";
 
 import { DatePickerSheet } from "@/components/date-picker-sheet";
+import { PredictionCropSheet } from "@/features/prediction/components/PredictionCropSheet";
+import { CompareMarketsSheet } from "@/features/prediction/components/CompareMarketsSheet";
 import { MarketPickerSheet } from "@/features/prediction/components/MarketPickerSheet";
 import { QuantityPickerSheet } from "@/features/prediction/components/QuantityPickerSheet";
 import { QUANTITY_UNIT_LABEL } from "@/features/prediction/quantityUnits";
@@ -88,6 +90,9 @@ function PredictionPage() {
   const setSelectedGrade = usePredictionView((s) => s.setSelectedGrade);
   const setQuantity = usePredictionView((s) => s.setQuantity);
   const setMarketId = usePredictionView((s) => s.setMarketId);
+  const filled = usePredictionView((s) => s.filled);
+  const resetConditions = usePredictionView((s) => s.resetConditions);
+  const [cropSheetOpen, setCropSheetOpen] = useState(false);
 
   useEffect(() => {
     const incoming = search.cropId ?? search.crop;
@@ -109,18 +114,13 @@ function PredictionPage() {
     selectedGrade,
     marketId,
   );
-  // 출하 시점 비교 전용 시장 (상단 조건 시장과 별개, 기본값은 상단 시장)
-  const [compareMarketId, setCompareMarketId] = useState<string | null>(null);
+  // 출하 시점 비교: 날짜 2개 × 시장 1~2곳 (비교 시장 미선택 시 상단 시장)
+  const [compareMarketIds, setCompareMarketIds] = useState<string[]>([]);
   const [compareMarketOpen, setCompareMarketOpen] = useState(false);
-  const effectiveCompareMarketId = compareMarketId ?? marketId;
-  const comparePrediction = usePrediction(
-    selectedCropId,
-    14, // 출하 시점 비교 범위(오늘~+14일)는 차트 예측 기간과 별개
-    selectedGrade,
-    effectiveCompareMarketId,
-  );
-  const [compareIso, setCompareIso] = useState<string | null>(null);
-  const [baseIso, setBaseIso] = useState<string | null>(null);
+  const cmpMarkets = compareMarketIds.length ? compareMarketIds : [marketId];
+  const cmpPredA = usePrediction(selectedCropId, 30, selectedGrade, cmpMarkets[0]);
+  const cmpPredB = usePrediction(selectedCropId, 30, selectedGrade, cmpMarkets[1] ?? cmpMarkets[0]);
+  const [compareDates, setCompareDates] = useState<[string, string] | null>(null);
   const cropMeta = getPredictableCrop(selectedCropId);
   const marketName =
     prediction?.marketName ??
@@ -131,7 +131,6 @@ function PredictionPage() {
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
   useEffect(() => {
     setSelectedDayIndex(null);
-    setBaseIso(null);
   }, [selectedRangeDays, selectedCropId, selectedGrade, marketId]);
 
   if (!prediction || !cropMeta) {
@@ -191,51 +190,38 @@ function PredictionPage() {
   const selectedDate = selectedPoint?.label ?? insight.recommendationDate;
   const selectedPrice = selectedPoint?.predictedPrice ?? insight.expectedPrice;
 
-  // 비교 날짜 선택 가능 범위 = 예측값이 있는 미래 포인트 (오늘 제외)
-  const futurePoints = prediction.predictedPoints.filter(
-    (p) => p.predictedPrice !== undefined && !p.isToday,
-  );
-  const futureIsoSet = new Set(futurePoints.map((p) => p.date));
-  const compareMinIso = futurePoints[0]?.date;
-  const compareMaxIso = futurePoints[futurePoints.length - 1]?.date;
-
-  const compareMarket = MARKETS.find((m) => m.id === effectiveCompareMarketId);
-  // 비교 날짜 선택 범위: 오늘 ~ 오늘+14일
-  const compareRangeMin = todayIso();
-  const compareRangeMax = (() => {
-    const [y, m, d] = compareRangeMin.split("-").map(Number);
-    const dt = new Date(y, m - 1, d + 14);
+  // 비교 날짜 선택 범위: 오늘 ~ 오늘+30일
+  const addDaysIso = (iso: string, n: number) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    const dt = new Date(y, m - 1, d + n);
     return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
-  })();
-  const compareDateIso =
-    compareIso ??
-    (selectedPoint?.date && selectedPoint.date <= compareRangeMax
-      ? selectedPoint.date
-      : compareRangeMin);
-  const comparePoint = comparePrediction?.predictedPoints.find(
-    (p) => p.date === compareDateIso,
-  );
-  const compareDateLabel = (() => {
-    const [, m, d] = compareDateIso.split("-").map(Number);
-    return `${m}월 ${d}일`;
-  })();
-  const baseDateIso = baseIso ?? compareRangeMin;
-  const isBaseToday = baseDateIso === compareRangeMin;
-  const basePrice = isBaseToday
-    ? prediction.currentPrice
-    : (comparePrediction?.predictedPoints.find((p) => p.date === baseDateIso)
-        ?.predictedPrice ?? prediction.currentPrice);
+  };
+  const compareRangeMin = todayIso();
+  const compareRangeMax = addDaysIso(compareRangeMin, 30);
+  const [cmpD1, cmpD2] = compareDates ?? [compareRangeMin, addDaysIso(compareRangeMin, 7)];
   const md = (iso: string) => {
     const [, m, d] = iso.split("-").map(Number);
     return `${m}/${d}`;
   };
-  const baseTitleLabel = isBaseToday ? `오늘(${md(baseDateIso)})` : `기준일(${md(baseDateIso)})`;
-  const todayPoint = prediction.predictedPoints.find((p) => p.isToday);
-  const todayShort = (() => {
-    const iso = todayPoint?.date ?? prediction.currentDate;
-    const [, m, d] = (iso ?? "").slice(0, 10).split("-").map(Number);
-    return m && d ? `${m}/${d}` : "";
-  })();
+  const priceOn = (pred: typeof cmpPredA, iso: string) => {
+    if (!pred) return undefined;
+    if (iso === compareRangeMin) return pred.currentPrice;
+    return pred.predictedPoints.find((p) => p.date === iso)?.predictedPrice;
+  };
+  const compareCombos = cmpMarkets.flatMap((mid, k) => {
+    const pred = k === 0 ? cmpPredA : cmpPredB;
+    const mk = MARKETS.find((m) => m.id === mid);
+    return [cmpD1, cmpD2].map((iso) => ({
+      dateIso: iso,
+      marketId: mid,
+      marketName: mk?.name ?? marketName,
+      marketRegion: mk?.region ?? "",
+      price: priceOn(pred, iso),
+    }));
+  });
+  const compareMarketLabel = compareMarketIds.length
+    ? compareMarketIds.map((id) => MARKETS.find((m) => m.id === id)?.name ?? id).join(", ")
+    : marketName;
 
   const priceDiff = selectedPrice - prediction.currentPrice;
   const isPositiveForUser = isFarmer ? priceDiff > 0 : priceDiff < 0;
@@ -245,24 +231,26 @@ function PredictionPage() {
       <div className="px-4 pb-16 pt-3">
         {/* 1. 상단 조건 선택 그리드 */}
         <PredictionConditionGrid
-          quantityHeading={isFarmer ? "출하량" : "매입량"}
-          quantityLabel={`${quantityBoxes.toLocaleString()}${QUANTITY_UNIT_LABEL[quantityUnit]}`}
-          cropLabel={`${cropMeta.categoryName} · ${cropMeta.name} · ${cropMeta.varietyName}`}
-          marketLabel={marketName}
-          grade={selectedGrade}
+          quantityHeading="출하량(매입량)"
+          quantityLabel={filled.quantity ? `${quantityBoxes.toLocaleString()}${QUANTITY_UNIT_LABEL[quantityUnit]}` : null}
+          cropLabel={filled.crop ? `${cropMeta.categoryName} · ${cropMeta.name} · ${cropMeta.varietyName}` : null}
+          marketLabel={filled.market ? marketName : null}
+          grade={filled.grade ? selectedGrade : null}
           onGradeChange={setSelectedGrade}
           viewpoint={selectedViewpoint}
           onViewpointChange={setSelectedViewpoint}
           onQuantityClick={() => setQtySheetOpen(true)}
-          onCropClick={() =>
-            navigate({
-              to: "/crop-select",
-              search: { from: "prediction", return: "/prediction" },
-            })
-          }
+          onCropClick={() => setCropSheetOpen(true)}
           onMarketClick={() => setMarketSheetOpen(true)}
+          onReset={resetConditions}
         />
 
+        {!(filled.crop && filled.market) ? (
+          <div className="mt-6 rounded-2xl border border-dashed border-[#DEE2E6] bg-white px-4 py-10 text-center text-caption text-[#868E96]">
+            작물과 도매시장을 선택하면 AI 예측 결과를 확인할 수 있어요
+          </div>
+        ) : (
+        <>
         {/* 3. AI 추천 카드 */}
         <div className="mt-3">
           <PredictionInsightCard
@@ -332,7 +320,7 @@ function PredictionPage() {
           {/* 5. 상승/기준/하락 예상가 3카드 (정보 전용) */}
           <div className="mt-3">
             <PredictionScenarioCards
-              point={selectedPoint}
+              points={prediction.predictedPoints}
               baseUnitLabel={baseUnitLabel}
               onOpenRangeDetail={() => setRangeDetailOpen(true)}
             />
@@ -344,25 +332,15 @@ function PredictionPage() {
         <div className="mt-4">
           <PredictionCompareCards
             viewpoint={selectedViewpoint}
-            currentPrice={basePrice}
-            baseTitle={baseTitleLabel}
-            datePickerValue={`${md(baseDateIso)} ~ ${md(compareDateIso)}`}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
             quantityUnit={quantityUnit}
             cropName={prediction.cropName}
-            compareIso={compareDateIso}
-            compareLabel={compareDateLabel}
-            comparePrice={comparePoint?.predictedPrice ?? (compareDateIso === compareRangeMin ? comparePrediction?.currentPrice : undefined)}
-            isRecommendedSelection={
-              !!comparePoint?.isRecommendedDate &&
-              effectiveCompareMarketId === marketId
-            }
+            combos={compareCombos}
+            datePickerValue={`${md(cmpD1)} · ${md(cmpD2)}`}
+            marketPickerValue={compareMarketLabel}
             onPickDate={() => setCompareDateOpen(true)}
-            todayShort={todayShort}
-            compareMarketName={compareMarket?.name ?? marketName}
-            compareRegion={compareMarket?.region ?? ""}
             onPickMarket={() => setCompareMarketOpen(true)}
           />
         </div>
@@ -465,6 +443,9 @@ function PredictionPage() {
           </div>
         </section>
 
+        </>
+        )}
+
         {/* 고지문 */}
         <p className="mt-4 px-2 text-center text-meta leading-snug text-[#adb5bd]">
           본 예측은 데이터 기반 AI의 참고용 세컨드 오피니언입니다. 표시되는
@@ -479,14 +460,20 @@ function PredictionPage() {
         value={quantityBoxes}
         unit={quantityUnit}
         onChange={(v, u) => setQuantity(v, u)}
-        heading={isFarmer ? "출하량" : "매입량"}
+        heading="출하량(매입량)"
         itemName={prediction.cropName}
       />
       <MarketPickerSheet
         open={marketSheetOpen}
         onOpenChange={setMarketSheetOpen}
-        value={marketId}
+        value={filled.market ? marketId : null}
         onChange={setMarketId}
+      />
+      <PredictionCropSheet
+        open={cropSheetOpen}
+        onOpenChange={setCropSheetOpen}
+        selectedCropId={filled.crop ? selectedCropId : null}
+        onSelect={setSelectedCropId}
       />
       <ViewpointPickerSheet
         open={viewpointSheetOpen}
@@ -494,30 +481,27 @@ function PredictionPage() {
         value={selectedViewpoint}
         onChange={setSelectedViewpoint}
       />
-      <MarketPickerSheet
+      <CompareMarketsSheet
         open={compareMarketOpen}
         onOpenChange={setCompareMarketOpen}
-        value={effectiveCompareMarketId}
-        onChange={setCompareMarketId}
+        value={compareMarketIds}
+        onChange={setCompareMarketIds}
       />
       <DatePickerSheet
         pair={{
-          baseIso: baseDateIso,
-          compareIso: compareDateIso,
-          onConfirm: (b, c) => {
-            setBaseIso(b);
-            setCompareIso(c);
-          },
+          baseIso: cmpD1,
+          compareIso: cmpD2,
+          onConfirm: (a, b) => setCompareDates([a, b]),
         }}
         open={compareDateOpen}
         onOpenChange={setCompareDateOpen}
-        selected={compareDateIso}
-        title="비교 날짜 선택"
+        selected={cmpD2}
+        title="비교할 날짜 2개 선택"
         showToday={false}
         allowFuture
         minIso={compareRangeMin}
         maxIso={compareRangeMax}
-        onConfirm={(iso) => setCompareIso(iso)}
+        onConfirm={() => {}}
       />
 
       <PredictionRangeDetailSheet

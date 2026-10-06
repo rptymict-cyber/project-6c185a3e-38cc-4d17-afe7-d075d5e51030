@@ -134,26 +134,17 @@ export function DatePickerSheet({
 
   /** 기준일·비교일 선택 규칙 (pair 모드) */
   const pickPair = (iso: string) => {
+    const other = nextTarget === "base" ? pCmp : pBase;
+    if (iso === other) {
+      setWarn("같은 날짜는 두 번 선택할 수 없어요");
+      return;
+    }
     if (nextTarget === "base") {
       setPBase(iso);
-      if (pCmp && pCmp <= iso) {
-        setPCmp("");
-        setWarn("기준일 뒤 날짜로 비교일을 다시 골라주세요");
-      } else setWarn(null);
       setNextTarget("compare");
-      return;
+    } else {
+      setPCmp(iso);
     }
-    if (iso === pBase) {
-      setWarn("기준일과 같은 날은 비교할 수 없어요");
-      return;
-    }
-    if (pBase && iso < pBase) {
-      setPBase(iso);
-      setPCmp("");
-      setWarn("더 이른 날짜를 기준일로 바꿨어요. 비교일을 골라주세요");
-      return;
-    }
-    setPCmp(iso);
     setWarn(null);
   };
 
@@ -182,13 +173,15 @@ export function DatePickerSheet({
       : pCmp
         ? "다른 날짜를 누르면 비교일이 바뀝니다"
         : "비교할 날짜를 선택하세요";
-  const canConfirm = !!pBase && !!pCmp;
+  const canConfirm = !!pBase && !!pCmp && pBase !== pCmp;
+  const pLo = pBase && pCmp ? (pBase < pCmp ? pBase : pCmp) : "";
+  const pHi = pBase && pCmp ? (pBase < pCmp ? pCmp : pBase) : "";
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="rounded-t-2xl p-0 [&>button:first-of-type]:hidden">
+      <SheetContent side="bottom" className="flex max-h-[92dvh] flex-col rounded-t-2xl p-0 [&>button:first-of-type]:hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-5">
+        <div className="flex shrink-0 items-center justify-between px-5 pt-5">
           <h2 className="text-subtitle font-bold text-foreground">{title}</h2>
           <button
             aria-label="닫기"
@@ -199,23 +192,24 @@ export function DatePickerSheet({
           </button>
         </div>
 
+        <div className="min-h-0 flex-1 overflow-y-auto">
         {pair ? (
           <>
             <div className="mx-5 mt-2 flex items-stretch gap-1.5">
               <PairCard
-                label="기준일"
+                label="날짜 1"
                 dot="#4B5563"
                 iso={pBase}
                 sub={pBase ? (pBase === todayStr ? "오늘" : `오늘로부터 +${dayDiff(todayStr, pBase)}일`) : ""}
                 active={nextTarget === "base"}
                 onClick={() => setNextTarget("base")}
               />
-              <span className="self-center text-body font-bold text-[#ADB5BD]">~</span>
+              <span className="self-center text-body font-bold text-[#ADB5BD]">·</span>
               <PairCard
-                label="비교일"
+                label="날짜 2"
                 dot="#2E9E6B"
                 iso={pCmp}
-                sub={pCmp && pBase ? `기준일로부터 +${dayDiff(pBase, pCmp)}일` : ""}
+                sub={pCmp ? (pCmp === todayStr ? "오늘" : `오늘로부터 +${dayDiff(todayStr, pCmp)}일`) : ""}
                 active={nextTarget === "compare"}
                 onClick={() => setNextTarget("compare")}
               />
@@ -293,8 +287,8 @@ export function DatePickerSheet({
                       const isB = !off && iso === pBase;
                       const isC = !off && iso === pCmp;
                       const isT = iso === todayStr && !modifiers.outside;
-                      const hasRange = !!pBase && !!pCmp && !modifiers.outside;
-                      const inMid = hasRange && iso > pBase && iso < pCmp;
+                      const hasRange = !!pLo && !!pHi && pLo !== pHi && !modifiers.outside;
+                      const inMid = hasRange && iso > pLo && iso < pHi;
                       const sun = day.date.getDay() === 0;
                       return (
                         <button
@@ -309,8 +303,8 @@ export function DatePickerSheet({
                               className="absolute inset-y-[3px]"
                               style={{
                                 background: "rgba(46,158,107,0.13)",
-                                left: isB ? "50%" : 0,
-                                right: isC ? "50%" : 0,
+                                left: iso === pLo ? "50%" : 0,
+                                right: iso === pHi ? "50%" : 0,
                               }}
                             />
                           ) : null}
@@ -361,16 +355,23 @@ export function DatePickerSheet({
           />
         </div>
 
+        </div>
+
         {/* Confirm button */}
         {confirmOnSelect && !pair ? <div className="pb-6" /> : (
-        <div className="px-5 pb-6 pt-2">
+        <div className="shrink-0 border-t border-[#F1F3F5] px-5 pb-[calc(16px+env(safe-area-inset-bottom))] pt-2">
+          {pair ? (
+            <p className="mb-2 text-center text-meta text-[#868E96]">
+              서로 다른 날짜 2개를 골라주세요
+            </p>
+          ) : null}
           <button
             type="button"
             disabled={!!pair && !canConfirm}
             onClick={() => {
               if (pair) {
                 if (!canConfirm) return;
-                pair.onConfirm(pBase, pCmp);
+                pair.onConfirm(pLo, pHi);
                 onOpenChange(false);
                 return;
               }
@@ -380,11 +381,6 @@ export function DatePickerSheet({
           >
             {pair ? "확인" : "완료"}
           </button>
-          {pair ? (
-            <p className="mt-2 text-center text-meta text-[#868E96]">
-              오늘부터 2주(14일) 이내 날짜만 선택할 수 있어요
-            </p>
-          ) : null}
         </div>
         )}
       </SheetContent>
