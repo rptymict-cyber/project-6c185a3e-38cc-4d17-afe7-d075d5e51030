@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
+import { SheetSearch } from "./MarketSheet";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { getCorporations } from "@/lib/mock/corporations";
 import { useMarketFilter } from "@/store/market";
@@ -13,6 +15,12 @@ export function CorporationSheet({
 }) {
   const { marketId, marketLabel, corpId, setCorp } = useMarketFilter();
   const corps = getCorporations(marketId);
+  const [q, setQ] = useState("");
+  useEffect(() => {
+    if (open) setQ("");
+  }, [open]);
+  const query = q.trim().toLowerCase();
+  const filtered = query ? corps.filter((c) => c.label.toLowerCase().includes(query)) : corps;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -21,8 +29,14 @@ export function CorporationSheet({
           <SheetTitle className="text-subtitle font-bold">법인 선택</SheetTitle>
         </SheetHeader>
         <div className="px-5 pt-1 text-caption text-[#6C757D]">{marketLabel} 소속</div>
-        <ul className="px-2 pb-6 pt-2">
-          {corps.map((c) => {
+        <div className="pt-2">
+          <SheetSearch value={q} onChange={setQ} placeholder="도매법인명 검색" />
+        </div>
+        {filtered.length === 0 ? (
+          <p className="px-4 py-6 text-center text-caption text-[#868E96]">검색 결과가 없어요.</p>
+        ) : null}
+        <ul className="px-2 pb-6 pt-1">
+          {filtered.map((c) => {
             const active = c.id === corpId;
             return (
               <li key={c.id}>
