@@ -164,13 +164,16 @@ export function DatePickerSheet({
     d.setDate(d.getDate() + n);
     return toISO(d);
   };
-  const QUICK = [
-    { label: "오늘", n: 0 },
-    { label: "내일", n: 1 },
-    { label: "3일 뒤", n: 3 },
-    { label: "1주 뒤", n: 7 },
-    { label: "2주 뒤", n: 14 },
-  ];
+  // 기준일 선택 중: 오늘 하나 / 비교일 선택 중: 기준일로부터 +1·+3·+7·+14일
+  const QUICK =
+    nextTarget === "base"
+      ? [{ label: "오늘", n: 0 }]
+      : [
+          { label: "1일 뒤", n: 1 },
+          { label: "3일 뒤", n: 3 },
+          { label: "1주 뒤", n: 7 },
+          { label: "2주 뒤", n: 14 },
+        ];
   const activeIso = nextTarget === "base" ? pBase : pCmp;
   const pairHint = warn
     ? null
@@ -217,22 +220,31 @@ export function DatePickerSheet({
                 onClick={() => setNextTarget("compare")}
               />
             </div>
-            <div className="no-scrollbar mt-3 flex gap-1.5 overflow-x-auto px-5">
+            <div className="no-scrollbar mt-3 flex items-center gap-1.5 overflow-x-auto px-5">
+              {nextTarget === "compare" ? (
+                <span className="shrink-0 pr-0.5 text-meta text-[#868E96]">기준일로부터</span>
+              ) : null}
               {QUICK.map((q) => {
-                const iso = addDays(todayStr, q.n);
-                const on = activeIso === iso;
+                const iso = addDays(nextTarget === "base" ? todayStr : pBase || todayStr, q.n);
+                const off = isDisabled(fromISO(iso));
+                const on = !off && activeIso === iso;
                 return (
                   <button
                     key={q.label}
                     type="button"
+                    disabled={off}
                     onClick={() => {
-                      if (isDisabled(fromISO(iso))) return;
+                      if (off) return;
                       pickPair(iso);
                       setMonth(fromISO(iso));
                     }}
                     className={[
                       "min-h-9 shrink-0 rounded-full border px-3 text-caption font-semibold",
-                      on ? "border-[#2E9E6B] bg-[#2E9E6B] text-white" : "border-[#E9ECEF] bg-white text-[#495057]",
+                      off
+                        ? "border-[#F1F3F5] bg-[#F8F9FA] text-[#CED4DA]"
+                        : on
+                          ? "border-[#2E9E6B] bg-[#2E9E6B] text-white"
+                          : "border-[#E9ECEF] bg-white text-[#495057]",
                     ].join(" ")}
                   >
                     {q.label}
