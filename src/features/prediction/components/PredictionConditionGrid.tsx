@@ -1,26 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import type { PredictionGrade, PredictionViewpoint } from "../types";
+import { PredictionSheetFrame, SheetPrimaryButton } from "./PredictionSheetFrame";
+
+const DISABLED_HINT = "작물과 도매시장을 먼저 선택해주세요";
 
 interface ConditionCellProps {
   label: string;
   value: string;
   onClick: () => void;
-  accent?: "default" | "green";
+  disabled?: boolean;
+  placeholder?: boolean;
 }
 
-function ConditionCell({ label, value, onClick, accent = "default" }: ConditionCellProps) {
+function ConditionCell({ label, value, onClick, disabled, placeholder }: ConditionCellProps) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
+      aria-disabled={disabled}
       className={cn(
-        "flex w-full items-center justify-between gap-2 rounded-xl border bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]",
-        accent === "green"
-          ? "border-[#3A8A3A]/40 bg-[#F0F9F0]"
-          : "border-[#E9ECEF]",
+        "flex w-full items-center justify-between gap-2 rounded-xl border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]",
+        disabled && "cursor-not-allowed opacity-50 active:bg-white",
       )}
     >
       <div className="min-w-0 flex-1">
@@ -28,11 +31,14 @@ function ConditionCell({ label, value, onClick, accent = "default" }: ConditionC
         <div
           className={cn(
             "mt-0.5 truncate text-body font-bold",
-            accent === "green" ? "text-[#1F5C1F]" : "text-foreground",
+            placeholder || disabled ? "text-[#ADB5BD]" : "text-foreground",
           )}
         >
-          {value}
+          {disabled ? "-" : value}
         </div>
+        {disabled ? (
+          <div className="mt-0.5 text-meta leading-snug text-[#868E96]">{DISABLED_HINT}</div>
+        ) : null}
       </div>
       <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
     </button>
@@ -46,63 +52,64 @@ const GRADE_OPTIONS: { value: PredictionGrade; label: string }[] = [
   { value: "하", label: "하" },
 ];
 
-function GradeCell({
+function GradeSheet({
+  open,
+  onOpenChange,
   value,
   onChange,
 }: {
-  value: PredictionGrade;
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  value: PredictionGrade | null;
   onChange: (g: PredictionGrade) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const current = GRADE_OPTIONS.find((o) => o.value === value)?.label ?? "전체";
+  const [draft, setDraft] = useState<PredictionGrade | null>(value);
+  useEffect(() => {
+    if (open) setDraft(value);
+  }, [open, value]);
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="flex w-full items-center justify-between gap-2 rounded-xl border border-[#E9ECEF] bg-white px-3 py-2.5 text-left active:bg-[#F8F9FA]"
-      >
-        <div className="min-w-0 flex-1">
-          <div className="text-meta font-medium text-[#868E96]">등급</div>
-          <div className="mt-0.5 truncate text-body font-bold text-foreground">{current}</div>
-        </div>
-        <ChevronRight className="h-4 w-4 shrink-0 text-[#ADB5BD]" />
-      </button>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="bottom" className="mx-auto max-w-[430px] rounded-t-2xl p-0">
-          <SheetHeader className="border-b border-[#E9ECEF] px-4 py-3.5 text-left">
-            <SheetTitle className="text-body-lg font-bold text-foreground">등급 선택</SheetTitle>
-          </SheetHeader>
-          <div className="px-4 py-3">
-            <ul className="divide-y divide-[#F1F3F5] overflow-hidden rounded-xl border border-[#E9ECEF] bg-white">
-              {GRADE_OPTIONS.map((o) => {
-                const active = o.value === value;
-                return (
-                  <li key={o.value}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onChange(o.value);
-                        setOpen(false);
-                      }}
-                      className={cn(
-                        "flex min-h-12 w-full items-center justify-between px-4 py-3 text-left active:bg-[#F8F9FA]",
-                        active && "bg-[#F0F9F0]",
-                      )}
-                    >
-                      <span className={cn("text-body font-semibold", active ? "text-[#1F5C1F]" : "text-foreground")}>
-                        {o.label}
-                      </span>
-                      {active && <Check className="h-5 w-5 text-[#3A8A3A]" />}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </SheetContent>
-      </Sheet>
-    </>
+    <PredictionSheetFrame
+      open={open}
+      onOpenChange={onOpenChange}
+      title="등급 선택"
+      footer={
+        <SheetPrimaryButton
+          disabled={!draft}
+          onClick={() => {
+            if (!draft) return;
+            onChange(draft);
+            onOpenChange(false);
+          }}
+        >
+          적용하기
+        </SheetPrimaryButton>
+      }
+    >
+      <div className="px-4 py-3">
+        <ul className="divide-y divide-[#F1F3F5] overflow-hidden rounded-xl border border-[#E9ECEF] bg-white">
+          {GRADE_OPTIONS.map((o) => {
+            const active = o.value === draft;
+            return (
+              <li key={o.value}>
+                <button
+                  type="button"
+                  onClick={() => setDraft(o.value)}
+                  className={cn(
+                    "flex min-h-12 w-full items-center justify-between px-4 py-3 text-left active:bg-[#F8F9FA]",
+                    active && "bg-[#F0F9F0]",
+                  )}
+                >
+                  <span className={cn("text-body font-semibold", active ? "text-[#1F5C1F]" : "text-foreground")}>
+                    {o.label}
+                  </span>
+                  {active && <Check className="h-5 w-5 text-[#3A8A3A]" />}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </PredictionSheetFrame>
   );
 }
 
@@ -118,43 +125,45 @@ export function PredictionConditionGrid({
   onQuantityClick,
   onCropClick,
   onMarketClick,
+  onReset,
 }: {
-  quantityLabel: string;
-  quantityHeading: "출하량" | "매입량";
-  cropLabel: string;
-  marketLabel: string;
-  grade: PredictionGrade;
+  quantityLabel: string | null;
+  quantityHeading: string;
+  cropLabel: string | null;
+  marketLabel: string | null;
+  grade: PredictionGrade | null;
   onGradeChange: (g: PredictionGrade) => void;
   viewpoint: PredictionViewpoint;
   onViewpointChange: (v: PredictionViewpoint) => void;
   onQuantityClick: () => void;
   onCropClick: () => void;
   onMarketClick: () => void;
+  onReset: () => void;
 }) {
+  const [gradeOpen, setGradeOpen] = useState(false);
+  const locked = !cropLabel || !marketLabel;
+  const gradeText = GRADE_OPTIONS.find((o) => o.value === grade)?.label;
+
   return (
     <div>
-      <section>
-        <h2 className="mb-2 text-caption font-bold text-[#1F5C1F]">조회 조건 선택</h2>
-        <div className="grid grid-cols-2 gap-2">
-          <ConditionCell
-            label={quantityHeading}
-            value={quantityLabel}
-            onClick={onQuantityClick}
-          />
-          <ConditionCell label="작물" value={cropLabel} onClick={onCropClick} />
-          <ConditionCell
-            label="도매시장"
-            value={marketLabel}
-            onClick={onMarketClick}
-          />
-          <GradeCell value={grade} onChange={onGradeChange} />
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="text-caption font-bold text-[#1F5C1F]">조회 조건 선택</h2>
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={onReset} className="text-meta font-semibold text-[#868E96] underline-offset-2 active:underline">
+            예측 조건 초기화
+          </button>
+          <button
+            type="button"
+            onClick={() => onViewpointChange(viewpoint === "farmer" ? "wholesaler" : "farmer")}
+            className="text-meta font-semibold text-[#2E9E6B] underline-offset-2 active:underline"
+          >
+            {viewpoint === "farmer" ? "유통인 전환" : "농민 전환"}
+          </button>
         </div>
-        <p className="mt-2 text-meta leading-snug text-[#6C757D]">
-          등급 선택은 아래 예측 차트·리포트 전체에 동일하게 적용됩니다
-        </p>
-      </section>
+      </div>
 
-      <section className="mt-3">
+      {/* 1) 유형 */}
+      <section>
         <div className="mb-1.5 text-caption font-bold text-foreground">유형</div>
         <div className="grid grid-cols-2 gap-1 rounded-xl bg-[#F1F3F5] p-1" role="tablist">
           {(
@@ -182,6 +191,31 @@ export function PredictionConditionGrid({
           })}
         </div>
       </section>
+
+      {/* 2) 작물 3) 도매시장 4) 출하량 5) 등급 */}
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <ConditionCell label="작물" value={cropLabel ?? "선택해주세요"} placeholder={!cropLabel} onClick={onCropClick} />
+        <ConditionCell label="도매시장" value={marketLabel ?? "선택해주세요"} placeholder={!marketLabel} onClick={onMarketClick} />
+        <ConditionCell
+          label={quantityHeading}
+          value={quantityLabel ?? "선택해주세요"}
+          placeholder={!quantityLabel}
+          disabled={locked}
+          onClick={onQuantityClick}
+        />
+        <ConditionCell
+          label="등급"
+          value={gradeText ?? "선택해주세요"}
+          placeholder={!gradeText}
+          disabled={locked}
+          onClick={() => setGradeOpen(true)}
+        />
+      </div>
+      <p className="mt-2 text-meta leading-snug text-[#6C757D]">
+        등급 선택은 아래 예측 차트·리포트 전체에 동일하게 적용됩니다
+      </p>
+
+      <GradeSheet open={gradeOpen} onOpenChange={setGradeOpen} value={grade} onChange={onGradeChange} />
     </div>
   );
 }

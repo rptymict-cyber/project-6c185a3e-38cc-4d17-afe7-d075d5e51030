@@ -116,27 +116,6 @@ export function PredictionInsightCard({
           </span>
         </div>
 
-        <div className="mt-1 flex items-center gap-1.5">
-          <span
-            className={cn(
-              "inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-meta font-bold tabular-nums",
-              priceHigher
-                ? "text-[#E03131]"
-                : priceLower
-                  ? "text-[#1971C2]"
-                  : "text-[#495057]",
-            )}
-          >
-            {priceHigher ? (
-              <TrendingUp className="h-3 w-3" />
-            ) : priceLower ? (
-              <TrendingDown className="h-3 w-3" />
-            ) : null}
-            오늘 대비 {priceHigher ? "+" : priceLower ? "-" : ""}
-            {diffAbs.toLocaleString()}원 / {baseUnitLabel}
-          </span>
-        </div>
-
         {/* KPI 3개 */}
         <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
           <div className="rounded-xl bg-white/12 px-2 py-2 backdrop-blur-sm">
@@ -173,29 +152,6 @@ export function PredictionInsightCard({
             </div>
           </div>
 
-          <div
-            className={cn(
-              "col-span-2 rounded-xl px-2 py-2 sm:col-span-1",
-              gain >= 0
-                ? "bg-white text-[#1F5C1F]"
-                : "bg-white text-[#B02525]",
-            )}
-          >
-            <div className="text-meta font-bold opacity-80">{gainLabel}</div>
-            <div className="mt-1 flex items-baseline whitespace-nowrap">
-              <span
-                className="font-black tabular-nums leading-none"
-                style={{ fontSize: "clamp(15px, 4.2vw, 17px)" }}
-              >
-                {gain === 0
-                  ? "0원"
-                  : `${gain > 0 ? "+" : "-"}${formatFullWon(gainAbs)}`}
-              </span>
-            </div>
-            <div className="mt-0.5 text-meta opacity-70">
-              {quantityLabel}
-            </div>
-          </div>
         </div>
         {/* 비용 미반영 고지 */}
         <p className="mt-2.5 text-meta font-medium text-white/70">

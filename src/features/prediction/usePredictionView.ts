@@ -30,6 +30,9 @@ interface PredictionViewState {
   setQuantity: (value: number, unit: QuantityUnit) => void;
   setQuantityUnit: (u: QuantityUnit) => void;
   setMarketId: (id: string) => void;
+  /** 조건 입력 여부 (예측 조건 초기화 시 false) */
+  filled: { crop: boolean; market: boolean; quantity: boolean; grade: boolean };
+  resetConditions: () => void;
 }
 
 const DEFAULT_CROP_ID = PREDICTABLE_CROPS[0].id;
@@ -47,17 +50,31 @@ export const usePredictionView = create<PredictionViewState>()(
       quantityBoxes: DEFAULT_QTY,
       quantityUnit: DEFAULT_UNIT,
       marketId: "seoul-garak",
+      filled: { crop: true, market: true, quantity: true, grade: true },
+      resetConditions: () =>
+        set({
+          selectedViewpoint: "farmer",
+          filled: { crop: false, market: false, quantity: false, grade: false },
+        }),
       setSelectedCropId: (id) =>
-        set({ selectedCropId: isPredictableCropId(id) ? id : DEFAULT_CROP_ID }),
+        set({
+          selectedCropId: isPredictableCropId(id) ? id : DEFAULT_CROP_ID,
+          filled: { ...get().filled, crop: true },
+        }),
       setSelectedViewpoint: (v) => set({ selectedViewpoint: v }),
       setSelectedRangeDays: (d) => set({ selectedRangeDays: d }),
-      setSelectedGrade: (g) => set({ selectedGrade: g }),
+      setSelectedGrade: (g) =>
+        set({ selectedGrade: g, filled: { ...get().filled, grade: true } }),
       setQuantityBoxes: (n) => {
         const unit = get().quantityUnit;
         set({ quantityBoxes: clampQuantity(n, unit) });
       },
       setQuantity: (value, unit) =>
-        set({ quantityUnit: unit, quantityBoxes: clampQuantity(value, unit) }),
+        set({
+          quantityUnit: unit,
+          quantityBoxes: clampQuantity(value, unit),
+          filled: { ...get().filled, quantity: true },
+        }),
       setQuantityUnit: (u) => {
         const { quantityUnit, quantityBoxes } = get();
         set({
@@ -65,7 +82,8 @@ export const usePredictionView = create<PredictionViewState>()(
           quantityBoxes: convertQuantity(quantityBoxes, quantityUnit, u),
         });
       },
-      setMarketId: (id) => set({ marketId: id }),
+      setMarketId: (id) =>
+        set({ marketId: id, filled: { ...get().filled, market: true } }),
     }),
     {
       name: "agdict:aiPricePrediction",
@@ -93,6 +111,8 @@ export const usePredictionView = create<PredictionViewState>()(
           state.marketId = "seoul-garak";
         }
         if (!state.selectedGrade) state.selectedGrade = DEFAULT_GRADE;
+        if (!state.filled)
+          state.filled = { crop: true, market: true, quantity: true, grade: true };
       },
     },
   ),

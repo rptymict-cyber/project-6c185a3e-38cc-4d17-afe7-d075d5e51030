@@ -1,9 +1,4 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { PredictionSheetFrame, SheetPrimaryButton } from "./PredictionSheetFrame";
 import type { PredictionPoint } from "../types";
 
 export function PredictionRangeDetailSheet({
@@ -27,16 +22,12 @@ export function PredictionRangeDetailSheet({
   const likelyHigh = has ? Math.round(mid! + spread * 0.55) : 0;
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="bottom"
-        className="mx-auto max-w-[430px] rounded-t-2xl p-0"
-      >
-        <SheetHeader className="border-b border-[#E9ECEF] px-4 py-3.5 text-left">
-          <SheetTitle className="text-body-lg font-bold text-foreground">
-            예측 범위 자세히
-          </SheetTitle>
-        </SheetHeader>
+    <PredictionSheetFrame
+      open={open}
+      onOpenChange={onOpenChange}
+      title="예측 범위 자세히"
+      footer={<SheetPrimaryButton onClick={() => onOpenChange(false)}>확인</SheetPrimaryButton>}
+    >
         <div className="px-4 py-4">
           <p className="text-caption leading-snug text-[#495057]">
             AI는 하나의 값이 아니라 가격이 들어올 <b>범위</b>를 예측합니다.
@@ -84,19 +75,10 @@ export function PredictionRangeDetailSheet({
           )}
 
           <div className="mt-3 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-meta leading-snug text-[#2c6444]">
-            📌 화면의 상승 예상가·기준 예상가·하락 예상가는 이 범위에서 각각 위쪽·가운데·아래쪽
-            값입니다. 기준 예상가가 가장 가능성이 높습니다.
+            📌 차트의 밴드는 낙관~비관 범위, 가운데 선은 예상 가격입니다. 예상 가격이 가장 가능성이 높습니다.
           </div>
 
-          <button
-            type="button"
-            onClick={() => onOpenChange(false)}
-            className="mt-4 grid h-11 w-full place-items-center rounded-xl bg-[#2E9E6B] text-body font-bold text-white active:bg-[#1F7A50]"
-          >
-            확인
-          </button>
         </div>
-      </SheetContent>
-    </Sheet>
+    </PredictionSheetFrame>
   );
 }

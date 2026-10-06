@@ -1,91 +1,70 @@
 import type { PredictionPoint } from "../types";
 
-function fmtDiff(n: number) {
-  if (n === 0) return "0";
-  const sign = n > 0 ? "+" : "-";
-  return `${sign}${Math.abs(n).toLocaleString()}`;
+function md(iso: string) {
+  const [, m, d] = iso.slice(0, 10).split("-").map(Number);
+  return `${m}/${d}`;
 }
 
+/** 선택 예측 기간 내 중립 예측값 기준 최고가 / 예상 평균가 / 최저가 */
 export function PredictionScenarioCards({
-  point,
+  points,
   baseUnitLabel,
   onOpenRangeDetail,
 }: {
-  point?: PredictionPoint;
+  points: PredictionPoint[];
   baseUnitLabel: string;
   onOpenRangeDetail: () => void;
 }) {
-  const mid = point?.predictedPrice;
-  const opt = point?.optimisticPrice;
-  const pess = point?.pessimisticPrice;
-
-  if (mid == null || opt == null || pess == null) return null;
-
-  const optDiff = opt - mid;
-  const pessDiff = pess - mid;
+  const fut = points.filter((p) => !p.isToday && p.actualPrice === undefined && p.predictedPrice !== undefined);
+  if (!fut.length) return null;
+  const max = fut.reduce((a, b) => (b.predictedPrice! > a.predictedPrice! ? b : a));
+  const min = fut.reduce((a, b) => (b.predictedPrice! < a.predictedPrice! ? b : a));
+  const avg = Math.round(fut.reduce((s, p) => s + p.predictedPrice!, 0) / fut.length);
 
   return (
     <section>
       <div className="grid grid-cols-3 gap-2">
-        {/* 낙관 */}
         <div className="rounded-[13px] border border-[#E9ECEF] bg-white p-2.5 text-center">
-          <div className="text-meta font-bold text-[#E8590C]">▲ 상승 예상가</div>
+          <div className="text-meta font-bold text-[#E8590C]">▲ 최고가</div>
           <div className="mt-1 flex items-baseline justify-center gap-0.5">
             <span className="text-subtitle font-black tabular-nums text-foreground">
-              {opt.toLocaleString()}
+              {max.predictedPrice!.toLocaleString()}
             </span>
             <span className="text-meta font-semibold text-[#6C757D]">원</span>
           </div>
-          <div className="mt-0.5 text-meta font-bold text-[#E8590C]">
-            {fmtDiff(optDiff)}
-          </div>
+          <div className="mt-0.5 text-meta font-bold text-[#E8590C]">{md(max.date)}</div>
         </div>
-        {/* 중립 */}
         <div className="relative rounded-[13px] border-2 border-[#2E9E6B] bg-[#F0F9F0] p-2.5 text-center">
-          <div className="text-meta font-bold text-[#1F5C1F]">● 기준 예상가</div>
+          <div className="text-meta font-bold text-[#1F5C1F]">● 예상 평균가</div>
           <div className="mt-1 flex items-baseline justify-center gap-0.5">
-            <span className="text-subtitle font-black tabular-nums text-[#1F5C1F]">
-              {mid.toLocaleString()}
-            </span>
+            <span className="text-subtitle font-black tabular-nums text-[#1F5C1F]">{avg.toLocaleString()}</span>
             <span className="text-meta font-semibold text-[#1F5C1F]/70">원</span>
           </div>
-          <div className="mt-0.5 text-meta font-semibold leading-tight text-[#1F5C1F]">가장 가능성 높은 예상 가격</div>
+          <div className="mt-0.5 text-meta font-semibold leading-tight text-[#1F5C1F]">기간 평균</div>
         </div>
-        {/* 비관 */}
         <div className="rounded-[13px] border border-[#E9ECEF] bg-white p-2.5 text-center">
-          <div className="text-meta font-bold text-[#1971C2]">▼ 하락 예상가</div>
+          <div className="text-meta font-bold text-[#1971C2]">▼ 최저가</div>
           <div className="mt-1 flex items-baseline justify-center gap-0.5">
             <span className="text-subtitle font-black tabular-nums text-foreground">
-              {pess.toLocaleString()}
+              {min.predictedPrice!.toLocaleString()}
             </span>
             <span className="text-meta font-semibold text-[#6C757D]">원</span>
           </div>
-          <div className="mt-0.5 text-meta font-bold text-[#1971C2]">
-            {fmtDiff(pessDiff)}
-          </div>
+          <div className="mt-0.5 text-meta font-bold text-[#1971C2]">{md(min.date)}</div>
         </div>
       </div>
+      <div className="mt-1 text-right text-meta text-[#ADB5BD]">원 / {baseUnitLabel}</div>
 
       <div className="mt-2 rounded-xl bg-[#F0F9F0] px-3 py-2 text-meta leading-snug text-[#2c6444]">
-        💡 추천일 시세는 보통 기준 예상가 정도이고, 잘 되면 상승 예상가, 안 되면 하락 예상가까지
-        움직일 수 있어요. 뒤로 갈수록 범위가 넓어지는 건 그만큼 예측이
-        어렵다는 뜻이에요.{" "}
-        <span
-          role="button"
-          tabIndex={0}
+        💡 낙관~비관 범위는 예측 불확실성을 나타내요{" "}
+        <button
+          type="button"
           onClick={onOpenRangeDetail}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              onOpenRangeDetail();
-            }
-          }}
-          className="ml-0.5 inline-flex min-h-9 cursor-pointer items-center whitespace-nowrap font-bold text-[#1F7A50] underline underline-offset-2"
+          className="ml-0.5 inline-flex min-h-9 items-center whitespace-nowrap font-bold text-[#1F7A50] underline underline-offset-2"
         >
           자세히›
-        </span>
+        </button>
       </div>
-
     </section>
   );
 }
