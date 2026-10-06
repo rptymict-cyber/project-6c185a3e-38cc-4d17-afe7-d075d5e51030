@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { CalendarDays } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { MapPin, ChevronRight, ChevronDown, Umbrella } from "lucide-react";
 import { useLocation } from "@/store/location";
@@ -19,6 +20,12 @@ export function HomeWeatherBar() {
   const pending = useLocation((s) => s.pending);
   const regionId = useWeatherRegion((s) => s.regionId);
   const [regionOpen, setRegionOpen] = useState(false);
+  const [todayLabel, setTodayLabel] = useState("");
+  useEffect(() => {
+    const d = new Date();
+    const W = ["일", "월", "화", "수", "목", "금", "토"];
+    setTodayLabel(`${d.getMonth() + 1}월 ${d.getDate()}일 (${W[d.getDay()]})`);
+  }, []);
 
   // 사용자가 지역을 직접 선택했으면 그 지역, 아니면 권한 여부에 따라 결정
   const isFallback = regionId === null && granted !== true;
@@ -48,6 +55,15 @@ export function HomeWeatherBar() {
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-1">
         {/* 위치 */}
         <div className="flex items-center">
+          <span
+            className="flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/30 bg-white/[0.14] px-3 text-white"
+            style={{ fontSize: 15, fontWeight: 600, lineHeight: "22px" }}
+          >
+            <CalendarDays className="h-4 w-4 shrink-0" />
+            {todayLabel}
+          </span>
+        </div>
+        <div className="absolute right-4 top-3.5 z-10 flex items-center">
           <span
             role="button"
             tabIndex={0}
@@ -125,7 +141,7 @@ export function HomeWeatherBar() {
         ) : null}
       </div>
 
-      <div className="flex shrink-0 items-center gap-1 pl-2">
+      <div className="flex shrink-0 items-center gap-1 pl-2 pt-9">
         <WeatherIllustration size={82} className="max-w-[88px]" />
         <span
           aria-hidden="true"
