@@ -131,6 +131,7 @@ function PredictionPage() {
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
   useEffect(() => {
     setSelectedDayIndex(null);
+    setBaseIso(null);
   }, [selectedRangeDays, selectedCropId, selectedGrade, marketId]);
 
   if (!prediction || !cropMeta) {
@@ -345,7 +346,7 @@ function PredictionPage() {
             viewpoint={selectedViewpoint}
             currentPrice={basePrice}
             baseTitle={baseTitleLabel}
-            datePickerValue={`${md(baseDateIso)} → ${md(compareDateIso)}`}
+            datePickerValue={`${md(baseDateIso)} ~ ${md(compareDateIso)}`}
             baseUnitLabel={baseUnitLabel}
             quantityBoxes={quantityBoxes}
             quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
