@@ -233,7 +233,7 @@ function PredictionPage() {
         <PredictionConditionGrid
           quantityHeading="출하량(매입량)"
           quantityLabel={filled.quantity ? `${quantityBoxes.toLocaleString()}${QUANTITY_UNIT_LABEL[quantityUnit]}` : null}
-          cropLabel={filled.crop ? `${cropMeta.categoryName} · ${cropMeta.name} · ${cropMeta.varietyName}` : null}
+          cropLabel={filled.crop ? cropMeta.name : null}
           marketLabel={filled.market ? marketName : null}
           grade={filled.grade ? selectedGrade : null}
           onGradeChange={setSelectedGrade}
@@ -321,6 +321,7 @@ function PredictionPage() {
           <div className="mt-3">
             <PredictionScenarioCards
               points={prediction.predictedPoints}
+              rangeDays={prediction.predictionRangeDays}
               baseUnitLabel={baseUnitLabel}
               onOpenRangeDetail={() => setRangeDetailOpen(true)}
             />

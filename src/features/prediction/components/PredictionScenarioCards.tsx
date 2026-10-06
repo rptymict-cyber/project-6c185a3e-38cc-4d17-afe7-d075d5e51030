@@ -1,17 +1,20 @@
 import type { PredictionPoint } from "../types";
 
+const DOW = ["일", "월", "화", "수", "목", "금", "토"];
 function md(iso: string) {
-  const [, m, d] = iso.slice(0, 10).split("-").map(Number);
-  return `${m}/${d}`;
+  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
+  return `${m}/${d}(${DOW[new Date(y, m - 1, d).getDay()]})`;
 }
 
 /** 선택 예측 기간 내 중립 예측값 기준 최고가 / 예상 평균가 / 최저가 */
 export function PredictionScenarioCards({
   points,
+  rangeDays,
   baseUnitLabel,
   onOpenRangeDetail,
 }: {
   points: PredictionPoint[];
+  rangeDays: number;
   baseUnitLabel: string;
   onOpenRangeDetail: () => void;
 }) {
@@ -25,22 +28,22 @@ export function PredictionScenarioCards({
     <section>
       <div className="grid grid-cols-3 gap-2">
         <div className="rounded-[13px] border border-[#E9ECEF] bg-white p-2.5 text-center">
-          <div className="text-meta font-bold text-[#E8590C]">▲ 최고가</div>
+          <div className="text-meta font-bold text-[#E03B3B]">▲ 최고가</div>
           <div className="mt-1 flex items-baseline justify-center gap-0.5">
             <span className="text-subtitle font-black tabular-nums text-foreground">
               {max.predictedPrice!.toLocaleString()}
             </span>
-            <span className="text-meta font-semibold text-[#6C757D]">원</span>
+            <span className="text-subtitle font-black text-foreground">원</span>
           </div>
-          <div className="mt-0.5 text-meta font-bold text-[#E8590C]">{md(max.date)}</div>
+          <div className="mt-0.5 text-meta font-semibold text-[#868E96]">{md(max.date)}</div>
         </div>
         <div className="relative rounded-[13px] border-2 border-[#2E9E6B] bg-[#F0F9F0] p-2.5 text-center">
           <div className="text-meta font-bold text-[#1F5C1F]">● 예상 평균가</div>
           <div className="mt-1 flex items-baseline justify-center gap-0.5">
             <span className="text-subtitle font-black tabular-nums text-[#1F5C1F]">{avg.toLocaleString()}</span>
-            <span className="text-meta font-semibold text-[#1F5C1F]/70">원</span>
+            <span className="text-subtitle font-black text-[#1F5C1F]">원</span>
           </div>
-          <div className="mt-0.5 text-meta font-semibold leading-tight text-[#1F5C1F]">기간 평균</div>
+          <div className="mt-0.5 text-meta font-semibold leading-tight text-[#1F5C1F]">앞으로 {rangeDays}일 평균</div>
         </div>
         <div className="rounded-[13px] border border-[#E9ECEF] bg-white p-2.5 text-center">
           <div className="text-meta font-bold text-[#1971C2]">▼ 최저가</div>
@@ -48,15 +51,15 @@ export function PredictionScenarioCards({
             <span className="text-subtitle font-black tabular-nums text-foreground">
               {min.predictedPrice!.toLocaleString()}
             </span>
-            <span className="text-meta font-semibold text-[#6C757D]">원</span>
+            <span className="text-subtitle font-black text-foreground">원</span>
           </div>
-          <div className="mt-0.5 text-meta font-bold text-[#1971C2]">{md(min.date)}</div>
+          <div className="mt-0.5 text-meta font-semibold text-[#868E96]">{md(min.date)}</div>
         </div>
       </div>
       <div className="mt-1 text-right text-meta text-[#ADB5BD]">원 / {baseUnitLabel}</div>
 
       <div className="mt-2 rounded-xl bg-[#F0F9F0] px-3 py-2 text-meta leading-snug text-[#2c6444]">
-        💡 낙관~비관 범위는 예측 불확실성을 나타내요{" "}
+        💡 연한 초록 띠는 AI가 예상하는 <b>낙관~비관 가격 범위</b>예요. 뒤로 갈수록 띠가 넓어지는 건 그만큼 예측이 어렵다는 뜻이에요.{" "}
         <button
           type="button"
           onClick={onOpenRangeDetail}
