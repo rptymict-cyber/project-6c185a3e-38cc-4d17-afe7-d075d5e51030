@@ -321,6 +321,7 @@ function PredictionPage() {
           <div className="mt-3">
             <PredictionScenarioCards
               points={prediction.predictedPoints}
+              rangeDays={prediction.predictionRangeDays}
               baseUnitLabel={baseUnitLabel}
               onOpenRangeDetail={() => setRangeDetailOpen(true)}
             />
