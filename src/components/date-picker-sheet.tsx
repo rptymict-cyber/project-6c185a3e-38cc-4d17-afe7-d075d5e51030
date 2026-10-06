@@ -214,35 +214,6 @@ export function DatePickerSheet({
                 onClick={() => setNextTarget("compare")}
               />
             </div>
-            <div className="no-scrollbar mt-3 flex items-center gap-1.5 overflow-x-auto px-5">
-              {QUICK.map((q) => {
-                const iso = addDays(nextTarget === "base" ? todayStr : pBase || todayStr, q.n);
-                const off = isDisabled(fromISO(iso));
-                const on = !off && activeIso === iso;
-                return (
-                  <button
-                    key={q.label}
-                    type="button"
-                    disabled={off}
-                    onClick={() => {
-                      if (off) return;
-                      pickPair(iso);
-                      setMonth(fromISO(iso));
-                    }}
-                    className={[
-                      "min-h-9 shrink-0 rounded-full border px-3 text-caption font-semibold",
-                      off
-                        ? "border-[#F1F3F5] bg-[#F8F9FA] text-[#CED4DA]"
-                        : on
-                          ? "border-[#2E9E6B] bg-[#2E9E6B] text-white"
-                          : "border-[#E9ECEF] bg-white text-[#495057]",
-                    ].join(" ")}
-                  >
-                    {q.label}
-                  </button>
-                );
-              })}
-            </div>
             {warn ? (
               <div className="mx-5 mt-3 rounded-lg bg-[#FFF4E6] px-3 py-2 text-caption font-semibold text-[#D9480F]">
                 ⚠ {warn}
