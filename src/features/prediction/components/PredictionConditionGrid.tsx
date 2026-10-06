@@ -146,25 +146,8 @@ export function PredictionConditionGrid({
 
   return (
     <div>
-      <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-caption font-bold text-[#1F5C1F]">조회 조건 선택</h2>
-        <div className="flex items-center gap-3">
-          <button type="button" onClick={onReset} className="text-meta font-semibold text-[#868E96] underline-offset-2 active:underline">
-            예측 조건 초기화
-          </button>
-          <button
-            type="button"
-            onClick={() => onViewpointChange(viewpoint === "farmer" ? "wholesaler" : "farmer")}
-            className="text-meta font-semibold text-[#2E9E6B] underline-offset-2 active:underline"
-          >
-            {viewpoint === "farmer" ? "유통인 전환" : "농민 전환"}
-          </button>
-        </div>
-      </div>
-
       {/* 1) 유형 */}
       <section>
-        <div className="mb-1.5 text-caption font-bold text-foreground">유형</div>
         <div className="grid grid-cols-2 gap-1 rounded-xl bg-[#F1F3F5] p-1" role="tablist">
           {(
             [
