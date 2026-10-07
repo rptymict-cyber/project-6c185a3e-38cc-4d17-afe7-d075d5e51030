@@ -523,11 +523,9 @@ function PredictionChartBase({
         body = (
           <>
             <div className="font-bold">{korDate(r.date)}</div>
-            <div className="mt-0.5 tabular-nums">낙관 {b.hi.toLocaleString()}원</div>
-            <div className="tabular-nums">
-              중립 <span className="text-body font-extrabold">{value.toLocaleString()}</span>원/{baseUnitLabel}
-            </div>
-            <div className="tabular-nums">비관 {b.lo.toLocaleString()}원</div>
+            <div className="mt-0.5 tabular-nums">높게 본 가격 {b.hi.toLocaleString()}원</div>
+            <div className="tabular-nums">예상 가격 {value.toLocaleString()}원</div>
+            <div className="tabular-nums">낮게 본 가격 {b.lo.toLocaleString()}원</div>
           </>
         );
       } else {
@@ -588,8 +586,8 @@ function PredictionChartBase({
 
   const legend: Array<{ label: string; color: string; kind: "solid" | "dash" | "bar" | "dot"; dim?: boolean }> = [
     { label: "실제 평균가", color: ACTUAL, kind: "solid" },
-    { label: "중립 예측", color: PRED, kind: "dash", dim: !showMid },
-    { label: "낙관~비관 범위", color: BAND_FILL, kind: "bar", dim: !showBand },
+    { label: "예상 가격", color: PRED, kind: "dash", dim: !showMid },
+    { label: "예측 범위", color: BAND_FILL, kind: "bar", dim: !showBand },
     ...(showTurn
       ? [{ label: "전환 시점(가격 반등·조정 전환 예상)", color: TURN, kind: "dot" as const }]
       : []),

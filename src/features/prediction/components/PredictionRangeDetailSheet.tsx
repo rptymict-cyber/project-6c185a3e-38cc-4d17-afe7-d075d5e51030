@@ -41,9 +41,9 @@ export function PredictionRangeDetailSheet({
 
   const cards = has
     ? [
-        { key: "opt", title: "낙관", desc: "공급이 줄거나 수요가 늘면 닿을 수 있는 가격", price: opt!, strong: false },
-        { key: "mid", title: "중립", desc: "차트의 가운데 점선, 예상 가격", price: mid!, strong: true },
-        { key: "pess", title: "비관", desc: "반입량이 늘거나 날씨가 나빠지면 내려갈 수 있는 가격", price: pess!, strong: false },
+        { key: "opt", title: "높게 본 가격", desc: "공급이 줄거나 수요가 늘어 가격이 높게 형성될 경우", price: opt!, strong: false },
+        { key: "mid", title: "예상 가격", desc: "AI가 예측한 기본 가격 (차트의 가운데 점선)", price: mid!, strong: true },
+        { key: "pess", title: "낮게 본 가격", desc: "반입량이 늘거나 날씨가 나빠 가격이 낮게 형성될 경우", price: pess!, strong: false },
       ]
     : [];
 
@@ -86,11 +86,7 @@ export function PredictionRangeDetailSheet({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
                       <span className="text-[14px] font-bold text-foreground">{c.title}</span>
-                      {c.strong && (
-                        <span className="rounded-full bg-[#2E9E6B] px-[7px] py-0.5 text-[10px] font-bold text-white">
-                          가장 가능성 높아요
-                        </span>
-                      )}
+                      
                     </div>
                     <div className="mt-0.5 text-[11px] leading-[1.4] text-[#868E96]">{c.desc}</div>
                   </div>
@@ -119,14 +115,14 @@ export function PredictionRangeDetailSheet({
                 ))}
               </div>
               <div className="relative mt-1 h-4 text-[11px] text-[#868E96]">
-                <span className="absolute left-0">비관 {pess!.toLocaleString()}</span>
+                <span className="absolute left-0">낮게 본 {pess!.toLocaleString()}</span>
                 <span
                   className="absolute -translate-x-1/2 font-bold text-[#1F5C1F]"
                   style={{ left: `${Math.min(70, Math.max(30, midPct))}%` }}
                 >
-                  중립 {mid!.toLocaleString()}
+                  예상 {mid!.toLocaleString()}
                 </span>
-                <span className="absolute right-0">낙관 {opt!.toLocaleString()}</span>
+                <span className="absolute right-0">높게 본 {opt!.toLocaleString()}</span>
               </div>
             </div>
 
@@ -146,7 +142,7 @@ export function PredictionRangeDetailSheet({
         )}
 
         <div className="mt-3 rounded-xl bg-[#F0F9F0] px-3 py-2.5 text-meta leading-snug text-[#2c6444]">
-          📌 차트의 연한 초록 띠는 낙관~비관 범위, 가운데 점선은 중립(예상 가격)이에요.
+          📌 차트의 연한 초록 띠는 높게~낮게 본 가격의 범위, 가운데 점선은 예상 가격이에요.
         </div>
       </div>
     </PredictionSheetFrame>
