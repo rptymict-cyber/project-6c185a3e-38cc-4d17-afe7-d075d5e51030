@@ -17,7 +17,6 @@ const Y_STEPS = [10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000, 10000];
 // TODO(미확정): 거래량 단위(현재 Mock)
 const VOL_UNIT = "t";
 const TAP_MOVE_PX = 8;
-const TOOLTIP_MS = 2600;
 /** 핀치 한 번에 한 단계 이동 판정 비율 */
 const PINCH_STEP_RATIO = 1.2;
 
@@ -294,6 +293,7 @@ function PredictionChartBase({
     const dx = e.clientX - g.startX;
     const dy = e.clientY - g.startY;
     if (!g.moved && Math.abs(dx) < TAP_MOVE_PX && Math.abs(dy) < TAP_MOVE_PX) return;
+    if (!g.moved && Math.abs(dx) >= Math.abs(dy)) setTip(null);
     if (!g.moved && Math.abs(dy) > Math.abs(dx)) {
       // 세로 제스처 → 페이지 스크롤에 양보
       ptrs.current.delete(e.pointerId);
@@ -384,12 +384,15 @@ function PredictionChartBase({
     return () => el.removeEventListener("wheel", h);
   }, []);
 
-  // 툴팁 자동 숨김
+  // 차트 바깥을 탭하면 툴팁 숨김
   useEffect(() => {
-    if (!tip) return;
-    const t = setTimeout(() => setTip(null), TOOLTIP_MS);
-    return () => clearTimeout(t);
-  }, [tip]);
+    const onDown = (e: PointerEvent) => {
+      const el = wrapRef.current;
+      if (el && !el.contains(e.target as Node)) setTip(null);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, []);
 
   const isDefault =
     level === 0 &&
