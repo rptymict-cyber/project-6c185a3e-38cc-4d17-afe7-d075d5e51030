@@ -510,6 +510,11 @@ function PredictionPage() {
         onOpenChange={setRangeDetailOpen}
         point={selectedPoint}
         baseUnitLabel={baseUnitLabel}
+        quantityBoxes={quantityBoxes}
+        quantityUnit={quantityUnit}
+        quantityUnitLabel={QUANTITY_UNIT_LABEL[quantityUnit]}
+        cropName={prediction.cropName}
+        viewpoint={selectedViewpoint}
       />
     </AppShell>
   );
