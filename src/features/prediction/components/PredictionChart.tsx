@@ -16,7 +16,8 @@ const MAX_PAST_DAYS = 30;
 const ZOOM_IN_PAST = 3;
 const ZOOM_IN_FUTURE = 4;
 // TODO(미확정): 거래량 막대 최대 높이 비율(차트 영역 대비)
-const VOL_MAX_RATIO = 0.3;
+const VOL_MAX_RATIO = 0.28;
+const Y_STEPS = [10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000, 10000];
 // TODO(미확정): 거래량 단위(현재 Mock)
 const VOL_UNIT = "t";
 const TAP_MOVE_PX = 8;
@@ -187,12 +188,8 @@ function PredictionChartBase({
     for (const r of rows) {
       if (r.i < todayIdx || r.predictedPrice === undefined) continue;
       const k = r.i - todayIdx;
-      const fromData =
-        r.optimisticPrice !== undefined && r.pessimisticPrice !== undefined
-          ? (r.optimisticPrice - r.pessimisticPrice) / 2
-          : 0;
-      const formula = ((40 + 24 * k) * r.predictedPrice) / 10000;
-      const hw = k === 0 ? 0 : Math.max(prev, fromData, formula);
+      const formula = r.predictedPrice * (0.00284 + 0.0017 * k);
+      const hw = k === 0 ? 0 : Math.max(prev, formula);
       prev = hw;
       m.set(r.i, Math.round(hw));
     }
@@ -214,15 +211,17 @@ function PredictionChartBase({
       if (r.actualPrice !== undefined) vals.push(r.actualPrice);
       if (r.predictedPrice !== undefined) vals.push(r.predictedPrice);
       const b = bandOf(r);
-      if (showBand && b) vals.push(b.hi, b.lo);
+      if (b) vals.push(b.hi, b.lo); // 예측 범위 칩 ON/OFF와 무관 → 토글해도 축 고정
     }
     if (!vals.length) return [0, 1];
     const lo = Math.min(...vals);
     const hi = Math.max(...vals);
-    const pad = Math.max((hi - lo) * 0.2, hi * 0.01);
-    return [lo - pad, hi + pad];
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, showBand]);
+    const mid = (lo + hi) / 2;
+    const step = Y_STEPS.find((s) => s >= mid * 0.035) ?? 10000;
+    const padV = mid * 0.011;
+    return [Math.floor((lo - padV) / step) * step, Math.ceil((hi + padV) / step) * step];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
   const yOf = (v: number) => PAD.top + (1 - (v - yMin) / (yMax - yMin || 1)) * plotH;
 
   // 거래량 (과거 구간만, Mock)
@@ -231,7 +230,7 @@ function PredictionChartBase({
     .filter((r) => r.actualPrice !== undefined && !r.isToday)
     .map((r) => ({ r, v: volOf(r) }));
   const volMax = Math.max(1, ...vols.map((v) => v.v));
-  const barW = Math.max(2, Math.min(10, (plotW / Math.max(1, win.span)) * 0.5));
+  const barW = Math.max(1.5, (plotW / Math.max(1, win.span)) * 0.6);
   const volH = (v: number) => (v / volMax) * plotH * VOL_MAX_RATIO;
 
   // ── 제스처 (Pointer Events)
@@ -433,25 +432,22 @@ function PredictionChartBase({
 
   // X축 라벨: 보이는 구간 균등 분할(시작·끝 포함)
   const xTicks = (() => {
-    const n = Math.min(5, visible.length);
-    const out = new Set<number>();
-    for (let k = 0; k < n; k++) {
-      const idx = Math.round(visLo + (k / Math.max(1, n - 1)) * (visHi - visLo));
-      if (idx >= 0 && idx < total) out.add(idx);
+    const raw = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round(visLo + f * (visHi - visLo)));
+    const out = [...new Set(raw)].filter((i) => i >= 0 && i < total);
+    if (todayIdx >= visLo && todayIdx <= visHi && !out.includes(todayIdx)) {
+      const nearest = out.reduce((a, b) => (Math.abs(b - todayIdx) < Math.abs(a - todayIdx) ? b : a), out[0]);
+      out.splice(out.indexOf(nearest), 1, todayIdx);
     }
-    if (todayIdx >= visLo && todayIdx <= visHi) {
-      for (const t of [...out]) if (Math.abs(xOf(t) - xOf(todayIdx)) < 30) out.delete(t);
-      out.add(todayIdx);
-    }
-    return [...out].sort((a, b) => a - b);
+    return out
+      .filter((i) => i === todayIdx || Math.abs(xOf(i) - xOf(todayIdx)) >= 30)
+      .sort((a, b) => a - b);
   })();
 
   const yTicks = (() => {
-    let step = 500;
-    const count = (st: number) => Math.floor(yMax / st) - Math.ceil(yMin / st) + 1;
-    while (count(step) > 7) step = step === 500 ? 1000 : step * 2;
+    const mid = (yMin + yMax) / 2;
+    const step = Y_STEPS.find((s) => s >= mid * 0.035) ?? 10000;
     const out: number[] = [];
-    for (let v = Math.ceil(yMin / step) * step; v <= yMax; v += step) out.push(v);
+    for (let v = yMin; v <= yMax + 0.001; v += step) out.push(v);
     return out;
   })();
 
@@ -706,7 +702,7 @@ function PredictionChartBase({
 
             {/* 전환 시점: OFF = 25% 마커만, ON = 불투명 + 짧은 "전환" 라벨 (40px 이내 겹침은 하나만) */}
             {(() => {
-              const marks = visible.filter((r) => r.turn && r.predictedPrice !== undefined);
+              const marks = showTurn ? visible.filter((r) => r.turn && r.predictedPrice !== undefined) : [];
               let lastLabelX = -Infinity;
               const avoid = [maxFut, minFut].filter(Boolean).map((r) => ({ x: xOf(r!.i), y: yOf(r!.predictedPrice!) }));
               return marks.map((r) => {
@@ -715,19 +711,18 @@ function PredictionChartBase({
                 const showLabel = showTurn && cx - lastLabelX > 40;
                 if (showLabel) lastLabelX = cx;
                 const nearCallout = avoid.some((p) => Math.abs(p.x - cx) < 50 && Math.abs(p.y - cy) < 40);
-                const ly = nearCallout ? cy + 18 : cy + 4;
-                const right = cx > PAD.left + plotW - 40;
+                const ly = nearCallout ? cy + 16 : cy - 8;
                 return (
-                  <g key={`t-${r.i}`} opacity={showTurn ? 1 : 0.25}>
-                    <circle cx={cx} cy={cy} r={5} fill={TURN} stroke="#fff" strokeWidth={1.6} />
+                  <g key={`t-${r.i}`}>
+                    <circle cx={cx} cy={cy} r={4.5} fill={TURN} stroke="#fff" strokeWidth={1.5} />
                     {showLabel ? (
                       <text
-                        x={nearCallout ? cx : cx + (right ? -9 : 9)}
+                        x={cx}
                         y={ly}
-                        textAnchor={nearCallout ? "middle" : right ? "end" : "start"}
-                        fontSize={11}
+                        textAnchor="middle"
+                        fontSize={10}
                         fontWeight={800}
-                        fill={TURN}
+                        fill="#8A6D0B"
                       >
                         전환
                       </text>
@@ -758,10 +753,10 @@ function PredictionChartBase({
           ) : null}
           {/* 최고/최저 콜아웃 (선택 기간 중립 예측값 기준) */}
           {minFut && minFut !== maxFut ? (
-            <Callout x={xOf(minFut.i)} y={yOf(minFut.predictedPrice!) + 16} text={`최저 ${minFut.predictedPrice!.toLocaleString()}`} color={DOWN} minX={PAD.left} maxX={PAD.left + plotW} />
+            <Callout x={xOf(minFut.i)} y={yOf(minFut.predictedPrice!) + 16.5} text={`최저 ${minFut.predictedPrice!.toLocaleString()}`} color={DOWN} minX={PAD.left} maxX={PAD.left + plotW} />
           ) : null}
           {maxFut ? (
-            <Callout x={xOf(maxFut.i)} y={yOf(maxFut.predictedPrice!) - 16} text={`최고 ${maxFut.predictedPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
+            <Callout x={xOf(maxFut.i)} y={yOf(maxFut.predictedPrice!) - 17.5} text={`최고 ${maxFut.predictedPrice!.toLocaleString()}`} color={UP} minX={PAD.left} maxX={PAD.left + plotW} />
           ) : null}
 
           {/* X축 */}
@@ -831,7 +826,7 @@ function Callout({
   const cx = clamp(x, minX + w / 2, maxX - w / 2);
   return (
     <g style={{ pointerEvents: "none" }}>
-      <rect x={cx - w / 2} y={y - 9} width={w} height={18} rx={5} fill="#fff" stroke={color} strokeWidth={1} />
+      <rect x={cx - w / 2} y={y - 8.5} width={w} height={17} rx={5} fill="#fff" stroke={color} strokeWidth={1} />
       <text x={cx} y={y + 4} textAnchor="middle" fontSize={10} fontWeight={800} fill={color}>
         {text}
       </text>
