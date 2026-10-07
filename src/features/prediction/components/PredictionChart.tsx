@@ -228,11 +228,15 @@ function PredictionChartBase({
   // 거래량 (과거 구간만, Mock)
   const volOf = (r: PredictionPoint) => r.volume ?? 40 + (hash(r.date) % 60);
   const vols = visible
-    .filter((r) => r.actualPrice !== undefined && !r.isToday)
+    .filter((r) => r.actualPrice !== undefined && r.i <= todayIdx)
     .map((r) => ({ r, v: volOf(r) }));
-  const volMax = Math.max(1, ...vols.map((v) => v.v));
-  const barW = Math.max(1.5, (plotW / Math.max(1, win.span)) * 0.6);
-  const volH = (v: number) => (v / volMax) * plotH * VOL_MAX_RATIO;
+  // 전체 과거 구간 최대 거래량 기준 정규화 (줌·스크롤해도 높이 고정)
+  const volMax = Math.max(
+    1,
+    ...rows.filter((r) => r.actualPrice !== undefined && r.i <= todayIdx).map(volOf),
+  );
+  const barW = Math.min(14, Math.max(1.5, (plotW / Math.max(1, win.span)) * 0.6));
+  const volH = (v: number) => (v / volMax) * plotH * 0.25;
 
   // ── 제스처 (Pointer Events)
   const ptrs = useRef(new Map<number, { x: number; y: number }>());
