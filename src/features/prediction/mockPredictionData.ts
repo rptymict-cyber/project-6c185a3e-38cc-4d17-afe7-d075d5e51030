@@ -159,7 +159,7 @@ function buildPoints(
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const pastDays = 30; // 차트 축소 시 최대 40일 구간 조회용
+  const pastDays = 90; // 과거 최대 90일
   const points: PredictionPoint[] = [];
 
   // 결정적 곡선(랜덤 노이즈 없음): 같은 곡선을 탭 길이만큼 잘라 쓰므로 탭 간 일관

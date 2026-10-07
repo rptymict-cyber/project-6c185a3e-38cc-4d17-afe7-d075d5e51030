@@ -10,11 +10,7 @@ import type { PredictionPoint } from "../types";
  * - 차트 내부는 가로 제스처만 처리, 세로 스크롤은 페이지로 전달(touch-action: pan-y)
  */
 
-// TODO(미확정): 과거 데이터 보유 일수는 틸다 확인 후 확정
-const MAX_PAST_DAYS = 30;
-// TODO(미확정): 확대 단계 과거/미래 일수
-const ZOOM_IN_PAST = 3;
-const ZOOM_IN_FUTURE = 4;
+const MAX_PAST_DAYS = 90;
 // TODO(미확정): 거래량 막대 최대 높이 비율(차트 영역 대비)
 const VOL_MAX_RATIO = 0.28;
 const Y_STEPS = [10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000, 10000];
@@ -133,13 +129,18 @@ function PredictionChartBase({
   const N = Math.max(1, Math.min(rangeDays ?? total - 1 - todayIdx, total - 1 - todayIdx));
 
   // 이동 가능 범위: 과거 MAX_PAST_DAYS, 미래 N (Lock)
-  const minStart = todayIdx - MAX_PAST_DAYS;
+  const minStart = Math.max(0, todayIdx - MAX_PAST_DAYS);
   const maxEnd = todayIdx + N;
 
   const winForLevel = useCallback(
     (lv: ZoomLevel): Win => {
-      const past = lv === -1 ? ZOOM_IN_PAST : lv === 1 ? MAX_PAST_DAYS : Math.min(N, MAX_PAST_DAYS);
-      const fut = lv === -1 ? Math.min(ZOOM_IN_FUTURE, N) : N;
+      const half = Math.ceil(N / 2);
+      const availPast = Math.min(MAX_PAST_DAYS, todayIdx);
+      const past =
+        lv === -1 ? Math.min(half, availPast)
+        : lv === 1 ? Math.min(3 * N, availPast)
+        : Math.min(N, availPast);
+      const fut = lv === -1 ? Math.min(half, N) : N;
       return { start: todayIdx - past, span: past + fut + 1 };
     },
     [N, todayIdx],
@@ -423,24 +424,30 @@ function PredictionChartBase({
       r.i > todayIdx &&
       (rangeDays ? r.i <= todayIdx + rangeDays : true),
   );
-  const maxFut = futRange.length
+  const inPlot = (i: number) => xOf(i) >= PAD.left && xOf(i) <= PAD.left + plotW;
+  const maxFutAll = futRange.length
     ? futRange.reduce((a, b) => (b.predictedPrice! > a.predictedPrice! ? b : a))
     : undefined;
-  const minFut = futRange.length
+  const minFutAll = futRange.length
     ? futRange.reduce((a, b) => (b.predictedPrice! < a.predictedPrice! ? b : a))
     : undefined;
+  const maxFut = maxFutAll && inPlot(maxFutAll.i) ? maxFutAll : undefined;
+  const minFut = minFutAll && inPlot(minFutAll.i) ? minFutAll : undefined;
 
-  // X축 라벨: 보이는 구간 균등 분할(시작·끝 포함)
   const xTicks = (() => {
-    const raw = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round(visLo + f * (visHi - visLo)));
-    const out = [...new Set(raw)].filter((i) => i >= 0 && i < total);
-    if (todayIdx >= visLo && todayIdx <= visHi && !out.includes(todayIdx)) {
-      const nearest = out.reduce((a, b) => (Math.abs(b - todayIdx) < Math.abs(a - todayIdx) ? b : a), out[0]);
-      out.splice(out.indexOf(nearest), 1, todayIdx);
+    const days = visHi - visLo;
+    const cands = [1, 2, 3, 5, 7, 10, 14, 15, 20, 30];
+    const step = cands.find((s) => days / s <= 5) ?? 30;
+    const kMin = Math.ceil((visLo - todayIdx) / step);
+    const kMax = Math.floor((visHi - todayIdx) / step);
+    const out: number[] = [];
+    for (let k = kMin; k <= kMax; k++) {
+      const i = todayIdx + k * step;
+      if (i < 0 || i >= total) continue;
+      if (i !== todayIdx && xOf(i) > PAD.left + plotW - 14) continue;
+      out.push(i);
     }
-    return out
-      .filter((i) => i === todayIdx || Math.abs(xOf(i) - xOf(todayIdx)) >= 30)
-      .sort((a, b) => a - b);
+    return out;
   })();
 
   const yTicks = (() => {
