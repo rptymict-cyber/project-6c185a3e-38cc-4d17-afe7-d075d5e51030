@@ -197,24 +197,13 @@ function ComboCard({
         </span>
       </div>
 
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="mt-2 flex min-h-9 w-full items-center justify-between border-t border-[#F1F3F5] pt-2 text-meta font-semibold text-[#495057]"
-      >
-        주의 정보
-        <ChevronDown className={cn("h-4 w-4 text-[#868E96] transition-transform", open && "rotate-180")} />
-      </button>
-      {open ? (
-        <div className="mt-1 flex items-start gap-2 rounded-xl bg-[#F8F9FA] px-3 py-2">
-          <span className="text-body leading-none">{w.icon}</span>
-          <p className="min-w-0 flex-1 text-meta leading-snug text-[#495057]">
-            {region} · {w.temp}° {w.condition}
-            {w.impact === "high" ? " — 강수 예보로 출하 지연 가능성이 있어요" : " — 출하 특이사항 없어요"}
-          </p>
-        </div>
-      ) : null}
+      <div className="mt-2 flex items-start gap-2 rounded-xl bg-[#F8F9FA] px-3 py-2">
+        <span className="text-body leading-none">{w.icon}</span>
+        <p className="min-w-0 flex-1 text-meta leading-snug text-[#495057]">
+          {region} · {w.temp}° {w.condition}
+          {w.impact === "high" ? " — 강수 예보로 출하 지연 가능성이 있어요" : " — 출하 특이사항 없어요"}
+        </p>
+      </div>
     </li>
   );
 }
