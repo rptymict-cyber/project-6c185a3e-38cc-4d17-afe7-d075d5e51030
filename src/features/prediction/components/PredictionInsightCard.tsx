@@ -59,7 +59,7 @@ export function PredictionInsightCard({
   const headline = isPositiveForUser
     ? `${action}에 유리해요`
     : priceHigher || priceLower
-      ? `${action} 시점을 검토하세요`
+      ? "매입에 유리해요"
       : `${action} 참고`;
 
   const gainLabel = isFarmer
