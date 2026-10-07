@@ -586,8 +586,8 @@ function PredictionChartBase({
 
   const legend: Array<{ label: string; color: string; kind: "solid" | "dash" | "bar" | "dot"; dim?: boolean }> = [
     { label: "실제 평균가", color: ACTUAL, kind: "solid" },
-    { label: "중립 예측", color: PRED, kind: "dash", dim: !showMid },
-    { label: "낙관~비관 범위", color: BAND_FILL, kind: "bar", dim: !showBand },
+    { label: "예상 가격", color: PRED, kind: "dash", dim: !showMid },
+    { label: "예측 범위", color: BAND_FILL, kind: "bar", dim: !showBand },
     ...(showTurn
       ? [{ label: "전환 시점(가격 반등·조정 전환 예상)", color: TURN, kind: "dot" as const }]
       : []),
