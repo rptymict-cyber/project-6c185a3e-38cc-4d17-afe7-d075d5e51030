@@ -39,7 +39,7 @@ export function PredictionInsightCard({
   // 출하량을 kg으로 환산한 뒤 기준 단위(10kg 등) 개수로 나눠 총액을 계산한다.
   const baseUnitKg = unitKgOf(baseUnitLabel) || 1;
   const baseUnitCount = toKg(quantityBoxes, quantityUnit, cropName) / baseUnitKg;
-  const quantityLabel = `출하량 ${quantityBoxes.toLocaleString()}${quantityUnitLabel} 기준`;
+  const quantityLabel = `${isFarmer ? "출하량" : "매입량"} ${quantityBoxes.toLocaleString()}${quantityUnitLabel} 기준`;
 
   const totalRevenue = expectedPrice * baseUnitCount;
   const totalDiff = diffPrice * baseUnitCount;
@@ -116,8 +116,14 @@ export function PredictionInsightCard({
           </span>
         </div>
 
-        {/* KPI 3개 */}
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <p className="mt-3 text-caption font-semibold text-white/90">
+          {isFarmer
+            ? "앞으로 30일 중 가장 높은 가격이 예상되는 날이에요"
+            : "앞으로 30일 중 가장 낮은 가격이 예상되는 날이에요"}
+        </p>
+
+        {/* KPI */}
+        <div className="mt-4 grid grid-cols-2 gap-2">
           <div className="rounded-xl bg-white/12 px-2 py-2 backdrop-blur-sm">
             <div className="text-meta font-semibold text-white/75">
               예상 평균가
