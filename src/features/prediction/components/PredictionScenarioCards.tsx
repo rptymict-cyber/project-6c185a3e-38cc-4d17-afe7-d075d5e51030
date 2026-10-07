@@ -59,7 +59,7 @@ export function PredictionScenarioCards({
       <div className="mt-1 text-right text-meta text-[#ADB5BD]">원 / {baseUnitLabel}</div>
 
       <div className="mt-2 rounded-xl bg-[#F0F9F0] px-3 py-2 text-meta leading-snug text-[#2c6444]">
-        💡 연한 초록 띠는 AI가 예상하는 <b>낙관~비관 가격 범위</b>예요. 뒤로 갈수록 띠가 넓어지는 건 그만큼 예측이 어렵다는 뜻이에요.{" "}
+        💡 연한 초록 띠는 AI가 예상하는 <b>가격 범위</b>예요. 뒤로 갈수록 띠가 넓어지는 건 그만큼 예측이 어렵다는 뜻이에요.{" "}
         <button
           type="button"
           onClick={onOpenRangeDetail}

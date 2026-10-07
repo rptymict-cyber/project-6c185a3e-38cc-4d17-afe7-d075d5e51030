@@ -523,11 +523,9 @@ function PredictionChartBase({
         body = (
           <>
             <div className="font-bold">{korDate(r.date)}</div>
-            <div className="mt-0.5 tabular-nums">낙관 {b.hi.toLocaleString()}원</div>
-            <div className="tabular-nums">
-              중립 <span className="text-body font-extrabold">{value.toLocaleString()}</span>원/{baseUnitLabel}
-            </div>
-            <div className="tabular-nums">비관 {b.lo.toLocaleString()}원</div>
+            <div className="mt-0.5 tabular-nums">높게 본 가격 {b.hi.toLocaleString()}원</div>
+            <div className="tabular-nums">예상 가격 {value.toLocaleString()}원</div>
+            <div className="tabular-nums">낮게 본 가격 {b.lo.toLocaleString()}원</div>
           </>
         );
       } else {
