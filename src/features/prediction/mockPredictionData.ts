@@ -130,14 +130,6 @@ function marketTrendPct(marketId?: string) {
   return ((m.avgKg - m.prevAvgKg) / m.prevAvgKg) * 100;
 }
 
-function seed(n: number) {
-  let s = n;
-  return () => {
-    s = (s * 9301 + 49297) % 233280;
-    return s / 233280;
-  };
-}
-
 function hashId(id: string) {
   return id.split("").reduce((s, ch) => s + ch.charCodeAt(0), 0);
 }
