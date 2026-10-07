@@ -13,6 +13,17 @@ import { WeatherRegionSheet } from "@/components/weather/WeatherRegionSheet";
 import { useWeatherRegion } from "@/store/weatherRegion";
 
 // 틸다 날씨 API 교체 대상
+const fmtKST = () => {
+  const p = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul",
+    month: "numeric",
+    day: "numeric",
+    weekday: "short",
+  }).formatToParts(new Date());
+  const g = (t: string) => p.find((x) => x.type === t)?.value ?? "";
+  return `${g("month")}월 ${g("day")}일 (${g("weekday")})`;
+};
+
 export function HomeWeatherBar() {
   const navigate = useNavigate();
   const granted = useLocation((s) => s.granted);
@@ -20,11 +31,13 @@ export function HomeWeatherBar() {
   const pending = useLocation((s) => s.pending);
   const regionId = useWeatherRegion((s) => s.regionId);
   const [regionOpen, setRegionOpen] = useState(false);
-  const [todayLabel, setTodayLabel] = useState("");
+  const [todayLabel, setTodayLabel] = useState(fmtKST);
+  // 자정이 지나거나 화면이 다시 보일 때 날짜 갱신
   useEffect(() => {
-    const d = new Date();
-    const W = ["일", "월", "화", "수", "목", "금", "토"];
-    setTodayLabel(`${d.getMonth() + 1}월 ${d.getDate()}일 (${W[d.getDay()]})`);
+    const refresh = () => setTodayLabel(fmtKST());
+    refresh();
+    document.addEventListener("visibilitychange", refresh);
+    return () => document.removeEventListener("visibilitychange", refresh);
   }, []);
 
   // 사용자가 지역을 직접 선택했으면 그 지역, 아니면 권한 여부에 따라 결정
@@ -57,7 +70,8 @@ export function HomeWeatherBar() {
         <div className="flex items-center">
           <span
             className="flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/30 bg-white/[0.14] px-3 text-white"
-            style={{ fontSize: 15, fontWeight: 600, lineHeight: "22px" }}
+            style={{ fontSize: 15, fontWeight: 600, lineHeight: "22px", minWidth: 118 }}
+            suppressHydrationWarning
           >
             <CalendarDays className="h-4 w-4 shrink-0" />
             {todayLabel}
