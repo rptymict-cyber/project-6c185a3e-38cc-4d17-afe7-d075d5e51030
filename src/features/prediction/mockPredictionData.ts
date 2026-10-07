@@ -130,14 +130,6 @@ function marketTrendPct(marketId?: string) {
   return ((m.avgKg - m.prevAvgKg) / m.prevAvgKg) * 100;
 }
 
-function seed(n: number) {
-  let s = n;
-  return () => {
-    s = (s * 9301 + 49297) % 233280;
-    return s / 233280;
-  };
-}
-
 function hashId(id: string) {
   return id.split("").reduce((s, ch) => s + ch.charCodeAt(0), 0);
 }
@@ -161,7 +153,6 @@ function buildPoints(
   grade: PredictionGrade,
   marketId: string,
 ): { points: PredictionPoint[]; recommendedIdx: number } {
-  const rand = seed(hashId(cropId) + hashId(marketId) + rangeDays);
   const gradeMul = GRADE_ADJ[grade];
   const marketMul = marketPriceFactor(marketId);
   const base = (BASE_PRICE[cropId] ?? 5000) * gradeMul * marketMul;
@@ -171,47 +162,60 @@ function buildPoints(
   const pastDays = 30; // 차트 축소 시 최대 40일 구간 조회용
   const points: PredictionPoint[] = [];
 
-  const prevDelta = cropPrevDeltaPct(cropId, marketId);
-  let actual = base * (1 - prevDelta / 100 / 4);
-  for (let i = 0; i < pastDays; i++) {
-    actual = actual * (1 + (rand() - 0.5) * 0.03);
+  // 결정적 곡선(랜덤 노이즈 없음): 같은 곡선을 탭 길이만큼 잘라 쓰므로 탭 간 일관
+  const B = Math.round(base);
+  const dir = ["apple", "garlic", "radish"].includes(cropId) ? 1 : -0.7;
+  const neutralAt = (i: number) => {
+    let r = dir * 0.0746 * Math.pow(i / 29, 1.15);
+    if (i <= 8) r -= 0.0114 * Math.sin((Math.PI * i) / 8);
+    r += 0.0067 * Math.sin(i * 0.9) + 0.0043 * Math.sin(i * 2.1);
+    if (i > 29) r -= 0.0057 * (i - 29);
+    return B * (1 + r);
+  };
+  const rawR = (i: number) =>
+    0.0256 * Math.sin(i / 3.3 + 1) + 0.0128 * Math.sin(i / 1.4) - (i > -5 ? 0.0085 * (i + 5) : 0);
+  const actualAt = (i: number) => B * (1 + rawR(i) - rawR(0));
+  const bandW = (i: number) => B * (0.00284 + 0.0017 * i);
+  const volAt = (i: number) => 0.3 + 0.45 * Math.abs(Math.sin(i * 1.7));
+
+  for (let k = pastDays; k >= 1; k--) {
     const d = new Date(today);
-    d.setDate(today.getDate() - (pastDays - i));
+    d.setDate(today.getDate() - k);
     points.push({
       date: formatDate(d),
       label: labelOf(d),
-      actualPrice: Math.round(actual),
+      actualPrice: Math.round(actualAt(-k)),
+      volume: volAt(-k) * 100,
     });
   }
 
-  const todayPrice = Math.round(base);
   points.push({
     date: formatDate(today),
     label: labelOf(today),
-    actualPrice: todayPrice,
-    predictedPrice: todayPrice,
+    actualPrice: B,
+    predictedPrice: B,
     isToday: true,
   });
 
-  const trendUp = ["apple", "garlic", "radish"].includes(cropId);
-  const marketTrend = marketTrendPct(marketId) / 100;
-  const targetChangePct = (trendUp ? 0.05 : -0.04) + marketTrend * 0.8;
-  const infA = Math.max(1, Math.round(rangeDays * 0.35));
-  const infB = Math.max(infA + 1, Math.round(rangeDays * 0.78));
+  let inflections = 0;
   for (let i = 1; i <= rangeDays; i++) {
-    const t = i / rangeDays;
-    const drift = 1 + targetChangePct * t + (rand() - 0.5) * 0.02;
-    const mid = todayPrice * drift;
-    const spread = mid * (0.008 + t * t * 0.075);
+    const n = neutralAt(i);
+    const isInf =
+      inflections < 4 &&
+      i >= 2 &&
+      i <= rangeDays - 2 &&
+      (n - neutralAt(i - 1)) * (neutralAt(i + 1) - n) < 0 &&
+      Math.abs(n - neutralAt(Math.max(0, i - 3))) > B * 0.0085;
+    if (isInf) inflections++;
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     points.push({
       date: formatDate(d),
       label: labelOf(d),
-      predictedPrice: Math.round(mid),
-      optimisticPrice: Math.round(mid + spread),
-      pessimisticPrice: Math.round(mid - spread),
-      isInflection: i === infA || i === infB,
+      predictedPrice: Math.round(n),
+      optimisticPrice: Math.round(n + bandW(i)),
+      pessimisticPrice: Math.round(n - bandW(i) * 0.9),
+      isInflection: isInf,
     });
   }
 
