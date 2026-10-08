@@ -15,7 +15,7 @@ const WEATHER_BY_MARKET: Record<string, { icon: string; desc: string; temp: numb
   "seoul-garak": { icon: "🌧️", desc: "비", temp: 19, rain: "20~35mm", wet: true },
   "busan-eomgung": { icon: "☀️", desc: "맑음", temp: 23, rain: "0mm", wet: false },
   "daegu-bugbu": { icon: "🌦️", desc: "소나기", temp: 21, rain: "5~15mm", wet: true },
-  "gwangju-gaksa": { icon: "⛅", desc: "구름 조금", temp: 20, rain: "0~2mm", wet: false },
+  "gwangju-gakhwa": { icon: "⛅", desc: "구름 조금", temp: 20, rain: "0~2mm", wet: false },
   "daejeon-ojeong": { icon: "🌧️", desc: "비", temp: 18, rain: "15~30mm", wet: true },
 };
 
