@@ -127,7 +127,7 @@ export function MainCropCard({ crop }: { crop: Crop }) {
       {/* Price */}
       <div className="mt-3 flex items-end justify-between gap-2">
         <div className="min-w-0">
-          <div className="font-data text-[30px] font-bold leading-none tabular-nums text-[#212529]">
+          <div className="font-data text-[32px] font-bold leading-none tabular-nums text-[#212529]">
             {crop.currentPrice.toLocaleString()}
             <span className="ml-1 text-body font-medium text-muted-foreground">
               {crop.unit}

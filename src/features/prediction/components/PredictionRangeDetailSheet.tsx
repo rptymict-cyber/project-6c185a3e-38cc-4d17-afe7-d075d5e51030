@@ -57,11 +57,11 @@ export function PredictionRangeDetailSheet({
       <div className="px-4 pt-[14px] pb-4">
         {point && (
           <>
-            <span className="inline-flex items-center rounded-full border border-[#CFE7CF] bg-[#EAF7F0] px-3 py-1.5 text-[13px] font-bold text-[#1F5C1F]">
+            <span className="inline-flex items-center rounded-full border border-[#CFE7CF] bg-[#EAF7F0] px-3 py-1.5 text-meta font-bold text-[#1F5C1F]">
               📅 {md(point.date)} 기준
               {point.isRecommendedDate ? ` · ${isFarmer ? "출하" : "매입"}에 유리한 날` : ""}
             </span>
-            <p className="mt-1.5 mb-2.5 text-[11px] text-[#868E96]">
+            <p className="mt-1.5 mb-2.5 text-meta text-[#868E96]">
               차트에서 다른 날짜를 누르면 그 날짜 기준으로 바뀌어요.
             </p>
           </>
@@ -88,11 +88,11 @@ export function PredictionRangeDetailSheet({
                       <span className="text-[14px] font-bold text-foreground">{c.title}</span>
                       
                     </div>
-                    <div className="mt-0.5 text-[11px] leading-[1.4] text-[#868E96]">{c.desc}</div>
+                    <div className="mt-0.5 text-meta leading-[1.4] text-[#868E96]">{c.desc}</div>
                   </div>
                   <div className="shrink-0 text-right">
                     <div className="text-[16px] font-bold tabular-nums text-foreground">{c.price.toLocaleString()}원</div>
-                    <div className="text-[11px] tabular-nums text-[#868E96]">
+                    <div className="text-meta tabular-nums text-[#868E96]">
                       / {baseUnitLabel} · {total(c.price).toLocaleString()}원
                     </div>
                   </div>
@@ -114,7 +114,7 @@ export function PredictionRangeDetailSheet({
                   />
                 ))}
               </div>
-              <div className="relative mt-1 h-4 text-[11px] text-[#868E96]">
+              <div className="relative mt-1 h-4 text-meta text-[#868E96]">
                 <span className="absolute left-0">낮게 본 {pess!.toLocaleString()}</span>
                 <span
                   className="absolute -translate-x-1/2 font-bold text-[#1F5C1F]"

@@ -29,7 +29,7 @@ export function TrendDirectionCard() {
       </div>
 
       <div className="mt-3 flex items-baseline gap-2">
-        <div className="text-[30px] font-black leading-none text-[#E8590C] tabular-nums">
+        <div className="text-[32px] font-black leading-none text-[#E8590C] tabular-nums">
           {value}
         </div>
         <div className="text-caption font-semibold text-[#495057]">
