@@ -142,7 +142,7 @@ export function HomeWeatherBar() {
             style={{ fontSize: 14, fontWeight: 600, lineHeight: "20px" }}
           >
             <MapPin className="h-3 w-3 shrink-0" />
-            현재 위치 날씨를 보려면 위치 권한을 허용해주세요
+            위치 권한 허용 시 현재 위치 날씨
           </span>
         ) : w.tip ? (
           <div
