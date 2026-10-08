@@ -14,7 +14,6 @@ import { PredictionInsightCard } from "@/features/prediction/components/Predicti
 import { PredictionScenarioCards } from "@/features/prediction/components/PredictionScenarioCards";
 import { PredictionRangeDetailSheet } from "@/features/prediction/components/PredictionRangeDetailSheet";
 import {
-  AuctionSupplyCard,
   PriceOutlookReportCard,
   TopicRelatedNewsCard,
 } from "@/features/prediction/components/PredictionRationaleExtras";
@@ -34,7 +33,7 @@ import {
 } from "@/features/prediction/mockPredictionData";
 import type { PredictionRangeDays } from "@/features/prediction/types";
 import { MARKETS } from "@/lib/mock/markets";
-import { getWeatherCause, getAuctionSupply, getFactors } from "@/features/prediction/rationaleData";
+import { getWeatherCause, getFactors } from "@/features/prediction/rationaleData";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -387,9 +386,6 @@ function PredictionPage() {
           </div>
 
           <div className="mb-2">
-          </div>
-          <div className="mb-2">
-            <AuctionSupplyCard {...getAuctionSupply(selectedCropId, prediction.marketId, prediction.currentPrice)} />
           </div>
 
           <PredictionFactorList factors={getFactors(selectedCropId)} />
