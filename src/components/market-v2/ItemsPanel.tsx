@@ -47,7 +47,7 @@ export function ItemsPanel() {
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center gap-2 py-16 text-center">
-          <span className="text-4xl">🌾</span>
+          <span className="text-[32px]">🌾</span>
           <span className="text-body text-[#6C757D]">해당 분류의 거래 품목이 없어요</span>
         </div>
       ) : (

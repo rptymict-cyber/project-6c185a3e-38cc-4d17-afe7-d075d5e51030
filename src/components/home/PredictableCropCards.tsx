@@ -23,7 +23,7 @@ function ChangeBadge({ changePct }: { changePct: number }) {
   return (
     <span
       className={cn(
-        "inline-flex max-w-full whitespace-nowrap rounded-[6px] px-1.5 py-[2px] text-[11px] font-semibold tabular-nums",
+        "inline-flex max-w-full whitespace-nowrap rounded-[6px] px-1.5 py-[2px] text-meta font-semibold tabular-nums",
         up ? "bg-[#FDECEC] text-[#E03B3B]" : "bg-[#EAF0FE] text-[#2563EB]",
       )}
       aria-label={`전일 대비 ${up ? "상승" : "하락"} ${Math.abs(changePct).toFixed(1)}퍼센트`}
@@ -87,15 +87,15 @@ export function PredictableCropCards() {
               className="flex min-h-[160px] w-[124px] min-w-[124px] flex-col items-start overflow-hidden rounded-[10px] bg-[#F5FAF6] px-3 pb-3 pt-3.5 transition-colors active:bg-[#E8F1E8]"
             >
               <CropIcon name={crop.name} size={24} />
-              <div className="mt-2 w-full truncate text-[15px] font-bold leading-tight text-[#111827]">
+              <div className="mt-2 w-full truncate text-body font-bold leading-tight text-[#111827]">
                 {crop.name}
               </div>
               <div className="mt-2 w-full">
-                <div className="whitespace-nowrap text-[19px] font-bold tabular-nums leading-tight text-primary">
+                <div className="whitespace-nowrap text-subtitle font-bold tabular-nums leading-tight text-primary">
                   {h.price.toLocaleString()}
-                  <span className="text-[13px] font-bold">원</span>
+                  <span className="text-meta font-bold">원</span>
                 </div>
-                <div className="mt-1 truncate text-[12px] font-medium leading-tight text-[#6B7280]">
+                <div className="mt-1 truncate text-meta font-medium leading-tight text-[#6B7280]">
                   / {h.unitLabel}
                 </div>
               </div>

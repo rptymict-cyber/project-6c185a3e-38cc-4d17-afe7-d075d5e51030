@@ -60,7 +60,7 @@ export function MarketHotSection() {
   const current = MARKETS.find((m) => m.id === active) ?? MARKETS[0];
   return (
     <section className="mt-6">
-      <h2 className="px-4 text-body-lg font-bold text-foreground">도매시장별 오늘의 품목</h2>
+      <h2 className="px-4 text-title font-bold text-foreground">도매시장별 오늘의 품목</h2>
 
       <div className="no-scrollbar mt-2 flex gap-1.5 overflow-x-auto px-4 pb-1">
         {MARKETS.map((m) => {

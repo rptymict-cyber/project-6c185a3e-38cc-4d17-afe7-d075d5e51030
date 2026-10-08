@@ -87,7 +87,7 @@ export function AuctionHistoryTable() {
       {/* Common header */}
       <div>
         <div className="flex items-baseline gap-2">
-          <h3 className="text-body-lg font-bold text-foreground">경매내역</h3>
+          <h3 className="text-title font-bold text-foreground">경매내역</h3>
           <span className="text-body-lg font-black text-[#3A8A3A]">
             총 {rows.length}건
           </span>

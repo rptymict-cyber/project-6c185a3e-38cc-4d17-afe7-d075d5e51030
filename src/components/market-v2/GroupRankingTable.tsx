@@ -38,7 +38,7 @@ export function GroupRankingTable({ scope }: { scope: Scope }) {
   return (
     <section className="mt-3 bg-white px-4 pb-6 pt-4">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-body-lg font-bold text-foreground">{cfg.title}</h3>
+        <h3 className="text-title font-bold text-foreground">{cfg.title}</h3>
         <button
           onClick={() => setOpen(true)}
           className="inline-flex items-center gap-0.5 rounded-md text-caption font-semibold text-foreground"

@@ -35,7 +35,7 @@ function BottomNavBase() {
             <Icon className="h-6 w-6" />
             {showUnread && <UnreadBadge className="-right-2 -top-1" />}
           </span>
-          <span className="w-full truncate text-center text-[12px] font-medium leading-none">
+          <span className="w-full truncate text-center text-meta font-medium leading-none">
             {label}
           </span>
         </Link>

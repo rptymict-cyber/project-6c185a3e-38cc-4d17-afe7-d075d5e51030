@@ -27,7 +27,7 @@ export function VolumeByMarketTab({
   return (
     <div className="pb-8">
       <div className="px-4 pt-4">
-        <h2 className="text-body-lg font-bold text-foreground">시장별 거래량</h2>
+        <h2 className="text-title font-bold text-foreground">시장별 거래량</h2>
         <p className="mt-1 text-meta text-[#868E96]">선택한 날짜의 총 거래량 기준</p>
       </div>
 

@@ -52,7 +52,7 @@ export function RealtimeCropRanking() {
   return (
     <section className="mt-6">
       <div className="flex items-center justify-between px-4">
-        <h2 className="flex items-center gap-1 text-body-lg font-bold text-foreground">
+        <h2 className="flex items-center gap-1 text-title font-bold text-foreground">
           실시간 시세 랭킹
           <HelpCircle className="h-3.5 w-3.5 text-[#ADB5BD]" />
         </h2>
