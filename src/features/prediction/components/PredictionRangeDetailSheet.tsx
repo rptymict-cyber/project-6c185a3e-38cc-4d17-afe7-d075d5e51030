@@ -67,7 +67,7 @@ export function PredictionRangeDetailSheet({
           </>
         )}
 
-        <p className="mt-2 mb-3 text-[12.5px] leading-[1.55] text-[#495057]">
+        <p className="mt-2 mb-3 text-meta leading-[1.55] text-[#495057]">
           AI는 하나의 값이 아니라 가격이 들어올 <b>범위</b>를 예측해요. 뒤로 갈수록 범위가 넓어지는 건 그만큼 예측이 어렵다는 뜻이에요.
         </p>
 
@@ -126,7 +126,7 @@ export function PredictionRangeDetailSheet({
               </div>
             </div>
 
-            <div className="mt-4 rounded-xl bg-[#F8F9FA] px-3 py-2.5 text-[11.5px] leading-[1.5] text-[#495057]">
+            <div className="mt-4 rounded-xl bg-[#F8F9FA] px-3 py-2.5 text-meta leading-[1.5] text-[#495057]">
               오른쪽 금액은{" "}
               <b>
                 {isFarmer ? "출하량" : "매입량"} {quantityBoxes.toLocaleString()}
@@ -136,7 +136,7 @@ export function PredictionRangeDetailSheet({
             </div>
           </>
         ) : (
-          <div className="rounded-xl bg-[#F8F9FA] px-3 py-2.5 text-[11.5px] leading-[1.5] text-[#495057]">
+          <div className="rounded-xl bg-[#F8F9FA] px-3 py-2.5 text-meta leading-[1.5] text-[#495057]">
             예측 범위 데이터를 불러오지 못했어요. 잠시 후 다시 확인해주세요.
           </div>
         )}
