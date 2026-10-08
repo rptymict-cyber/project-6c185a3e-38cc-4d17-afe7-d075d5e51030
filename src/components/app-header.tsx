@@ -96,7 +96,7 @@ export function AppHeader({
 
       <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[52px] flex-col items-center justify-center">
         {title ? (
-          <span className="text-body-lg font-black tracking-tight text-foreground">{title}</span>
+          <span className="text-subtitle font-black tracking-tight text-foreground">{title}</span>
         ) : (
           <>
             <div className="flex items-center gap-1.5 leading-none">
