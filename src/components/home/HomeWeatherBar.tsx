@@ -139,7 +139,7 @@ export function HomeWeatherBar() {
               }
             }}
             className="flex items-center gap-1 text-left text-white/90 underline decoration-white/40 underline-offset-2"
-            style={{ fontSize: 12, fontWeight: 600, lineHeight: "18px" }}
+            style={{ fontSize: 14, fontWeight: 600, lineHeight: "20px" }}
           >
             <MapPin className="h-3 w-3 shrink-0" />
             현재 위치 날씨를 보려면 위치 권한을 허용해주세요
