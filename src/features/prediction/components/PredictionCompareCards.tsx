@@ -66,7 +66,7 @@ export function PredictionCompareCards({
 
   return (
     <section>
-      <h2 className="mb-2 text-body font-bold text-foreground">{title}</h2>
+      <h2 className="mb-2 text-title font-bold text-foreground">{title}</h2>
       <p className="text-meta text-[#6C757D]">
         비교할 날짜 2개와 도매시장을 골라 예상 판매금액 순위를 확인해보세요
       </p>

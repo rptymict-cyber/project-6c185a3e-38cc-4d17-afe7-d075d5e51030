@@ -275,7 +275,7 @@ function PredictionPage() {
         {/* 4. 가격 예측 차트 */}
         <section className="mt-4">
           <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-body font-bold text-foreground">
+            <h2 className="text-title font-bold text-foreground">
               가격 예측 차트
             </h2>
             <span className="text-meta text-[#868E96]">
@@ -347,7 +347,7 @@ function PredictionPage() {
 
         {/* 7. 예측 근거 */}
         <section className="mt-4">
-          <h2 className="mb-2 text-body font-bold text-foreground">
+          <h2 className="mb-2 text-title font-bold text-foreground">
             예측 근거
           </h2>
 

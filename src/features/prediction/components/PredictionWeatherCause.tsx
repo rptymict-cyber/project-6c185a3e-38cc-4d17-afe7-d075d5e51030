@@ -8,7 +8,7 @@ export function PredictionWeatherCause() {
 
   return (
     <section className="mt-3">
-      <h2 className="mb-2 text-body font-bold text-foreground">
+      <h2 className="mb-2 text-title font-bold text-foreground">
         날씨가 가격에 미치는 영향
       </h2>
 
