@@ -1,3 +1,4 @@
+import { formatLocalDate } from "@/lib/date";
 import { MARKETS } from "@/lib/mock/markets";
 import type {
   PredictableCrop,
@@ -135,7 +136,7 @@ function hashId(id: string) {
 }
 
 function formatDate(d: Date) {
-  return d.toISOString().slice(0, 10);
+  return formatLocalDate(d);
 }
 
 function labelOf(d: Date) {
