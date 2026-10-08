@@ -69,7 +69,16 @@ export function PredictionInsightCard({
 
   return (
     <section
-      className="relative overflow-hidden rounded-3xl px-5 pb-4 pt-5 text-white shadow-[0_16px_40px_-16px_rgba(46,158,107,0.55)]"
+      role="button"
+      tabIndex={0}
+      onClick={onDetailClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onDetailClick();
+        }
+      }}
+      className="relative cursor-pointer overflow-hidden transition-transform active:scale-[0.99] rounded-3xl px-5 pb-4 pt-5 text-white shadow-[0_16px_40px_-16px_rgba(46,158,107,0.55)]"
       style={{
         background:
           "linear-gradient(145deg, #2E9E6B 0%, #1F7A50 55%, #145A3A 100%)",
@@ -93,9 +102,7 @@ export function PredictionInsightCard({
             <Sparkles className="h-3 w-3" />
             {badge}
           </span>
-          <span className="text-meta font-semibold uppercase tracking-wider text-white/70">
-            {"\n"}
-          </span>
+          <ChevronRight className="h-5 w-5 text-white/80" aria-hidden />
         </div>
 
         {/* 큰 날짜 헤드라인 */}
@@ -163,17 +170,6 @@ export function PredictionInsightCard({
         <p className="mt-2.5 text-meta font-medium text-white/70">
           예상 시세 기준 금액이며 물류비·수수료 등 비용은 반영되지 않았습니다.
         </p>
-
-
-        {/* 결합 CTA */}
-        <button
-          type="button"
-          onClick={onDetailClick}
-          className="mt-4 flex w-full items-center justify-between rounded-2xl bg-white/15 px-3.5 py-2.5 text-caption font-bold text-white backdrop-blur-sm transition-colors active:bg-white/25"
-        >
-          <span>현재 시세 상세 보기</span>
-          <ChevronRight className="h-4 w-4" />
-        </button>
       </div>
     </section>
   );
