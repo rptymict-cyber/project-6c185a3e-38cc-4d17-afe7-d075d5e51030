@@ -34,7 +34,7 @@ import {
 } from "@/features/prediction/mockPredictionData";
 import type { PredictionRangeDays } from "@/features/prediction/types";
 import { MARKETS } from "@/lib/mock/markets";
-import { MOCK_WEATHER } from "@/lib/mock/weather";
+import { getWeatherCause, getAuctionSupply, getFactors } from "@/features/prediction/rationaleData";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -145,6 +145,7 @@ function PredictionPage() {
     );
   }
 
+  const wc = getWeatherCause(selectedCropId, prediction.marketId);
   const selectedMarket = MARKETS.find((m) => m.id === prediction.marketId);
   const marketVolumeChangePct = selectedMarket?.prevAvgKg
     ? ((selectedMarket.avgKg - selectedMarket.prevAvgKg) /
@@ -354,40 +355,31 @@ function PredictionPage() {
           {/* 날씨 근거 카드 (요약) */}
           <div className="mb-2 rounded-xl border border-[#E9ECEF] bg-white p-3">
             <div className="flex items-start gap-2">
-              <span className="text-heading leading-none">🌧️</span>
+              <span className="text-heading leading-none">{wc.icon}</span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   <span className="text-body font-bold text-foreground">
                     날씨 영향
                   </span>
-                  <span className="rounded-full bg-[#FFE9E9] px-1.5 py-[1px] text-meta font-extrabold text-[#E03B3B]">
-                    출하 주의
+                  <span className={"rounded-full px-1.5 py-[1px] text-meta font-extrabold " + (wc.risk ? "bg-[#FFE9E9] text-[#E03B3B]" : "bg-[#E7F5EE] text-[#1F7A50]")}>
+                    {wc.badge}
                   </span>
                 </div>
                 <p className="mt-1 text-meta leading-snug text-[#495057]">
-                  {MOCK_WEATHER.regionFull} · {selectedDate} ·{" "}
-                  {MOCK_WEATHER.current.temp}° {MOCK_WEATHER.current.desc} —
-                  강수 20~35mm로 수확·출하 차질 가능, 공급 감소가 추천가에
-                  반영됨.
+                  {wc.region} · {selectedDate} · {wc.temp}° {wc.desc} — {wc.sentence}
                 </p>
                 <div className="mt-2 grid grid-cols-3 gap-1.5">
                   <div className="rounded-lg bg-[#F8F9FA] px-2 py-1.5 text-center">
                     <div className="text-meta text-[#6C757D]">강수</div>
-                    <div className="text-meta font-bold text-[#212529]">
-                      20~35mm
-                    </div>
+                    <div className="text-meta font-bold text-[#212529]">{wc.rain}</div>
                   </div>
-                  <div className="rounded-lg bg-[#FEF3F3] px-2 py-1.5 text-center">
-                    <div className="text-meta text-[#E03B3B]">수확 지연</div>
-                    <div className="text-meta font-bold text-[#E03B3B]">
-                      우려
-                    </div>
+                  <div className={"rounded-lg px-2 py-1.5 text-center " + (wc.risk ? "bg-[#FEF3F3]" : "bg-[#F8F9FA]")}>
+                    <div className={"text-meta " + (wc.risk ? "text-[#E03B3B]" : "text-[#6C757D]")}>{wc.chip}</div>
+                    <div className={"text-meta font-bold " + (wc.risk ? "text-[#E03B3B]" : "text-[#212529]")}>{wc.chipVal}</div>
                   </div>
-                  <div className="rounded-lg bg-[#FEF3F3] px-2 py-1.5 text-center">
-                    <div className="text-meta text-[#E03B3B]">반입</div>
-                    <div className="text-meta font-bold text-[#E03B3B]">
-                      ↓
-                    </div>
+                  <div className={"rounded-lg px-2 py-1.5 text-center " + (wc.risk ? "bg-[#FEF3F3]" : "bg-[#F8F9FA]")}>
+                    <div className={"text-meta " + (wc.risk ? "text-[#E03B3B]" : "text-[#6C757D]")}>반입</div>
+                    <div className={"text-meta font-bold " + (wc.risk ? "text-[#E03B3B]" : "text-[#212529]")}>{wc.supply}</div>
                   </div>
                 </div>
               </div>
@@ -397,19 +389,15 @@ function PredictionPage() {
           <div className="mb-2">
           </div>
           <div className="mb-2">
-            <AuctionSupplyCard
-              marketName={marketName}
-              avgAuctionPrice={prediction.currentPrice}
-              avgChangePct={prediction.previousChangeRate}
-              weeklyVolumeTon={selectedMarket?.volumeTon ?? 429}
-              volumeChangePct={marketVolumeChangePct}
-            />
+            <AuctionSupplyCard {...getAuctionSupply(selectedCropId, prediction.marketId, prediction.currentPrice)} />
           </div>
 
-          <PredictionFactorList factors={prediction.factors} />
+          <PredictionFactorList factors={getFactors(selectedCropId)} />
 
           <div className="mt-2">
             <PriceOutlookReportCard
+              cropId={selectedCropId}
+              grade={selectedGrade}
               marketName={marketName}
               rangeDays={prediction.predictionRangeDays}
               forecastLow={forecastLow}
@@ -417,7 +405,7 @@ function PredictionPage() {
             />
           </div>
           <div className="mt-2">
-            <TopicRelatedNewsCard />
+            <TopicRelatedNewsCard cropId={selectedCropId} />
           </div>
         </section>
 

@@ -3,6 +3,9 @@
  * All cards share the same visual style (white bg, radius 16, light border).
  */
 
+import { getOutlookReport, getTopicNews } from "../rationaleData";
+import { todayIso } from "@/lib/date";
+
 const CARD =
   "rounded-2xl border border-[#E9ECEF] bg-white p-4";
 const BRAND = "#3A8A3A";
@@ -71,26 +74,24 @@ export function AuctionSupplyCard({
   avgChangePct = 2.1,
   weeklyVolumeTon = 429,
   volumeChangePct = -3.8,
+  weekLabel = "",
+  origins = [],
 }: {
+  weekLabel?: string;
+  origins?: { name: string; pct: number }[];
   marketName?: string;
   avgAuctionPrice?: number;
   avgChangePct?: number;
   weeklyVolumeTon?: number;
   volumeChangePct?: number;
 }) {
-  const origins = [
-    { name: "경북", pct: 42 },
-    { name: "충남", pct: 28 },
-    { name: "경남", pct: 18 },
-    { name: "기타", pct: 12 },
-  ];
   return (
     <div className={CARD}>
       <div className="text-body font-bold text-foreground">
         경매·수급 동향
       </div>
       <div className="mt-0.5 text-meta text-[#868E96]">
-        {marketName} · 2026년 29주차
+        {marketName} · {weekLabel}
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
@@ -157,35 +158,23 @@ export function PriceOutlookReportCard({
   rangeDays = 30,
   forecastLow = 13294,
   forecastHigh = 15398,
+  cropId = "apple",
+  grade = "all",
 }: {
+  cropId?: string;
+  grade?: string;
   marketName?: string;
   rangeDays?: number;
   forecastLow?: number;
   forecastHigh?: number;
 }) {
-  const paragraphs = [
-    {
-      title: "과거 가격 추세",
-      body:
-        `${marketName} 기준 최근 180일간 완만한 상승세를 유지함. 저장물량 소진과 착색 지연이 겹치며 공급 제약이 커진 구간이 확인됨.`,
-    },
-    {
-      title: "예측 추세",
-      body:
-        `향후 ${rangeDays}일 예측 범위는 ${Math.round(forecastLow).toLocaleString()}~${Math.round(forecastHigh).toLocaleString()}원임. 상단 부근에서 횡보하며 고점 형성 흐름이 예상됨.`,
-    },
-    {
-      title: "시장 영향",
-      body:
-        "공급 불확실성이 남아있어 강세 우세 판단이 유효함. 전환 시점 중심으로 진입·이탈 시점을 잡는 것이 유리함.",
-    },
-  ];
+  const paragraphs = getOutlookReport(cropId, marketName, rangeDays, forecastLow, forecastHigh, grade);
   return (
     <div className={CARD}>
       <div className="text-body font-bold text-foreground">
         가격 전망 리포트
       </div>
-      <div className="mt-0.5 text-meta text-[#868E96]">작성일 2026-07-20</div>
+      <div className="mt-0.5 text-meta text-[#868E96]">작성일 {todayIso()}</div>
 
       <div className="mt-3 space-y-3">
         {paragraphs.map((p) => (
@@ -207,39 +196,8 @@ export function PriceOutlookReportCard({
 }
 
 /* ---------- 6. 주제별 관련 뉴스 ---------- */
-export function TopicRelatedNewsCard() {
-  const topics = [
-    {
-      title: "🌧️ 기상·생산 리스크",
-      items: [
-        {
-          date: "2026-07-18",
-          source: "농민신문",
-          headline: "장마 재개로 주산지 수확 지연 확산",
-        },
-        {
-          date: "2026-07-15",
-          source: "한국농어민",
-          headline: "경북 지역 강수량 평년 대비 140%",
-        },
-      ],
-    },
-    {
-      title: "📦 유통·정책",
-      items: [
-        {
-          date: "2026-07-17",
-          source: "aT센터",
-          headline: "정부, 수급 안정 위해 비축분 방출 검토",
-        },
-        {
-          date: "2026-07-12",
-          source: "농수산식품신문",
-          headline: "대형마트 산지직송 확대, 도매경로 축소",
-        },
-      ],
-    },
-  ];
+export function TopicRelatedNewsCard({ cropId = "apple" }: { cropId?: string }) {
+  const topics = getTopicNews(cropId);
   return (
     <div className={CARD}>
       <div className="text-body font-bold text-foreground">
