@@ -14,7 +14,6 @@ import { PredictionInsightCard } from "@/features/prediction/components/Predicti
 import { PredictionScenarioCards } from "@/features/prediction/components/PredictionScenarioCards";
 import { PredictionRangeDetailSheet } from "@/features/prediction/components/PredictionRangeDetailSheet";
 import {
-  TrendDirectionCard,
   AuctionSupplyCard,
   PriceOutlookReportCard,
   TopicRelatedNewsCard,
@@ -396,7 +395,6 @@ function PredictionPage() {
           </div>
 
           <div className="mb-2">
-            <TrendDirectionCard />
           </div>
           <div className="mb-2">
             <AuctionSupplyCard
