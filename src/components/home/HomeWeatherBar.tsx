@@ -137,27 +137,7 @@ export function HomeWeatherBar() {
         </div>
 
         {/* 주말 안내 또는 위치 권한 안내 */}
-        {isFallback ? (
-          <span
-            role="button"
-            tabIndex={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!pending) void request();
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.stopPropagation();
-                if (!pending) void request();
-              }
-            }}
-            className="flex items-center gap-1 text-left text-white/90 underline decoration-white/40 underline-offset-2"
-            style={{ fontSize: 14, fontWeight: 600, lineHeight: "20px" }}
-          >
-            <MapPin className="h-3 w-3 shrink-0" />
-            위치 권한 허용 시 현재 위치 날씨
-          </span>
-        ) : w.tip ? (
+        {!isFallback && w.tip ? (
           <div
             className="flex items-center gap-1 text-white/95"
             style={{ fontSize: 14, fontWeight: 600, lineHeight: "20px" }}
