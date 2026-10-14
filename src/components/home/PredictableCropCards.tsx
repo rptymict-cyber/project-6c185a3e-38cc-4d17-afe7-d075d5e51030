@@ -84,7 +84,7 @@ export function PredictableCropCards() {
               key={crop.id}
               to="/prediction"
               search={{ cropId: crop.id, entrySource: "home" }}
-              className="flex min-h-[160px] w-[124px] min-w-[124px] flex-col items-start overflow-hidden rounded-[10px] bg-[#F5FAF6] px-3 pb-3 pt-3.5 transition-colors active:bg-[#E8F1E8]"
+              className="flex min-h-[160px] w-max min-w-[124px] shrink-0 flex-col items-start overflow-hidden rounded-[10px] bg-[#F5FAF6] px-3 pb-3 pt-3.5 transition-colors active:bg-[#E8F1E8]"
             >
               <CropIcon name={crop.name} size={24} />
               <div className="mt-2 w-full truncate text-body font-bold leading-tight text-[#111827]">
@@ -99,7 +99,7 @@ export function PredictableCropCards() {
                   / {h.unitLabel}
                 </div>
               </div>
-              <div className="mt-auto w-full pt-3">
+              <div className="mt-auto w-full whitespace-nowrap pt-3">
                 <ChangeBadge changePct={h.changePct} />
               </div>
             </Link>
