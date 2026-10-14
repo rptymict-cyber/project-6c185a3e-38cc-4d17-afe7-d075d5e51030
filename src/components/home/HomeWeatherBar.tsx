@@ -115,7 +115,7 @@ export function HomeWeatherBar() {
         </div>
 
         {/* 기온 + 상태 */}
-        <div className="flex items-center gap-2">
+        <div className="my-auto flex items-center gap-2">
           <span
             className="tabular-nums text-white"
             style={{
