@@ -83,25 +83,25 @@ function WeatherDetailPage() {
                   </span>
                   <span className="ml-1 text-display font-semibold">°C</span>
                 </div>
-                <div className="mt-2 text-heading font-semibold text-white">
-                  {w.current.desc}
-                </div>
-                <div className="mt-2 text-body text-white/85">
-                  {w.today.dateLabel}
-                </div>
-                <div className="mt-3 flex items-center gap-4 text-body font-semibold text-white/95">
-                  <span>
-                    최고 <span className="text-white">{w.today.high}°</span>
-                  </span>
-                  <span>
-                    최저 <span className="text-white">{w.today.low}°</span>
-                  </span>
-                </div>
               </div>
-              <div className="shrink-0">
+              <div className="-mt-2 shrink-0">
                 <WeatherIllustration size={130} />
               </div>
             </div>
+            <div className="mt-1 flex items-center justify-between gap-3">
+              <div className="min-w-0 truncate text-heading font-semibold text-white">
+                {w.current.desc}
+              </div>
+              <div className="flex shrink-0 items-center gap-3 text-body font-semibold text-white/95">
+                <span>
+                  최고 <span className="text-white">{w.today.high}°</span>
+                </span>
+                <span>
+                  최저 <span className="text-white">{w.today.low}°</span>
+                </span>
+              </div>
+            </div>
+            <div className="mt-2 text-body text-white/85">{w.today.dateLabel}</div>
           </div>
         </section>
 
