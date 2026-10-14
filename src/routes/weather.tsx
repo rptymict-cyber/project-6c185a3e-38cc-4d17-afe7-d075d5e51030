@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, Droplets, Info, MapPin, Sun, Umbrella, Wind } from "lucide-react";
+import { AlertTriangle, ChevronDown, Droplets, Info, MapPin, Sun, Umbrella, Wind } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { WeatherIllustration } from "@/components/weather/WeatherIllustration";
 import {
   MOCK_WEATHER,
   DEFAULT_REGION_WEATHER,
   getWeatherForRegion,
+  getAlertLabel,
+  getWeatherImpactStyle,
 } from "@/lib/mock/weather";
 import { WeatherRegionSheet } from "@/components/weather/WeatherRegionSheet";
 import { useWeatherRegion } from "@/store/weatherRegion";
@@ -45,6 +47,17 @@ function WeatherDetailPage() {
     : granted === true
       ? MOCK_WEATHER
       : DEFAULT_REGION_WEATHER;
+  const rainN = w.forecastBadges?.rain?.daysAhead;
+  const rainIdx = typeof rainN === "number" && rainN >= 1 && rainN <= 3 ? rainN : -1;
+  const firstRain = w.daily.find((d) => d.condition.includes("비"));
+  const advisoryText = firstRain
+    ? `${firstRain.date}에 비가 예보되어 있어요. 야외 작업 일정을 확인하세요.`
+    : "향후 10일간 큰 비 소식은 없어요.";
+  const alertStyle = w.alert ? getWeatherImpactStyle(w.alert.level === "warning" ? "high" : "warn") : null;
+  const fmtIssued = (iso: string) => {
+    const m = /^\d{4}-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso);
+    return m ? `${Number(m[1])}/${Number(m[2])} ${m[3]}:${m[4]} 발효` : "";
+  };
 
   return (
     <AppShell screenId="WTR-001_날씨상세"
@@ -105,6 +118,27 @@ function WeatherDetailPage() {
           </div>
         </section>
 
+        {/* 기상 특보 안내 */}
+        {w.alert && alertStyle ? (
+          <section className="px-4 pt-3">
+            <div
+              className="flex items-center gap-3 rounded-[16px] border px-4 py-3"
+              style={{ background: alertStyle.badgeBg, borderColor: alertStyle.badgeBorder, color: alertStyle.badgeText }}
+            >
+              <AlertTriangle className="h-5 w-5 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-body font-bold">
+                  {getAlertLabel(w.alert)}
+                  {(w.alert.count ?? 1) >= 2 ? ` 외 ${(w.alert.count ?? 1) - 1}건` : ""}
+                </div>
+                <div className="text-meta font-medium opacity-90">
+                  {w.alert.region} · {fmtIssued(w.alert.issuedAt)}
+                </div>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
         {/* Metrics */}
         <section className="px-4 pt-3">
           <div className="grid grid-cols-4 divide-x divide-[#EEF1F5] rounded-[16px] border border-[#EEF1F5] bg-white py-3">
@@ -163,12 +197,13 @@ function WeatherDetailPage() {
 
         {/* Weekly */}
         <section className="px-4 pt-5">
-          <h2 className="text-title font-bold text-[#111827]">주간 예보</h2>
+          <h2 className="text-title font-bold text-[#111827]">10일 예보</h2>
           <ul className="mt-2 divide-y divide-[#F1F3F5] rounded-[16px] border border-[#EEF1F5] bg-white">
-            {w.daily.map((d) => (
+            {w.daily.map((d, i) => (
               <li
                 key={d.date}
-                className="grid grid-cols-[auto_auto_24px_minmax(0,1fr)_auto_auto] items-center gap-1.5 px-3 py-3"
+                style={d.pop >= 60 ? { background: "#F3F8FF" } : undefined}
+                className="first:rounded-t-[16px] last:rounded-b-[16px] grid grid-cols-[auto_auto_24px_minmax(0,1fr)_auto_auto] items-center gap-1.5 px-3 py-3"
               >
                 <span
                   className={cn(
@@ -183,8 +218,13 @@ function WeatherDetailPage() {
                 </span>
                 <span className="text-caption text-[#6B7280]">{d.date}</span>
                 <span className="text-heading leading-none">{d.icon}</span>
-                <span className="truncate text-body text-[#374151]">
-                  {d.condition}
+                <span className="flex min-w-0 items-center gap-1 text-body text-[#374151]">
+                  <span className="truncate">{d.condition ?? "-"}</span>
+                  {i === rainIdx ? (
+                    <span className="shrink-0 rounded-full bg-[#E6F0FD] px-1.5 py-0.5 text-caption font-bold text-[#2878E8]">
+                      강수 예보
+                    </span>
+                  ) : null}
                 </span>
                 <span className="flex items-center justify-end gap-0.5 text-caption font-semibold text-[#2878E8]">
                   <Umbrella className="h-3 w-3" />
@@ -201,12 +241,12 @@ function WeatherDetailPage() {
         </section>
 
         {/* Advisory */}
-        {w.advisory ? (
+        {advisoryText ? (
           <section className="px-4 pt-4">
             <div className="flex items-start gap-2 rounded-[14px] bg-[#EAF3FB] px-3 py-3">
               <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#2878E8]" />
               <p className="text-body leading-relaxed text-[#1F3B5B]">
-                {w.advisory}
+                {advisoryText}
               </p>
             </div>
           </section>
