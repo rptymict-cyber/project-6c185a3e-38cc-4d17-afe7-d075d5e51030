@@ -181,9 +181,10 @@ export function DatePickerSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="flex max-h-[92dvh] flex-col rounded-t-2xl p-0 [&>button:first-of-type]:hidden">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between px-5 pt-5">
-          <h2 className="text-subtitle font-bold text-foreground">{title}</h2>
+        <div className="relative flex shrink-0 items-center justify-center px-5 pt-5">
+          <h2 className="text-center text-subtitle font-bold text-foreground">{title}</h2>
           <button
+            style={{ position: "absolute", right: 12 }}
             aria-label="닫기"
             onClick={() => onOpenChange(false)}
             className="grid h-11 w-11 place-items-center rounded-full hover:bg-secondary"
