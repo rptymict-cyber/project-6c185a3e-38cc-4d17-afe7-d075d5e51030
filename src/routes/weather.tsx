@@ -62,7 +62,8 @@ function WeatherDetailPage() {
               minHeight: 220,
             }}
           >
-            <div className="flex justify-end">
+            <div className="flex items-center justify-between gap-2">
+              <div className="min-w-0 truncate text-body text-white/85">{w.today.dateLabel}</div>
                   <button
                     type="button"
                     aria-label="지역 변경"
@@ -101,7 +102,6 @@ function WeatherDetailPage() {
                 </span>
               </div>
             </div>
-            <div className="mt-2 text-body text-white/85">{w.today.dateLabel}</div>
           </div>
         </section>
 
