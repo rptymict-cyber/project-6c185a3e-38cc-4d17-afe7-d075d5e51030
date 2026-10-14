@@ -62,9 +62,7 @@ function WeatherDetailPage() {
               minHeight: 220,
             }}
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="flex items-center">
+            <div className="flex justify-end">
                   <button
                     type="button"
                     aria-label="지역 변경"
@@ -76,7 +74,9 @@ function WeatherDetailPage() {
                     {w.region}
                     <ChevronDown className="h-4 w-4" />
                   </button>
-                </div>
+            </div>
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
                 <div className="mt-1.5 flex items-baseline">
                   <span className="text-[64px] font-bold leading-none tracking-tight">
                     {w.current.temp}
