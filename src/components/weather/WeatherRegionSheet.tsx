@@ -70,7 +70,7 @@ export function WeatherRegionSheet({
           </button>
         </div>
 
-        <SheetSearch value={q} onChange={setQ} placeholder="시·군·구 검색 (예: 수원, 공주)" />
+        <SheetSearch value={q} onChange={setQ} placeholder="시·군·구 검색" />
 
         {filtered.length === 0 ? (
           <p className="px-4 py-6 text-center text-caption text-[#868E96]">검색 결과가 없어요.</p>
