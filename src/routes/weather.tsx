@@ -76,16 +76,16 @@ function WeatherDetailPage() {
                     <ChevronDown className="h-4 w-4" />
                   </button>
             </div>
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <div className="mt-1.5 flex items-baseline">
+                <div className="flex items-baseline">
                   <span className="text-[64px] font-bold leading-none tracking-tight">
                     {w.current.temp}
                   </span>
                   <span className="ml-1 text-display font-semibold">°C</span>
                 </div>
               </div>
-              <div className="-mt-2 shrink-0">
+              <div className="shrink-0">
                 <WeatherIllustration size={130} />
               </div>
             </div>
