@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { CalendarDays } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { MapPin, ChevronRight, ChevronDown, Umbrella, Thermometer, Droplets, TriangleAlert } from "lucide-react";
+import { MapPin, ChevronRight, ChevronDown, Umbrella, Droplets, AlertTriangle } from "lucide-react";
 import { useLocation } from "@/store/location";
 import {
   MOCK_WEATHER,
   DEFAULT_REGION_WEATHER,
   getWeatherForRegion,
+  getAlertLabel,
 } from "@/lib/mock/weather";
 import { WeatherIllustration } from "@/components/weather/WeatherIllustration";
 import { WeatherRegionSheet } from "@/components/weather/WeatherRegionSheet";
@@ -48,17 +49,17 @@ export function HomeWeatherBar() {
       ? MOCK_WEATHER
       : DEFAULT_REGION_WEATHER;
 
-  const fb = w.forecastBadges;
-  const badges: { text: string; Icon: typeof Thermometer; warn?: boolean }[] = [];
-  if (fb) {
-    if (typeof fb.horizonDays === "number")
-      badges.push({ text: `향후 ${fb.horizonDays}일 기상 반영 중`, Icon: Thermometer });
-    if (fb.rain) {
-      const n = fb.rain.daysAhead;
-      badges.push({ text: n === 0 ? "오늘 강수 예보" : n === 1 ? "내일 강수 예보" : `${n}일 후 강수 예보`, Icon: Droplets });
-    }
-    if (fb.shipImpact === "caution") badges.push({ text: "출하 영향 주의", Icon: TriangleAlert, warn: true });
-  }
+  type Tone = "base" | "advisory" | "warning";
+  const badges: { text: string; Icon: typeof Droplets; tone: Tone }[] = [];
+  const n = w.forecastBadges?.rain?.daysAhead;
+  if (typeof n === "number" && n >= 1 && n <= 3)
+    badges.push({ text: n === 1 ? "내일 강수 예보" : `${n}일 후 강수 예보`, Icon: Droplets, tone: "base" });
+  if (w.alert) badges.push({ text: getAlertLabel(w.alert), Icon: AlertTriangle, tone: w.alert.level });
+  const TONE = {
+    base: { bg: "rgba(255,255,255,0.16)", bd: "rgba(255,255,255,0.22)", fg: "#FFFFFF" },
+    advisory: { bg: "rgba(255,214,102,0.24)", bd: "rgba(255,214,102,0.5)", fg: "#FFE49A" },
+    warning: { bg: "rgba(255,107,107,0.28)", bd: "rgba(255,160,160,0.6)", fg: "#FFD6D6" },
+  } as const;
 
   return (
     <>
@@ -161,12 +162,6 @@ export function HomeWeatherBar() {
       {badges.length > 0 ? (
         <div
           className="no-scrollbar mt-2.5 flex w-full gap-1.5 overflow-x-auto whitespace-nowrap"
-          style={{
-            maskImage: "linear-gradient(90deg,#000 85%,transparent)",
-            WebkitMaskImage: "linear-gradient(90deg,#000 85%,transparent)",
-          }}
-          onClick={(e) => e.stopPropagation()}
-          onPointerDown={(e) => e.stopPropagation()}
         >
           {badges.map((b) => (
             <span
@@ -174,9 +169,9 @@ export function HomeWeatherBar() {
               className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-3 font-bold"
               style={{
                 fontSize: 14,
-                background: b.warn ? "rgba(255,214,102,0.24)" : "rgba(255,255,255,0.16)",
-                border: `1px solid ${b.warn ? "rgba(255,214,102,0.5)" : "rgba(255,255,255,0.22)"}`,
-                color: b.warn ? "#FFE49A" : "#FFFFFF",
+                background: TONE[b.tone].bg,
+                border: `1px solid ${TONE[b.tone].bd}`,
+                color: TONE[b.tone].fg,
               }}
             >
               <b.Icon className="h-3.5 w-3.5 shrink-0" />

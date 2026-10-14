@@ -39,12 +39,34 @@ type Weather = {
   cause: { steps: CauseStep[]; result: string };
   /** 틸다 날씨 API 교체 대상: 예측 근거 배지용 값 (문구는 UI에서 생성) */
   forecastBadges?: ForecastBadges;
+  /** 틸다 날씨 API 교체 대상: 기상 특보 */
+  alert: WeatherAlert | null;
 };
 
+export type WeatherAlert = {
+  kind: "typhoon" | "heavyRain" | "strongWind" | "heatwave" | "coldWave" | "heavySnow";
+  level: "advisory" | "warning";
+  region: string;
+  issuedAt: string; // ISO 발효 시각
+  count?: number; // 동시 발효 건수
+};
+
+const ALERT_KIND_LABEL: Record<WeatherAlert["kind"], string> = {
+  typhoon: "태풍",
+  heavyRain: "호우",
+  strongWind: "강풍",
+  heatwave: "폭염",
+  coldWave: "한파",
+  heavySnow: "대설",
+};
+
+/** 특보 라벨 (홈·상세 공용). 예: "태풍 주의" */
+export function getAlertLabel(a: WeatherAlert): string {
+  return `${ALERT_KIND_LABEL[a.kind]} ${a.level === "warning" ? "경보" : "주의"}`;
+}
+
 export type ForecastBadges = {
-  horizonDays: number | null; // 예측에 반영한 기상 예보 기간(일)
   rain: { daysAhead: number } | null; // 강수 예보 (없으면 null)
-  shipImpact: "none" | "caution" | null; // 출하 영향 단계
 };
 
 // 틸다 날씨 API 교체 대상
@@ -53,7 +75,7 @@ export const MOCK_WEATHER: Weather = {
   regionFull: "충남 공주시 우성면",
   current: { icon: "☁️", temp: 28, desc: "대체로 흐림" },
   tip: "주말 비",
-  today: { dateLabel: "2026년 7월 3일 금요일", high: 31, low: 24 },
+  today: { dateLabel: "2026년 10월 14일 수요일", high: 28, low: 19 },
   metrics: { pop: 60, humidity: 72, windMs: 2.1, uvLabel: "보통" },
   hourly: [
     { time: "09시", icon: "⛅", temp: 24, pop: 10 },
@@ -63,11 +85,16 @@ export const MOCK_WEATHER: Weather = {
     { time: "21시", icon: "☁️", temp: 25, pop: 30 },
   ],
   daily: [
-    { dayLabel: "오늘", date: "7/3 (금)", icon: "⛅", condition: "구름 조금", pop: 60, min: 24, max: 31, tone: "today" },
-    { dayLabel: "토요일", date: "7/4 (토)", icon: "🌧️", condition: "비", pop: 80, min: 24, max: 29, tone: "sat" },
-    { dayLabel: "일요일", date: "7/5 (일)", icon: "🌧️", condition: "비", pop: 70, min: 23, max: 28, tone: "sun" },
-    { dayLabel: "월요일", date: "7/6 (월)", icon: "⛅", condition: "구름 조금", pop: 20, min: 24, max: 31 },
-    { dayLabel: "화요일", date: "7/7 (화)", icon: "☀️", condition: "맑음", pop: 10, min: 24, max: 32 },
+    { dayLabel: "오늘", date: "10/14 (수)", icon: "☁️", condition: "대체로 흐림", pop: 30, min: 19, max: 28, tone: "today" },
+    { dayLabel: "내일", date: "10/15 (목)", icon: "⛅", condition: "구름 조금", pop: 20, min: 18, max: 27 },
+    { dayLabel: "금요일", date: "10/16 (금)", icon: "☁️", condition: "흐림", pop: 40, min: 18, max: 25 },
+    { dayLabel: "토요일", date: "10/17 (토)", icon: "🌧️", condition: "비", pop: 70, min: 17, max: 24, tone: "sat" },
+    { dayLabel: "일요일", date: "10/18 (일)", icon: "🌧️", condition: "비", pop: 60, min: 15, max: 22, tone: "sun" },
+    { dayLabel: "월요일", date: "10/19 (월)", icon: "☀️", condition: "맑음", pop: 10, min: 13, max: 21 },
+    { dayLabel: "화요일", date: "10/20 (화)", icon: "☀️", condition: "맑음", pop: 10, min: 12, max: 22 },
+    { dayLabel: "수요일", date: "10/21 (수)", icon: "☀️", condition: "맑음", pop: 10, min: 12, max: 23 },
+    { dayLabel: "목요일", date: "10/22 (목)", icon: "⛅", condition: "구름 조금", pop: 20, min: 13, max: 23 },
+    { dayLabel: "금요일", date: "10/23 (금)", icon: "☁️", condition: "흐림", pop: 40, min: 14, max: 22 },
   ],
   advisory: "주말 강수 가능성이 있어 출하 및 야외 작업 계획 시 날씨를 확인하세요.",
   forecast: [
@@ -84,7 +111,9 @@ export const MOCK_WEATHER: Weather = {
     result: "가격 상승 요인",
   },
   // 틸다 날씨 API 교체 대상
-  forecastBadges: { horizonDays: 10, rain: { daysAhead: 3 }, shipImpact: "caution" },
+  forecastBadges: { rain: { daysAhead: 3 } },
+  // 틸다 날씨 API 교체 대상
+  alert: { kind: "typhoon", level: "advisory", region: "서울", issuedAt: "2026-10-14T09:00:00", count: 1 },
 };
 
 /** 위치 권한이 없을 때 보여줄 기본 지역(서울) 날씨 */
