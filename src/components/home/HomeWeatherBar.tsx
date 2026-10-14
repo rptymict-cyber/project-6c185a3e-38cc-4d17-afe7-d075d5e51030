@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CalendarDays } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { MapPin, ChevronRight, ChevronDown, Umbrella } from "lucide-react";
+import { MapPin, ChevronRight, ChevronDown, Umbrella, Thermometer, Droplets, TriangleAlert } from "lucide-react";
 import { useLocation } from "@/store/location";
 import {
   MOCK_WEATHER,
@@ -48,13 +48,25 @@ export function HomeWeatherBar() {
       ? MOCK_WEATHER
       : DEFAULT_REGION_WEATHER;
 
+  const fb = w.forecastBadges;
+  const badges: { text: string; Icon: typeof Thermometer; warn?: boolean }[] = [];
+  if (fb) {
+    if (typeof fb.horizonDays === "number")
+      badges.push({ text: `향후 ${fb.horizonDays}일 기상 반영 중`, Icon: Thermometer });
+    if (fb.rain) {
+      const n = fb.rain.daysAhead;
+      badges.push({ text: n === 0 ? "오늘 강수 예보" : n === 1 ? "내일 강수 예보" : `${n}일 후 강수 예보`, Icon: Droplets });
+    }
+    if (fb.shipImpact === "caution") badges.push({ text: "출하 영향 주의", Icon: TriangleAlert, warn: true });
+  }
+
   return (
     <>
     <button
       type="button"
       onClick={() => navigate({ to: "/weather" })}
       aria-label={`${w.region} 날씨 상세 보기`}
-      className="group relative flex w-full items-stretch overflow-hidden rounded-[20px] text-left text-white shadow-[0_6px_16px_rgba(2,82,153,0.16)] transition-transform duration-150 ease-out active:scale-[0.99]"
+      className="group relative flex w-full flex-col overflow-hidden rounded-[20px] text-left text-white shadow-[0_6px_16px_rgba(2,82,153,0.16)] transition-transform duration-150 ease-out active:scale-[0.99]"
       style={{
         background:
           "linear-gradient(110deg, #0879ca 0%, #0968b6 52%, #07569d 100%)",
@@ -65,6 +77,7 @@ export function HomeWeatherBar() {
         paddingRight: 16,
       }}
     >
+      <div className="flex w-full items-stretch">
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-1">
         {/* 위치 */}
         <div className="flex items-center">
@@ -164,6 +177,34 @@ export function HomeWeatherBar() {
           <ChevronRight className="h-5 w-5 text-white" />
         </span>
       </div>
+      </div>
+      {badges.length > 0 ? (
+        <div
+          className="no-scrollbar mt-2.5 flex w-full gap-1.5 overflow-x-auto whitespace-nowrap"
+          style={{
+            maskImage: "linear-gradient(90deg,#000 85%,transparent)",
+            WebkitMaskImage: "linear-gradient(90deg,#000 85%,transparent)",
+          }}
+          onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          {badges.map((b) => (
+            <span
+              key={b.text}
+              className="inline-flex h-[26px] shrink-0 items-center gap-1 rounded-full px-2.5 font-bold"
+              style={{
+                fontSize: 12,
+                background: b.warn ? "rgba(255,214,102,0.24)" : "rgba(255,255,255,0.16)",
+                border: `1px solid ${b.warn ? "rgba(255,214,102,0.5)" : "rgba(255,255,255,0.22)"}`,
+                color: b.warn ? "#FFE49A" : "#FFFFFF",
+              }}
+            >
+              <b.Icon className="h-3 w-3 shrink-0" />
+              {b.text}
+            </span>
+          ))}
+        </div>
+      ) : null}
     </button>
     <WeatherRegionSheet open={regionOpen} onOpenChange={setRegionOpen} />
     </>

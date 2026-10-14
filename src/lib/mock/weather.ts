@@ -37,6 +37,14 @@ type Weather = {
   advisory: string;
   forecast: { label: string; icon: string; temp: number }[];
   cause: { steps: CauseStep[]; result: string };
+  /** 틸다 날씨 API 교체 대상: 예측 근거 배지용 값 (문구는 UI에서 생성) */
+  forecastBadges?: ForecastBadges;
+};
+
+export type ForecastBadges = {
+  horizonDays: number | null; // 예측에 반영한 기상 예보 기간(일)
+  rain: { daysAhead: number } | null; // 강수 예보 (없으면 null)
+  shipImpact: "none" | "caution" | null; // 출하 영향 단계
 };
 
 // 틸다 날씨 API 교체 대상
@@ -75,6 +83,8 @@ export const MOCK_WEATHER: Weather = {
     ],
     result: "가격 상승 요인",
   },
+  // 틸다 날씨 API 교체 대상
+  forecastBadges: { horizonDays: 10, rain: { daysAhead: 3 }, shipImpact: "caution" },
 };
 
 /** 위치 권한이 없을 때 보여줄 기본 지역(서울) 날씨 */
