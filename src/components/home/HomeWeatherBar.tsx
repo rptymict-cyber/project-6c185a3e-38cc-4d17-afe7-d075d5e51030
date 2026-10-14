@@ -171,15 +171,15 @@ export function HomeWeatherBar() {
           {badges.map((b) => (
             <span
               key={b.text}
-              className="inline-flex h-[26px] shrink-0 items-center gap-1 rounded-full px-2.5 font-bold"
+              className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-3 font-bold"
               style={{
-                fontSize: 12,
+                fontSize: 14,
                 background: b.warn ? "rgba(255,214,102,0.24)" : "rgba(255,255,255,0.16)",
                 border: `1px solid ${b.warn ? "rgba(255,214,102,0.5)" : "rgba(255,255,255,0.22)"}`,
                 color: b.warn ? "#FFE49A" : "#FFFFFF",
               }}
             >
-              <b.Icon className="h-3 w-3 shrink-0" />
+              <b.Icon className="h-3.5 w-3.5 shrink-0" />
               {b.text}
             </span>
           ))}
