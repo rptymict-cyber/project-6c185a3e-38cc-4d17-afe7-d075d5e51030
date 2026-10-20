@@ -259,8 +259,6 @@ export function DatePickerSheet({
                       const isB = !off && iso === pBase;
                       const isC = !off && iso === pCmp;
                       const isT = iso === todayStr && !modifiers.outside;
-                      const hasRange = !!pLo && !!pHi && pLo !== pHi && !modifiers.outside;
-                      const inMid = hasRange && iso > pLo && iso < pHi;
                       const sun = day.date.getDay() === 0;
                       return (
                         <button
@@ -269,17 +267,6 @@ export function DatePickerSheet({
                           disabled={off}
                           className="relative flex h-full w-full items-center justify-center text-base"
                         >
-                          {hasRange && (inMid || isB || isC) ? (
-                            <span
-                              aria-hidden
-                              className="absolute inset-y-[3px]"
-                              style={{
-                                background: "rgba(46,158,107,0.13)",
-                                left: iso === pLo ? "50%" : 0,
-                                right: iso === pHi ? "50%" : 0,
-                              }}
-                            />
-                          ) : null}
                           <span
                             className="relative flex h-10 w-10 flex-col items-center justify-center rounded-full"
                             style={{
